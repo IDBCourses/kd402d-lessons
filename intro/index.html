@@ -1,414 +1,921 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Course introduction · KD402D Programming</title>
-<link rel="stylesheet" href="../shared/tokens.css">
-<link rel="stylesheet" href="../shared/deck.css">
-<style>
-/* styles used only by this lecture */
-.order>div{grid-template-columns:72px 120px 1fr;align-items:center}
-.order .tm{font-family:var(--font-mono);font-size:16px;color:var(--ink-500)}
-.order .nm{font-size:23px;color:var(--ink-900);font-weight:500}
-.order .nm small{display:block;font-size:16px;color:var(--ink-500);font-weight:400}
-.roles>div{grid-template-columns:250px 1fr;padding:15px 0}
-.roles .rn{font-family:var(--font-display);font-weight:700;font-size:28px;color:var(--ink-900);letter-spacing:-.02em}
-.roles .rn small{display:block;font-family:var(--font-ui);font-weight:400;font-size:16px;color:var(--ink-500);letter-spacing:0}
-.map{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--ink-900)}
-.map>div{padding:14px 20px 0 0;font-size:18px;line-height:1.45;color:var(--ink-700)}
-.map>div+div{border-left:1px solid var(--paper-300);padding-left:20px}
-.map .wk{font-family:var(--font-mono);font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--curtain-600)}
-.map h3{font-family:var(--font-display);font-weight:700;font-size:27px;line-height:1.1;letter-spacing:-.02em;color:var(--ink-900);margin:6px 0 12px}
-.map ul{margin:0;padding:0;list-style:none}
-.map li{padding:4px 0;border-bottom:1px solid var(--paper-300)}
-.map li:last-child{border-bottom:0}
-.day>div{grid-template-columns:200px 1fr;padding:18px 0}
-.day .when{font-family:var(--font-mono);font-size:15px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-500);padding-top:6px}
-.day .what{font-family:var(--font-display);font-weight:700;font-size:30px;letter-spacing:-.02em;color:var(--ink-900);line-height:1.1}
-.day .what small{display:block;font-family:var(--font-ui);font-weight:400;font-size:19px;letter-spacing:0;color:var(--ink-700);margin-top:6px;line-height:1.45}
-.assess>div{grid-template-columns:96px 1fr 330px;padding:16px 0;align-items:start}
-.assess .code{font-family:var(--font-display);font-weight:700;font-size:44px;line-height:1;color:var(--curtain-600);letter-spacing:-.03em}
-.assess .nm{font-family:var(--font-display);font-weight:700;font-size:30px;color:var(--ink-900);letter-spacing:-.02em;line-height:1.1}
-.assess .nm small{display:block;font-family:var(--font-ui);font-weight:400;font-size:18px;color:var(--ink-700);letter-spacing:0;margin-top:6px;line-height:1.4}
-.assess .dt{font-family:var(--font-mono);font-size:16px;color:var(--ink-900);line-height:1.6}
-.assess .dt span{display:block;color:var(--ink-500)}
-.tools>div{grid-template-columns:240px 1fr;padding:9px 0;gap:18px}
-.tools>div>span:last-child{font-size:18px;line-height:1.4}
-.tools .rn{font-family:var(--font-display);font-weight:700;font-size:25px;line-height:1.15;color:var(--ink-900);letter-spacing:-.02em}
-.tools .key .rn{color:var(--curtain-600)}
-.saves{display:flex;flex-direction:column;align-items:flex-start;gap:0;margin:2px 0 0}
-.saves .pt{border:2px solid var(--ink-900);background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900);padding:8px 12px;font-size:16px;color:var(--ink-900);line-height:1.25;width:100%}
-.saves .pt b{display:block;font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-500)}
-.saves .lk{width:2px;height:14px;margin-left:24px!important;background:var(--ink-900);flex:none;padding:0;margin:0}
-.steps>div{grid-template-columns:60px 360px 1fr;padding:7px 0;align-items:center}
-.steps .opt{font-size:21px;padding:8px 14px}
-.steps .num{font-size:34px}
-.steps .ask{display:block;font-family:var(--font-display);font-style:italic;font-weight:500;font-size:20px;line-height:1.35;color:var(--curtain-600)}
-.steps .ask[hidden]{display:block;visibility:hidden}
-/* three-layer preview */
-.pv{min-height:330px;padding:28px;background:var(--paper-200);display:grid;place-items:center}
-.pv .pg{width:100%;max-width:420px}
-.pv.l0 .pg{font-family:'Times New Roman',Times,serif;color:#000;background:#fff;padding:12px 14px;border:1px solid var(--ink-300)}
-.pv.l0 h3{font-size:30px;margin:0 0 10px;font-weight:700}
-.pv.l0 p{font-size:18px;margin:0 0 10px}
-.pv.l0 button{font:14px Arial,sans-serif;padding:2px 8px;color:#000;background:#efefef;border:1px solid #767676;border-radius:2px}
-.pv.l1 .pg,.pv.l2 .pg{font-family:var(--font-ui);background:var(--paper-000);border:2px solid var(--ink-900);box-shadow:5px 5px 0 var(--applause-500);padding:24px 26px;color:var(--ink-700)}
-.pv.l1 h3,.pv.l2 h3{font-family:var(--font-display);font-size:40px;letter-spacing:-.03em;color:var(--ink-900);margin:0 0 6px;line-height:1}
-.pv.l1 p,.pv.l2 p{font-size:19px;margin:0 0 18px}
-.pv.l1 button,.pv.l2 button{font-family:var(--font-mono);font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:10px 16px;border:2px solid var(--ink-900);border-radius:2px;background:var(--applause-500);color:var(--ink-900);box-shadow:3px 3px 0 var(--ink-900);cursor:pointer}
-.pv .pg button{cursor:pointer}
-.pv .flashbg{animation:flashlite .9s ease}
-.layer-note{font-size:20px;line-height:1.5;color:var(--ink-700);margin:0;min-height:120px}
-.layer-note b{color:var(--ink-900)}
-#wq>div{grid-template-columns:1fr 580px}
-.links>div{grid-template-columns:1fr 1fr;padding:12px 0;gap:24px}
-.links a{font-size:21px;font-weight:500}
-.links .muted{font-size:17px}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Course introduction · KD402D Programming</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/deck.css">
+  <style>
+    /* styles used only by this lecture */
+    .order>div {
+      grid-template-columns: 72px 120px 1fr;
+      align-items: center
+    }
+
+    .order .tm {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      color: var(--ink-500)
+    }
+
+    .order .nm {
+      font-size: 23px;
+      color: var(--ink-900);
+      font-weight: 500
+    }
+
+    .order .nm small {
+      display: block;
+      font-size: 16px;
+      color: var(--ink-500);
+      font-weight: 400
+    }
+
+    .roles>div {
+      grid-template-columns: 250px 1fr;
+      padding: 15px 0
+    }
+
+    .roles .rn {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 28px;
+      color: var(--ink-900);
+      letter-spacing: -.02em
+    }
+
+    .roles .rn small {
+      display: block;
+      font-family: var(--font-ui);
+      font-weight: 400;
+      font-size: 16px;
+      color: var(--ink-500);
+      letter-spacing: 0
+    }
+
+    .map {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--ink-900)
+    }
+
+    .map>div {
+      padding: 14px 20px 0 0;
+      font-size: 18px;
+      line-height: 1.45;
+      color: var(--ink-700)
+    }
+
+    .map>div+div {
+      border-left: 1px solid var(--paper-300);
+      padding-left: 20px
+    }
+
+    .map .wk {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--curtain-600)
+    }
+
+    .map h3 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 27px;
+      line-height: 1.1;
+      letter-spacing: -.02em;
+      color: var(--ink-900);
+      margin: 6px 0 12px
+    }
+
+    .map ul {
+      margin: 0;
+      padding: 0;
+      list-style: none
+    }
+
+    .map li {
+      padding: 4px 0;
+      border-bottom: 1px solid var(--paper-300)
+    }
+
+    .map li:last-child {
+      border-bottom: 0
+    }
+
+    .day>div {
+      grid-template-columns: 200px 1fr;
+      padding: 18px 0
+    }
+
+    .day .when {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--ink-500);
+      padding-top: 6px
+    }
+
+    .day .what {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 30px;
+      letter-spacing: -.02em;
+      color: var(--ink-900);
+      line-height: 1.1
+    }
+
+    .day .what small {
+      display: block;
+      font-family: var(--font-ui);
+      font-weight: 400;
+      font-size: 19px;
+      letter-spacing: 0;
+      color: var(--ink-700);
+      margin-top: 6px;
+      line-height: 1.45
+    }
+
+    .assess>div {
+      grid-template-columns: 96px 1fr 330px;
+      padding: 16px 0;
+      align-items: start
+    }
+
+    .assess .code {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 44px;
+      line-height: 1;
+      color: var(--curtain-600);
+      letter-spacing: -.03em
+    }
+
+    .assess .nm {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 30px;
+      color: var(--ink-900);
+      letter-spacing: -.02em;
+      line-height: 1.1
+    }
+
+    .assess .nm small {
+      display: block;
+      font-family: var(--font-ui);
+      font-weight: 400;
+      font-size: 18px;
+      color: var(--ink-700);
+      letter-spacing: 0;
+      margin-top: 6px;
+      line-height: 1.4
+    }
+
+    .assess .dt {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      color: var(--ink-900);
+      line-height: 1.6
+    }
+
+    .assess .dt span {
+      display: block;
+      color: var(--ink-500)
+    }
+
+    .tools>div {
+      grid-template-columns: 240px 1fr;
+      padding: 9px 0;
+      gap: 18px
+    }
+
+    .tools>div>span:last-child {
+      font-size: 18px;
+      line-height: 1.4
+    }
+
+    .tools .rn {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 25px;
+      line-height: 1.15;
+      color: var(--ink-900);
+      letter-spacing: -.02em
+    }
+
+    .tools .key .rn {
+      color: var(--curtain-600)
+    }
+
+    .saves {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      margin: 2px 0 0
+    }
+
+    .saves .pt {
+      border: 2px solid var(--ink-900);
+      background: var(--paper-000);
+      box-shadow: 3px 3px 0 var(--ink-900);
+      padding: 8px 12px;
+      font-size: 16px;
+      color: var(--ink-900);
+      line-height: 1.25;
+      width: 100%
+    }
+
+    .saves .pt b {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--ink-500)
+    }
+
+    .saves .lk {
+      width: 2px;
+      height: 14px;
+      margin-left: 24px !important;
+      background: var(--ink-900);
+      flex: none;
+      padding: 0;
+      margin: 0
+    }
+
+    .steps>div {
+      grid-template-columns: 60px 360px 1fr;
+      padding: 7px 0;
+      align-items: center
+    }
+
+    .steps .opt {
+      font-size: 21px;
+      padding: 8px 14px
+    }
+
+    .steps .num {
+      font-size: 34px
+    }
+
+    .steps .ask {
+      display: block;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 1.35;
+      color: var(--curtain-600)
+    }
+
+    .steps .ask[hidden] {
+      display: block;
+      visibility: hidden
+    }
+
+    /* three-layer preview */
+    .pv {
+      min-height: 330px;
+      padding: 28px;
+      background: var(--paper-200);
+      display: grid;
+      place-items: center
+    }
+
+    .pv .pg {
+      width: 100%;
+      max-width: 420px
+    }
+
+    .pv.l0 .pg {
+      font-family: 'Times New Roman', Times, serif;
+      color: #000;
+      background: #fff;
+      padding: 12px 14px;
+      border: 1px solid var(--ink-300)
+    }
+
+    .pv.l0 h3 {
+      font-size: 30px;
+      margin: 0 0 10px;
+      font-weight: 700
+    }
+
+    .pv.l0 p {
+      font-size: 18px;
+      margin: 0 0 10px
+    }
+
+    .pv.l0 button {
+      font: 14px Arial, sans-serif;
+      padding: 2px 8px;
+      color: #000;
+      background: #efefef;
+      border: 1px solid #767676;
+      border-radius: 2px
+    }
+
+    .pv.l1 .pg,
+    .pv.l2 .pg {
+      font-family: var(--font-ui);
+      background: var(--paper-000);
+      border: 2px solid var(--ink-900);
+      box-shadow: 5px 5px 0 var(--applause-500);
+      padding: 24px 26px;
+      color: var(--ink-700)
+    }
+
+    .pv.l1 h3,
+    .pv.l2 h3 {
+      font-family: var(--font-display);
+      font-size: 40px;
+      letter-spacing: -.03em;
+      color: var(--ink-900);
+      margin: 0 0 6px;
+      line-height: 1
+    }
+
+    .pv.l1 p,
+    .pv.l2 p {
+      font-size: 19px;
+      margin: 0 0 18px
+    }
+
+    .pv.l1 button,
+    .pv.l2 button {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 10px 16px;
+      border: 2px solid var(--ink-900);
+      border-radius: 2px;
+      background: var(--applause-500);
+      color: var(--ink-900);
+      box-shadow: 3px 3px 0 var(--ink-900);
+      cursor: pointer
+    }
+
+    .pv .pg button {
+      cursor: pointer
+    }
+
+    .pv .flashbg {
+      animation: flashlite .9s ease
+    }
+
+    .layer-note {
+      font-size: 20px;
+      line-height: 1.5;
+      color: var(--ink-700);
+      margin: 0;
+      min-height: 120px
+    }
+
+    .layer-note b {
+      color: var(--ink-900)
+    }
+
+    #wq>div {
+      grid-template-columns: 1fr 580px
+    }
+
+    .links>div {
+      grid-template-columns: 1fr 1fr;
+      padding: 12px 0;
+      gap: 24px
+    }
+
+    .links a {
+      font-size: 21px;
+      font-weight: 500
+    }
+
+    .links .muted {
+      font-size: 17px
+    }
+  </style>
 </head>
+
 <body data-lecture="intro" data-home="../">
-<main id="stage">
-<div id="deck">
+  <main id="stage">
+    <div id="deck">
 
-<!-- 01 COVER -->
-<section class="slide stage" id="cover" data-sec="Opening">
-  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
-  <div class="inner">
-    <div class="billing">KD402D Programming · Week 41</div>
-    <h1 class="hero">Hello, world.</h1>
-    <p class="lede">Welcome to Programming. Today: how the course works, what programming is, and why designers do it.</p>
-  </div>
-  <div style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
-    <div class="m" style="font-size:17px;color:var(--ink-200)">KD402D Programming · Mon 5 Oct · 09:15–10:00</div>
-  </div>
-  <aside class="nt">Welcome. 45 minutes, three parts, no code today: code starts tomorrow in Functions. Students can open the same link on their laptops (it's on Canvas) and click through the slides marked "Your turn" themselves. Keys: arrows to move, I for the slide index, N for these notes. "Hello, world" is the traditional first program; we'll do the human version in the workshop straight after this.</aside>
-</section>
-
-<!-- 02 RUNNING ORDER -->
-<section class="slide" id="running-order" data-sec="Opening">
-  <div class="billing">Running order · Today</div><hr class="rule">
-  <h2 class="h1">Three parts before 10:00</h2>
-  <div class="rows order">
-    <div><span class="num">01</span><span class="tm">09:15</span><span class="nm">Welcome and course overview<small>Who we are, how the five weeks run, how you're assessed, where things live</small></span></div>
-    <div><span class="num">02</span><span class="tm">09:30</span><span class="nm">Introduction to programming and JavaScript<small>What a program is, why designers write them, the three layers of a web page</small></span></div>
-    <div><span class="num">03</span><span class="tm">09:55</span><span class="nm">Wrap-up and preview<small>What happens this afternoon, tomorrow and on Wednesday</small></span></div>
-  </div>
-  <p class="dir" style="margin-top:18px">The Hello World workshop starts at 10:15.</p>
-  <aside class="nt">Set expectations: today is about orientation and ideas, not syntax. No laptops needed, but anyone who wants to can follow along on the course site. The workshop after this is movement-based; the morning group goes at 10:15, the afternoon group at 15:15.</aside>
-</section>
-
-<!-- 03 OBJECTIVES -->
-<section class="slide" id="objectives" data-sec="Opening">
-  <div class="billing">By 10:00 you can</div><hr class="rule">
-  <h2 class="h1">Three things to take home</h2>
-  <div class="rows lab big">
-    <div><span class="num">01</span><span class="tx">Describe how the course is structured, who teaches it, and how you're assessed.</span></div>
-    <div><span class="num">02</span><span class="tx">Explain what programming is and why it matters in Interaction Design.</span></div>
-    <div><span class="num">03</span><span class="tx">Name the roles of HTML, CSS and JavaScript, and find the key course resources on Canvas.</span></div>
-  </div>
-  <aside class="nt">The session's learning objectives from the course plan. Come back to them at the recap at 09:55.</aside>
-</section>
-
-<!-- 04 TEAM -->
-<section class="slide" id="team" data-sec="Welcome and course overview">
-  <div class="billing">01 · Welcome and course overview · 09:15</div><hr class="rule">
-  <h2 class="h1">Who's teaching</h2>
-  <div class="rows roles">
-    <div><span class="rn">David Kadish<small>Course lead</small></span><span>Lectures, the course plan, assessment. Questions about the course in general come to me.</span></div>
-    <div><span class="rn">Jens Pedersen<small>Teacher</small></span><span>Lectures and group work. A second voice and a second pair of eyes on your code.</span></div>
-    <div><span class="rn">Teaching assistants<small>To be announced</small></span><span>In the room during afternoon group work and the Wednesday TA sessions. They're who you ask first when you're stuck.</span></div>
-  </div>
-  <aside class="nt">Introduce yourself: background, what you make with code, why you teach this course. Hand over to Jens for a sentence or two. TAs are still to be confirmed; tell students they'll be announced on Canvas. Mention who's running the Hello World workshop straight after this.</aside>
-</section>
-
-<!-- 05 SHAPE -->
-<section class="slide" id="shape" data-sec="Welcome and course overview">
-  <div class="billing">Welcome and course overview · The five weeks</div><hr class="rule">
-  <h2 class="h1">Five weeks, four modules</h2>
-  <div class="map">
-    <div><span class="wk">Weeks 41–42</span><h3>Programming fundamentals</h3><ul><li>Functions</li><li>Data</li><li>Acting out functions</li></ul></div>
-    <div><span class="wk">Weeks 41–42</span><h3>Program structure and logic</h3><ul><li>Conditionals</li><li>User input</li><li>Objects and arrays</li><li>Iteration</li></ul></div>
-    <div><span class="wk">Weeks 43–44</span><h3>Interactive systems</h3><ul><li>Processing data</li><li>Keyboards</li><li>The page and interaction</li></ul></div>
-    <div><span class="wk">Weeks 44–45</span><h3>Synthesis and examination</h3><ul><li>Prototype coaching</li><li>Your functional prototype</li><li>Oral exam</li></ul></div>
-  </div>
-  <p class="dir" style="margin-top:22px">It moves fast: a new topic most days. Keep up a little every day rather than a lot at the weekend.</p>
-  <aside class="nt">The arc of the course. The first two modules overlap in the first fortnight: one building block a day. Module 3 puts those blocks into interactive things in the browser. Module 4 is about your own prototype and the oral exam. Point out the pace honestly; first-years who fall a day behind feel it quickly. Last year's feedback: people felt others already had a background. Say clearly that the course assumes none.</aside>
-</section>
-
-<!-- 06 A DAY -->
-<section class="slide" id="a-day" data-sec="Welcome and course overview">
-  <div class="billing">Welcome and course overview · A typical day</div><hr class="rule">
-  <h2 class="h1">How a day runs</h2>
-  <div class="rows day">
-    <div><span class="when">Morning · 2 h</span><span class="what">Lecture<small>First the idea and where it shows up in the real world, then the syntax. Slides like these, with exercises you can do on your own laptop.</small></span></div>
-    <div><span class="when">Afternoon</span><span class="what">Group work<small>Exercises on the day's topic, in groups, with teachers and TAs in the room. This is where most of the learning happens.</small></span></div>
-    <div><span class="when">Wednesdays</span><span class="what">TA sessions<small>Drop-in help. This week: setting up VS Code, Git and GitHub Desktop.</small></span></div>
-  </div>
-  <aside class="nt">The rhythm of a normal day from tomorrow onwards. Stress that the afternoons matter more than the lectures: you learn to program by writing programs, not by watching. Concept first, syntax second is deliberate: you should know what a thing is for before you learn how to type it.</aside>
-</section>
-
-<!-- 07 ASSESSMENT -->
-<section class="slide" id="assessment" data-sec="Welcome and course overview">
-  <div class="billing">Welcome and course overview · Assessment</div><hr class="rule">
-  <h2 class="h1" style="margin-bottom:12px">Three assessments</h2>
-  <div class="rows assess">
-    <div><span class="code">A1</span><span class="nm">Modelling<small>In groups of about four. Ends with a class showcase and peer review, plus a short individual reflection.</small></span><span class="dt">Hand in Tue 20 Oct<span>Showcase and peer review Wed 21 Oct · reflection that day, 17:00</span></span></div>
-    <div><span class="code">A3</span><span class="nm">Functional prototype<small>A working interactive prototype, built in JavaScript in the browser.</small></span><span class="dt">Due Mon 2 Nov, 17:00</span></div>
-    <div><span class="code">A2</span><span class="nm">Oral exam<small>Individual. You talk through code and explain what it does, out loud.</small></span><span class="dt">Tue 3 – Thu 5 Nov</span></div>
-  </div>
-  <p class="small muted" style="margin:14px 0 0">Credits and how each part is graded: see the course syllabus on Canvas.</p>
-  <aside class="nt">Listed in date order, which is why A3 comes before A2. Weights and grading scale are in the course syllabus; open it on Canvas if anyone asks for specifics. A1 is in groups of about four: groups are formed in the first week. Re-exam dates are on Canvas too. Reassure: the oral exam is about understanding your own and given code, and the whole course rehearses explaining code out loud.</aside>
-</section>
-
-<!-- 08 METHOD -->
-<section class="slide stage" id="method" data-sec="Welcome and course overview">
-  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
-  <div class="inner">
-    <div class="billing">Welcome and course overview · How we learn</div>
-    <h2 class="hero md">Act it out first. Then write it.</h2>
-    <p class="lede">Some days you'll be part of the program: one person follows a step, another passes along the data, and the room watches what happens. Then we write the same thing in code.</p>
-  </div>
-  <aside class="nt">How the course teaches: physical, out-loud enactment alongside careful basics (syntax, debugging, planning before typing). Why: programs are processes, and it's easier to understand a process you've been inside. It also trains you to explain what code does out loud, which is exactly what the oral exam asks. The workshop at 10:15 is the first taste of this.</aside>
-</section>
-
-<!-- 09 TOOLS -->
-<section class="slide" id="tools" data-sec="Welcome and course overview">
-  <div class="billing">Welcome and course overview · Your tools</div><hr class="rule">
-  <h2 class="h1" style="margin-bottom:14px">What you'll work with</h2>
-  <div class="cols" style="grid-template-columns:1.45fr .55fr;gap:36px">
-    <div class="rows tools">
-      <div><span class="rn">A web browser</span><span>Where your JavaScript runs, and where you'll see it work (or break).</span></div>
-      <div><span class="rn">VS Code</span><span>The editor you'll write code in.</span></div>
-      <div class="key"><span class="rn">Git</span><span>Keeps a history of your project: every saved version, ready to go back to.</span></div>
-      <div class="key"><span class="rn">GitHub + Desktop</span><span>Stores that history online so your group can share it. Desktop gives you buttons instead of commands.</span></div>
-      <div><span class="rn">Eloquent JavaScript</span><span>The course book. Free, online, with examples you can run.</span></div>
-    </div>
-    <div class="stack">
-      <div class="panel"><div class="bar p"><span>a project in Git</span><span>save points</span></div>
-        <div class="pbody">
-          <div class="saves"><div class="pt"><b>Mon</b>Started the page</div><div class="lk"></div><div class="pt"><b>Tue</b>Button works</div><div class="lk"></div><div class="pt"><b>Wed</b>Broke it</div></div>
-          <p class="small" style="margin:14px 0 0;line-height:1.45">Every save point has a short message. If Wednesday goes wrong, you go back to Tuesday.</p>
+      <!-- 01 COVER -->
+      <section class="slide stage" id="cover" data-sec="Opening">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">KD402D Programming · Week 41</div>
+          <h1 class="hero">Hello, world.</h1>
+          <p class="lede">Welcome to Programming. Today: how the course works, what programming is, and why designers do
+            it.</p>
         </div>
-      </div>
-      <p class="small" style="margin:0;line-height:1.45">Install all of these before Wednesday: the <b>Course software</b> page on Canvas has the links. The TA session helps you set them up.</p>
+        <div
+          style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
+          <div class="m" style="font-size:17px;color:var(--ink-200)">KD402D Programming · Mon 5 Oct · 09:15–10:00</div>
+        </div>
+        <aside class="nt">Welcome. 45 minutes, three parts, no code today: code starts tomorrow in Functions. Students
+          can open the same link on their laptops (it's on Canvas) and click through the slides marked "Your turn"
+          themselves. Keys: arrows to move, I for the slide index, N for these notes. "Hello, world" is the traditional
+          first program; we'll do the human version in the workshop straight after this.</aside>
+      </section>
+
+      <!-- 02 RUNNING ORDER -->
+      <section class="slide" id="running-order" data-sec="Opening">
+        <div class="billing">Running order · Today</div>
+        <hr class="rule">
+        <h2 class="h1">Three parts before 10:00</h2>
+        <div class="rows order">
+          <div><span class="num">01</span><span class="tm">09:15</span><span class="nm">Welcome and course
+              overview<small>Who we are, how the five weeks run, how you're assessed, where things live</small></span>
+          </div>
+          <div><span class="num">02</span><span class="tm">09:30</span><span class="nm">Introduction to programming and
+              JavaScript<small>What a program is, why designers write them, the three layers of a web
+                page</small></span></div>
+          <div><span class="num">03</span><span class="tm">09:55</span><span class="nm">Wrap-up and preview<small>What
+                happens this afternoon, tomorrow and on Wednesday</small></span></div>
+        </div>
+        <p class="dir" style="margin-top:18px">The Hello World workshop starts at 10:15.</p>
+        <aside class="nt">Set expectations: today is about orientation and ideas, not syntax. No laptops needed, but
+          anyone who wants to can follow along on the course site. The workshop after this is movement-based; the
+          morning group goes at 10:15, the afternoon group at 15:15.</aside>
+      </section>
+
+      <!-- 03 OBJECTIVES -->
+      <section class="slide" id="objectives" data-sec="Opening">
+        <div class="billing">By 10:00 you can</div>
+        <hr class="rule">
+        <h2 class="h1">Three things to take home</h2>
+        <div class="rows lab big">
+          <div><span class="num">01</span><span class="tx">Describe how the course is structured, who teaches it, and
+              how you're assessed.</span></div>
+          <div><span class="num">02</span><span class="tx">Explain what programming is and why it matters in Interaction
+              Design.</span></div>
+          <div><span class="num">03</span><span class="tx">Name the roles of HTML, CSS and JavaScript, and find the key
+              course resources on Canvas.</span></div>
+        </div>
+        <aside class="nt">The session's learning objectives from the course plan. Come back to them at the recap at
+          09:55.</aside>
+      </section>
+
+      <!-- 04 TEAM -->
+      <section class="slide" id="team" data-sec="Welcome and course overview">
+        <div class="billing">01 · Welcome and course overview · 09:15</div>
+        <hr class="rule">
+        <h2 class="h1">Who's teaching</h2>
+        <div class="rows roles">
+          <div><span class="rn">David Kadish<small>Course lead</small></span><span>Lectures, the course plan,
+              assessment. Questions about the course in general come to me.</span></div>
+          <div><span class="rn">Jens Pedersen<small>Teacher</small></span><span>Lectures and group work. A second voice
+              and a second pair of eyes on your code.</span></div>
+          <div><span class="rn">Teaching assistants<small>To be announced</small></span><span>In the room during
+              afternoon group work and the Wednesday TA sessions. They're who you ask first when you're stuck.</span>
+          </div>
+        </div>
+        <aside class="nt">Introduce yourself: background, what you make with code, why you teach this course. Hand over
+          to Jens for a sentence or two. TAs are still to be confirmed; tell students they'll be announced on Canvas.
+          Mention who's running the Hello World workshop straight after this.</aside>
+      </section>
+
+      <!-- 05 SHAPE -->
+      <section class="slide" id="shape" data-sec="Welcome and course overview">
+        <div class="billing">Welcome and course overview · The five weeks</div>
+        <hr class="rule">
+        <h2 class="h1">Five weeks, four modules</h2>
+        <div class="map">
+          <div><span class="wk">Week 41</span>
+            <h3>Programming fundamentals</h3>
+            <ul>
+              <li>Functions</li>
+              <li>Data</li>
+              <li>Acting out functions</li>
+            </ul>
+          </div>
+          <div><span class="wk">Week 42</span>
+            <h3>Program structure and logic</h3>
+            <ul>
+              <li>Conditionals</li>
+              <li>User input</li>
+              <li>Objects and arrays</li>
+              <li>Iteration</li>
+            </ul>
+          </div>
+          <div><span class="wk">Week 43</span>
+            <h3>Interactive systems</h3>
+            <ul>
+              <li>Processing data</li>
+              <li>Keyboards</li>
+              <li>The page and interaction</li>
+            </ul>
+          </div>
+          <div><span class="wk">Weeks 44–45</span>
+            <h3>Synthesis and examination</h3>
+            <ul>
+              <li>Prototype coaching</li>
+              <li>Your functional prototype</li>
+              <li>Oral exam</li>
+            </ul>
+          </div>
+        </div>
+        <p class="dir" style="margin-top:22px">It moves fast: a new topic most days. Keep up a little every day rather
+          than a lot at the weekend.</p>
+        <aside class="nt">The arc of the course. The first two modules overlap in the first fortnight: one building
+          block a day. Module 3 puts those blocks into interactive things in the browser. Module 4 is about your own
+          prototype and the oral exam. Point out the pace honestly; first-years who fall a day behind feel it quickly.
+          Last year's feedback: people felt others already had a background. Say clearly that the course assumes none.
+        </aside>
+      </section>
+
+      <!-- 06 A DAY -->
+      <section class="slide" id="a-day" data-sec="Welcome and course overview">
+        <div class="billing">Welcome and course overview · A typical day</div>
+        <hr class="rule">
+        <h2 class="h1">How a day runs</h2>
+        <div class="rows day">
+          <div><span class="when">Morning · 2 h</span><span class="what">Lecture<small>First the idea and where it shows
+                up in the real world, then the syntax. Slides like these, with exercises you can do on your own
+                laptop.</small></span></div>
+          <div><span class="when">Afternoon</span><span class="what">Group work<small>Exercises on the day's topic, in
+                groups, with teachers and TAs in the room. This is where most of the learning happens.</small></span>
+          </div>
+          <div><span class="when">Wednesdays</span><span class="what">TA sessions<small>Drop-in help. This week: setting
+                up VS Code, Git and GitHub Desktop.</small></span></div>
+        </div>
+        <aside class="nt">The rhythm of a normal day from tomorrow onwards. Stress that the afternoons matter more than
+          the lectures: you learn to program by writing programs, not by watching. Concept first, syntax second is
+          deliberate: you should know what a thing is for before you learn how to type it.</aside>
+      </section>
+
+      <!-- 07 ASSESSMENT -->
+      <section class="slide" id="assessment" data-sec="Welcome and course overview">
+        <div class="billing">Welcome and course overview · Assessment</div>
+        <hr class="rule">
+        <h2 class="h1" style="margin-bottom:12px">Three assessments</h2>
+        <div class="rows assess">
+          <div><span class="code">A1</span><span class="nm">Modelling<small>In groups of about four. Ends with a class
+                showcase and peer review, plus a short individual reflection.</small></span><span class="dt">Hand in Tue
+              20 Oct<span>Showcase and peer review Wed 21 Oct · reflection that day, 17:00</span></span></div>
+          <div><span class="code">A3</span><span class="nm">Functional prototype<small>A working interactive prototype,
+                built in JavaScript in the browser.</small></span><span class="dt">Due Mon 2 Nov, 17:00</span></div>
+          <div><span class="code">A2</span><span class="nm">Oral exam<small>Individual. You talk through code and
+                explain what it does, out loud.</small></span><span class="dt">Tue 3 – Thu 5 Nov</span></div>
+        </div>
+        <p class="small muted" style="margin:14px 0 0">Credits and how each part is graded: see the course syllabus on
+          Canvas.</p>
+        <aside class="nt">Listed in date order, which is why A3 comes before A2. Weights and grading scale are in the
+          course syllabus; open it on Canvas if anyone asks for specifics. A1 is in groups of about four: groups are
+          formed in the first week. Re-exam dates are on Canvas too. Reassure: the oral exam is about understanding your
+          own and given code, and the whole course rehearses explaining code out loud.</aside>
+      </section>
+
+      <!-- 08 METHOD -->
+      <section class="slide stage" id="method" data-sec="Welcome and course overview">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">Welcome and course overview · How we learn</div>
+          <h2 class="hero md">Act it out first. Then write it.</h2>
+          <p class="lede">Some days you'll be part of the program: one person follows a step, another passes along the
+            data, and the room watches what happens. Then we write the same thing in code.</p>
+        </div>
+        <aside class="nt">How the course teaches: physical, out-loud enactment alongside careful basics (syntax,
+          debugging, planning before typing). Why: programs are processes, and it's easier to understand a process
+          you've been inside. It also trains you to explain what code does out loud, which is exactly what the oral exam
+          asks. The workshop at 10:15 is the first taste of this.</aside>
+      </section>
+
+      <!-- 09 TOOLS -->
+      <section class="slide" id="tools" data-sec="Welcome and course overview">
+        <div class="billing">Welcome and course overview · Your tools</div>
+        <hr class="rule">
+        <h2 class="h1" style="margin-bottom:14px">What you'll work with</h2>
+        <div class="cols" style="grid-template-columns:1.45fr .55fr;gap:36px">
+          <div class="rows tools">
+            <div><span class="rn">A web browser</span><span>Where your JavaScript runs, and where you'll see it work (or
+                break).</span></div>
+            <div><span class="rn">VS Code</span><span>The editor you'll write code in.</span></div>
+            <div class="key"><span class="rn">Git</span><span>Keeps a history of your project: every saved version,
+                ready to go back to.</span></div>
+            <div class="key"><span class="rn">GitHub + Desktop</span><span>Stores that history online so your group can
+                share it. Desktop gives you buttons instead of commands.</span></div>
+            <div><span class="rn">Eloquent JavaScript</span><span>The course book. Free, online, with examples you can
+                run.</span></div>
+          </div>
+          <div class="stack">
+            <div class="panel">
+              <div class="bar p"><span>a project in Git</span><span>save points</span></div>
+              <div class="pbody">
+                <div class="saves">
+                  <div class="pt"><b>Mon</b>Started the page</div>
+                  <div class="lk"></div>
+                  <div class="pt"><b>Tue</b>Button works</div>
+                  <div class="lk"></div>
+                  <div class="pt"><b>Wed</b>Broke it</div>
+                </div>
+                <p class="small" style="margin:14px 0 0;line-height:1.45">Every save point has a short message. If
+                  Wednesday goes wrong, you go back to Tuesday.</p>
+              </div>
+            </div>
+            <p class="small" style="margin:0;line-height:1.45">Install all of these before Wednesday: the <b>Course
+                software</b> page on Canvas has the links. The TA session helps you set them up.</p>
+          </div>
+        </div>
+        <aside class="nt">Mirrors the Course software page on Canvas. Spend a moment on Git and GitHub: many students
+          have never used them, and A1 is group work, so you need a shared place for your code from week 1. Git keeps
+          the history; GitHub puts it online; GitHub Desktop is the app we use, so nobody has to learn the command line
+          yet. Don't demo anything today; Wednesday's TA session walks through installing and the first commit.</aside>
+      </section>
+
+      <!-- 10 WHERE IS IT -->
+      <section class="slide" id="where-is-it" data-sec="Welcome and course overview" data-ex="Where would you look?">
+        <span class="turn">Your turn</span>
+        <div class="billing">Welcome and course overview · Check</div>
+        <hr class="rule">
+        <h2 class="h1" style="margin-bottom:6px">Where would you look?</h2>
+        <p class="muted small" style="margin:0 0 10px">Pick the best place for each one.</p>
+        <div class="rows quiz" id="wq"></div>
+        <div class="row" style="margin-top:12px">
+          <div class="fb grow" id="wq-fb"></div>
+        </div>
+        <aside class="nt">A quick tour by question. Open Canvas on the projector alongside this and show each place as
+          it's answered: the modules list, the Pre-flight checklist, the Course software page, and this lecture site.
+          Students can do it on their own laptops at the same time.</aside>
+      </section>
+
+      <!-- 11 DEFINITION -->
+      <section class="slide stage" id="definition" data-sec="Introduction to programming">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">02 · Introduction to programming and JavaScript · 09:30</div>
+          <h2 class="hero md">A program is instructions a machine can follow.</h2>
+          <p class="lede">Every step spelled out, in order, with nothing left to guess. The machine does exactly what
+            you wrote, not what you meant.</p>
+        </div>
+        <aside class="nt">The one idea for this part. People fill gaps in instructions without noticing; a computer
+          never does. Most of learning to program is learning how much you normally leave out. Next slide makes that
+          concrete.</aside>
+      </section>
+
+      <!-- 12 TOO VAGUE -->
+      <section class="slide" id="too-vague" data-sec="Introduction to programming" data-ex="Too vague for a machine">
+        <span class="turn">Your turn</span>
+        <div class="billing">Introduction to programming · Precision</div>
+        <hr class="rule">
+        <h2 class="h1" style="margin-bottom:6px">Make a cup of tea</h2>
+        <p class="muted small" style="margin:0 0 10px">Clear enough for a person. Click each step to hear what a machine
+          would ask.</p>
+        <div class="rows steps" id="tv"></div>
+        <div class="row" style="margin-top:14px;align-items:stretch">
+          <div class="fb grow" id="tv-fb"></div><button class="btn ghost" id="tv-all">Show all</button><button
+            class="btn ghost" id="tv-reset">Start over</button>
+        </div>
+        <aside class="nt">Ask the room first: which step would a robot get wrong? Then click through. The point: every
+          step hides questions a person answers without thinking. A program has to answer all of them. In the workshop
+          at 10:15 you'll break a task like this into smaller and smaller steps with your bodies. (Tomorrow's Functions
+          lecture comes back to this same recipe.)</aside>
+      </section>
+
+      <!-- 13 WHY IXD -->
+      <section class="slide" id="why-ixd" data-sec="Introduction to programming">
+        <div class="billing">Introduction to programming · Why designers code</div>
+        <hr class="rule">
+        <h2 class="h1">Why interaction designers program</h2>
+        <div class="rows roles">
+          <div><span class="rn">Prototype</span><span>Try an interaction for real: does it feel right when someone
+              actually uses it? A picture can't tell you that.</span></div>
+          <div><span class="rn">Explore</span><span>Code is a material you can sketch with: change a number and see what
+              happens.</span></div>
+          <div><span class="rn">Build</span><span>The things you design (apps, installations, sensors, games) are made
+              of code.</span></div>
+          <div><span class="rn">Collaborate</span><span>Talk with developers in their terms, and know what's easy, hard
+              or impossible.</span></div>
+        </div>
+        <aside class="nt">Why this course is in an Interaction Design programme. You're not being trained as software
+          engineers; you're learning to use code as a design material. Ask: has anyone built something with code before?
+          Show one or two examples of past student prototypes if you have them.</aside>
+      </section>
+
+      <!-- 14 LAYERS -->
+      <section class="slide" id="layers" data-sec="Introduction to programming" data-demo="Three layers">
+        <span class="turn try">Try it</span>
+        <div class="billing">Introduction to programming · The web page</div>
+        <hr class="rule">
+        <h2 class="h1" style="margin-bottom:14px">Three layers of a web page</h2>
+        <div class="cols">
+          <div class="stack">
+            <div class="seg" id="ly-seg"><button class="btn ghost sel" data-l="0">HTML</button><button class="btn ghost"
+                data-l="1">+ CSS</button><button class="btn ghost" data-l="2">+ JavaScript</button></div>
+            <p class="layer-note" id="ly-note"></p>
+            <div class="fb" id="ly-fb"></div>
+          </div>
+          <div class="panel">
+            <div class="bar p"><span>a plant's web page</span><span id="ly-lbl">HTML only</span></div>
+            <div class="pv l0" id="ly-pv">
+              <div class="pg">
+                <h3>Fern</h3>
+                <p id="ly-txt">Last watered: 3 days ago</p><button id="ly-btn">I watered it</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="nt">Same page, three layers. HTML says what's there: a heading, a sentence, a button. CSS says how
+          it looks. JavaScript says what it does. Press the button in each state: with HTML only and with CSS, nothing
+          happens, because nothing has been told to happen. Only JavaScript gives it behaviour. This course is about the
+          JavaScript layer; you'll write a little HTML and CSS along the way. No code shown today on purpose.</aside>
+      </section>
+
+      <!-- 15 JAVASCRIPT -->
+      <section class="slide stage" id="javascript" data-sec="Introduction to programming">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">Introduction to programming · Our language</div>
+          <h2 class="hero md">JavaScript: the language of the browser.</h2>
+          <p class="lede">Every web browser already runs it, so there's nothing extra to install, and everything you
+            make can be opened with a link.</p>
+        </div>
+        <aside class="nt">Why JavaScript for this course: it runs everywhere, it's what makes web pages interactive, and
+          the ideas (functions, data, conditionals, loops) carry over to every other language you'll meet: Python,
+          Processing, Arduino. It also has its quirks; we'll meet them as they come up.</aside>
+      </section>
+
+      <!-- 16 RECAP -->
+      <section class="slide stage" id="recap" data-sec="Wrap-up">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">03 · Wrap-up and preview · 09:55</div>
+          <h2 class="hero md">Precise instructions, in the browser, together.</h2>
+          <div class="terms">
+            <span>program</span><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Git</span><span>Canvas</span>
+          </div>
+        </div>
+        <aside class="nt">Recap against the three objectives: how the course runs (modules, days, three assessments);
+          what a program is (instructions with nothing left to guess) and why designers write them; HTML, CSS,
+          JavaScript, and where to find things on Canvas. Quick hands-up on each.</aside>
+      </section>
+
+      <!-- 17 NEXT -->
+      <section class="slide" id="next" data-sec="Wrap-up">
+        <div class="billing">Wrap-up and preview · What's next</div>
+        <hr class="rule">
+        <h2 class="h1">The rest of this week</h2>
+        <div class="rows day">
+          <div><span class="when">Today</span><span class="what">Hello World workshop<small>Names, movement, and
+                breaking a process into steps. Morning group 10:15, afternoon group 15:15.</small></span></div>
+          <div><span class="when">Tue 6 Oct</span><span class="what">Functions<small>Lecture at 10:15, group work in the
+                afternoon. Your first lines of code.</small></span></div>
+          <div><span class="when">Before Wed</span><span class="what">Pre-flight checklist<small>On Canvas. Install VS
+                Code, Git and GitHub Desktop; bring your laptop to the TA session.</small></span></div>
+        </div>
+        <p class="small muted" style="margin:14px 0 0">Coded before? Try the optional Basic JavaScript Skills Assessment
+          quiz on Canvas to see where you stand.</p>
+        <aside class="nt">Preview the workshop: comfortable clothes, no laptops needed. Remind everyone about the
+          Pre-flight checklist; anyone who hasn't installed things by Wednesday gets help in the TA session. The skills
+          assessment is optional and only for their own information.</aside>
+      </section>
+
+      <!-- 18 RESOURCES -->
+      <section class="slide" id="resources" data-sec="Wrap-up">
+        <div class="billing">Wrap-up and preview · Resources</div>
+        <hr class="rule">
+        <h2 class="h1">Where to start reading</h2>
+        <div class="rows links">
+          <div><a href="https://mau.instructure.com/courses/22858/modules/137078" target="_blank" rel="noopener">Canvas:
+              Course introduction module</a><span class="muted">Today's slides, Pre-flight checklist, workshop
+              info</span></div>
+          <div><a href="https://mau.instructure.com/courses/22858/pages/course-software" target="_blank"
+              rel="noopener">Canvas: Course software</a><span class="muted">VS Code, Git and GitHub Desktop, with set-up
+              help</span></div>
+          <div><a href="https://eloquentjavascript.net/00_intro.html" target="_blank" rel="noopener">Eloquent
+              JavaScript: Introduction</a><span class="muted">The course book's first chapter. Read it this week.</span>
+          </div>
+          <div><a href="https://scrimba.com/learn/learnjavascript" target="_blank" rel="noopener">Scrimba: Learn
+              JavaScript</a><span class="muted">Short video lessons where you edit the code yourself</span></div>
+          <div><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noopener">MDN Web
+              Docs: JavaScript</a><span class="muted">The reference, for "how does this work?" moments</span></div>
+        </div>
+        <aside class="nt">The study material from the course plan, plus the Course software page and MDN. The Eloquent
+          JavaScript introduction is short and sets up tomorrow nicely. See you at the workshop.</aside>
+      </section>
+
     </div>
-  </div>
-  <aside class="nt">Mirrors the Course software page on Canvas. Spend a moment on Git and GitHub: many students have never used them, and A1 is group work, so you need a shared place for your code from week 1. Git keeps the history; GitHub puts it online; GitHub Desktop is the app we use, so nobody has to learn the command line yet. Don't demo anything today; Wednesday's TA session walks through installing and the first commit.</aside>
-</section>
+  </main>
 
-<!-- 10 WHERE IS IT -->
-<section class="slide" id="where-is-it" data-sec="Welcome and course overview" data-ex="Where would you look?">
-  <span class="turn">Your turn</span>
-  <div class="billing">Welcome and course overview · Check</div><hr class="rule">
-  <h2 class="h1" style="margin-bottom:6px">Where would you look?</h2>
-  <p class="muted small" style="margin:0 0 10px">Pick the best place for each one.</p>
-  <div class="rows quiz" id="wq"></div>
-  <div class="row" style="margin-top:12px"><div class="fb grow" id="wq-fb"></div></div>
-  <aside class="nt">A quick tour by question. Open Canvas on the projector alongside this and show each place as it's answered: the modules list, the Pre-flight checklist, the Course software page, and this lecture site. Students can do it on their own laptops at the same time.</aside>
-</section>
+  <script src="../shared/deck.js"></script>
+  <script>
+    (function () {
+      "use strict";
+      var D = Deck, $ = D.$, $$ = D.$$, esc = D.esc, fb = D.fb;
 
-<!-- 11 DEFINITION -->
-<section class="slide stage" id="definition" data-sec="Introduction to programming">
-  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
-  <div class="inner">
-    <div class="billing">02 · Introduction to programming and JavaScript · 09:30</div>
-    <h2 class="hero md">A program is instructions a machine can follow.</h2>
-    <p class="lede">Every step spelled out, in order, with nothing left to guess. The machine does exactly what you wrote, not what you meant.</p>
-  </div>
-  <aside class="nt">The one idea for this part. People fill gaps in instructions without noticing; a computer never does. Most of learning to program is learning how much you normally leave out. Next slide makes that concrete.</aside>
-</section>
+      /* ---------- 10 where would you look ---------- */
+      (function () {
+        var R = ["Canvas modules", "Pre-flight list", "Software page", "Lecture site"];
+        var H = [
+          "The Canvas modules hold each day's material and every assignment.",
+          "The Pre-flight checklist is the list of things to do before the course gets going.",
+          "The Course software page has the download links and set-up help for each tool.",
+          "This lecture site has every lecture's slides and exercises, ready to open on your own laptop."
+        ];
+        var Q = [
+          { t: "Where to hand in A1, and its exact deadline", a: 0 },
+          { t: "Everything you should have done before Wednesday", a: 1 },
+          { t: "How to install GitHub Desktop", a: 2 },
+          { t: "Today's slides, to click through again tonight", a: 3 },
+          { t: "The reading for tomorrow's Functions lecture", a: 0 }
+        ];
+        var box = $("#wq"), done = 0;
+        Q.forEach(function (q) {
+          var row = document.createElement("div");
+          row.innerHTML = '<div class="sc">' + esc(q.t) + '</div><div class="ch"></div>';
+          var ch = row.querySelector(".ch"), answered = false;
+          R.forEach(function (r, i) {
+            var b = document.createElement("button"); b.className = "chip"; b.textContent = r;
+            b.addEventListener("click", function () {
+              if (answered) return;
+              if (i === q.a) { b.classList.add("right"); answered = true; done++; fb($("#wq-fb"), "pass", "Right. " + H[i] + (done === Q.length ? " That's all five." : "")) }
+              else { b.classList.add("wrong"); fb($("#wq-fb"), "note", "Not quite. " + H[i] + " Is that what this one needs?") }
+            });
+            ch.appendChild(b);
+          });
+          box.appendChild(row);
+        });
+      })();
 
-<!-- 12 TOO VAGUE -->
-<section class="slide" id="too-vague" data-sec="Introduction to programming" data-ex="Too vague for a machine">
-  <span class="turn">Your turn</span>
-  <div class="billing">Introduction to programming · Precision</div><hr class="rule">
-  <h2 class="h1" style="margin-bottom:6px">Make a cup of tea</h2>
-  <p class="muted small" style="margin:0 0 10px">Clear enough for a person. Click each step to hear what a machine would ask.</p>
-  <div class="rows steps" id="tv"></div>
-  <div class="row" style="margin-top:14px;align-items:stretch"><div class="fb grow" id="tv-fb"></div><button class="btn ghost" id="tv-all">Show all</button><button class="btn ghost" id="tv-reset">Start over</button></div>
-  <aside class="nt">Ask the room first: which step would a robot get wrong? Then click through. The point: every step hides questions a person answers without thinking. A program has to answer all of them. In the workshop at 10:15 you'll break a task like this into smaller and smaller steps with your bodies. (Tomorrow's Functions lecture comes back to this same recipe.)</aside>
-</section>
+      /* ---------- 12 too vague ---------- */
+      (function () {
+        var S = [
+          ["Boil some water.", "Boil it in what? How much? How do I know when it's boiling?"],
+          ["Put a teabag in the cup.", "Which cup? Where are the teabags? Take it out of its wrapper first?"],
+          ["Pour the water in.", "Pour how much? Into the cup, or onto the teabag? Stop when?"],
+          ["Wait a bit.", "How long is a bit? Wait doing what?"],
+          ["Take it out.", "Take what out? The teabag, the water, the cup? Out to where?"]
+        ];
+        var box = $("#tv"), seen = 0;
+        function show(row, b) {
+          var a = row.querySelector(".ask"); if (!a.hidden) return;
+          a.hidden = false; b.classList.add("right"); seen++;
+          if (seen === S.length) fb($("#tv-fb"), "pass", "Five steps, more than a dozen questions. A program has to answer every one of them.");
+          else fb($("#tv-fb"), "note", seen + " of " + S.length + " steps. Keep going.");
+        }
+        S.forEach(function (s, i) {
+          var row = document.createElement("div");
+          row.innerHTML = '<span class="num">0' + (i + 1) + '</span><button class="opt">' + esc(s[0]) + '</button><span class="ask" hidden>' + esc(s[1]) + '</span>';
+          var b = row.querySelector("button");
+          b.addEventListener("click", function () { show(row, b) });
+          box.appendChild(row);
+        });
+        $("#tv-all").addEventListener("click", function () { $$("#tv>div").forEach(function (r) { show(r, r.querySelector("button")) }) });
+        $("#tv-reset").addEventListener("click", function () { seen = 0; fb($("#tv-fb")); $$("#tv .ask").forEach(function (a) { a.hidden = true }); $$("#tv .opt").forEach(function (b) { b.classList.remove("right") }) });
+      })();
 
-<!-- 13 WHY IXD -->
-<section class="slide" id="why-ixd" data-sec="Introduction to programming">
-  <div class="billing">Introduction to programming · Why designers code</div><hr class="rule">
-  <h2 class="h1">Why interaction designers program</h2>
-  <div class="rows roles">
-    <div><span class="rn">Prototype</span><span>Try an interaction for real: does it feel right when someone actually uses it? A picture can't tell you that.</span></div>
-    <div><span class="rn">Explore</span><span>Code is a material you can sketch with: change a number and see what happens.</span></div>
-    <div><span class="rn">Build</span><span>The things you design (apps, installations, sensors, games) are made of code.</span></div>
-    <div><span class="rn">Collaborate</span><span>Talk with developers in their terms, and know what's easy, hard or impossible.</span></div>
-  </div>
-  <aside class="nt">Why this course is in an Interaction Design programme. You're not being trained as software engineers; you're learning to use code as a design material. Ask: has anyone built something with code before? Show one or two examples of past student prototypes if you have them.</aside>
-</section>
+      /* ---------- 14 three layers ---------- */
+      (function () {
+        var L = [
+          { lbl: "HTML only", note: "<b>HTML</b> says what's on the page: a heading, a sentence, a button. It's the structure. The browser draws it with its plain default look." },
+          { lbl: "HTML + CSS", note: "<b>CSS</b> says how it looks: fonts, colours, spacing, borders. Same heading, sentence and button, now designed." },
+          { lbl: "HTML + CSS + JavaScript", note: "<b>JavaScript</b> says what it does. Now the button can change the page. This layer is what the course is about." }
+        ];
+        var cur = 0, times = 0;
+        function set(l) {
+          cur = l;
+          $("#ly-pv").className = "pv l" + l;
+          $("#ly-lbl").textContent = L[l].lbl;
+          $("#ly-note").innerHTML = L[l].note;
+          $$("#ly-seg .btn").forEach(function (b) { b.classList.toggle("sel", +b.dataset.l === l) });
+          if (l < 2) { times = 0; $("#ly-txt").textContent = "Last watered: 3 days ago" }
+          fb($("#ly-fb"));
+        }
+        $$("#ly-seg .btn").forEach(function (b) { b.addEventListener("click", function () { set(+b.dataset.l) }) });
+        $("#ly-btn").addEventListener("click", function () {
+          if (cur < 2) { fb($("#ly-fb"), "note", "Nothing happened. The page knows there's a button, but nothing tells it what to do when pressed. Try adding JavaScript."); return }
+          times++;
+          var t = $("#ly-txt"); t.textContent = "Last watered: just now" + (times > 1 ? " (that's " + times + " times today, careful)" : "");
+          t.classList.remove("flashbg"); void t.offsetWidth; t.classList.add("flashbg");
+          fb($("#ly-fb"), "pass", "The page changed because a few lines of JavaScript were listening for the press. You'll write lines like that this week.");
+        });
+        set(0);
+      })();
 
-<!-- 14 LAYERS -->
-<section class="slide" id="layers" data-sec="Introduction to programming" data-demo="Three layers">
-  <span class="turn try">Try it</span>
-  <div class="billing">Introduction to programming · The web page</div><hr class="rule">
-  <h2 class="h1" style="margin-bottom:14px">Three layers of a web page</h2>
-  <div class="cols">
-    <div class="stack">
-      <div class="seg" id="ly-seg"><button class="btn ghost sel" data-l="0">HTML</button><button class="btn ghost" data-l="1">+ CSS</button><button class="btn ghost" data-l="2">+ JavaScript</button></div>
-      <p class="layer-note" id="ly-note"></p>
-      <div class="fb" id="ly-fb"></div>
-    </div>
-    <div class="panel"><div class="bar p"><span>a plant's web page</span><span id="ly-lbl">HTML only</span></div>
-      <div class="pv l0" id="ly-pv"><div class="pg"><h3>Fern</h3><p id="ly-txt">Last watered: 3 days ago</p><button id="ly-btn">I watered it</button></div></div>
-    </div>
-  </div>
-  <aside class="nt">Same page, three layers. HTML says what's there: a heading, a sentence, a button. CSS says how it looks. JavaScript says what it does. Press the button in each state: with HTML only and with CSS, nothing happens, because nothing has been told to happen. Only JavaScript gives it behaviour. This course is about the JavaScript layer; you'll write a little HTML and CSS along the way. No code shown today on purpose.</aside>
-</section>
-
-<!-- 15 JAVASCRIPT -->
-<section class="slide stage" id="javascript" data-sec="Introduction to programming">
-  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
-  <div class="inner">
-    <div class="billing">Introduction to programming · Our language</div>
-    <h2 class="hero md">JavaScript: the language of the browser.</h2>
-    <p class="lede">Every web browser already runs it, so there's nothing extra to install, and everything you make can be opened with a link.</p>
-  </div>
-  <aside class="nt">Why JavaScript for this course: it runs everywhere, it's what makes web pages interactive, and the ideas (functions, data, conditionals, loops) carry over to every other language you'll meet: Python, Processing, Arduino. It also has its quirks; we'll meet them as they come up.</aside>
-</section>
-
-<!-- 16 RECAP -->
-<section class="slide stage" id="recap" data-sec="Wrap-up">
-  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
-  <div class="inner">
-    <div class="billing">03 · Wrap-up and preview · 09:55</div>
-    <h2 class="hero md">Precise instructions, in the browser, together.</h2>
-    <div class="terms"><span>program</span><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Git</span><span>Canvas</span></div>
-  </div>
-  <aside class="nt">Recap against the three objectives: how the course runs (modules, days, three assessments); what a program is (instructions with nothing left to guess) and why designers write them; HTML, CSS, JavaScript, and where to find things on Canvas. Quick hands-up on each.</aside>
-</section>
-
-<!-- 17 NEXT -->
-<section class="slide" id="next" data-sec="Wrap-up">
-  <div class="billing">Wrap-up and preview · What's next</div><hr class="rule">
-  <h2 class="h1">The rest of this week</h2>
-  <div class="rows day">
-    <div><span class="when">Today</span><span class="what">Hello World workshop<small>Names, movement, and breaking a process into steps. Morning group 10:15, afternoon group 15:15.</small></span></div>
-    <div><span class="when">Tue 6 Oct</span><span class="what">Functions<small>Lecture at 10:15, group work in the afternoon. Your first lines of code.</small></span></div>
-    <div><span class="when">Before Wed</span><span class="what">Pre-flight checklist<small>On Canvas. Install VS Code, Git and GitHub Desktop; bring your laptop to the TA session.</small></span></div>
-  </div>
-  <p class="small muted" style="margin:14px 0 0">Coded before? Try the optional Basic JavaScript Skills Assessment quiz on Canvas to see where you stand.</p>
-  <aside class="nt">Preview the workshop: comfortable clothes, no laptops needed. Remind everyone about the Pre-flight checklist; anyone who hasn't installed things by Wednesday gets help in the TA session. The skills assessment is optional and only for their own information.</aside>
-</section>
-
-<!-- 18 RESOURCES -->
-<section class="slide" id="resources" data-sec="Wrap-up">
-  <div class="billing">Wrap-up and preview · Resources</div><hr class="rule">
-  <h2 class="h1">Where to start reading</h2>
-  <div class="rows links">
-    <div><a href="https://mau.instructure.com/courses/22858/modules/137078" target="_blank" rel="noopener">Canvas: Course introduction module</a><span class="muted">Today's slides, Pre-flight checklist, workshop info</span></div>
-    <div><a href="https://mau.instructure.com/courses/22858/pages/course-software" target="_blank" rel="noopener">Canvas: Course software</a><span class="muted">VS Code, Git and GitHub Desktop, with set-up help</span></div>
-    <div><a href="https://eloquentjavascript.net/00_intro.html" target="_blank" rel="noopener">Eloquent JavaScript: Introduction</a><span class="muted">The course book's first chapter. Read it this week.</span></div>
-    <div><a href="https://scrimba.com/learn/learnjavascript" target="_blank" rel="noopener">Scrimba: Learn JavaScript</a><span class="muted">Short video lessons where you edit the code yourself</span></div>
-    <div><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noopener">MDN Web Docs: JavaScript</a><span class="muted">The reference, for "how does this work?" moments</span></div>
-  </div>
-  <aside class="nt">The study material from the course plan, plus the Course software page and MDN. The Eloquent JavaScript introduction is short and sets up tomorrow nicely. See you at the workshop.</aside>
-</section>
-
-</div>
-</main>
-
-<script src="../shared/deck.js"></script>
-<script>
-(function(){
-"use strict";
-var D=Deck,$=D.$,$$=D.$$,esc=D.esc,fb=D.fb;
-
-/* ---------- 10 where would you look ---------- */
-(function(){
-  var R=["Canvas modules","Pre-flight list","Software page","Lecture site"];
-  var H=[
-    "The Canvas modules hold each day's material and every assignment.",
-    "The Pre-flight checklist is the list of things to do before the course gets going.",
-    "The Course software page has the download links and set-up help for each tool.",
-    "This lecture site has every lecture's slides and exercises, ready to open on your own laptop."
-  ];
-  var Q=[
-    {t:"Where to hand in A1, and its exact deadline",a:0},
-    {t:"Everything you should have done before Wednesday",a:1},
-    {t:"How to install GitHub Desktop",a:2},
-    {t:"Today's slides, to click through again tonight",a:3},
-    {t:"The reading for tomorrow's Functions lecture",a:0}
-  ];
-  var box=$("#wq"),done=0;
-  Q.forEach(function(q){
-    var row=document.createElement("div");
-    row.innerHTML='<div class="sc">'+esc(q.t)+'</div><div class="ch"></div>';
-    var ch=row.querySelector(".ch"),answered=false;
-    R.forEach(function(r,i){
-      var b=document.createElement("button");b.className="chip";b.textContent=r;
-      b.addEventListener("click",function(){
-        if(answered)return;
-        if(i===q.a){b.classList.add("right");answered=true;done++;fb($("#wq-fb"),"pass","Right. "+H[i]+(done===Q.length?" That's all five.":""))}
-        else{b.classList.add("wrong");fb($("#wq-fb"),"note","Not quite. "+H[i]+" Is that what this one needs?")}
-      });
-      ch.appendChild(b);
-    });
-    box.appendChild(row);
-  });
-})();
-
-/* ---------- 12 too vague ---------- */
-(function(){
-  var S=[
-    ["Boil some water.","Boil it in what? How much? How do I know when it's boiling?"],
-    ["Put a teabag in the cup.","Which cup? Where are the teabags? Take it out of its wrapper first?"],
-    ["Pour the water in.","Pour how much? Into the cup, or onto the teabag? Stop when?"],
-    ["Wait a bit.","How long is a bit? Wait doing what?"],
-    ["Take it out.","Take what out? The teabag, the water, the cup? Out to where?"]
-  ];
-  var box=$("#tv"),seen=0;
-  function show(row,b){
-    var a=row.querySelector(".ask");if(!a.hidden)return;
-    a.hidden=false;b.classList.add("right");seen++;
-    if(seen===S.length)fb($("#tv-fb"),"pass","Five steps, more than a dozen questions. A program has to answer every one of them.");
-    else fb($("#tv-fb"),"note",seen+" of "+S.length+" steps. Keep going.");
-  }
-  S.forEach(function(s,i){
-    var row=document.createElement("div");
-    row.innerHTML='<span class="num">0'+(i+1)+'</span><button class="opt">'+esc(s[0])+'</button><span class="ask" hidden>'+esc(s[1])+'</span>';
-    var b=row.querySelector("button");
-    b.addEventListener("click",function(){show(row,b)});
-    box.appendChild(row);
-  });
-  $("#tv-all").addEventListener("click",function(){$$("#tv>div").forEach(function(r){show(r,r.querySelector("button"))})});
-  $("#tv-reset").addEventListener("click",function(){seen=0;fb($("#tv-fb"));$$("#tv .ask").forEach(function(a){a.hidden=true});$$("#tv .opt").forEach(function(b){b.classList.remove("right")})});
-})();
-
-/* ---------- 14 three layers ---------- */
-(function(){
-  var L=[
-    {lbl:"HTML only",note:"<b>HTML</b> says what's on the page: a heading, a sentence, a button. It's the structure. The browser draws it with its plain default look."},
-    {lbl:"HTML + CSS",note:"<b>CSS</b> says how it looks: fonts, colours, spacing, borders. Same heading, sentence and button, now designed."},
-    {lbl:"HTML + CSS + JavaScript",note:"<b>JavaScript</b> says what it does. Now the button can change the page. This layer is what the course is about."}
-  ];
-  var cur=0,times=0;
-  function set(l){
-    cur=l;
-    $("#ly-pv").className="pv l"+l;
-    $("#ly-lbl").textContent=L[l].lbl;
-    $("#ly-note").innerHTML=L[l].note;
-    $$("#ly-seg .btn").forEach(function(b){b.classList.toggle("sel",+b.dataset.l===l)});
-    if(l<2){times=0;$("#ly-txt").textContent="Last watered: 3 days ago"}
-    fb($("#ly-fb"));
-  }
-  $$("#ly-seg .btn").forEach(function(b){b.addEventListener("click",function(){set(+b.dataset.l)})});
-  $("#ly-btn").addEventListener("click",function(){
-    if(cur<2){fb($("#ly-fb"),"note","Nothing happened. The page knows there's a button, but nothing tells it what to do when pressed. Try adding JavaScript.");return}
-    times++;
-    var t=$("#ly-txt");t.textContent="Last watered: just now"+(times>1?" (that's "+times+" times today, careful)":"");
-    t.classList.remove("flashbg");void t.offsetWidth;t.classList.add("flashbg");
-    fb($("#ly-fb"),"pass","The page changed because a few lines of JavaScript were listening for the press. You'll write lines like that this week.");
-  });
-  set(0);
-})();
-
-})();
-</script>
+    })();
+  </script>
 </body>
+
 </html>
