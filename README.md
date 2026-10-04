@@ -82,9 +82,9 @@ fallback interpreter only loads over http.)
 Every push to `main` is copied to the `gh-pages` branch by `.github/workflows/deploy.yml`, and GitHub
 Pages serves that branch. The `.nojekyll` file makes GitHub serve the files as they are.
 
-Repository settings this needs (once):
-- Settings → Pages → Deploy from a branch → `gh-pages` / `(root)`.
-- Settings → Actions → General → Workflow permissions → Read and write permissions.
+Repository setting this needs (once): Settings → Pages → Deploy from a branch → `gh-pages` / `(root)`.
+Both workflows ask for write access in their own `permissions:` block, so the repository's default
+workflow permissions (set by the IDBCourses organisation) can stay read-only.
 
 ### PR previews
 
