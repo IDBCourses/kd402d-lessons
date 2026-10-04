@@ -79,7 +79,18 @@ fallback interpreter only loads over http.)
 
 ## Publishing on GitHub Pages
 
-Push to `main`, then in the repository: Settings → Pages → Deploy from a branch → `main` / `(root)`.
-The `.nojekyll` file makes GitHub serve the files as they are.
+Every push to `main` is copied to the `gh-pages` branch by `.github/workflows/deploy.yml`, and GitHub
+Pages serves that branch. The `.nojekyll` file makes GitHub serve the files as they are.
+
+Repository setting this needs (once): Settings → Pages → Deploy from a branch → `gh-pages` / `(root)`.
+Both workflows ask for write access in their own `permissions:` block, so the repository's default
+workflow permissions (set by the IDBCourses organisation) can stay read-only.
+
+### PR previews
+
+Every pull request is published to `https://<site>/pr-preview/pr-<number>/` by
+`.github/workflows/preview.yml`, which comments the link (with a QR code) on the PR and updates it on each
+push. The preview is deleted when the PR is merged or closed. Previews share the live site's origin, so a
+preview sees the same saved workspace as the live decks in that browser.
 
 At the end of a term, tag it (`git tag ht26`) so that run can always be recovered.
