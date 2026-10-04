@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KD402D Programming · HT2026</title>
+<link rel="stylesheet" href="shared/tokens.css">
+<style>
+body{margin:0;background:var(--paper-100);color:var(--ink-700);font-family:var(--font-ui);font-size:18px;line-height:1.55}
+a{color:var(--curtain-600);text-decoration-thickness:1.5px;text-underline-offset:3px}
+a:hover{color:var(--curtain-700);text-decoration-thickness:3px}
+:focus-visible{outline:2px solid var(--curtain-600);outline-offset:2px}
+.band{position:relative;overflow:hidden;background:var(--blue-600);color:var(--paper-100);padding:72px 24px 64px}
+.band .beam{position:absolute;top:-80px;height:200%;transform:rotate(12deg);pointer-events:none}
+.band .y{left:70%;width:220px;background:var(--spot-400)}
+.band .m{left:90%;width:90px;background:var(--curtain-500)}
+.band .scan{position:absolute;inset:0;background:repeating-linear-gradient(180deg,rgba(11,11,82,.10) 0 2px,transparent 2px 5px);pointer-events:none}
+.wrap{max-width:1100px;margin:0 auto;position:relative}
+.billing{font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;color:var(--ink-500)}
+.band .billing{color:var(--spot-400)}
+h1{font-family:var(--font-display);font-weight:700;font-size:clamp(54px,9vw,96px);line-height:.95;letter-spacing:-.045em;color:var(--paper-000);margin:16px 0 0;text-shadow:6px 6px 0 var(--curtain-500);max-width:12ch}
+.band p{font-size:21px;color:var(--paper-300);max-width:44ch;margin:24px 0 0}
+main{padding:48px 24px 72px}
+h2{font-family:var(--font-display);font-weight:700;font-size:38px;letter-spacing:-.03em;color:var(--ink-900);margin:0 0 18px}
+.rule{border:0;border-top:1px solid var(--ink-900);margin:12px 0 22px}
+.lectures{list-style:none;margin:-10px 0 56px;padding:0}
+.lectures li{display:grid;grid-template-columns:80px 1fr auto;gap:8px 24px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--paper-300)}
+.wk{font-family:var(--font-display);font-weight:700;font-size:38px;line-height:1;color:var(--paper-400);letter-spacing:-.03em}
+.lectures a.t{font-family:var(--font-display);font-weight:700;font-size:28px;letter-spacing:-.02em;color:var(--ink-900);text-decoration:none}
+.lectures a.t:hover{color:var(--curtain-600)}
+.lectures p{margin:4px 0 0;color:var(--ink-700);max-width:60ch}
+.when{font-family:var(--font-mono);font-size:15px;color:var(--ink-500);white-space:nowrap}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+.cols ul{margin:0;padding-left:20px}
+.cols li{margin:4px 0}
+kbd{font-family:var(--font-mono);font-size:14px;border:2px solid var(--ink-900);border-radius:2px;padding:1px 6px;background:var(--paper-000);color:var(--ink-900)}
+@media (max-width:720px){.lectures li{grid-template-columns:56px 1fr}.when{grid-column:2}.cols{grid-template-columns:1fr}.wk{font-size:30px}}
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="wrap">
+    <div class="billing">KD402D · Malmö University · Autumn 2026</div>
+    <h1>Programming</h1>
+    <p>Lecture slides and in-class exercises. Everything runs in your browser; your code is saved on this computer.</p>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <div class="billing">Lectures</div><hr class="rule">
+    <!-- One <li> per lecture, in course order. Folder name = lecture name. -->
+    <ol class="lectures">
+      <li>
+        <span class="wk">41</span>
+        <div><a class="t" href="functions/">Functions</a><p>What functions are for, playing one out loud, and writing your own.</p></div>
+        <span class="when">Tue 6 Oct</span>
+      </li>
+    </ol>
+
+    <div class="cols">
+      <section>
+        <div class="billing">Using the slides</div><hr class="rule">
+        <ul>
+          <li><kbd>←</kbd> <kbd>→</kbd> move between slides</li>
+          <li><kbd>E</kbd> jumps to the next exercise</li>
+          <li><kbd>W</kbd> opens the workspace, where you write and run code</li>
+          <li><kbd>I</kbd> shows every slide in the lecture</li>
+        </ul>
+      </section>
+      <section>
+        <div class="billing">Course links</div><hr class="rule">
+        <ul>
+          <li><a href="https://mau.instructure.com/courses/22858">Canvas: KD402D Programming</a></li>
+          <li><a href="https://eloquentjavascript.net/">Eloquent JavaScript</a></li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</main>
+</body>
+</html>
