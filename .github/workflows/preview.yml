@@ -1,0 +1,36 @@
+# Publishes each pull request to <site>/pr-preview/pr-<number>/ on the gh-pages
+# branch and comments the link on the PR. The preview is removed when the PR closes.
+name: Deploy PR preview
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency: preview-${{ github.ref }}
+
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Collect site files
+        if: github.event.action != 'closed'
+        run: |
+          mkdir _site
+          rsync -a --exclude .git --exclude .github --exclude .claude --exclude _site ./ _site/
+
+      - uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: _site
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          qr-code: true
