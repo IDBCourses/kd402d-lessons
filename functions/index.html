@@ -142,97 +142,97 @@
   <div class="billing">Scene 02 · What functions are for · 10:25</div><hr class="rule">
   <h2 class="h1">Five jobs a function does</h2>
   <div class="rows roles">
-    <div><span class="rn">Packaging</span><span>One name for a sequence of steps, so you can think of it as one thing.</span><span class="an">A recipe</span></div>
-    <div><span class="rn">Reuse</span><span>Write it once, call it as often as you need.</span><span class="an">The same recipe, every Sunday</span></div>
-    <div><span class="rn">Abstraction</span><span>Callers know <em>what</em> it does, not <em>how</em>.</span><span class="an">A coffee machine</span></div>
-    <div><span class="rn">Transformation</span><span>Data goes in, a result comes out.</span><span class="an">A vending machine</span></div>
-    <div><span class="rn">Organisation</span><span>Break a big problem into smaller, named pieces.</span><span class="an">Handing a task to someone by name</span></div>
+    <div><span class="rn">Packaging</span><span>One name for a sequence of steps, so you can think of it as one thing.</span><span class="an">"Chop the onion"</span></div>
+    <div><span class="rn">Reuse</span><span>Write it once, call it as often as you need.</span><span class="an">Soup, salsa, curry: same onion</span></div>
+    <div><span class="rn">Abstraction</span><span>Callers know <em>what</em> it does, not <em>how</em>.</span><span class="an">"A chopped onion, please"</span></div>
+    <div><span class="rn">Transformation</span><span>Data goes in, a result comes out.</span><span class="an">Whole onions in, pieces out</span></div>
+    <div><span class="rn">Organisation</span><span>Break a big problem into smaller, named pieces.</span><span class="an">"Kim, you chop the onions"</span></div>
   </div>
-  <aside class="nt">Overview before any syntax. One function often does several of these jobs at once. The next five slides take them one at a time, each with something to poke at.</aside>
+  <aside class="nt">Overview before any syntax. Every example today is the onion from the drama workshop, so they already have it in their hands (and eyes). One function often does several of these jobs at once. The next five slides take them one at a time, each with something to poke at.</aside>
 </section>
 
 <!-- 07 PACKAGING -->
 <section class="slide" id="packaging" data-sec="What functions are for" data-demo="Package the recipe">
   <span class="turn try">Try it</span>
   <div class="billing">What functions are for · Packaging</div><hr class="rule">
-  <h2 class="h1">Packaging: the recipe</h2>
+  <h2 class="h1">Packaging: chop the onion</h2>
   <div class="cols wide-r">
     <div class="stack">
-      <p class="lede">A recipe is a list of steps with a name on top. You don't say "boil the water, put a teabag in the cup, pour…". You say "make tea".</p>
+      <p class="lede">In the workshop you broke chopping an onion into steps. Nobody in a kitchen says "cut off the top, halve it, peel it…". They say "chop the onion".</p>
       <p class="dir">Once the steps have a name, you can stop thinking about them.</p>
       <div><button class="btn" id="pack-go">Package it</button></div>
     </div>
-    <div class="panel"><div class="bar y"><span>a recipe</span><span id="pack-lbl">five loose steps</span></div><div id="pack-box" style="min-height:290px"></div></div>
+    <div class="panel"><div class="bar y"><span>chopping an onion</span><span id="pack-lbl">five loose steps</span></div><div id="pack-box" style="min-height:290px"></div></div>
   </div>
-  <aside class="nt">Toggle between the loose steps and the packaged version. Point out that each step could itself be a packaged recipe ("boil the water" hides a lot): functions are built out of functions.</aside>
+  <aside class="nt">These are the five steps from the drama workshop. Toggle between the loose steps and the packaged version. Ask: in the workshop, when you broke one step into five more, what were you doing? Unpacking a name. Each step here is itself a package ("slice each half" hides a lot of knife-work): functions are built out of functions. If the room forgot to peel the onion, this is a good moment to bring it back: the name only works if the steps inside are complete.</aside>
 </section>
 
 
-<!-- 08 REUSE UI -->
-<section class="slide" id="reuse" data-sec="What functions are for" data-demo="formatTime everywhere">
+<!-- 08 REUSE -->
+<section class="slide" id="reuse" data-sec="What functions are for" data-demo="One onion, every recipe">
   <span class="turn try">Try it</span>
   <div class="billing">What functions are for · Reuse</div><hr class="rule">
-  <h2 class="h1">Reuse: one function, every timestamp</h2>
+  <h2 class="h1">Reuse: one onion, every recipe</h2>
   <div class="cols">
-    <div class="panel chat"><div class="bar p"><span>Group chat · Studio 3</span><span>3 messages</span></div>
-      <div class="msg"><span class="av" style="background:var(--cyan-400)">N</span><div><div class="who">Noor</div><div class="txt">Who has the HDMI adapter?</div></div><span class="when" data-min="35"></span></div>
-      <div class="msg"><span class="av" style="background:var(--spot-400)">S</span><div><div class="who">Sam</div><div class="txt">Room B2 is locked again.</div></div><span class="when" data-min="28"></span></div>
-      <div class="msg"><span class="av" style="background:var(--curtain-500)">E</span><div><div class="who">Elif</div><div class="txt">Found a key. Come in.</div></div><span class="when" data-min="10"></span></div>
+    <div class="panel chat"><div class="bar p"><span>Tonight's menu</span><span>3 recipes</span></div>
+      <div class="msg"><span class="av" style="background:var(--cyan-400)">OS</span><div><div class="who">Onion soup</div><div class="txt">Step 1: chop the onion. Fry it slowly.</div></div><span class="when"></span></div>
+      <div class="msg"><span class="av" style="background:var(--spot-400)">S</span><div><div class="who">Salsa</div><div class="txt">Step 1: chop the onion. Mix with tomato.</div></div><span class="when"></span></div>
+      <div class="msg"><span class="av" style="background:var(--curtain-500)">C</span><div><div class="who">Curry</div><div class="txt">Step 1: chop the onion. Fry with spices.</div></div><span class="when"></span></div>
     </div>
     <div class="stack">
-      <div class="seg" role="group" aria-label="Time format">
-        <button class="btn ghost sel" data-fmt="h24">24-hour</button><button class="btn ghost" data-fmt="h12">12-hour</button><button class="btn ghost" data-fmt="rel">Relative</button>
+      <div class="seg" role="group" aria-label="How to chop">
+        <button class="btn ghost sel" data-fmt="dice">Diced</button><button class="btn ghost" data-fmt="slice">Sliced</button><button class="btn ghost" data-fmt="mince">Minced</button>
       </div>
-      <div class="panel"><div class="bar p"><span>one rule, written once</span><span>used 3 times</span></div><div class="named" id="fmt-rule"><div class="nm">Format the time</div><div class="rl" id="fmt-text"></div></div></div>
-      <p class="dir">Change the rule once and every place that uses it follows.</p>
+      <div class="panel"><div class="bar p"><span>one way to chop, written once</span><span>used 3 times</span></div><div class="named" id="fmt-rule"><div class="nm">Chop the onion</div><div class="rl" id="fmt-text"></div></div></div>
+      <p class="dir">Change the chopping once and every recipe that uses it follows.</p>
     </div>
   </div>
-  <aside class="nt">An interaction design example: the same bit of interface logic, used in many places. Ask: if each message had its own copy of the formatting rule, how many edits for each style change? Other everyday candidates: validate this input, format this price, pick the initials for an avatar.</aside>
+  <aside class="nt">Every recipe on the menu starts with the same job the room acted out in the workshop. None of them spells out the knife-work again; each one says "chop the onion". Switch the cut and all three follow. Ask: if each recipe had its own copy of the chopping steps, how many edits to change the cut? And if you fixed the "forgot to peel it" bug, how many places would you have to fix it? Link back to interaction design: the same goes for a rule like "format this time" or "check this email address", used all over an interface.</aside>
 </section>
 
 <!-- 09 ABSTRACTION -->
-<section class="slide" id="abstraction" data-sec="What functions are for" data-demo="Coffee machine">
+<section class="slide" id="abstraction" data-sec="What functions are for" data-demo="Ask the kitchen">
   <span class="turn try">Try it</span>
   <div class="billing">What functions are for · Abstraction</div><hr class="rule">
-  <h2 class="h1">Abstraction: press the button</h2>
+  <h2 class="h1">Abstraction: ask for it chopped</h2>
   <div class="cols">
-    <div class="panel"><div class="bar y"><span>the coffee machine</span><span>press a button</span></div>
+    <div class="panel"><div class="bar y"><span>the kitchen</span><span>ask for an onion</span></div>
       <div class="pbody stack">
-        <div class="row"><button class="btn cy" data-drink="espresso">Espresso</button><button class="btn cy" data-drink="latte">Latte</button><button class="btn cy" data-drink="cortado">Cortado</button></div>
+        <div class="row"><button class="btn cy" data-drink="diced">Diced</button><button class="btn cy" data-drink="sliced">Sliced</button><button class="btn cy" data-drink="minced">Minced</button></div>
         <div class="small muted">You asked for</div>
         <div id="cof-call" style="font-size:24px;color:var(--ink-900)">…</div>
         <div class="small muted">You get back</div>
         <div class="out-big" id="cof-out">&nbsp;</div>
       </div>
     </div>
-    <div class="panel"><div class="bar p"><span>inside the machine</span><span id="cof-state">panel on</span></div>
-      <div class="cover" id="cof-cover"><div><p>You don't need to see in here to get coffee.</p><button class="btn ghost" id="cof-open">Take the side panel off</button></div></div>
+    <div class="panel"><div class="bar p"><span>inside the kitchen</span><span id="cof-state">door closed</span></div>
+      <div class="cover" id="cof-cover"><div><p>You don't need to watch the knife-work to get a chopped onion.</p><button class="btn ghost" id="cof-open">Open the kitchen door</button></div></div>
       <ol class="plain" id="cof-code" hidden></ol>
     </div>
   </div>
-  <aside class="nt">Press a drink: you ask for something by name, hand over your choice, and get something back. You never saw grinding or brewing. Then take the side panel off: the details are there, but the caller doesn't depend on them. If the machine gets a new grinder, nobody pressing the button needs to change anything.</aside>
+  <aside class="nt">Press a cut: you ask for something by name, hand over your choice, and get something back. You never saw the peeling or the knife. Then open the kitchen door: the steps from the workshop are all there, but whoever asked doesn't depend on them. If the cook gets a sharper knife or a new way to stop crying, nobody asking for onions needs to change anything.</aside>
 </section>
 
 <!-- 10 MYSTERY MACHINE -->
 <section class="slide" id="machine" data-sec="What functions are for" data-ex="Mystery machine">
   <span class="turn">Your turn</span>
   <div class="billing">What functions are for · Transformation</div><hr class="rule">
-  <h2 class="h1">What does the machine do?</h2>
+  <h2 class="h1">What does the chopper do?</h2>
   <div class="cols">
-    <div class="panel"><div class="bar y"><span>the mystery machine</span><span id="mm-count">0 tries</span></div>
+    <div class="panel"><div class="bar y"><span>the mystery chopper</span><span id="mm-count">0 tries</span></div>
       <div class="pbody stack">
-        <div class="row"><label class="f grow">A number to put in<input class="t" id="mm-in" type="number" value="3"></label><button class="btn" id="mm-feed" style="align-self:flex-end">Put it in</button></div>
-        <div style="max-height:212px;overflow:auto"><table class="io"><thead><tr><th>Put in</th><th>Got back</th></tr></thead><tbody id="mm-rows"><tr><td colspan="2" class="muted" style="font-family:var(--font-ui);font-size:16px">Nothing put in yet. Try 0, 1 and 10.</td></tr></tbody></table></div>
+        <div class="row"><label class="f grow">Onions to put in<input class="t" id="mm-in" type="number" min="0" step="1" value="3"></label><button class="btn" id="mm-feed" style="align-self:flex-end">Put it in</button></div>
+        <div style="max-height:212px;overflow:auto"><table class="io"><thead><tr><th>Onions in</th><th>Pieces out</th></tr></thead><tbody id="mm-rows"><tr><td colspan="2" class="muted" style="font-family:var(--font-ui);font-size:16px">Nothing put in yet. Try 0, 1 and 10.</td></tr></tbody></table></div>
       </div>
     </div>
     <div class="stack">
-      <p style="margin:0;font-size:19px">What is it doing to your number? Try a few before you guess.</p>
+      <p style="margin:0;font-size:19px">What is it doing to your onions? Try a few before you guess.</p>
       <div class="stack" id="mm-opts" style="gap:8px"></div>
       <div class="fb" id="mm-fb"></div>
-      <div><button class="btn ghost" id="mm-new">New machine</button></div>
+      <div><button class="btn ghost" id="mm-new">New chopper</button></div>
     </div>
   </div>
-  <aside class="nt">Transformation: data in, result out, like a vending machine taking a selection and dispensing an item. The inside is hidden; you can only learn what it does by trying it. Get the room to shout out arguments. Good strategy question: which inputs tell you the most? (0 and 1 are very informative.)</aside>
+  <aside class="nt">Transformation: data in, result out. Whole onions go in, pieces come out. The inside is hidden; you can only learn what it does by trying it. Get the room to shout out how many onions to put in. Good strategy question: which inputs tell you the most? (0 and 1 are very informative: 0 onions tells you whether there were pieces on the board already.)</aside>
 </section>
 
 <!-- 11 ORGANISATION -->
@@ -242,13 +242,13 @@
   <h2 class="h1">Organisation: delegate by name</h2>
   <div class="cols wide-r">
     <div class="stack">
-      <p class="lede">A whole course page is too much to hold in your head at once. Split it into pieces, name each piece, and hand it off.</p>
+      <p class="lede">A whole dinner is too much to hold in your head at once. Split it into pieces, name each piece, and hand it off.</p>
       <p class="dir">Each name is a promise: "someone will take care of this."</p>
       <div class="row"><button class="btn" id="org-go">Delegate the next piece</button><button class="btn ghost" id="org-reset">Start over</button></div>
     </div>
     <div class="panel"><div class="bar p"><span>the plan</span><span id="org-lbl">one big job</span></div><div id="org-code" style="min-height:300px"></div></div>
   </div>
-  <aside class="nt">Like asking someone by name to take a task: "Sam, can you do the deadlines?" Each named piece is small enough to write, test and fix on its own. Blocking (a.k.a. planning your program) often starts exactly like this: name the pieces first, work out each one later.</aside>
+  <aside class="nt">Like asking someone by name to take a task: "Kim, can you chop the onions?" In the workshop you went down a level: one step of chopping became five more. This goes up a level: chopping the onion is one named piece of a bigger job. Each named piece is small enough to do, check and fix on its own. Blocking (a.k.a. planning your program) often starts exactly like this: name the pieces first, work out each one later.</aside>
 </section>
 
 <!-- 12 ROLES QUIZ -->
@@ -596,13 +596,13 @@ var sget=D.store.get,sset=D.store.set;
 
 /* ---------- 07 packaging ---------- */
 (function(){
-  var steps=["Boil the water","Put a teabag in the cup","Pour the water","Wait three minutes","Take out the teabag"],on=false;
+  var steps=["Cut off the top","Halve it through the root","Peel off the skin","Slice each half","Cut across the slices"],on=false;
   function render(){
     $("#pack-box").innerHTML=on
-      ?'<div class="named flashbg"><div class="nm">Make tea</div><div class="rl">Inside: '+steps.map(function(x){return x.toLowerCase()}).join(", ")+'.</div></div><p style="margin:6px 18px 16px;font-size:20px">Now one instruction does all five: <b>Make tea.</b></p>'
+      ?'<div class="named flashbg"><div class="nm">Chop the onion</div><div class="rl">Inside: '+steps.map(function(x){return x.toLowerCase()}).join(", ")+'.</div></div><p style="margin:6px 18px 16px;font-size:20px">Now one instruction does all five: <b>Chop the onion.</b></p>'
       :'<ol class="plain">'+steps.map(function(x){return "<li>"+x+"</li>"}).join("")+'</ol>';
     $("#pack-go").textContent=on?"Unpack it":"Package it";
-    $("#pack-lbl").textContent=on?"one name: make tea":"five loose steps";
+    $("#pack-lbl").textContent=on?"one name: chop the onion":"five loose steps";
   }
   render();
   $("#pack-go").addEventListener("click",function(){on=!on;render()});
@@ -610,50 +610,43 @@ var sget=D.store.get,sset=D.store.set;
 
 /* ---------- 08 reuse ---------- */
 (function(){
-  var now=new Date(2026,9,6,14,40);
   var bodies={
-    h24:"Give it a time. It gives back the hour and minutes on a 24-hour clock.",
-    h12:"Give it a time. It gives back the hour and minutes on a 12-hour clock, with am or pm.",
-    rel:"Give it a time. It gives back how many minutes ago that was."
+    dice:"Halve it, peel it, then cut it into small cubes.",
+    slice:"Halve it, peel it, then cut it into thin half-moons.",
+    mince:"Halve it, peel it, then chop it as fine as it will go."
   };
-  function pad(n){return n<10?"0"+n:""+n}
-  function f(kind,d){
-    if(kind==="h24")return d.getHours()+":"+pad(d.getMinutes());
-    if(kind==="h12")return (d.getHours()%12||12)+":"+pad(d.getMinutes())+" pm";
-    return Math.round((now-d)/60000)+" min ago";
-  }
+  var out={dice:"diced",slice:"sliced",mince:"minced"};
   function set(kind,fl){
     $("#fmt-text").textContent=bodies[kind];var fr=$("#fmt-rule");if(fl){fr.classList.remove("flashbg");void fr.offsetWidth;fr.classList.add("flashbg")}
     $$("#reuse .when").forEach(function(w){
-      var d=new Date(now.getTime()-(+w.dataset.min)*60000);
-      w.textContent=f(kind,d);
+      w.textContent=out[kind];
       if(fl){w.classList.remove("flash");void w.offsetWidth;w.classList.add("flash")}
     });
     $$("#reuse [data-fmt]").forEach(function(b){b.classList.toggle("sel",b.dataset.fmt===kind);b.setAttribute("aria-pressed",b.dataset.fmt===kind)});
   }
-  set("h24");
+  set("dice");
   $$("#reuse [data-fmt]").forEach(function(b){b.addEventListener("click",function(){set(b.dataset.fmt,true)})});
 })();
 
 /* ---------- 09 coffee ---------- */
 (function(){
-  $("#cof-code").innerHTML=["Grind 18 g of beans","Heat the water to 93 °C","Build up 9 bar of pressure","Brew the drink you asked for","Hand back the cup"].map(function(x){return "<li>"+x+"</li>"}).join("");
+  $("#cof-code").innerHTML=["Cut off the top, keep the root","Halve it through the root","Peel off the skin","Cut it the way you asked","Hand back the board"].map(function(x){return "<li>"+x+"</li>"}).join("");
   $$("#abstraction [data-drink]").forEach(function(b){b.addEventListener("click",function(){
     var d=b.dataset.drink;
-    $("#cof-call").textContent="A "+d+", please";
-    var o=$("#cof-out");o.textContent="";setTimeout(function(){o.textContent="One "+d},220);
+    $("#cof-call").textContent="An onion, "+d+", please";
+    var o=$("#cof-out");o.textContent="";setTimeout(function(){o.textContent="One onion, "+d},220);
   })});
-  $("#cof-open").addEventListener("click",function(){$("#cof-cover").hidden=true;$("#cof-code").hidden=false;$("#cof-state").textContent="panel off"});
+  $("#cof-open").addEventListener("click",function(){$("#cof-cover").hidden=true;$("#cof-code").hidden=false;$("#cof-state").textContent="door open"});
 })();
 
 /* ---------- 10 mystery machine ---------- */
 (function(){
   var M=[
-    {w:"Doubles it",f:function(n){return n*2}},
-    {w:"Adds ten",f:function(n){return n+10}},
-    {w:"Multiplies it by itself",f:function(n){return n*n}},
-    {w:"Takes away one",f:function(n){return n-1}},
-    {w:"Triples it, then adds one",f:function(n){return n*3+1}}
+    {w:"Halves each onion",f:function(n){return n*2}},
+    {w:"Quarters each onion",f:function(n){return n*4}},
+    {w:"Adds them to the 10 pieces already on the board",f:function(n){return n+10}},
+    {w:"Cuts each onion into three, plus one stray bit",f:function(n){return n*3+1}},
+    {w:"Cuts each onion into as many slices as there are onions",f:function(n){return n*n}}
   ];
   var pick=-1,tries=[],solved=false;
   var EMPTY='<tr><td colspan="2" class="muted" style="font-family:var(--font-ui);font-size:16px">Nothing put in yet. Try 0, 1 and 10.</td></tr>';
@@ -664,8 +657,8 @@ var sget=D.store.get,sset=D.store.set;
       b.addEventListener("click",function(){
         if(solved)return;
         if(tries.length<2){fb($("#mm-fb"),"warn","Try at least two numbers first. One result fits lots of rules.");return}
-        if(i===pick){b.classList.add("right");solved=true;fb($("#mm-fb"),"pass","Applause. It "+m.w.toLowerCase()+". You worked that out without seeing inside, which is how you use most functions.")}
-        else{b.classList.add("wrong");var bad=tries.filter(function(c){return m.f(c[0])!==c[1]})[0];fb($("#mm-fb"),"err",bad?"Not that one. A machine that "+m.w.toLowerCase()+" would give back "+m.f(bad[0])+" for "+bad[0]+", but this one gave "+bad[1]+".":"That fits so far, but it's not the one. Try a different number to tell them apart.")}
+        if(i===pick){b.classList.add("right");solved=true;fb($("#mm-fb"),"pass","Applause. It "+m.w.toLowerCase()+". You worked that out without seeing the knife, which is how you use most functions.")}
+        else{b.classList.add("wrong");var bad=tries.filter(function(c){return m.f(c[0])!==c[1]})[0];fb($("#mm-fb"),"err",bad?"Not that one. A chopper that "+m.w.toLowerCase()+" would give back "+m.f(bad[0])+" pieces for "+bad[0]+" onions, but this one gave "+bad[1]+".":"That fits so far, but it's not the one. Try a different number to tell them apart.")}
       });
       box.appendChild(b);
     });
@@ -673,7 +666,7 @@ var sget=D.store.get,sset=D.store.set;
   function reset(){var p;do{p=Math.floor(Math.random()*M.length)}while(p===pick);pick=p;tries=[];solved=false;$("#mm-rows").innerHTML=EMPTY;$("#mm-count").textContent="0 tries";fb($("#mm-fb"));opts()}
   function feed(){
     var v=$("#mm-in").value.trim();
-    if(v===""||isNaN(+v)){fb($("#mm-fb"),"warn","The machine only takes numbers. Type one in, then put it in.");return}
+    if(v===""||isNaN(+v)||+v<0||+v%1!==0){fb($("#mm-fb"),"warn","The chopper only takes whole onions. Type 0 or more, then put them in.");return}
     var n=+v,r=M[pick].f(n);tries.push([n,r]);
     var tb=$("#mm-rows");if(tries.length===1)tb.innerHTML="";
     var tr=document.createElement("tr");tr.innerHTML="<td>"+esc(n)+"</td><td class='o'>"+esc(r)+"</td>";tb.insertBefore(tr,tb.firstChild);
@@ -687,11 +680,11 @@ var sget=D.store.get,sset=D.store.set;
 
 /* ---------- 11 organisation ---------- */
 (function(){
-  var pieces=["Draw the header","List the lectures","Show the deadlines","Draw the footer"],n=0;
+  var pieces=["Chop the onions","Fry them slowly","Add the stock and simmer","Toast the bread and cheese"],n=0;
   function render(){
     var li=pieces.slice(0,n).map(function(p,i){return '<li'+(i===n-1?' class="flash"':'')+'>'+p+'<span class="tag">its own named job</span></li>'});
     if(n<pieces.length)li.push('<li class="muted">…and everything else, all at once</li>');
-    $("#org-code").innerHTML='<div class="named"><div class="nm">Build the course page</div></div><ol class="plain">'+li.join("")+'</ol>';
+    $("#org-code").innerHTML='<div class="named"><div class="nm">Make onion soup</div></div><ol class="plain">'+li.join("")+'</ol>';
     $("#org-lbl").textContent=n===0?"one big job":n+" named piece"+(n>1?"s":"");
     $("#org-go").disabled=n>=pieces.length;
   }
@@ -704,11 +697,11 @@ var sget=D.store.get,sset=D.store.set;
 (function(){
   var R=["Packaging","Reuse","Abstraction","Transformation","Organisation"];
   var Q=[
-    {t:"A \"check this email address\" rule, written once, used on the sign-up form, the login form and the newsletter box.",a:1,w:"Written once, used in three places."},
-    {t:"Give it a temperature in Celsius and it gives back the same temperature in Fahrenheit.",a:3,w:"A number goes in, a different number comes out."},
-    {t:"You ask for a sound to play with no idea how the computer talks to the speakers.",a:2,w:"You know what it does, not how."},
-    {t:"A huge game is split into \"set up\", \"draw the board\" and \"check who won\".",a:4,w:"One big problem, split into named pieces."},
-    {t:"Ten steps for brushing your teeth become one instruction: \"brush your teeth\".",a:0,w:"A sequence of steps, one name."}
+    {t:"One \"chop the onion\" card, used by the soup, the salsa and the curry.",a:1,w:"Written once, used in three places."},
+    {t:"Tell it how many guests are coming and it gives back how many onions to buy.",a:3,w:"A number goes in, a different number comes out."},
+    {t:"You ask a friend for a chopped onion with no idea how they hold the knife.",a:2,w:"You know what it does, not how."},
+    {t:"A dinner party is split into \"chop the onions\", \"make the sauce\" and \"set the table\".",a:4,w:"One big problem, split into named pieces."},
+    {t:"Halve it, peel it, slice it and dice it become one instruction: \"chop the onion\".",a:0,w:"A sequence of steps, one name."}
   ];
   var box=$("#rq"),score=0,done=0;
   Q.forEach(function(q){
