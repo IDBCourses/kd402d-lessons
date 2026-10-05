@@ -63,7 +63,7 @@ table.tr tr.on td{background:var(--spot-200)}
 .reveal.long>div{grid-template-columns:520px 1fr;padding:9px 0;gap:20px}
 .reveal.long .opt{font-family:var(--font-ui);font-weight:500;font-size:19px;letter-spacing:0;padding:10px 14px}
 .reveal.long .ans{font-size:18px;line-height:1.4}
-.notes-tbl{display:grid;grid-template-columns:110px 1fr;gap:6px 14px;font-size:18px;align-items:baseline}
+.notes-tbl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:18px;align-items:baseline}
 .notes-tbl code{font-size:17px}
 .kbd{position:relative;height:200px;display:flex;border:2px solid var(--ink-900);background:var(--ink-900);gap:2px;user-select:none}
 .kbd .w{flex:1;background:var(--paper-000);border:0;border-radius:0 0 2px 2px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:10px;font-family:var(--font-mono);font-size:15px;font-weight:700;color:var(--ink-900);cursor:pointer}
@@ -75,6 +75,11 @@ table.tr tr.on td{background:var(--spot-200)}
 .lens{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;align-items:center;font-size:18px}
 .lens .btn{padding:6px 12px;min-width:76px}
 .slide.stage.adv{background:var(--track-purple)}
+/* advanced room: go further, and read more */
+.more{margin:0;font-size:15px;line-height:1.45;color:var(--ink-500)}
+.more b{font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--track-purple)}
+.ideas{margin:0;padding-left:20px;font-size:18px;line-height:1.45}
+.ideas li{margin:0 0 6px}
 .notes-tbl b{font-size:13px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;color:var(--ink-500);grid-column:1/-1;margin-top:8px}
 </style>
 </head>
@@ -131,7 +136,7 @@ table.tr tr.on td{background:var(--spot-200)}
   <h2 class="h1">Two rooms, one song</h2>
   <div class="rows tracks">
     <div><span class="tn">Beginner room</span><span><span class="sw k"></span><b>Black</b> first: play a note, write a riff, arrange a song from sections.<br><span class="sw b"></span><b>Blue</b> when black is done: short names for long calls, riffs that take their notes.</span><span class="tw">New to code? Start here</span></div>
-    <div><span class="tn">Advanced room</span><span><span class="sw p"></span><b>Purple</b>: race through black, then sections that return when they end, drum pads, other ways to write a function, functions that take functions.</span><span class="tw">If you've coded before</span></div>
+    <div><span class="tn">Advanced room</span><span><span class="sw p"></span><b>Purple</b>: work through black first (it introduces Tone.js), then sections that return when they end, drum pads, other ways to write a function, functions that take functions.</span><span class="tw">If you've coded before</span></div>
   </div>
   <p class="lede" style="margin-top:20px">Press <b>E</b> to jump to the next exercise. Stuck? Ask your neighbour, then a TA. Press <b>S</b> to stop all sound.</p>
   <aside class="nt">Two rooms. The beginner room works through black, then blue; both are beginner exercises, blue is for whoever finishes black early. The advanced room skims black and spends the block on purple, which starts after the "Advanced room" divider slide. Each exercise slide shows its track in the billing line. Brief the TAs: nobody should feel behind for staying on black all afternoon; the song on black covers objectives 01 to 03.</aside>
@@ -335,9 +340,10 @@ table.tr tr.on td{background:var(--spot-200)}
   <div class="inner">
     <div class="billing">Advanced room · From here on</div>
     <h2 class="hero md">Advanced room starts here.</h2>
-    <p class="lede">Beginner room: your exercises end on the slide before this one. Advanced room: once your song plays, carry on here.</p>
+    <p class="lede">Coded before? Work through the beginner exercises first anyway. They introduce Tone.js and how time works in this deck, and they go quickly once you know the basics.</p>
+    <p class="lede" style="font-size:20px;margin-top:14px">These exercises are a starting point, not a ceiling. Read the code, change it, break it, and take it further than the task asks. Each slide links to reading on ideas we haven't covered yet.</p>
   </div>
-  <aside class="nt">The divide between the rooms. Everything after this, up to the walkthrough, is for the advanced room: return values that chain, buttons, other ways to write a function, functions as arguments. In the beginner room, skip to the walkthrough when the block ends.</aside>
+  <aside class="nt">The divide between the rooms. Beginner room: exercises end on the slide before this one. Tell the advanced room that the beginner exercises are worth doing first even for experienced programmers: they introduce Tone.js and the deck's "seconds after Play" timing, which every advanced exercise uses. Encourage them to go off-script; the last advanced slide shows how to take Tone.js into VS Code. Everything after this, up to the walkthrough, is for the advanced room: return values that chain, buttons, other ways to write a function, functions as arguments. In the beginner room, skip to the walkthrough when the block ends.</aside>
 </section>
 
 <!-- 21 RETURN THE END -->
@@ -351,6 +357,7 @@ table.tr tr.on td{background:var(--spot-200)}
       <table class="tr"><thead><tr><th>Line</th><th>What happens</th><th>t</th></tr></thead><tbody id="re-tb"></tbody></table>
       <p class="dir" id="re-dir" style="margin:0;min-height:58px;font-size:19px"></p>
       <div class="row"><button class="btn ghost" id="re-back">Back</button><button class="btn" id="re-next">Next</button><button class="btn ghost" id="re-reset">Start again</button></div>
+      <p class="more"><b>Read</b> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/return" target="_blank" rel="noopener">return (MDN)</a> · <a href="https://javascript.info/function-basics#returning-a-value" target="_blank" rel="noopener">Returning a value (javascript.info)</a> · <a href="https://javascript.info/variables" target="_blank" rel="noopener">let and const (javascript.info)</a></p>
     </div>
   </div>
   <aside class="nt">Advanced room only. In the beginner song, every start was worked out by hand: 0, 2, 4. That breaks as soon as sections have different lengths. Here verse plays its notes and hands back the time it finishes. song keeps that in t and passes it into the next section. Note the let: t changes, so it can't be const. Ask: what would t be if verse forgot to return? (undefined, and the next notes fail.)</aside>
@@ -381,7 +388,8 @@ table.tr tr.on td{background:var(--spot-200)}
   <h2 class="h1" style="margin-bottom:6px">Four ways to write the same kick</h2>
   <p class="muted small" style="margin:0 0 6px">Name each style. Every one of them can be cued with <code>kick(0)</code>, except the one with no name.</p>
   <div class="rows styles quiz" id="sy"></div>
-  <div class="fb" id="sy-fb" style="margin-top:10px"></div>
+  <div class="fb" id="sy-fb" style="margin-top:8px"></div>
+  <p class="more" style="margin-top:8px"><b>Go further</b> Rewrite your verse as an arrow function. Then try calling each style on a line above where it's written: which ones still work?<br><b>Read</b> <a href="https://javascript.info/function-expressions" target="_blank" rel="noopener">Function expressions</a> · <a href="https://javascript.info/arrow-functions-basics" target="_blank" rel="noopener">Arrow functions</a> (javascript.info) · <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions" target="_blank" rel="noopener">Functions guide (MDN)</a></p>
   <aside class="nt">Declaration, function expression, arrow function, anonymous function. Monday's lecture goes deeper into declarations vs expressions; this is a first look. One difference worth naming: declarations can be called before the line they're written on (hoisting); expressions and arrows can't. Try it in the workspace.</aside>
 </section>
 
@@ -394,7 +402,32 @@ table.tr tr.on td{background:var(--spot-200)}
   <aside class="nt">twice takes a section, which is a function, and calls it. The tests don't use sound: they pass a tiny function of their own that adds 1 to the time and counts how often it was called. Bonus: fourTimes can be written with twice, either nested (twice(section, twice(section, start))) or with an anonymous function passed in.</aside>
 </section>
 
-<!-- 26 MISTAKES -->
+<!-- 26 OUT OF THE DECK -->
+<section class="slide" id="vscode" data-sec="Advanced room" data-demo="Take it to VS Code">
+  <span class="turn try">Try it</span>
+  <div class="billing"><span class="sw p"></span>Advanced room · Go further</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:14px">Take it out of the deck</h2>
+  <div class="cols">
+    <div class="stack" style="gap:10px">
+      <div class="panel"><div class="bar"><span>index.html</span><span>open it in a browser</span></div><pre class="code sm" id="vs-code" style="font-size:14px;line-height:1.5"></pre></div>
+      <p class="more">Plain Tone.js differs from this deck in two ways. Browsers stay silent until a click, so start sound inside a click with <code>Tone.start()</code>. And a number time counts from when the page opened, so add <code>Tone.now()</code>.</p>
+    </div>
+    <div class="stack" style="gap:10px">
+      <div class="small muted">Ideas, if you have VS Code set up</div>
+      <ul class="ideas">
+        <li>Move your song into a page, with a Play button.</li>
+        <li>A drum machine: a row of real buttons, one per sound.</li>
+        <li>Random notes: <code>Math.random()</code> picks from a few you like.</li>
+        <li>Other instruments: <code>Tone.FMSynth</code>, <code>Tone.PolySynth</code> for chords.</li>
+        <li>Loops that keep time on their own: <code>Tone.Loop</code>.</li>
+      </ul>
+      <p class="more"><b>Read</b> <a href="https://tonejs.github.io/" target="_blank" rel="noopener">Tone.js: getting started and examples</a> · <a href="https://tonejs.github.io/docs/" target="_blank" rel="noopener">Tone.js API docs</a></p>
+    </div>
+  </div>
+  <aside class="nt">For the advanced room once the exercises are done, or anyone who wants to go off-script. Not everyone has VS Code set up before Wednesday's TA session; the workspace (W) works too, with this deck's timing. The two differences matter: without Tone.start() inside a click there's no sound, and without Tone.now() notes are scheduled in the past and play at once (or throw). The script line loads Tone.js from the internet, so the page needs a connection.</aside>
+</section>
+
+<!-- 27 MISTAKES -->
 <section class="slide" id="mistakes" data-sec="Walkthrough" data-ex="What went wrong">
   <span class="turn">Your turn</span>
   <div class="billing">Scene 05 · Walkthrough · 16:15</div><hr class="rule">
@@ -403,7 +436,7 @@ table.tr tr.on td{background:var(--spot-200)}
   <aside class="nt">Ask the room which of these happened to them before revealing each fix. Add any other mistakes the TAs saw a lot.</aside>
 </section>
 
-<!-- 27 MODEL -->
+<!-- 28 MODEL -->
 <section class="slide" id="model" data-sec="Walkthrough" data-demo="One way to write it">
   <span class="turn try">Try it</span>
   <div class="billing">Walkthrough · A solution</div><hr class="rule">
@@ -412,7 +445,7 @@ table.tr tr.on td{background:var(--spot-200)}
   <aside class="nt">David's in-class solution for the beginner room: wrappers (note, kick, from blue), sections timed from start, and a song that calls them two seconds apart. Read song() aloud; it reads like the running order. Then ask a couple of students to show theirs; different is fine as long as every note is timed from start. Advanced room: show how song() changes when each section returns its end.</aside>
 </section>
 
-<!-- 28 CURTAIN CALL -->
+<!-- 29 CURTAIN CALL -->
 <section class="slide stage" id="curtain-call" data-sec="Curtain call">
   <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
   <div class="inner">
@@ -423,7 +456,7 @@ table.tr tr.on td{background:var(--spot-200)}
   <aside class="nt">Curtain call (a.k.a. the recap). Back to the objectives: called someone else's function with arguments (triggerAttackRelease), wrote functions with parameters (playRiff, verse), split a song into functions (song). Advanced room: chained return values (t = verse(t)) and handed a function to a button or another function (makeButton, twice). Hands up for each.</aside>
 </section>
 
-<!-- 29 NEXT -->
+<!-- 30 NEXT -->
 <section class="slide" id="next" data-sec="Curtain call">
   <div class="billing">Next · Resources</div><hr class="rule">
   <h2 class="h1">Your song comes back on Thursday</h2>
@@ -434,13 +467,13 @@ table.tr tr.on td{background:var(--spot-200)}
       <p class="dir" style="margin:0;font-size:19px">Your song is saved in this browser. Use the same laptop and browser on Thursday.</p>
     </div>
     <div class="rows lab" style="border-top:1px solid var(--ink-900)">
-      <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://mau.instructure.com/courses/22858/modules/137079" target="_blank" rel="noopener">Canvas: Functions module and practice quiz</a></span></div>
+      <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://mau.instructure.com/courses/22858/modules/137079" target="_blank" rel="noopener">Canvas: Functions module</a></span></div>
       <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://eloquentjavascript.net/03_functions.html" target="_blank" rel="noopener">Eloquent JavaScript, chapter 3: Functions</a></span></div>
       <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://scrimba.com/learn/learnjavascript" target="_blank" rel="noopener">Scrimba: Learn JavaScript</a></span></div>
       <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://tonejs.github.io/" target="_blank" rel="noopener">Tone.js: documentation and examples</a></span></div>
     </div>
   </div>
-  <aside class="nt">Remind them about the Functions practice quiz on Canvas and Scrimba for self-study. The song is in the shared browser storage, so the Data deck can load it on Thursday; it's gone if they switch browser or clear site data, so suggest pasting it somewhere safe too.</aside>
+  <aside class="nt">Point to the Functions module on Canvas and Scrimba for self-study. The song is in the shared browser storage, so the Data deck can load it on Thursday; it's gone if they switch browser or clear site data, so suggest pasting it somewhere safe too.</aside>
 </section>
 
 </div>
@@ -555,7 +588,7 @@ function soundEd(o){
   var el=o.el;
   el.innerHTML='<div class="left"><div class="panel ed"><div class="bar"><span>'+esc(o.file)+'</span><span>Ctrl / ⌘ + Enter plays</span></div><textarea class="code-ed" spellcheck="false" aria-label="Code for '+esc(o.file)+'"></textarea></div>'+
     '<div class="panel"><div class="console"><span class="dim">Your console.log output appears here.</span></div></div></div>'+
-    '<div class="side"><p class="task">'+o.task+'</p>'+
+    '<div class="side"><p class="task">'+o.task+'</p>'+(o.more?'<p class="more">'+o.more+'</p>':'')+
     '<div class="row"><button class="btn play">Play</button><button class="btn ghost stop">Stop</button><button class="btn ghost reset">Reset</button></div>'+
     (o.tests?'<ul class="res"></ul>':'')+
     '<div class="fb"></div>'+
@@ -677,7 +710,7 @@ soundEd({el:$("#s-first"),file:"first-note.js",store:"first",
 })();
 
 /* ---------- riff ---------- */
-soundEd({el:$("#s-riff"),file:"riff.js",store:"riff",names:["playRiff"],
+soundEd({el:$("#s-riff"),file:"riff.js",store:"riff-v2",names:["playRiff"],
   task:"Finish <code>playRiff()</code> so it plays at least three notes, one after another. Then call it. Make it yours: any notes, any rhythm.",
   start:SYNTH+"\nfunction playRiff() {\n  synth.triggerAttackRelease(\"C4\", \"8n\", 0);\n  // two or more notes, each a little later: 0.5, 1…\n  \n}\n\nplayRiff();\n",
   check:function(c){
@@ -689,7 +722,7 @@ soundEd({el:$("#s-riff"),file:"riff.js",store:"riff",names:["playRiff"],
   }});
 
 /* ---------- riff with a start ---------- */
-soundEd({el:$("#s-again"),file:"riff-again.js",store:"again",names:["playRiff"],
+soundEd({el:$("#s-again"),file:"riff-again.js",store:"again-v2",names:["playRiff"],
   task:"Now <code>playRiff</code> takes a <code>start</code>: when to begin, in seconds. Every note is timed from it. Call it a second time, starting at 2. Then swap in your own notes.",
   start:SYNTH+"\nfunction playRiff(start) {\n  synth.triggerAttackRelease(\"C4\", \"8n\", start);\n  synth.triggerAttackRelease(\"E4\", \"8n\", start + 0.5);\n  synth.triggerAttackRelease(\"G4\", \"8n\", start + 1);\n}\n\nplayRiff(0);\n// call it again, starting at 2:\n\n",
   check:function(c){
@@ -818,7 +851,7 @@ soundEd({el:$("#s-song"),file:"song.js",store:"sound:song",course:true,names:["v
   }});
 
 /* ---------- wrap ---------- */
-soundEd({el:$("#s-wrap"),file:"wrap.js",store:"wrap",names:["note","kick"],
+soundEd({el:$("#s-wrap"),file:"wrap.js",store:"wrap-v2",names:["note","kick"],
   task:"<code>note</code> hides the long call behind a short name. Write <code>kick</code> the same way, playing <code>\"C1\"</code> on <code>drum</code>. Then use both in your verse.",
   start:SYNTH+"const drum = new Tone.MembraneSynth().toDestination();\n\nfunction note(name, start) {\n  synth.triggerAttackRelease(name, \"8n\", start);\n}\n\nfunction kick(start) {\n  // play \"C1\" on the drum, at start\n}\n\nnote(\"C4\", 0);\nnote(\"E4\", 0.5);\nkick(0);\nkick(1);\n",
   check:function(c){
@@ -853,6 +886,7 @@ soundEd({el:$("#s-rnotes"),file:"riff-notes.js",store:"rnotes",names:["playRiff"
 
 /* ---------- chain with return (advanced) ---------- */
 soundEd({el:$("#s-chain"),file:"song-chain.js",store:"chain",names:["verse","chorus","song"],
+  more:"<b>Go further</b> Give every section a different length. Can <code>song()</code> return its own end, so two songs play back to back?<br><b>Read</b> <a href=\"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/return\" target=\"_blank\" rel=\"noopener\">return (MDN)</a> · <a href=\"https://javascript.info/variables\" target=\"_blank\" rel=\"noopener\">let and const (javascript.info)</a>",
   task:"Each section now <code>return</code>s when it ends. Write a three-second <code>chorus</code>, and a <code>bridge</code> of any length. Then make <code>song()</code> chain verse, chorus, verse, bridge, chorus.",
   start:SYNTH+"\nfunction verse(start) {\n  synth.triggerAttackRelease(\"C4\", \"8n\", start);\n  synth.triggerAttackRelease(\"E4\", \"8n\", start + 0.5);\n  synth.triggerAttackRelease(\"G4\", \"8n\", start + 1);\n  return start + 2;   // when the verse ends\n}\n\nfunction chorus(start) {\n  // your notes here\n  return start + 3;\n}\n\nfunction song() {\n  let t = 0;\n  t = verse(t);\n  t = chorus(t);\n}\n\nsong();\n",
   check:function(c){
@@ -866,6 +900,7 @@ soundEd({el:$("#s-chain"),file:"song-chain.js",store:"chain",names:["verse","cho
 
 /* ---------- pads (advanced) ---------- */
 soundEd({el:$("#s-pads"),file:"pads.js",store:"pads",pads:true,names:["kick","hihat"],
+  more:"<b>Go further</b> A pad that plays a chord, or your whole song. Then build real buttons in VS Code: see the last advanced slide.<br><b>Read</b> <a href=\"https://developer.mozilla.org/en-US/docs/Glossary/Callback_function\" target=\"_blank\" rel=\"noopener\">Callback function (MDN)</a> · <a href=\"https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener\" target=\"_blank\" rel=\"noopener\">addEventListener (MDN)</a>",
   task:"<code>makeButton</code> takes a label and a function to run on every click. Press Play, then the pads. Add a pad for <code>hihat</code>, then one for a riff of your own.",
   start:"const drum = new Tone.MembraneSynth().toDestination();\nconst hat = new Tone.NoiseSynth().toDestination();\n\nfunction kick() {\n  drum.triggerAttackRelease(\"C1\", \"8n\");\n}\n\nfunction hihat() {\n  hat.triggerAttackRelease(\"16n\");\n}\n\n// makeButton(label, whatToDoOnEachClick)\nmakeButton(\"Kick\", kick);\n// a pad for hihat:\n\n",
   check:function(c){
@@ -903,7 +938,8 @@ soundEd({el:$("#s-pads"),file:"pads.js",store:"pads",pads:true,names:["kick","hi
 })();
 
 /* ---------- pass a function ---------- */
-soundEd({el:$("#s-pass"),file:"twice.js",store:"twice",names:["twice","fourTimes"],tests:true,
+soundEd({el:$("#s-pass"),file:"twice.js",store:"twice-v2",names:["twice","fourTimes"],tests:true,
+  more:"<b>Go further</b> Write <code>repeat(section, times, start)</code>, or pass an arrow function straight into <code>twice</code>.<br><b>Read</b> <a href=\"https://developer.mozilla.org/en-US/docs/Glossary/Callback_function\" target=\"_blank\" rel=\"noopener\">Callback function (MDN)</a> · <a href=\"https://eloquentjavascript.net/05_higher-order.html\" target=\"_blank\" rel=\"noopener\">Higher-order functions (Eloquent JavaScript)</a>",
   task:"Write <code>twice(section, start)</code>: call <code>section</code>, call it again where the first one ended, and return the end. Bonus: <code>fourTimes</code>, using <code>twice</code>.",
   start:SYNTH+"\nfunction verse(start) {\n  synth.triggerAttackRelease(\"C4\", \"8n\", start);\n  synth.triggerAttackRelease(\"G4\", \"8n\", start + 0.5);\n  return start + 1;\n}\n\n// section is a function. Call it like one.\nfunction twice(section, start) {\n  \n}\n\ntwice(verse, 0);\n",
   check:function(c){
@@ -920,6 +956,9 @@ soundEd({el:$("#s-pass"),file:"twice.js",store:"twice",names:["twice","fourTimes
     return ["note","The tests pass in a function called step that adds 1 to the time. Call <code>section(start)</code>, keep what it returns, and pass that into the second call."];
   }});
 
+/* ---------- out of the deck ---------- */
+code($("#vs-code"),'<!doctype html>\n<button id="play">Play</button>\n<script src="https://unpkg.com/tone"><\/script>\n<script>\n  const synth = new Tone.Synth().toDestination();\n\n  function playRiff(start) {\n    synth.triggerAttackRelease("C4", "8n", start);\n    synth.triggerAttackRelease("E4", "8n", start + 0.5);\n  }\n\n  const button = document.getElementById("play");\n  button.addEventListener("click", async () => {\n    await Tone.start();\n    playRiff(Tone.now());\n  });\n<\/script>');
+
 /* ---------- mistakes ---------- */
 (function(){
   var M=[["Error: Start time must be strictly greater than previous start time","Two notes on one synth asked to start at the same moment. Give each its own time: 0, 0.5, 1… Two sections with the same start do the same."],
@@ -932,7 +971,7 @@ soundEd({el:$("#s-pass"),file:"twice.js",store:"twice",names:["twice","fourTimes
 })();
 
 /* ---------- model solution ---------- */
-soundEd({el:$("#s-model"),file:"song-solution.js",store:"model",
+soundEd({el:$("#s-model"),file:"song-solution.js",store:"model-v2",
   task:"Short names for each instrument, sections timed from <code>start</code>, and a song that reads like a running order. Press Play.",
   start:SYNTH+"const drum = new Tone.MembraneSynth().toDestination();\n\nfunction note(name, start) {\n  synth.triggerAttackRelease(name, \"8n\", start);\n}\nfunction kick(start) {\n  drum.triggerAttackRelease(\"C1\", \"8n\", start);\n}\n\nfunction verse(start) {\n  note(\"C4\", start);\n  note(\"E4\", start + 0.5);\n  note(\"G4\", start + 1);\n  kick(start);\n  kick(start + 1);\n}\n\nfunction chorus(start) {\n  note(\"A4\", start);\n  note(\"G4\", start + 0.5);\n  note(\"E4\", start + 1);\n  note(\"D4\", start + 1.5);\n  kick(start);\n  kick(start + 1);\n}\n\nfunction song() {\n  verse(0);\n  chorus(2);\n  verse(4);\n  chorus(6);\n}\n\nsong();\n"});
 })();
