@@ -4,7 +4,7 @@
    Any element with class "ws-open" opens the drawer. W toggles it.
    The workspace content is saved per browser and shared by every lecture,
    so code written in one session is still there in the next.
-   Adds to window.Deck: run(src, fnName), edKeys(textarea, onRun), workspace.{show, append}. */
+   Adds to window.Deck: run(src, fnName, env), edKeys(textarea, onRun), workspace.{show, append, env, onRun}. */
 (function(){
 "use strict";
 var D=window.Deck,$=D.$,$$=D.$$;
@@ -21,23 +21,25 @@ function loadSval(){
 }
 try{(new Function("return 1"))()}catch(e){useSval=true;loadSval()}
 
-/* Run src with a captured console. If fnName is given, returns that function as `value`. */
-function run(src,fnName){
-  var logs=[];
+/* Run src with a captured console. If fnName is given, returns that function as `value`.
+   env: optional {name: value} of extra globals the code can use (e.g. a library). */
+function run(src,fnName,env){
+  var logs=[],names=env?Object.keys(env):[],vals=names.map(function(k){return env[k]});
   var lg=function(){logs.push(Array.prototype.map.call(arguments,D.fmt).join(" "))};
   var fake={log:lg,error:lg,warn:lg,info:lg};
   var pick=fnName?"typeof "+fnName+' === "function" ? '+fnName+" : undefined":"";
   if(!useSval){
-    try{new Function("console",src)}catch(err){if(isCSP(err)){useSval=true;loadSval()}else return {logs:logs,error:err}}
+    try{Function.apply(null,["console"].concat(names,[src]))}catch(err){if(isCSP(err)){useSval=true;loadSval()}else return {logs:logs,error:err}}
   }
   if(!useSval){
-    try{return {logs:logs,value:new Function("console",src+(pick?"\nreturn "+pick+";":""))(fake)}}
+    try{return {logs:logs,value:Function.apply(null,["console"].concat(names,[src+(pick?"\nreturn "+pick+";":"")])).apply(null,[fake].concat(vals))}}
     catch(err){if(isCSP(err)){useSval=true;loadSval()}else return {logs:logs,error:err}}
   }
   if(!window.Sval)return {logs:logs,blocked:true,error:new Error("The code runner is still loading. Try again in a moment.")};
   try{
     var it=new window.Sval({ecmaVer:"latest",sandBox:true});
-    it.import({console:fake});
+    var imp={console:fake};names.forEach(function(k){imp[k]=env[k]});
+    it.import(imp);
     it.parse(src);
     it.run(src+(pick?"\nexports.__fn = "+pick+";":""));
     return {logs:logs,value:fnName?it.exports.__fn:undefined};
@@ -72,8 +74,11 @@ function show(on){
   btn.setAttribute("aria-pressed",on);
   if(on)setTimeout(function(){ed.focus()},30);
 }
+/* A lecture can give workspace code extra globals (D.workspace.env) and run hooks first (onRun). */
+var env={},hooks=[];
 function runWs(){
-  var r=run(ed.value),lines=[{c:"in",t:"run workspace.js"}].concat(r.logs);
+  hooks.forEach(function(f){f()});
+  var r=run(ed.value,null,env),lines=[{c:"in",t:"run workspace.js"}].concat(r.logs);
   if(r.error)lines.push({c:"bad",t:r.blocked?r.error.message:(r.error.name||"Error")+": "+r.error.message});
   else if(!r.logs.length)lines.push({c:"dim",t:"(nothing was logged. Did you call your function and log the result?)"});
   D.conLines(con,lines);con.scrollTop=con.scrollHeight;
@@ -98,5 +103,5 @@ function append(src){
   D.courseStore.set("workspace",ed.value);show(true);
 }
 
-D.run=run;D.edKeys=edKeys;D.workspace={show:show,append:append};
+D.run=run;D.edKeys=edKeys;D.workspace={show:show,append:append,env:env,onRun:function(f){hooks.push(f)}};
 })();

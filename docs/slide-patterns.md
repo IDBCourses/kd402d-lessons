@@ -181,8 +181,12 @@ name an input where that rule would have given a different answer.
 ```js
 var r = D.run(src);               // {logs:[...], error?, blocked?}
 var r = D.run(src, "double");     // also returns the student's function as r.value
+var r = D.run(src, null, {Tone: Tone});  // extra globals for the code (a library, helpers)
 D.edKeys(textarea, runFn);        // Tab indents, Ctrl/⌘+Enter runs
 ```
+
+Pass libraries through `env` rather than relying on `window`, so the fallback interpreter (which is
+sandboxed) sees them too.
 
 `r.blocked` means the fallback interpreter is still loading: show `r.error.message` as a note.
 Otherwise report `r.error` as "The scene stopped: `Name: message`".
@@ -202,6 +206,8 @@ Any element with class `ws-open` opens the workspace drawer; `W` toggles it. Put
 <div class="ws-cta"><button class="btn alt ws-open">Open the workspace</button><p>Type it in yourself and run it.</p></div>
 ```
 `D.workspace.append(src)` adds starter code to the end of the student's workspace (it never replaces what's there).
+`D.workspace.env.Tone = Tone` makes a library available to workspace code; `D.workspace.onRun(fn)` runs `fn`
+before each workspace run (e.g. stopping sound that is still playing).
 
 ## Storage
 
@@ -210,6 +216,13 @@ D.store.get("card"); D.store.set("card", JSON.stringify(card));   // kd402d:<lec
 D.courseStore.get("workspace");                                   // kd402d:workspace (shared)
 ```
 Strings only. Wrap `JSON.parse` in try/catch.
+
+## Sound (Tone.js)
+
+`shared/vendor/tone.min.js` is Tone.js, loaded before `deck.js` by lectures that make sound. `functions-group/`
+has the sound editor (`soundEd`: editor, Play/Stop, a piano roll of what played, optional pads and tests),
+a recorder that sees every `triggerAttackRelease` (with a dry mode for testing a student's function silently),
+and `stopAll()`, bound to S. Copy them from there; promote to `shared/` if a third lecture needs them.
 
 ## Lecture-local components in `functions/` worth reusing
 
@@ -226,4 +239,4 @@ Strings only. Wrap `JSON.parse` in try/catch.
 | `fb(el, kind, html)`, `conLines(el, lines)`, `fmt(value)` | Feedback, console output |
 | `store`, `courseStore` | Per-viewer storage |
 | `go(i)`, `scale()`, `addButton({label, key, onClick})`, `onEscape(fn)` | Deck control |
-| `run`, `edKeys`, `workspace.show(bool)`, `workspace.append(src)` | Added by `workspace.js` |
+| `run`, `edKeys`, `workspace.show(bool)`, `workspace.append(src)`, `workspace.env`, `workspace.onRun(fn)` | Added by `workspace.js` |
