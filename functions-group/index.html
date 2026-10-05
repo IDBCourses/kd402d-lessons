@@ -677,7 +677,7 @@ soundEd({el:$("#s-first"),file:"first-note.js",store:"first",
 })();
 
 /* ---------- riff ---------- */
-soundEd({el:$("#s-riff"),file:"riff.js",store:"riff",names:["playRiff"],
+soundEd({el:$("#s-riff"),file:"riff.js",store:"riff-v2",names:["playRiff"],
   task:"Finish <code>playRiff()</code> so it plays at least three notes, one after another. Then call it. Make it yours: any notes, any rhythm.",
   start:SYNTH+"\nfunction playRiff() {\n  synth.triggerAttackRelease(\"C4\", \"8n\", 0);\n  // two or more notes, each a little later: 0.5, 1…\n  \n}\n\nplayRiff();\n",
   check:function(c){
@@ -689,7 +689,7 @@ soundEd({el:$("#s-riff"),file:"riff.js",store:"riff",names:["playRiff"],
   }});
 
 /* ---------- riff with a start ---------- */
-soundEd({el:$("#s-again"),file:"riff-again.js",store:"again",names:["playRiff"],
+soundEd({el:$("#s-again"),file:"riff-again.js",store:"again-v2",names:["playRiff"],
   task:"Now <code>playRiff</code> takes a <code>start</code>: when to begin, in seconds. Every note is timed from it. Call it a second time, starting at 2. Then swap in your own notes.",
   start:SYNTH+"\nfunction playRiff(start) {\n  synth.triggerAttackRelease(\"C4\", \"8n\", start);\n  synth.triggerAttackRelease(\"E4\", \"8n\", start + 0.5);\n  synth.triggerAttackRelease(\"G4\", \"8n\", start + 1);\n}\n\nplayRiff(0);\n// call it again, starting at 2:\n\n",
   check:function(c){
@@ -818,7 +818,7 @@ soundEd({el:$("#s-song"),file:"song.js",store:"sound:song",course:true,names:["v
   }});
 
 /* ---------- wrap ---------- */
-soundEd({el:$("#s-wrap"),file:"wrap.js",store:"wrap",names:["note","kick"],
+soundEd({el:$("#s-wrap"),file:"wrap.js",store:"wrap-v2",names:["note","kick"],
   task:"<code>note</code> hides the long call behind a short name. Write <code>kick</code> the same way, playing <code>\"C1\"</code> on <code>drum</code>. Then use both in your verse.",
   start:SYNTH+"const drum = new Tone.MembraneSynth().toDestination();\n\nfunction note(name, start) {\n  synth.triggerAttackRelease(name, \"8n\", start);\n}\n\nfunction kick(start) {\n  // play \"C1\" on the drum, at start\n}\n\nnote(\"C4\", 0);\nnote(\"E4\", 0.5);\nkick(0);\nkick(1);\n",
   check:function(c){
@@ -903,7 +903,7 @@ soundEd({el:$("#s-pads"),file:"pads.js",store:"pads",pads:true,names:["kick","hi
 })();
 
 /* ---------- pass a function ---------- */
-soundEd({el:$("#s-pass"),file:"twice.js",store:"twice",names:["twice","fourTimes"],tests:true,
+soundEd({el:$("#s-pass"),file:"twice.js",store:"twice-v2",names:["twice","fourTimes"],tests:true,
   task:"Write <code>twice(section, start)</code>: call <code>section</code>, call it again where the first one ended, and return the end. Bonus: <code>fourTimes</code>, using <code>twice</code>.",
   start:SYNTH+"\nfunction verse(start) {\n  synth.triggerAttackRelease(\"C4\", \"8n\", start);\n  synth.triggerAttackRelease(\"G4\", \"8n\", start + 0.5);\n  return start + 1;\n}\n\n// section is a function. Call it like one.\nfunction twice(section, start) {\n  \n}\n\ntwice(verse, 0);\n",
   check:function(c){
@@ -932,7 +932,7 @@ soundEd({el:$("#s-pass"),file:"twice.js",store:"twice",names:["twice","fourTimes
 })();
 
 /* ---------- model solution ---------- */
-soundEd({el:$("#s-model"),file:"song-solution.js",store:"model",
+soundEd({el:$("#s-model"),file:"song-solution.js",store:"model-v2",
   task:"Short names for each instrument, sections timed from <code>start</code>, and a song that reads like a running order. Press Play.",
   start:SYNTH+"const drum = new Tone.MembraneSynth().toDestination();\n\nfunction note(name, start) {\n  synth.triggerAttackRelease(name, \"8n\", start);\n}\nfunction kick(start) {\n  drum.triggerAttackRelease(\"C1\", \"8n\", start);\n}\n\nfunction verse(start) {\n  note(\"C4\", start);\n  note(\"E4\", start + 0.5);\n  note(\"G4\", start + 1);\n  kick(start);\n  kick(start + 1);\n}\n\nfunction chorus(start) {\n  note(\"A4\", start);\n  note(\"G4\", start + 0.5);\n  note(\"E4\", start + 1);\n  note(\"D4\", start + 1.5);\n  kick(start);\n  kick(start + 1);\n}\n\nfunction song() {\n  verse(0);\n  chorus(2);\n  verse(4);\n  chorus(6);\n}\n\nsong();\n"});
 })();
