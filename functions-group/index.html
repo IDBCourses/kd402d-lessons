@@ -65,6 +65,16 @@ table.tr tr.on td{background:var(--spot-200)}
 .reveal.long .ans{font-size:18px;line-height:1.4}
 .notes-tbl{display:grid;grid-template-columns:110px 1fr;gap:6px 14px;font-size:18px;align-items:baseline}
 .notes-tbl code{font-size:17px}
+.kbd{position:relative;height:200px;display:flex;border:2px solid var(--ink-900);background:var(--ink-900);gap:2px;user-select:none}
+.kbd .w{flex:1;background:var(--paper-000);border:0;border-radius:0 0 2px 2px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:10px;font-family:var(--font-mono);font-size:15px;font-weight:700;color:var(--ink-900);cursor:pointer}
+.kbd .w small{font-size:11px;font-weight:400;color:var(--ink-500)}
+.kbd .bk{position:absolute;top:0;width:7.5%;height:60%;background:var(--ink-900);border:0;border-radius:0 0 2px 2px;color:var(--paper-100);font-family:var(--font-mono);font-size:11px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;cursor:pointer;transform:translateX(-50%)}
+.kbd .w:hover,.kbd .w.hit{background:var(--spot-300)}
+.kbd .bk:hover,.kbd .bk.hit{background:var(--curtain-600)}
+.kbd button:focus-visible{outline:2px solid var(--curtain-600);outline-offset:-4px}
+.lens{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;align-items:center;font-size:18px}
+.lens .btn{padding:6px 12px;min-width:76px}
+.slide.stage.adv{background:var(--track-purple)}
 .notes-tbl b{font-size:13px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;color:var(--ink-500);grid-column:1/-1;margin-top:8px}
 </style>
 </head>
@@ -91,10 +101,10 @@ table.tr tr.on td{background:var(--spot-200)}
   <div class="billing">Running order · This afternoon</div><hr class="rule">
   <h2 class="h1">Six scenes until five</h2>
   <div class="rows order">
-    <div><span class="num">01</span><span class="tm">13:15</span><span class="nm">Introduction<small>Recap the morning, meet Tone.js, pick a track</small></span></div>
+    <div><span class="num">01</span><span class="tm">13:15</span><span class="nm">Introduction<small>Recap the morning, meet Tone.js and a little music, find your room</small></span></div>
     <div class="act"><span class="num">02</span><span class="tm">13:30</span><span class="nm">Call it, then write your own<small>Play a note, then write a function that plays a riff</small></span></div>
     <div><span class="num">03</span><span class="tm">14:15</span><span class="nm">Play it for your neighbour</span></div>
-    <div class="act"><span class="num">04</span><span class="tm">14:45</span><span class="nm">Write a song<small>Sections that return when they end, wrappers, pads, functions as arguments</small></span></div>
+    <div class="act"><span class="num">04</span><span class="tm">14:45</span><span class="nm">Write a song<small>Beginner room: arrange sections into a song. Advanced room: return values, buttons, functions as arguments</small></span></div>
     <div><span class="num">05</span><span class="tm">16:15</span><span class="nm">Walkthrough<small>What went wrong, and one way to write it</small></span></div>
     <div><span class="num">06</span><span class="tm">16:45</span><span class="nm">Curtain call</span></div>
   </div>
@@ -108,24 +118,23 @@ table.tr tr.on td{background:var(--spot-200)}
   <h2 class="h1">Four things to take home</h2>
   <div class="rows lab big">
     <div style="padding:16px 0"><span class="num">01</span><span class="tx">Call a function someone else wrote, and pass it arguments.</span></div>
-    <div style="padding:16px 0"><span class="num">02</span><span class="tx">Write functions with parameters and return values.</span></div>
-    <div style="padding:16px 0"><span class="num">03</span><span class="tx">Break a song into smaller functions that call each other.</span></div>
-    <div style="padding:16px 0"><span class="num">04</span><span class="tx">Hand a function to a button, or to another function.</span></div>
+    <div style="padding:16px 0"><span class="num">02</span><span class="tx">Write a function with a parameter, and call it with different arguments.</span></div>
+    <div style="padding:16px 0"><span class="num">03</span><span class="tx">Break a song into smaller functions, and call them in order.</span></div>
+    <div style="padding:16px 0"><span class="num">04</span><span class="tx"><span class="sw p"></span>Advanced room: chain return values, and hand a function to a button.</span></div>
   </div>
-  <aside class="nt">Adapted from the session's learning objectives: parameters and return values, attaching functions to buttons, and decomposing a problem into smaller functions. Come back to these at the curtain call.</aside>
+  <aside class="nt">Adapted from the session's learning objectives. The beginner room covers 01 to 03: calling, parameters, and splitting a song into functions. No return values and no variables there: data and variables are Thursday, and buttons are Monday. Return values that chain, buttons and functions as arguments are for the advanced room only. Come back to these at the curtain call.</aside>
 </section>
 
 <!-- 04 TRACKS -->
 <section class="slide" id="tracks" data-sec="Opening">
-  <div class="billing">Opening · Three tracks</div><hr class="rule">
-  <h2 class="h1">Three tracks, one room</h2>
+  <div class="billing">Opening · Two rooms</div><hr class="rule">
+  <h2 class="h1">Two rooms, one song</h2>
   <div class="rows tracks">
-    <div><span class="tn"><span class="sw k"></span>Black</span><span>Everyone. Play a note, write a riff, write a song from sections.</span><span class="tw">Do these first</span></div>
-    <div><span class="tn"><span class="sw b"></span>Blue</span><span>Wrap Tone.js in short functions of your own. Build drum pads.</span><span class="tw">When black is done</span></div>
-    <div><span class="tn"><span class="sw p"></span>Purple</span><span>Other ways to write a function. Functions that take functions.</span><span class="tw">If you've coded before</span></div>
+    <div><span class="tn">Beginner room</span><span><span class="sw k"></span><b>Black</b> first: play a note, write a riff, arrange a song from sections.<br><span class="sw b"></span><b>Blue</b> when black is done: short names for long calls, riffs that take their notes.</span><span class="tw">New to code? Start here</span></div>
+    <div><span class="tn">Advanced room</span><span><span class="sw p"></span><b>Purple</b>: race through black, then sections that return when they end, drum pads, other ways to write a function, functions that take functions.</span><span class="tw">If you've coded before</span></div>
   </div>
   <p class="lede" style="margin-top:20px">Press <b>E</b> to jump to the next exercise. Stuck? Ask your neighbour, then a TA. Press <b>S</b> to stop all sound.</p>
-  <aside class="nt">The three-track system: black is for everyone, blue is intermediate, purple is advanced. Each exercise slide shows its track in the billing line. Brief the TAs: nobody should feel behind for staying on black all afternoon; the song on black covers every objective except passing functions.</aside>
+  <aside class="nt">Two rooms. The beginner room works through black, then blue; both are beginner exercises, blue is for whoever finishes black early. The advanced room skims black and spends the block on purple, which starts after the "Advanced room" divider slide. Each exercise slide shows its track in the billing line. Brief the TAs: nobody should feel behind for staying on black all afternoon; the song on black covers objectives 01 to 03.</aside>
 </section>
 
 <!-- 05 BLOCK 1 OPENER -->
@@ -149,31 +158,58 @@ table.tr tr.on td{background:var(--spot-200)}
       <p class="dir" style="font-size:19px;margin:0">Line 1 builds an instrument and plugs it into the speakers. Take it as given today. Line 2 is a call, with two arguments.</p>
     </div>
     <div class="notes-tbl">
-      <b>Which note</b>
-      <code>"C4"</code><span>middle C</span>
-      <code>"E4" "G4"</code><span>letters A to G, then the octave</span>
-      <code>"C5"</code><span>one octave higher</span>
-      <code>"F#4"</code><span># for sharp</span>
-      <b>How long</b>
-      <code>"4n"</code><span>a quarter note (one beat)</span>
-      <code>"8n"</code><span>an eighth note (half a beat)</span>
-      <code>"2n"</code><span>a half note (two beats)</span>
-      <code>0.3</code><span>or a number of seconds</span>
+      <b>Read line 2 aloud</b>
+      <code>synth</code><span>the instrument line 1 made</span>
+      <code>.triggerAttackRelease</code><span>its function for playing a note: start it (attack), then let go (release)</span>
+      <code>"C4"</code><span>argument 1: which note</span>
+      <code>"8n"</code><span>argument 2: how long</span>
     </div>
   </div>
   <aside class="nt">Read the call aloud: synth, trigger attack release, C4, eighth note. The dot means "the triggerAttackRelease that belongs to synth", the same shape as console.log. The name is long because it describes what a synth does: attack (start the note), then release (let it go). Don't spend time on new or toDestination: "this line makes the instrument" is enough for today.</aside>
 </section>
 
-<!-- 07 FIRST NOTE -->
+<!-- 07 MUSIC -->
+<section class="slide" id="music" data-sec="Call it, then write your own" data-demo="Notes and lengths">
+  <span class="turn try">Try it</span>
+  <div class="billing">Call it, then write your own · A minute of music</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:14px">Notes, for non-musicians</h2>
+  <div class="cols">
+    <div class="stack" style="gap:14px">
+      <div class="kbd" id="kb" aria-label="Piano keyboard, C4 to C5"></div>
+      <div class="fb note" id="kb-fb">Click a key to hear it and see its name.</div>
+      <p class="dir" style="margin:0;font-size:18px">A note is a letter from A to G, then a number for the octave. <code>"C4"</code> is middle C; <code>"C5"</code> is the same note, one octave higher. The black keys are sharps: <code>"C#4"</code> sits between C and D.</p>
+    </div>
+    <div class="stack" style="gap:12px">
+      <div class="small muted">How long: click to hear each length</div>
+      <div class="lens" id="lens"></div>
+      <p class="dir" style="margin:0;font-size:18px">A beat lasts half a second here. Lengths are fractions of four beats: <code>"4n"</code> is a quarter of four beats, so one beat.</p>
+    </div>
+  </div>
+  <aside class="nt">For students who have never read music. Three things only: notes have letter names A to G and repeat every octave; the number says which octave (C4 is middle C on a piano); lengths are written as fractions of a four-beat bar, and at Tone.js's default speed (120 beats a minute) a beat is half a second. Play C, E, G for them: that's a chord. Tip for the room: notes from one chord (C, E, G) or the white keys alone rarely sound wrong together.</aside>
+</section>
+
+<!-- 08 FIRST NOTE -->
 <section class="slide" id="first-note" data-sec="Call it, then write your own" data-ex="Play a note">
   <span class="turn">Your turn</span>
   <div class="billing"><span class="sw k"></span>Black track · Exercise 1</div><hr class="rule">
   <h2 class="h1" style="margin-bottom:14px">Play a note, then change it</h2>
   <div class="snd" id="s-first"></div>
-  <aside class="nt">Everyone presses Play. Then they change one argument at a time and listen. Common snags: the quotes around "C4" go missing (ReferenceError: C4 is not defined), or a lowercase tone (ReferenceError: tone is not defined). Two calls with no times stop with "Start time must be strictly greater than previous start time": that's the next slide. If nothing is heard: check volume and headphones; browsers stay silent until you click something, so the Play button matters. S stops everything.</aside>
+  <aside class="nt">Point at the grey lines first: a line starting with // is a comment, a note for people that the computer skips. We use them all afternoon to tell you where to write. Everyone presses Play. Then they change one argument at a time and listen. Common snags: the quotes around "C4" go missing (ReferenceError: C4 is not defined), or a lowercase tone (ReferenceError: tone is not defined). Two calls with no times stop with "Start time must be strictly greater than previous start time": that's the next two slides. If nothing is heard: check volume and headphones; browsers stay silent until you click something, so the Play button matters. S stops everything.</aside>
 </section>
 
-<!-- 08 ALL AT ONCE -->
+<!-- 09 ONE VOICE -->
+<section class="slide" id="one-voice" data-sec="Call it, then write your own">
+  <div class="billing">Call it, then write your own · Before you predict</div><hr class="rule">
+  <h2 class="h1">One synth, one voice</h2>
+  <div class="rows lab big">
+    <div style="padding:16px 0"><span class="num">01</span><span class="tx">A synth plays one note at a time, like a singer. It can't start two notes at the same moment.</span></div>
+    <div style="padding:16px 0"><span class="num">02</span><span class="tx">Code runs top to bottom, and fast: three lines take less than a millisecond.</span></div>
+    <div style="padding:16px 0"><span class="num">03</span><span class="tx">Unless you say when, a call to <code>triggerAttackRelease</code> means "play this note now".</span></div>
+  </div>
+  <aside class="nt">Three facts the next slide needs, so the prediction is reasoning, not guessing. Have one student be the synth and sing the note they're given. Read three calls at full speed, all at once: they can only sing one. That's the error they're about to meet. Don't give the fix yet; it's on the next slide.</aside>
+</section>
+
+<!-- 10 ALL AT ONCE -->
 <section class="slide" id="at-once" data-sec="Call it, then write your own" data-ex="Predict the timing">
   <span class="turn">Your turn</span>
   <div class="billing"><span class="sw k"></span>Black track · Predict</div><hr class="rule">
@@ -181,7 +217,7 @@ table.tr tr.on td{background:var(--spot-200)}
   <div class="cols">
     <div class="stack" style="gap:12px">
       <div class="panel"><div class="bar"><span>version A</span><span>no times</span></div><pre class="code sm" id="ao-a"></pre></div>
-      <div class="panel" id="ao-bp" hidden><div class="bar"><span>version B</span><span>a third argument: when</span></div><pre class="code sm" id="ao-b"></pre></div>
+      <div class="panel" id="ao-bp" hidden><div class="bar"><span>version B</span><span>a third argument: when, in seconds</span></div><pre class="code sm" id="ao-b"></pre></div>
     </div>
     <div class="stack" style="gap:12px">
       <div class="stack" id="ao-opts" style="gap:8px"></div>
@@ -190,28 +226,28 @@ table.tr tr.on td{background:var(--spot-200)}
       <div class="panel rollwrap"><div class="roll sm" id="ao-roll"></div></div>
     </div>
   </div>
-  <aside class="nt">Ask for a show of hands before anyone clicks. Most people expect one after another, because code runs line by line. It does run line by line, but each line only schedules a note for "now", and the three lines run within a millisecond. A Synth plays one note at a time, so when the second note asks to start at the same moment, Tone.js stops the scene: Error: Start time must be strictly greater than previous start time. Everyone will meet this error today, so read it aloud. The fix is the third argument, a time: Tone.now() is the current time in seconds, and now + 0.5 is half a second later.</aside>
+  <aside class="nt">Ask for a show of hands before anyone clicks; point back at the three facts on the last slide. Each line schedules a note for "now", and the three lines run within a millisecond. The synth has one voice, so when the second note asks to start at the same moment, Tone.js stops the scene: Error: Start time must be strictly greater than previous start time. Everyone will meet this error today, so read it aloud. The fix is the third argument: when to play, in seconds after you press Play. 0 is right away, 0.5 is half a second later. (In this deck's editors a time counts from the moment you press Play. In plain Tone.js you'd add the current time, Tone.now(), which needs a variable; that's Thursday.)</aside>
 </section>
 
-<!-- 09 RIFF -->
+<!-- 11 RIFF -->
 <section class="slide" id="riff" data-sec="Call it, then write your own" data-ex="Write playRiff">
   <span class="turn">Your turn</span>
   <div class="billing"><span class="sw k"></span>Black track · Exercise 2</div><hr class="rule">
   <h2 class="h1" style="margin-bottom:14px">Write a function that plays a riff</h2>
   <div class="snd" id="s-riff"></div>
-  <aside class="nt">The first function of the afternoon: packaging. Three or more calls get one name. Walk the room and look for: notes with no time argument (the "strictly greater" error), the function written but never called, and calls placed outside the curly braces.</aside>
+  <aside class="nt">The first function of the afternoon: packaging. Three or more calls get one name. Walk the room and look for: notes with no time argument (the "strictly greater" error), two notes with the same time, the function written but never called, and calls placed outside the curly braces.</aside>
 </section>
 
-<!-- 10 RIFF PARAM -->
+<!-- 12 RIFF PARAM -->
 <section class="slide" id="riff-again" data-sec="Call it, then write your own" data-ex="Riff with a start">
   <span class="turn">Your turn</span>
   <div class="billing"><span class="sw k"></span>Black track · Exercise 3</div><hr class="rule">
   <h2 class="h1" style="margin-bottom:14px">Play it again, later</h2>
   <div class="snd" id="s-again"></div>
-  <aside class="nt">Reuse, with a parameter. start is a placeholder for "when this riff begins"; every note inside is timed from it. The check calls their playRiff with 100 and makes sure no note starts before 100, so a note that still uses now instead of start gets caught. Early finishers: three calls, or a call that overlaps the first one (start + 1) for a round.</aside>
+  <aside class="nt">Reuse, with a parameter. start is a placeholder for "when this riff begins"; every note inside is timed from it. The check calls their playRiff with 100 and makes sure no note starts before 100, so a note that still uses a fixed number like 0.5 instead of start + 0.5 gets caught. Ask: playRiff(2) — what is start + 0.5 now? Early finishers: three calls, or a call that overlaps the first one (playRiff(1)) for a round. Blue track is next for them.</aside>
 </section>
 
-<!-- 11 SHARE -->
+<!-- 13 SHARE -->
 <section class="slide" id="share" data-sec="Play it for your neighbour" data-ex="Share in pairs">
   <span class="turn">Your turn</span>
   <div class="billing">Scene 03 · Play it for your neighbour · 14:15</div><hr class="rule">
@@ -221,7 +257,7 @@ table.tr tr.on td{background:var(--spot-200)}
   <aside class="nt">15 minutes. Pairs play their riff for each other first, then pick a couple of pairs to play for the room (the projector laptop can load theirs if they paste it into the riff slide). Ask each question to the room before revealing.</aside>
 </section>
 
-<!-- 12 BREAK -->
+<!-- 14 BREAK -->
 <section class="slide stage" id="break" data-sec="Intermission">
   <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
   <div class="inner">
@@ -233,22 +269,23 @@ table.tr tr.on td{background:var(--spot-200)}
   <aside class="nt">15-minute break. Press S first so the room is quiet.</aside>
 </section>
 
-<!-- 13 BLOCK 2 OPENER -->
+<!-- 15 BLOCK 2 OPENER -->
 <section class="slide stage" id="block-2" data-sec="Write a song">
   <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
   <div class="inner">
     <div class="billing">Scene 04 · Write a song · 14:45</div>
     <h2 class="hero md">A song is functions calling functions.</h2>
-    <p class="lede">Verse, chorus, verse, chorus. Each section is a function. The song is a function that calls them in order.</p>
+    <p class="lede">Someone has written the verse, the chorus and the bridge. Each one is a function. You decide how the song is put together.</p>
   </div>
-  <aside class="nt">90 minutes of work time in this block. This is organisation from this morning: one big job, split into named pieces. TAs circulate; encourage pairs to help each other.</aside>
+  <aside class="nt">90 minutes of work time in this block. The rooms split here: the beginner room works the next three slides, then blue; the advanced room goes to the purple divider once their song plays. This is organisation from this morning: one big job, split into named pieces. TAs circulate; encourage pairs to help each other.</aside>
 </section>
 
-<!-- 14 BLOCK THE SONG -->
+<!-- 16 BLOCK THE SONG -->
 <section class="slide" id="block-song" data-sec="Write a song" data-demo="Block the song">
   <span class="turn try">Try it</span>
   <div class="billing">Write a song · Blocking</div><hr class="rule">
-  <h2 class="h1" style="margin-bottom:14px">Block the song before you write it</h2>
+  <h2 class="h1" style="margin-bottom:6px">The songwriter wrote it. You arrange it.</h2>
+  <p class="muted small" style="margin:0 0 12px">Someone wrote <code>verse</code>, <code>chorus</code> and <code>bridge</code> for you. Each plays for two seconds from the <code>start</code> you give it. Pick the order and watch <code>song()</code> being written.</p>
   <div class="cols">
     <div class="stack" style="gap:12px">
       <div class="small muted">Add a section</div>
@@ -258,17 +295,55 @@ table.tr tr.on td{background:var(--spot-200)}
       <div class="fb" id="bs-fb"></div>
     </div>
     <div class="stack" style="gap:12px">
-      <div class="panel"><div class="bar"><span>song.js</span><span>written for you</span></div><pre class="code" id="bs-code" style="height:272px;font-size:15px;line-height:1.45"></pre></div>
+      <div class="panel"><div class="bar"><span>song.js</span><span>written for you</span></div><pre class="code" id="bs-code" style="height:244px;font-size:15px;line-height:1.45"></pre></div>
       <div class="panel rollwrap"><div class="roll sm" id="bs-roll"></div></div>
     </div>
   </div>
-  <aside class="nt">Blocking (a.k.a. planning your program) before writing it. Build an arrangement with the room: verse, chorus, verse, chorus, bridge, chorus. The code on the right is what song() looks like: one line per section. Point at the roll: each section takes two seconds and starts where the last one ended. How does the chorus know when to start? Next slide.</aside>
+  <aside class="nt">Blocking (a.k.a. planning your program) before writing it. The story: a songwriter has already written the verse, chorus and bridge as functions. We are the arranger: we only decide the order. Build one with the room: verse, chorus, verse, chorus, bridge, chorus. The code on the right is song(): one call per section, and each call gets its start time as the argument. Each section lasts two seconds, so the starts go 0, 2, 4, 6… Ask: where would the fifth section start?</aside>
 </section>
 
-<!-- 15 RETURN THE END -->
-<section class="slide" id="return-end" data-sec="Write a song" data-demo="Follow t">
+<!-- 17 SONG -->
+<section class="slide" id="song" data-sec="Write a song" data-ex="Write your song">
+  <span class="turn">Your turn</span>
+  <div class="billing"><span class="sw k"></span>Black track · Exercise 4</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:14px">Write your song</h2>
+  <div class="snd" id="s-song"></div>
+  <aside class="nt">The main black-track exercise, and most people's whole block. Sections take a start and play from it; song() calls them with starts two seconds apart. The check calls verse(100) and chorus(100) silently and makes sure every note is timed from start (a note at a fixed 0.5 gets caught). Common snag: two sections with the same start, which gives the "strictly greater" error. The song is saved in the browser for every lecture, so on Thursday (Data) it comes back and gets data fed into it.</aside>
+</section>
+
+<!-- 18 WRAP -->
+<section class="slide" id="wrap" data-sec="Write a song" data-ex="Wrap the tone">
+  <span class="turn">Your turn</span>
+  <div class="billing"><span class="sw b"></span>Blue track · Exercise 5</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:14px">Wrap the long call in a short one</h2>
+  <div class="snd" id="s-wrap"></div>
+  <aside class="nt">Wrapping: your own short function around someone else's long one. It's abstraction again, but now they're the ones hiding the details. A second instrument (MembraneSynth, a drum) shows why wrappers help: the song reads as note and kick, not as two kinds of triggerAttackRelease.</aside>
+</section>
+
+<!-- 19 RIFF NOTES -->
+<section class="slide" id="riff-notes" data-sec="Write a song" data-ex="Riff with notes">
+  <span class="turn">Your turn</span>
+  <div class="billing"><span class="sw b"></span>Blue track · Exercise 6</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:14px">A riff that takes its notes</h2>
+  <div class="snd" id="s-rnotes"></div>
+  <aside class="nt">More parameters: a function can take several, and the arguments line up with them in order. The check calls playRiff(100, "D4", "F4", "A4") silently and listens for those notes, so a riff that still plays fixed notes gets caught. Ask: what happens if you call it with only two notes? (the third parameter is undefined, and Tone.js stops the scene.)</aside>
+</section>
+
+<!-- 20 ADVANCED ROOM -->
+<section class="slide stage adv" id="advanced" data-sec="Advanced room">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Advanced room · From here on</div>
+    <h2 class="hero md">Advanced room starts here.</h2>
+    <p class="lede">Beginner room: your exercises end on the slide before this one. Advanced room: once your song plays, carry on here.</p>
+  </div>
+  <aside class="nt">The divide between the rooms. Everything after this, up to the walkthrough, is for the advanced room: return values that chain, buttons, other ways to write a function, functions as arguments. In the beginner room, skip to the walkthrough when the block ends.</aside>
+</section>
+
+<!-- 21 RETURN THE END -->
+<section class="slide" id="return-end" data-sec="Advanced room" data-demo="Follow t">
   <span class="turn try">Try it</span>
-  <div class="billing">Write a song · Return</div><hr class="rule">
+  <div class="billing"><span class="sw p"></span>Advanced room · Return</div><hr class="rule">
   <h2 class="h1" style="margin-bottom:14px">Each section returns when it ends</h2>
   <div class="cols wide-l">
     <div class="panel"><div class="bar"><span>song.js</span><span id="re-n">step 0 of 6</span></div><pre class="code sm" id="re-code"></pre></div>
@@ -278,57 +353,48 @@ table.tr tr.on td{background:var(--spot-200)}
       <div class="row"><button class="btn ghost" id="re-back">Back</button><button class="btn" id="re-next">Next</button><button class="btn ghost" id="re-reset">Start again</button></div>
     </div>
   </div>
-  <aside class="nt">The point of return this afternoon. verse plays its notes and hands back the time it finishes. song keeps that in t and passes it into the next section. Pretend Tone.now() is 0 so the numbers are readable. Note the let: t changes, so it can't be const. Ask: what would t be if verse forgot to return? (undefined, and the next notes fail.)</aside>
+  <aside class="nt">Advanced room only. In the beginner song, every start was worked out by hand: 0, 2, 4. That breaks as soon as sections have different lengths. Here verse plays its notes and hands back the time it finishes. song keeps that in t and passes it into the next section. Note the let: t changes, so it can't be const. Ask: what would t be if verse forgot to return? (undefined, and the next notes fail.)</aside>
 </section>
 
-<!-- 16 SONG -->
-<section class="slide" id="song" data-sec="Write a song" data-ex="Write your song">
+<!-- 22 CHAIN -->
+<section class="slide" id="chain" data-sec="Advanced room" data-ex="Sections that return">
   <span class="turn">Your turn</span>
-  <div class="billing"><span class="sw k"></span>Black track · Exercise 4</div><hr class="rule">
-  <h2 class="h1" style="margin-bottom:14px">Write your song</h2>
-  <div class="snd" id="s-song"></div>
-  <aside class="nt">The main black-track exercise, and most people's whole block. The check calls verse(100) and chorus(100) silently and looks at what they give back: a section that forgets to return is caught here. The song is saved in the browser for every lecture, so on Thursday (Data) it comes back and gets data fed into it.</aside>
+  <div class="billing"><span class="sw p"></span>Advanced room · Exercise 7</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:14px">Let the sections keep time</h2>
+  <div class="snd" id="s-chain"></div>
+  <aside class="nt">Sections of different lengths, chained by their return values. The check calls verse(100) and chorus(100) silently and looks at what they give back: a section that forgets to return is caught here, as is a return that isn't later than the start. Push early finishers to a bridge of an odd length (1.5 seconds) to prove nothing in song() needs to change.</aside>
 </section>
 
-<!-- 17 WRAP -->
-<section class="slide" id="wrap" data-sec="Write a song" data-ex="Wrap the tone">
+<!-- 23 PADS -->
+<section class="slide" id="pads" data-sec="Advanced room" data-ex="Drum pads">
   <span class="turn">Your turn</span>
-  <div class="billing"><span class="sw b"></span>Blue track · Exercise 5</div><hr class="rule">
-  <h2 class="h1" style="margin-bottom:14px">Wrap the long call in a short one</h2>
-  <div class="snd" id="s-wrap"></div>
-  <aside class="nt">Wrapping: your own short function around someone else's long one. It's abstraction again, but now they're the ones hiding the details. A second instrument (MembraneSynth, a drum) shows why wrappers help: the song reads as note and kick, not as two kinds of triggerAttackRelease.</aside>
-</section>
-
-<!-- 18 PADS -->
-<section class="slide" id="pads" data-sec="Write a song" data-ex="Drum pads">
-  <span class="turn">Your turn</span>
-  <div class="billing"><span class="sw b"></span>Blue track · Exercise 6</div><hr class="rule">
+  <div class="billing"><span class="sw p"></span>Advanced room · Exercise 8</div><hr class="rule">
   <h2 class="h1" style="margin-bottom:14px">Pass the function. Don't call it.</h2>
   <div class="snd" id="s-pads"></div>
-  <aside class="nt">makeButton is a helper written for this slide; real web pages do the same thing with button.addEventListener("click", kick), which is next Monday. The big idea: kick is the function; kick() is calling it right now. A button needs the function itself so it can call it later, on every click.</aside>
+  <aside class="nt">Advanced room only: buttons are Monday for everyone else. makeButton is a helper written for this slide; real web pages do the same thing with button.addEventListener("click", kick), which is next Monday. The big idea: kick is the function; kick() is calling it right now. A button needs the function itself so it can call it later, on every click.</aside>
 </section>
 
-<!-- 19 STYLES -->
-<section class="slide" id="styles" data-sec="Write a song" data-ex="Four ways to write it">
+<!-- 24 STYLES -->
+<section class="slide" id="styles" data-sec="Advanced room" data-ex="Four ways to write it">
   <span class="turn">Your turn</span>
-  <div class="billing"><span class="sw p"></span>Purple track · Exercise 7</div><hr class="rule">
+  <div class="billing"><span class="sw p"></span>Advanced room · Exercise 9</div><hr class="rule">
   <h2 class="h1" style="margin-bottom:6px">Four ways to write the same kick</h2>
-  <p class="muted small" style="margin:0 0 6px">Name each style. Every one of them can be cued with <code>kick(now)</code>, except the last, which has no name.</p>
+  <p class="muted small" style="margin:0 0 6px">Name each style. Every one of them can be cued with <code>kick(0)</code>, except the one with no name.</p>
   <div class="rows styles quiz" id="sy"></div>
   <div class="fb" id="sy-fb" style="margin-top:10px"></div>
   <aside class="nt">Declaration, function expression, arrow function, anonymous function. Monday's lecture goes deeper into declarations vs expressions; this is a first look. One difference worth naming: declarations can be called before the line they're written on (hoisting); expressions and arrows can't. Try it in the workspace.</aside>
 </section>
 
-<!-- 20 PASS A FUNCTION -->
-<section class="slide" id="pass-fn" data-sec="Write a song" data-ex="Functions as arguments">
+<!-- 25 PASS A FUNCTION -->
+<section class="slide" id="pass-fn" data-sec="Advanced room" data-ex="Functions as arguments">
   <span class="turn">Your turn</span>
-  <div class="billing"><span class="sw p"></span>Purple track · Exercise 8</div><hr class="rule">
+  <div class="billing"><span class="sw p"></span>Advanced room · Exercise 10</div><hr class="rule">
   <h2 class="h1" style="margin-bottom:14px">Send a function into a function</h2>
   <div class="snd" id="s-pass"></div>
   <aside class="nt">twice takes a section, which is a function, and calls it. The tests don't use sound: they pass a tiny function of their own that adds 1 to the time and counts how often it was called. Bonus: fourTimes can be written with twice, either nested (twice(section, twice(section, start))) or with an anonymous function passed in.</aside>
 </section>
 
-<!-- 21 MISTAKES -->
+<!-- 26 MISTAKES -->
 <section class="slide" id="mistakes" data-sec="Walkthrough" data-ex="What went wrong">
   <span class="turn">Your turn</span>
   <div class="billing">Scene 05 · Walkthrough · 16:15</div><hr class="rule">
@@ -337,16 +403,16 @@ table.tr tr.on td{background:var(--spot-200)}
   <aside class="nt">Ask the room which of these happened to them before revealing each fix. Add any other mistakes the TAs saw a lot.</aside>
 </section>
 
-<!-- 22 MODEL -->
+<!-- 27 MODEL -->
 <section class="slide" id="model" data-sec="Walkthrough" data-demo="One way to write it">
   <span class="turn try">Try it</span>
   <div class="billing">Walkthrough · A solution</div><hr class="rule">
   <h2 class="h1" style="margin-bottom:14px">One way to write it</h2>
   <div class="snd" id="s-model"></div>
-  <aside class="nt">David's in-class solution: wrappers (note, kick), sections that return their end time, and a song that chains them. Read song() aloud; it reads like the running order. Then ask a couple of students to show theirs; different is fine as long as each section returns when it ends.</aside>
+  <aside class="nt">David's in-class solution for the beginner room: wrappers (note, kick, from blue), sections timed from start, and a song that calls them two seconds apart. Read song() aloud; it reads like the running order. Then ask a couple of students to show theirs; different is fine as long as every note is timed from start. Advanced room: show how song() changes when each section returns its end.</aside>
 </section>
 
-<!-- 23 CURTAIN CALL -->
+<!-- 28 CURTAIN CALL -->
 <section class="slide stage" id="curtain-call" data-sec="Curtain call">
   <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
   <div class="inner">
@@ -354,10 +420,10 @@ table.tr tr.on td{background:var(--spot-200)}
     <h2 class="hero md">Call it. Write it. Pass it on.</h2>
     <div class="terms"><span>call</span><span>argument</span><span>parameter</span><span>return</span><span>a function as an argument</span></div>
   </div>
-  <aside class="nt">Curtain call (a.k.a. the recap). Back to the four objectives: called someone else's function with arguments (triggerAttackRelease), wrote functions with parameters and return values (playRiff, verse), split a song into functions (song), handed a function to a button or another function (makeButton, twice). Hands up for each.</aside>
+  <aside class="nt">Curtain call (a.k.a. the recap). Back to the objectives: called someone else's function with arguments (triggerAttackRelease), wrote functions with parameters (playRiff, verse), split a song into functions (song). Advanced room: chained return values (t = verse(t)) and handed a function to a button or another function (makeButton, twice). Hands up for each.</aside>
 </section>
 
-<!-- 24 NEXT -->
+<!-- 29 NEXT -->
 <section class="slide" id="next" data-sec="Curtain call">
   <div class="billing">Next · Resources</div><hr class="rule">
   <h2 class="h1">Your song comes back on Thursday</h2>
@@ -391,17 +457,21 @@ var sget=D.store.get,sset=D.store.set;
 
 /* ============ sound runtime ============
    Every triggerAttackRelease is recorded (so the piano roll can show what played and the checks can
-   see it). With REC.dry set, notes are recorded but not played: used to test a student's function. */
-var REC={on:false,dry:false,t0:0,notes:[]};
+   see it). With REC.dry set, notes are recorded but not played: used to test a student's function.
+   With REC.rel set, a number time counts in seconds from REC.t0 (the moment Play was pressed), so
+   students write 0, 0.5, 1 instead of Tone.now() + 0.5: no variables before Thursday's lecture. */
+var REC={on:false,dry:false,rel:false,t0:0,notes:[]};
 function patch(proto){
   if(!proto||Object.prototype.hasOwnProperty.call(proto,"__kd"))return;
   var orig=proto.triggerAttackRelease;
   proto.triggerAttackRelease=function(note,dur,time){
+    var self=this,noise=self.name==="NoiseSynth",args=[].slice.call(arguments),ti=noise?1:2;
+    if(REC.rel&&typeof args[ti]==="number")args[ti]=REC.t0+args[ti];
+    note=args[0];dur=args[1];time=args[2];
     /* play first, so a call that throws isn't drawn */
-    var ret=REC.dry?this:orig.apply(this,arguments);
+    var ret=REC.dry?this:orig.apply(this,args);
     if(REC.on){
       try{
-        var self=this,noise=self.name==="NoiseSynth";
         if(noise){time=dur;dur=note;note="noise"}
         var t=time===undefined?Tone.now():self.toSeconds(time),d=self.toSeconds(dur);
         [].concat(note).forEach(function(n){
@@ -424,18 +494,18 @@ function stopAll(){
   try{var tr=Tone.getTransport();tr.stop();tr.cancel()}catch(e){}
   try{var old=Tone.getContext();Tone.setContext(new Tone.Context());old.dispose()}catch(e){}
 }
-function startRec(){REC.on=true;REC.dry=false;REC.notes=[];REC.t0=Tone.now()}
+function startRec(){REC.on=true;REC.dry=false;REC.rel=true;REC.notes=[];REC.t0=Tone.now()}
 /* Call f with sound off and return the notes it would have played. */
 function dry(f){
-  var keep={on:REC.on,dry:REC.dry,notes:REC.notes},out;
-  REC.on=true;REC.dry=true;REC.notes=[];
+  var keep={on:REC.on,dry:REC.dry,rel:REC.rel,t0:REC.t0,notes:REC.notes},out;
+  REC.on=true;REC.dry=true;REC.rel=true;REC.t0=0;REC.notes=[];
   try{out={value:f()}}catch(e){out={error:e}}
-  out.notes=REC.notes;REC.on=keep.on;REC.dry=keep.dry;REC.notes=keep.notes;
+  out.notes=REC.notes;REC.on=keep.on;REC.dry=keep.dry;REC.rel=keep.rel;REC.t0=keep.t0;REC.notes=keep.notes;
   return out;
 }
 D.addButton({label:"Stop sound",key:"s",onClick:stopAll});
 D.workspace.env.Tone=Tone;
-D.workspace.onRun(function(){stopAll();Tone.start()});
+D.workspace.onRun(function(){stopAll();Tone.start();startRec()});
 
 /* Draw notes into a .roll: x is time, y is pitch, colour is the instrument. */
 function roll(el,notes,t0){
@@ -471,8 +541,8 @@ function runPick(src,names,env){
 }
 function errText(err){
   var m=(err.name||"Error")+": "+err.message,h="";
-  if(/cancelScheduledValues: null|non-finite|finite/.test(err.message))h=" A time was <code>undefined</code> or <code>NaN</code>. Did a function forget to <code>return</code> its end time?";
-  else if(/strictly greater than previous start/.test(err.message))h=" One synth plays one note at a time, and two notes asked to start at the same moment. Give each its own time: <code>now + 0.5</code>, <code>now + 1</code>…. Between sections, check that each one returns its end time.";
+  if(/cancelScheduledValues: null|non-finite|finite/.test(err.message))h=" A time was <code>undefined</code> or <code>NaN</code>. Did you call a function without its start, like <code>playRiff()</code> instead of <code>playRiff(0)</code>? Or, in the advanced room, did a section forget to <code>return</code> its end time?";
+  else if(/strictly greater than previous start/.test(err.message))h=" One synth plays one note at a time, and two notes asked to start at the same moment. Give each its own time as a third argument: <code>0</code>, <code>0.5</code>, <code>1</code>… Between sections, check that no two start at the same time.";
   else if(/setValueAtTime: "/.test(err.message))h=" That note name isn't one Tone.js knows. Notes are A to G, then a number: <code>\"C4\"</code>.";
   else if(/is not defined/.test(err.message))h=" Check the spelling, capitals included, and the quotes around note names.";
   else if(/is not a function/.test(err.message))h=" Something you called isn't a function. Check the name, or whether you passed <code>kick()</code> where <code>kick</code> was needed.";
@@ -540,12 +610,43 @@ function testList(res,rows){
 }
 var SYNTH="const synth = new Tone.Synth().toDestination();\n";
 
-/* ---------- 06 meet tone ---------- */
+/* ---------- meet tone ---------- */
 code($("#mt-code"),'const synth = new Tone.Synth().toDestination();\n\nsynth.triggerAttackRelease("C4", "8n");',[2]);
 
-/* ---------- 07 first note ---------- */
+/* ---------- music: a playable keyboard and the note lengths ---------- */
+(function(){
+  var kb=$("#kb"),syn=null;
+  function hit(name,len,what){
+    Tone.start();
+    try{if(!syn||syn.disposed||syn.context!==Tone.getContext())syn=new Tone.Synth().toDestination();syn.triggerAttackRelease(name,len)}catch(e){}
+    fb($("#kb-fb"),"note",what);
+  }
+  var W=[["C4","middle C"],["D4",""],["E4",""],["F4",""],["G4",""],["A4",""],["B4",""],["C5","one octave up"]];
+  var B=[["C#4",1],["D#4",2],["F#4",4],["G#4",5],["A#4",6]];
+  W.forEach(function(w){
+    var b=document.createElement("button");b.className="w";b.innerHTML=esc(w[0])+(w[1]?'<small>'+esc(w[1])+'</small>':'');
+    b.setAttribute("aria-label",w[0]);
+    b.addEventListener("click",function(){hit(w[0],"4n","<code>\""+esc(w[0])+"\"</code>"+(w[1]?": "+esc(w[1])+".":"."))});
+    kb.appendChild(b);
+  });
+  B.forEach(function(k){
+    var b=document.createElement("button");b.className="bk";b.textContent=k[0].replace("4","");
+    b.style.left=(k[1]/W.length*100)+"%";b.setAttribute("aria-label",k[0]);
+    b.addEventListener("click",function(){hit(k[0],"4n","<code>\""+esc(k[0])+"\"</code>: a sharp, a black key, between "+k[0].charAt(0)+" and the next white key.")});
+    kb.appendChild(b);
+  });
+  var L=[["1n","a whole note: four beats, 2 seconds"],["2n","a half note: two beats, 1 second"],["4n","a quarter note: one beat, 0.5 seconds"],["8n","an eighth note: half a beat, 0.25 seconds"],["16n","a sixteenth note: 0.125 seconds"]];
+  L.forEach(function(l){
+    var b=document.createElement("button");b.className="btn ghost";b.textContent=l[0];
+    var t=document.createElement("span");t.textContent=l[1];
+    b.addEventListener("click",function(){hit("C4",l[0],"<code>\""+esc(l[0])+"\"</code> is "+esc(l[1])+".")});
+    $("#lens").appendChild(b);$("#lens").appendChild(t);
+  });
+})();
+
+/* ---------- first note ---------- */
 soundEd({el:$("#s-first"),file:"first-note.js",store:"first",
-  task:"Press <b>Play</b>. Then change the note (try <code>\"E4\"</code> or <code>\"C5\"</code>) and the length (try <code>\"2n\"</code>). Which argument does what?",
+  task:"Lines that start with <code>//</code> are <b>comments</b>: notes for people, which the computer skips. Press <b>Play</b>. Then change the note (try <code>\"E4\"</code> or <code>\"C5\"</code>) and the length (try <code>\"2n\"</code>). Which argument does what?",
   start:"// Make an instrument and plug it into the speakers\n"+SYNTH+"\n// Call a function: which note, and for how long\nsynth.triggerAttackRelease(\"C4\", \"8n\");\n",
   check:function(c){
     if(!c.notes.length)return ["note","Nothing played. Is the line with <code>triggerAttackRelease</code> still there?"];
@@ -554,11 +655,11 @@ soundEd({el:$("#s-first"),file:"first-note.js",store:"first",
     return ["pass","Applause. You called it with <code>"+esc(JSON.stringify(n.n))+"</code> for "+n.d.toFixed(2)+" seconds. The first argument picks the note, the second how long it lasts."];
   }});
 
-/* ---------- 08 all at once ---------- */
+/* ---------- all at once ---------- */
 (function(){
   var A=SYNTH+'\nsynth.triggerAttackRelease("C4", "8n");\nsynth.triggerAttackRelease("E4", "8n");\nsynth.triggerAttackRelease("G4", "8n");';
-  var B=SYNTH+'const now = Tone.now();\n\nsynth.triggerAttackRelease("C4", "8n", now);\nsynth.triggerAttackRelease("E4", "8n", now + 0.5);\nsynth.triggerAttackRelease("G4", "8n", now + 1);';
-  code($("#ao-a"),A);code($("#ao-b"),B,[1,3,4,5]);
+  var B=SYNTH+'\nsynth.triggerAttackRelease("C4", "8n", 0);\nsynth.triggerAttackRelease("E4", "8n", 0.5);\nsynth.triggerAttackRelease("G4", "8n", 1);';
+  code($("#ao-a"),A);code($("#ao-b"),B,[2,3,4]);
   var rl=$("#ao-roll");roll(rl,[],0);
   function playSrc(s){stopAll();Tone.start();startRec();var r=run(s,null,{Tone:Tone});if(r.error)fb($("#ao-fb"),"err",errText(r.error));else if(answered)fb($("#ao-fb"),"pass","Three notes, half a second apart. Each one has its own time.");roll(rl,REC.notes,REC.t0)}
   var answered=false;
@@ -566,7 +667,7 @@ soundEd({el:$("#s-first"),file:"first-note.js",store:"first",
     var b=document.createElement("button");b.className="opt";b.textContent=o[0];
     b.addEventListener("click",function(){
       if(answered)return;
-      if(o[1]){b.classList.add("right");answered=true;fb($("#ao-fb"),"pass","Right. Each call means \"play this now\", and the lines run within a millisecond. One synth can't start two notes at the same moment, so the second call stops the scene. Version B gives each note its own time.");$("#ao-bp").hidden=false;$("#ao-pb").hidden=false}
+      if(o[1]){b.classList.add("right");answered=true;fb($("#ao-fb"),"pass","Right. Each call means \"play this now\", and the lines run within a millisecond. One synth can't start two notes at the same moment, so the second call stops the scene. Version B adds a third argument: when, in seconds after you press Play.");$("#ao-bp").hidden=false;$("#ao-pb").hidden=false}
       else{b.classList.add("wrong");fb($("#ao-fb"),"note","Play version A and listen. How many notes do you hear? Then read the message.")}
     });
     $("#ao-opts").appendChild(b);
@@ -575,39 +676,39 @@ soundEd({el:$("#s-first"),file:"first-note.js",store:"first",
   $("#ao-pb").addEventListener("click",function(){playSrc(B)});
 })();
 
-/* ---------- 09 riff ---------- */
+/* ---------- riff ---------- */
 soundEd({el:$("#s-riff"),file:"riff.js",store:"riff",names:["playRiff"],
   task:"Finish <code>playRiff()</code> so it plays at least three notes, one after another. Then call it. Make it yours: any notes, any rhythm.",
-  start:SYNTH+"\nfunction playRiff() {\n  const now = Tone.now();\n  synth.triggerAttackRelease(\"C4\", \"8n\", now);\n  // two or more notes, each a little later\n  \n}\n\nplayRiff();\n",
+  start:SYNTH+"\nfunction playRiff() {\n  synth.triggerAttackRelease(\"C4\", \"8n\", 0);\n  // two or more notes, each a little later: 0.5, 1…\n  \n}\n\nplayRiff();\n",
   check:function(c){
     if(!c.fns.playRiff)return ["err","The scene stopped: there's no function called <code>playRiff</code>. Check the spelling, capitals included."];
     if(!c.notes.length)return ["note","<code>playRiff</code> is written but nobody called it. Writing a scene isn't performing it: add <code>playRiff();</code> at the bottom."];
     if(c.notes.length<3)return ["warn","You played "+c.notes.length+(c.notes.length===1?" note":" notes")+". Add more inside the curly braces, until there are at least three."];
-    if(distinctStarts(c.notes)<3)return ["warn","Some notes start at the same moment. Look at the roll, then give each one a later time: <code>now + 0.5</code>, <code>now + 1</code>…"];
+    if(distinctStarts(c.notes)<3)return ["warn","Some notes start at the same moment. Look at the roll, then give each one a later time as the third argument: <code>0.5</code>, <code>1</code>…"];
     return ["pass","Applause. "+c.notes.length+" notes, one name. That's packaging: now <code>playRiff()</code> is all it takes."];
   }});
 
-/* ---------- 10 riff with a start ---------- */
+/* ---------- riff with a start ---------- */
 soundEd({el:$("#s-again"),file:"riff-again.js",store:"again",names:["playRiff"],
-  task:"Now <code>playRiff</code> takes a <code>start</code>: when to begin. Call it a second time, two seconds after the first. Then swap in your own notes.",
-  start:SYNTH+"\nfunction playRiff(start) {\n  synth.triggerAttackRelease(\"C4\", \"8n\", start);\n  synth.triggerAttackRelease(\"E4\", \"8n\", start + 0.5);\n  synth.triggerAttackRelease(\"G4\", \"8n\", start + 1);\n}\n\nconst now = Tone.now();\nplayRiff(now);\n// call it again, two seconds later:\n\n",
+  task:"Now <code>playRiff</code> takes a <code>start</code>: when to begin, in seconds. Every note is timed from it. Call it a second time, starting at 2. Then swap in your own notes.",
+  start:SYNTH+"\nfunction playRiff(start) {\n  synth.triggerAttackRelease(\"C4\", \"8n\", start);\n  synth.triggerAttackRelease(\"E4\", \"8n\", start + 0.5);\n  synth.triggerAttackRelease(\"G4\", \"8n\", start + 1);\n}\n\nplayRiff(0);\n// call it again, starting at 2:\n\n",
   check:function(c){
     var f=c.fns.playRiff;
     if(!f)return ["err","The scene stopped: there's no function called <code>playRiff</code>. Check the spelling, capitals included."];
     if(f.length<1)return ["warn","Your <code>playRiff</code> doesn't take anything in. Put <code>start</code> between the parentheses: <code>function playRiff(start)</code>."];
     var d=dry(function(){return f(100)});
     if(d.error)return ["err",errText(d.error)];
-    if(d.notes.some(function(n){return n.t<99.999}))return ["warn","When called with 100, your riff still plays some notes earlier than 100. Time every note from <code>start</code>, not from <code>now</code>."];
-    if(c.notes.length<6)return ["warn","The riff played once. Call <code>playRiff</code> again with a later start: <code>playRiff(now + 2)</code>."];
+    if(d.notes.some(function(n){return n.t<99.999}))return ["warn","When called with 100, your riff still plays some notes earlier than 100. Time every note from <code>start</code>: <code>start + 0.5</code>, not <code>0.5</code>."];
+    if(c.notes.length<6)return ["warn","The riff played once. Call <code>playRiff</code> again with a later start: <code>playRiff(2)</code>."];
     var ts=c.notes.map(function(n){return n.t});
     if(Math.max.apply(null,ts)-Math.min.apply(null,ts)<1.5)return ["warn","Both riffs play on top of each other. Give the second call a later start."];
     return ["pass","Applause. One function, called twice, starting at different times. That's reuse, and <code>start</code> is a parameter doing its job."];
   }});
 
-/* ---------- 11 share ---------- */
+/* ---------- share ---------- */
 (function(){
   var Q=[["Play your riff for your neighbour. Then theirs.","Listen for the rhythm: the gaps between the times you chose."],
-    ["Point at the parameter. What changes when you pass a different start?","start is the placeholder. The argument (now, now + 2) is the real time it gets each call."],
+    ["Point at the parameter. What changes when you pass a different start?","start is the placeholder. The argument (0, then 2) is the real time it gets on each call."],
     ["Which of this morning's jobs is playRiff doing?","Packaging (many calls, one name) and reuse (call it again later). triggerAttackRelease itself is abstraction."],
     ["Why did three calls with no times stop the scene?","Each call says \"now\", and the lines run within a millisecond. One synth can't start two notes at once. Code runs in order; sound needs times."]];
   var box=$("#sh");
@@ -615,7 +716,7 @@ soundEd({el:$("#s-again"),file:"riff-again.js",store:"again",names:["playRiff"],
   $("#sh-all").addEventListener("click",function(){$$("#sh .ans").forEach(function(a){a.hidden=false});$$("#sh .opt").forEach(function(b){b.classList.add("right")})});
 })();
 
-/* ---------- 12 timer ---------- */
+/* ---------- timer ---------- */
 (function(){
   var total=15*60,left=total,t=null,BRK=$("#tm-msg").textContent;
   function show(){var m=Math.floor(left/60),s=left%60;$("#tm").textContent=m+":"+(s<10?"0":"")+s;if(left===0){$("#tm-msg").textContent="Places, please. We start again now.";stop()}}
@@ -629,7 +730,7 @@ soundEd({el:$("#s-again"),file:"riff-again.js",store:"again",names:["playRiff"],
   $("#tm-reset").addEventListener("click",function(){stop();left=total;show();$("#tm-go").textContent="Start";$("#tm-msg").textContent=BRK});
 })();
 
-/* ---------- 14 block the song ---------- */
+/* ---------- block the song ---------- */
 /* Ready-made sections for the demo. Each plays two seconds and returns when it ends. */
 function sections(){
   var lead=new Tone.Synth().toDestination(),drum=new Tone.MembraneSynth().toDestination();
@@ -646,7 +747,7 @@ function sections(){
 }
 (function(){
   var arr=[],rl=$("#bs-roll");roll(rl,[],0);
-  function src(){return "function song() {\n  let t = Tone.now();\n"+arr.map(function(s){return "  t = "+s+"(t);"}).join("\n")+(arr.length?"\n":"  // add sections\n")+"}\n\nsong();"}
+  function src(){return "function song() {\n"+arr.map(function(s,i){return "  "+s+"("+(i*2)+");"}).join("\n")+(arr.length?"\n":"  // add sections\n")+"}\n\nsong();"}
   function render(){
     code($("#bs-code"),src());
     $("#bs-arr").innerHTML=arr.length?arr.map(function(s){return '<span class="sec s-'+s+'">'+s+'</span>'}).join(""):'<span class="muted">No sections yet.</span>';
@@ -663,16 +764,16 @@ function sections(){
     var r=run(src(),null,env);
     if(r.error){fb($("#bs-fb"),"err",errText(r.error));return}
     roll(rl,REC.notes,REC.t0);
-    fb($("#bs-fb"),"pass",arr.length+(arr.length===1?" section, ":" sections, ")+(arr.length*2)+" seconds. Each one starts where the last one ended.");
+    fb($("#bs-fb"),"pass",arr.length+(arr.length===1?" section, ":" sections, ")+(arr.length*2)+" seconds. Each section starts two seconds after the one before.");
   });
 })();
 
-/* ---------- 15 return the end ---------- */
+/* ---------- return the end ---------- */
 (function(){
-  var S='function verse(start) {\n  synth.triggerAttackRelease("C4", "8n", start);\n  synth.triggerAttackRelease("E4", "8n", start + 0.5);\n  synth.triggerAttackRelease("G4", "8n", start + 1);\n  return start + 2;   // when the verse ends\n}\n\nfunction song() {\n  let t = Tone.now();\n  t = verse(t);\n  t = chorus(t);\n  t = verse(t);\n}';
+  var S='function verse(start) {\n  synth.triggerAttackRelease("C4", "8n", start);\n  synth.triggerAttackRelease("E4", "8n", start + 0.5);\n  synth.triggerAttackRelease("G4", "8n", start + 1);\n  return start + 2;   // when the verse ends\n}\n\nfunction song() {\n  let t = 0;\n  t = verse(t);\n  t = chorus(t);\n  t = verse(t);\n}';
   var steps=[
-    {l:[],rows:[],d:"Pretend Tone.now() is 0, so the numbers stay readable. Press Next."},
-    {l:[8],rows:[["9","t starts at now","0"]],d:"song starts. t holds the time: 0."},
+    {l:[],rows:[],d:"Follow t, the time, through the song. Press Next."},
+    {l:[8],rows:[["9","t starts at 0","0"]],d:"song starts. t holds the time: 0."},
     {l:[9,0],rows:[["10","verse(0) is called","0"]],d:"verse is called with 0. Inside, start is 0."},
     {l:[1,2,3,4],rows:[["2–4","notes at 0, 0.5 and 1","0"],["5","verse returns 0 + 2","0"]],d:"The notes are scheduled from start, then return hands back 2: when the verse ends."},
     {l:[9],rows:[["10","t = verse(0)","2"]],d:"The 2 lands in t. Now song knows where the chorus begins."},
@@ -693,33 +794,33 @@ function sections(){
   $("#re-reset").addEventListener("click",function(){i=0;render()});
 })();
 
-/* ---------- 16 song (saved for every lecture: Thursday's Data deck picks it up) ---------- */
-function sectionCheck(f,name){
+/* ---------- song (saved for every lecture: Thursday's Data deck picks it up) ---------- */
+function sectionCheck(f,name,needReturn){
   if(!f)return ["err","The scene stopped: there's no function called <code>"+name+"</code>. Check the spelling, capitals included."];
   var d=dry(function(){return f(100)});
   if(d.error)return ["err","When called with 100, "+errText(d.error)];
   if(!d.notes.length)return ["warn","<code>"+name+"</code> is silent. Give it some notes, timed from <code>start</code>."];
-  if(typeof d.value!=="number"||!isFinite(d.value))return ["warn","<code>"+name+"(100)</code> gave back <code>"+esc(D.fmt(d.value))+"</code>. It should <code>return</code> the time it ends, like <code>start + 2</code>, so the next section knows when to begin."];
-  if(d.value<=100)return ["warn","<code>"+name+"(100)</code> returned "+d.value+". The end time should be later than the start."];
-  if(d.notes.some(function(n){return n.t<99.999}))return ["warn","<code>"+name+"(100)</code> plays notes before 100. Time every note from <code>start</code>."];
+  if(needReturn&&(typeof d.value!=="number"||!isFinite(d.value)))return ["warn","<code>"+name+"(100)</code> gave back <code>"+esc(D.fmt(d.value))+"</code>. It should <code>return</code> the time it ends, like <code>start + 2</code>, so the next section knows when to begin."];
+  if(needReturn&&d.value<=100)return ["warn","<code>"+name+"(100)</code> returned "+d.value+". The end time should be later than the start."];
+  if(d.notes.some(function(n){return n.t<99.999}))return ["warn","<code>"+name+"(100)</code> plays notes before 100. Time every note from <code>start</code>: <code>start + 0.5</code>, not <code>0.5</code>."];
   return null;
 }
 soundEd({el:$("#s-song"),file:"song.js",store:"sound:song",course:true,names:["verse","chorus","song"],
-  task:"Write the <code>chorus</code>. Then make <code>song()</code> play verse, chorus, verse, chorus. Every section returns when it ends.",
-  start:SYNTH+"\nfunction verse(start) {\n  synth.triggerAttackRelease(\"C4\", \"8n\", start);\n  synth.triggerAttackRelease(\"E4\", \"8n\", start + 0.5);\n  synth.triggerAttackRelease(\"G4\", \"8n\", start + 1);\n  return start + 2;\n}\n\nfunction chorus(start) {\n  // your notes here\n  return start + 2;\n}\n\nfunction song() {\n  let t = Tone.now();\n  t = verse(t);\n  t = chorus(t);\n}\n\nsong();\n",
+  task:"Write the <code>chorus</code>: notes timed from <code>start</code>, all within two seconds. Then make <code>song()</code> play verse, chorus, verse, chorus, each starting two seconds after the last.",
+  start:SYNTH+"\n// two seconds long\nfunction verse(start) {\n  synth.triggerAttackRelease(\"C4\", \"8n\", start);\n  synth.triggerAttackRelease(\"E4\", \"8n\", start + 0.5);\n  synth.triggerAttackRelease(\"G4\", \"8n\", start + 1);\n}\n\n// two seconds long\nfunction chorus(start) {\n  // your notes here, from start to start + 1.5\n  \n}\n\nfunction song() {\n  verse(0);\n  chorus(2);\n  // verse, then chorus again\n}\n\nsong();\n",
   check:function(c){
     var p=sectionCheck(c.fns.verse,"verse")||sectionCheck(c.fns.chorus,"chorus");if(p)return p;
     if(!c.fns.song)return ["err","The scene stopped: there's no function called <code>song</code>."];
     if(!c.notes.length)return ["note","Nothing played. Is <code>song();</code> still at the bottom?"];
     var end=Math.max.apply(null,c.notes.map(function(n){return n.t-c.t0+n.d}));
     if(end<7)return ["warn","Your song is "+end.toFixed(1)+" seconds long. Add lines to <code>song()</code> until it plays verse, chorus, verse, chorus."];
-    return ["pass","Applause. A "+end.toFixed(0)+"-second song, built from functions that hand each other the time. It's saved: Thursday it comes back."];
+    return ["pass","Applause. A "+end.toFixed(0)+"-second song, built from functions you call in order. It's saved: Thursday it comes back."];
   }});
 
-/* ---------- 17 wrap ---------- */
+/* ---------- wrap ---------- */
 soundEd({el:$("#s-wrap"),file:"wrap.js",store:"wrap",names:["note","kick"],
   task:"<code>note</code> hides the long call behind a short name. Write <code>kick</code> the same way, playing <code>\"C1\"</code> on <code>drum</code>. Then use both in your verse.",
-  start:SYNTH+"const drum = new Tone.MembraneSynth().toDestination();\n\nfunction note(name, start) {\n  synth.triggerAttackRelease(name, \"8n\", start);\n}\n\nfunction kick(start) {\n  // play \"C1\" on the drum, at start\n}\n\nconst now = Tone.now();\nnote(\"C4\", now);\nnote(\"E4\", now + 0.5);\nkick(now);\nkick(now + 1);\n",
+  start:SYNTH+"const drum = new Tone.MembraneSynth().toDestination();\n\nfunction note(name, start) {\n  synth.triggerAttackRelease(name, \"8n\", start);\n}\n\nfunction kick(start) {\n  // play \"C1\" on the drum, at start\n}\n\nnote(\"C4\", 0);\nnote(\"E4\", 0.5);\nkick(0);\nkick(1);\n",
   check:function(c){
     if(!c.fns.note)return ["err","The scene stopped: there's no function called <code>note</code>."];
     if(!c.fns.kick)return ["err","The scene stopped: there's no function called <code>kick</code>."];
@@ -731,7 +832,39 @@ soundEd({el:$("#s-wrap"),file:"wrap.js",store:"wrap",names:["note","kick"],
     return ["pass","Applause. Two short names for two long calls. The magenta blocks in the roll are your drum. Now rewrite your verse with <code>note</code> and <code>kick</code>."];
   }});
 
-/* ---------- 18 pads ---------- */
+/* ---------- riff that takes its notes (blue) ---------- */
+soundEd({el:$("#s-rnotes"),file:"riff-notes.js",store:"rnotes",names:["playRiff"],
+  task:"Give <code>playRiff</code> three more parameters, one per note, and use them inside. Then call it again from 2, with other notes: <code>playRiff(2, \"D4\", \"F4\", \"A4\")</code>.",
+  start:SYNTH+"\n// start, then the three notes to play\nfunction playRiff(start, first, second, third) {\n  synth.triggerAttackRelease(first, \"8n\", start);\n  // play second at start + 0.5, then third at start + 1\n  \n}\n\nplayRiff(0, \"C4\", \"E4\", \"G4\");\n// again from 2, with other notes:\n\n",
+  check:function(c){
+    var f=c.fns.playRiff;
+    if(!f)return ["err","The scene stopped: there's no function called <code>playRiff</code>. Check the spelling, capitals included."];
+    if(f.length<4)return ["warn","<code>playRiff</code> takes "+f.length+(f.length===1?" parameter":" parameters")+". It needs four: <code>start, first, second, third</code>."];
+    var d=dry(function(){return f(100,"D4","F4","A4")});
+    if(d.error)return ["err","When called with <code>(100, \"D4\", \"F4\", \"A4\")</code>, "+errText(d.error)];
+    var got=d.notes.map(function(n){return n.n});
+    var miss=["D4","F4","A4"].filter(function(n){return got.indexOf(n)<0});
+    if(miss.length)return ["warn","Called with <code>\"D4\", \"F4\", \"A4\"</code>, your riff didn't play "+miss.join(" or ")+". Use the parameters <code>second</code> and <code>third</code> inside, not fixed notes."];
+    if(d.notes.some(function(n){return n.t<99.999}))return ["warn","Called with 100, some notes play before 100. Time every note from <code>start</code>."];
+    if(distinctStarts(d.notes)<3)return ["warn","Some notes start at the same moment. Give each its own time: <code>start + 0.5</code>, <code>start + 1</code>."];
+    if(c.notes.length<6)return ["note","The riff works. Now call it a second time, from 2, with other notes."];
+    return ["pass","Applause. One function, four parameters, and the arguments line up with them in order."];
+  }});
+
+/* ---------- chain with return (advanced) ---------- */
+soundEd({el:$("#s-chain"),file:"song-chain.js",store:"chain",names:["verse","chorus","song"],
+  task:"Each section now <code>return</code>s when it ends. Write a three-second <code>chorus</code>, and a <code>bridge</code> of any length. Then make <code>song()</code> chain verse, chorus, verse, bridge, chorus.",
+  start:SYNTH+"\nfunction verse(start) {\n  synth.triggerAttackRelease(\"C4\", \"8n\", start);\n  synth.triggerAttackRelease(\"E4\", \"8n\", start + 0.5);\n  synth.triggerAttackRelease(\"G4\", \"8n\", start + 1);\n  return start + 2;   // when the verse ends\n}\n\nfunction chorus(start) {\n  // your notes here\n  return start + 3;\n}\n\nfunction song() {\n  let t = 0;\n  t = verse(t);\n  t = chorus(t);\n}\n\nsong();\n",
+  check:function(c){
+    var p=sectionCheck(c.fns.verse,"verse",true)||sectionCheck(c.fns.chorus,"chorus",true);if(p)return p;
+    if(!c.fns.song)return ["err","The scene stopped: there's no function called <code>song</code>."];
+    if(!c.notes.length)return ["note","Nothing played. Is <code>song();</code> still at the bottom?"];
+    var end=Math.max.apply(null,c.notes.map(function(n){return n.t-c.t0+n.d}));
+    if(end<8)return ["warn","Your song is "+end.toFixed(1)+" seconds long. Chain more sections in <code>song()</code>: verse, chorus, verse, bridge, chorus."];
+    return ["pass","Applause. A "+end.toFixed(0)+"-second song, and <code>song()</code> never needed to know how long a section is. The return values kept time."];
+  }});
+
+/* ---------- pads (advanced) ---------- */
 soundEd({el:$("#s-pads"),file:"pads.js",store:"pads",pads:true,names:["kick","hihat"],
   task:"<code>makeButton</code> takes a label and a function to run on every click. Press Play, then the pads. Add a pad for <code>hihat</code>, then one for a riff of your own.",
   start:"const drum = new Tone.MembraneSynth().toDestination();\nconst hat = new Tone.NoiseSynth().toDestination();\n\nfunction kick() {\n  drum.triggerAttackRelease(\"C1\", \"8n\");\n}\n\nfunction hihat() {\n  hat.triggerAttackRelease(\"16n\");\n}\n\n// makeButton(label, whatToDoOnEachClick)\nmakeButton(\"Kick\", kick);\n// a pad for hihat:\n\n",
@@ -741,7 +874,7 @@ soundEd({el:$("#s-pads"),file:"pads.js",store:"pads",pads:true,names:["kick","hi
     return ["pass","Applause. "+c.pads+" pads, each holding a function to call later. Real web pages do it like this: <code>button.addEventListener(\"click\", kick)</code>."];
   }});
 
-/* ---------- 19 styles ---------- */
+/* ---------- styles ---------- */
 (function(){
   var N=["declaration","function expression","arrow function","anonymous function"];
   var Q=[
@@ -750,11 +883,13 @@ soundEd({el:$("#s-pads"),file:"pads.js",store:"pads",pads:true,names:["kick","hi
     {c:'const kick = (time) => {\n  drum.triggerAttackRelease("C1", "8n", time);\n};',a:2,w:"The => arrow replaces the keyword function."},
     {c:'makeButton("Kick", function () {\n  drum.triggerAttackRelease("C1", "8n");\n});',a:3,w:"Written right where it's passed in, with no name at all."}
   ],done=0;
-  Q.forEach(function(q){
+  /* rows and chips in a fixed scrambled order, so the answers don't line up diagonally */
+  var ROWS=[2,0,3,1],CHIPS=[[1,3,0,2],[3,2,1,0],[2,0,3,1],[0,3,1,2]];
+  ROWS.forEach(function(qi,ri){var q=Q[qi];
     var row=document.createElement("div");
     row.innerHTML='<pre class="code">'+D.hl(q.c)+'</pre><div class="ch"></div>';
     var ch=row.querySelector(".ch"),answered=false;
-    N.forEach(function(n,i){
+    CHIPS[ri].forEach(function(i){var n=N[i];
       var b=document.createElement("button");b.className="chip";b.textContent=n;
       b.addEventListener("click",function(){
         if(answered)return;
@@ -767,10 +902,10 @@ soundEd({el:$("#s-pads"),file:"pads.js",store:"pads",pads:true,names:["kick","hi
   });
 })();
 
-/* ---------- 20 pass a function ---------- */
+/* ---------- pass a function ---------- */
 soundEd({el:$("#s-pass"),file:"twice.js",store:"twice",names:["twice","fourTimes"],tests:true,
   task:"Write <code>twice(section, start)</code>: call <code>section</code>, call it again where the first one ended, and return the end. Bonus: <code>fourTimes</code>, using <code>twice</code>.",
-  start:SYNTH+"\nfunction verse(start) {\n  synth.triggerAttackRelease(\"C4\", \"8n\", start);\n  synth.triggerAttackRelease(\"G4\", \"8n\", start + 0.5);\n  return start + 1;\n}\n\n// section is a function. Call it like one.\nfunction twice(section, start) {\n  \n}\n\ntwice(verse, Tone.now());\n",
+  start:SYNTH+"\nfunction verse(start) {\n  synth.triggerAttackRelease(\"C4\", \"8n\", start);\n  synth.triggerAttackRelease(\"G4\", \"8n\", start + 0.5);\n  return start + 1;\n}\n\n// section is a function. Call it like one.\nfunction twice(section, start) {\n  \n}\n\ntwice(verse, 0);\n",
   check:function(c){
     var f=c.fns.twice;
     if(!f)return ["err","The scene stopped: there's no function called <code>twice</code>."];
@@ -785,21 +920,21 @@ soundEd({el:$("#s-pass"),file:"twice.js",store:"twice",names:["twice","fourTimes
     return ["note","The tests pass in a function called step that adds 1 to the time. Call <code>section(start)</code>, keep what it returns, and pass that into the second call."];
   }});
 
-/* ---------- 21 mistakes ---------- */
+/* ---------- mistakes ---------- */
 (function(){
-  var M=[["Error: Start time must be strictly greater than previous start time","Two notes on one synth asked to start at the same moment. Give each its own time: now + 0.5, now + 1…"],
-    ["I wrote the function, but nothing plays.","It's defined, never called. Add the call, with parentheses: playRiff();"],
-    ["Error: Invalid argument to cancelScheduledValues: null","A time was undefined or NaN. Usually a section forgot to return its end time."],
-    ["The pad plays once when I press Play, then never again.","makeButton(\"Kick\", kick()) calls kick right away. Pass kick, without parentheses."],
-    ["ReferenceError: tone is not defined","Capitals count: Tone. Same for C4 without quotes: \"C4\"."]];
+  var M=[["Error: Start time must be strictly greater than previous start time","Two notes on one synth asked to start at the same moment. Give each its own time: 0, 0.5, 1… Two sections with the same start do the same."],
+    ["I wrote the function, but nothing plays.","It's defined, never called. Add the call, with parentheses: playRiff(0);"],
+    ["Error: Invalid argument to cancelScheduledValues: null","A time was undefined or NaN: playRiff() called without its start. Advanced room: a section forgot to return its end time."],
+    ["My second riff plays on top of the first.","A note inside uses a fixed time like 0.5 instead of start + 0.5."],
+    ["ReferenceError: C4 is not defined","Note names need quotes: \"C4\". Capitals count too: Tone, not tone."]];
   var box=$("#mk");
   M.forEach(function(m){var r=document.createElement("div");r.innerHTML='<button class="opt">'+esc(m[0])+'</button><span class="ans" hidden>'+esc(m[1])+'</span>';r.querySelector("button").addEventListener("click",function(){r.querySelector(".ans").hidden=false;this.classList.add("right")});box.appendChild(r)});
 })();
 
-/* ---------- 22 model solution ---------- */
+/* ---------- model solution ---------- */
 soundEd({el:$("#s-model"),file:"song-solution.js",store:"model",
-  task:"Wrappers for each instrument, sections that return their end time, and a song that reads like a running order. Press Play.",
-  start:SYNTH+"const drum = new Tone.MembraneSynth().toDestination();\n\nfunction note(name, start) {\n  synth.triggerAttackRelease(name, \"8n\", start);\n}\nfunction kick(start) {\n  drum.triggerAttackRelease(\"C1\", \"8n\", start);\n}\n\nfunction verse(start) {\n  note(\"C4\", start);\n  note(\"E4\", start + 0.5);\n  note(\"G4\", start + 1);\n  kick(start);\n  kick(start + 1);\n  return start + 2;\n}\n\nfunction chorus(start) {\n  note(\"A4\", start);\n  note(\"G4\", start + 0.5);\n  note(\"E4\", start + 1);\n  note(\"D4\", start + 1.5);\n  kick(start);\n  kick(start + 1);\n  return start + 2;\n}\n\nfunction song() {\n  let t = Tone.now();\n  t = verse(t);\n  t = chorus(t);\n  t = verse(t);\n  t = chorus(t);\n}\n\nsong();\n"});
+  task:"Short names for each instrument, sections timed from <code>start</code>, and a song that reads like a running order. Press Play.",
+  start:SYNTH+"const drum = new Tone.MembraneSynth().toDestination();\n\nfunction note(name, start) {\n  synth.triggerAttackRelease(name, \"8n\", start);\n}\nfunction kick(start) {\n  drum.triggerAttackRelease(\"C1\", \"8n\", start);\n}\n\nfunction verse(start) {\n  note(\"C4\", start);\n  note(\"E4\", start + 0.5);\n  note(\"G4\", start + 1);\n  kick(start);\n  kick(start + 1);\n}\n\nfunction chorus(start) {\n  note(\"A4\", start);\n  note(\"G4\", start + 0.5);\n  note(\"E4\", start + 1);\n  note(\"D4\", start + 1.5);\n  kick(start);\n  kick(start + 1);\n}\n\nfunction song() {\n  verse(0);\n  chorus(2);\n  verse(4);\n  chorus(6);\n}\n\nsong();\n"});
 })();
 </script>
 </body>
