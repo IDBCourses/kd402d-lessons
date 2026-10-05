@@ -13,6 +13,7 @@ shared/
   deck.js             navigation, slide index, speaker notes, scaling, helpers (window.Deck)
   workspace.js        in-browser code editor + console, and the code runner
   vendor/sval.min.js  fallback JavaScript interpreter (MIT, see sval.LICENSE)
+  vendor/tone.min.js  Tone.js 15.1.22 for lectures that make sound (MIT, see tone.LICENSE)
 functions/            one folder per lecture; index.html is the deck
 _template/            starting point for a new lecture (not linked from the home page)
 tools/check_deck.py   checks every slide fits and nothing errors; screenshots to tools/out/
