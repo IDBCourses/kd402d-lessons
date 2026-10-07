@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Data · KD402D Programming</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<link rel="stylesheet" href="../shared/deck.css">
+<style>
+/* styles used only by this lecture */
+.order>div{grid-template-columns:72px 120px 1fr 90px;align-items:center;padding:9px 0}
+.order .tm{font-family:var(--font-mono);font-size:16px;color:var(--ink-500)}
+.order .nm{font-size:23px;color:var(--ink-900);font-weight:500}
+.order .nm small{display:block;font-size:16px;color:var(--ink-500);font-weight:400}
+.order .kd{font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:2px solid var(--ink-900);border-radius:999px;padding:2px 10px;justify-self:start;color:var(--ink-900);background:var(--paper-000)}
+.order .kd.code{background:var(--cyan-400)}
+.order .num{font-size:34px}
+
+/* a named box: the picture of a variable before (and after) it has code */
+.vbox{display:inline-flex;flex-direction:column;border:2px solid var(--ink-900);border-radius:2px;background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900);min-width:150px}
+.vbox .lb{font-family:var(--font-mono);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--spot-400);color:var(--ink-900);padding:5px 12px;border-bottom:2px solid var(--ink-900)}
+.vbox .vl{font-family:var(--font-display);font-weight:700;font-size:44px;letter-spacing:-.03em;color:var(--ink-900);padding:8px 14px;line-height:1.1;min-height:66px}
+.vbox .vl.word{font-size:30px;padding-top:14px}
+.vbox .vl.empty{color:var(--paper-400)}
+.vbox .ty{font-size:14px;color:var(--ink-500);padding:0 14px 8px}
+.vbox.on{box-shadow:3px 3px 0 var(--ink-900),0 0 0 4px var(--spot-300)}
+.vbox.new .lb{background:var(--applause-500)}
+.vbox.steer .lb{background:var(--cyan-400)}
+.flashbox{animation:flashlite .9s ease}
+
+/* process card (the chopping) */
+.proc{border:2px solid var(--ink-900);border-radius:2px;background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900)}
+.proc.done{background:var(--paper-200);box-shadow:none;border-style:dashed}
+.proc.done ol.plain li{color:var(--ink-300)}
+ol.plain li.on{background:var(--spot-200);box-shadow:inset 3px 0 0 var(--spot-400);padding-left:10px}
+.count{font-family:var(--font-mono);font-size:18px;color:var(--ink-700);padding:8px 18px;border-top:1px solid var(--paper-300)}
+.count b{color:var(--ink-900);font-size:22px}
+.arrow{font-family:var(--font-display);font-weight:700;font-size:44px;color:var(--ink-500);line-height:1}
+
+/* three jobs of a number */
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.three .panel .big{font-family:var(--font-display);font-weight:700;font-size:56px;letter-spacing:-.03em;color:var(--ink-900);line-height:1}
+.three .panel p{margin:10px 0 0;font-size:18px;line-height:1.45}
+
+/* student card + transparency */
+.idwrap{position:relative;width:330px;height:500px;flex:none}
+.idcard{position:absolute;inset:0;border-radius:12px;overflow:hidden;background:#fff;border:2px solid var(--ink-900);box-shadow:3px 3px 0 var(--ink-900)}
+.idcard .low{position:absolute;left:0;right:0;top:29%;bottom:0;background:var(--ink-800)}
+.idcard .ph{position:absolute;left:50%;top:36%;width:57%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:var(--paper-300);border:5px solid #fff;display:grid;place-items:center;font-family:var(--font-display);font-weight:700;font-size:64px;color:var(--ink-700)}
+.idcard .st{position:absolute;left:12%;top:58.5%;font-weight:700;font-size:46px;color:#fff;line-height:1}
+.idcard .f{position:absolute;left:12%;color:#fff;font-weight:700;font-size:21px;line-height:1.15}
+.idcard .fn{top:71%;right:8%}.idcard .fc{top:82.5%;font-size:19px}.idcard .fp{top:89.5%;font-size:19px}
+.idcard .mk{position:absolute;left:12%;top:5%;font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--ink-900);letter-spacing:.06em}
+.transp{position:absolute;inset:-10px -150px -10px -10px;border:2px dashed var(--ink-900);border-radius:4px;pointer-events:none}
+.transp .tl{position:absolute;left:350px;font-family:var(--font-mono);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--spot-400);color:var(--ink-900);border:2px solid var(--ink-900);padding:2px 8px;white-space:nowrap}
+.transp .tl::before{content:"";position:absolute;right:100%;top:50%;width:48px;border-top:2px solid var(--spot-400)}
+.transp .bx{position:absolute;left:44px;border:2px solid var(--spot-400);border-radius:2px}
+.readoff>div{grid-template-columns:170px 1fr;padding:9px 0}
+.readoff .k{font-family:var(--font-mono);font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-500)}
+.readoff .v{font-size:22px;color:var(--ink-900);font-weight:500}
+
+/* mapping idea → code */
+.map>div{grid-template-columns:1fr 40px 1fr;align-items:center;padding:14px 0}
+.map .idea{font-size:20px;color:var(--ink-700)}
+.map pre.code{font-size:19px;padding:10px 14px}
+
+/* embedded editor */
+.mini{display:flex;flex-direction:column}
+.mini textarea.code-ed{font-size:17px}
+.mini .tools{display:flex;gap:10px;align-items:center;padding:8px 12px;background:var(--ink-800);border-top:2px solid var(--ink-900)}
+.mini .tools .btn{padding:7px 12px;font-size:13px}
+.mini .tools span{font-family:var(--font-mono);font-size:12px;color:var(--ink-200);margin-left:auto}
+.mini .console{font-size:16px;min-height:56px;max-height:150px;overflow:auto;border-top:2px solid var(--ink-900)}
+.task{background:var(--spot-200);border:2px solid var(--ink-900);padding:10px 14px;font-size:18px;line-height:1.45;color:var(--ink-900)}
+.task .tk{font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:2px}
+
+/* types table, rules */
+.types>div{grid-template-columns:150px 260px 1fr;padding:12px 0;align-items:center}
+.types .tn{font-family:var(--font-display);font-weight:700;font-size:28px;color:var(--ink-900);letter-spacing:-.02em}
+.types .ex{font-family:var(--font-mono);font-size:20px;color:var(--ink-900)}
+.types .ex span{background:var(--spot-200);padding:0 5px;border-radius:2px;margin-right:6px}
+.types .ds{font-size:19px}
+.plainlist{list-style:none;margin:0;padding:4px 16px}
+.plainlist li{padding:6px 0;border-bottom:1px solid var(--paper-300);font-size:18px;line-height:1.4}
+.plainlist li:last-child{border-bottom:0}
+.plainlist code{background:var(--spot-200);color:var(--ink-900);padding:0 4px;border-radius:2px}
+
+/* quizzes */
+.qz>div{grid-template-columns:1fr auto;gap:20px;padding:12px 0;align-items:center}
+.qz .sc{font-size:22px;line-height:1.4;color:var(--ink-900)}
+.qz .sc code{background:var(--spot-200);color:var(--ink-900);padding:1px 6px;border-radius:2px;font-size:19px}
+.qz .ch{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.qz .chip{font-size:15px;padding:7px 14px}
+
+/* changing data */
+.moves .panel .pbody{display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.moves .vbox{min-width:0}
+.moves .vbox .vl{font-size:26px;min-height:0;padding:6px 12px}
+.moves .ins{display:flex;gap:10px;flex-wrap:wrap}
+.moves .dir{font-size:18px}
+
+/* step-through and random */
+.out-big{font-family:var(--font-display);font-weight:700;font-size:56px;letter-spacing:-.03em;color:var(--ink-900);line-height:1.05;min-height:60px;word-break:break-all}
+
+/* experiments */
+.ex8>div{grid-template-columns:270px 210px 90px 1fr;gap:14px;padding:6px 0;align-items:center}
+.ex8 code{font-family:var(--font-mono);font-size:18px;color:var(--ink-900);background:var(--spot-200);padding:2px 6px;border-radius:2px}
+.ex8 input.t{font-size:16px;padding:5px 8px}
+.ex8 .btn{padding:6px 10px;font-size:12px}
+.ex8 .got{font-family:var(--font-mono);font-size:17px;color:var(--ink-900)}
+.ex8 .got small{font-family:var(--font-ui);font-size:15px;margin-left:8px}
+.ex8 .got .y{color:var(--pass-ink)}.ex8 .got .w{color:var(--cue-ink)}.ex8 .got .x{color:var(--error-ink)}
+.ex8 .own input.t{font-family:var(--font-mono)}
+</style>
+</head>
+<body data-lecture="data" data-home="../">
+<main id="stage">
+<div id="deck">
+
+<!-- ============ OPENING ============ -->
+
+<section class="slide stage" id="cover" data-sec="Opening">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">KD402D Programming · Week 41</div>
+    <h1 class="hero md">Keep what the process leaves behind.</h1>
+    <p class="lede">Data: how a program remembers values, and how it makes new values from them.</p>
+  </div>
+  <div style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
+    <div class="m" style="font-size:17px;color:var(--ink-200)">KD402D Programming · Thu 8 Oct · 10:15–12:00</div>
+  </div>
+  <aside class="nt">Welcome back. Keys: arrows to move, I for the slide index, N for these notes, E to jump to the next exercise. Students can open the same link on their laptops: the "Your turn" slides work on their own screens, and the code exercises run right inside the slides. No code at all until 10:35. The first twenty minutes are about the idea of a variable, using Monday's onion and their student cards.</aside>
+</section>
+
+<section class="slide" id="running-order" data-sec="Opening">
+  <div class="billing">Running order · Today</div><hr class="rule">
+  <h2 class="h1">Today in six parts</h2>
+  <div class="rows order">
+    <div><span class="num">01</span><span class="tm">10:15</span><span class="nm">Variables: the idea<small>The onion, the student card, boxes with names</small></span><span class="kd">Idea</span></div>
+    <div><span class="num">02</span><span class="tm">10:35</span><span class="nm">Variables in JavaScript<small>let, const, types, names</small></span><span class="kd code">Code</span></div>
+    <div><span class="num">03</span><span class="tm">10:55</span><span class="nm">Changing data: the idea<small>Why we make new values from stored ones</small></span><span class="kd">Idea</span></div>
+    <div><span class="num">04</span><span class="tm">11:20</span><span class="nm">Working with data<small>Joining, sums, string methods, surprises</small></span><span class="kd code">Code</span></div>
+    <div><span class="num">05</span><span class="tm">11:45</span><span class="nm">Quick data experiments</span><span class="kd code">Code</span></div>
+    <div><span class="num">06</span><span class="tm">11:55</span><span class="nm">Wrap-up</span><span></span></div>
+  </div>
+  <p class="dir" style="margin-top:12px">Break at 11:05.</p>
+  <aside class="nt">Two rhythms today: an idea part, then the same idea in code. Parts 1 and 3 have no code at all; parts 2 and 4 put it into JavaScript. The short exercises run inside these slides, so laptops are useful from 10:35. VS Code comes back this afternoon for the group exercises.</aside>
+</section>
+
+<section class="slide" id="objectives" data-sec="Opening">
+  <div class="billing">By noon you can</div><hr class="rule">
+  <h2 class="h1">What you'll be able to do</h2>
+  <div class="rows lab">
+    <div><span class="num">01</span><span class="tx">Explain a variable as a named place that remembers a value, and how a value can also steer a process.</span></div>
+    <div><span class="num">02</span><span class="tx">Tell values that change from values that stay fixed, and write both kinds in JavaScript.</span></div>
+    <div><span class="num">03</span><span class="tx">Recognise strings, numbers, undefined and null, and give variables good names.</span></div>
+    <div><span class="num">04</span><span class="tx">Make new values from stored ones: join text, do sums, use string methods.</span></div>
+    <div><span class="num">05</span><span class="tx">Predict what happens when JavaScript mixes text and numbers.</span></div>
+  </div>
+  <aside class="nt">The session's learning objectives, condensed from the course plan (five conceptual, five practical). Come back to them at the wrap-up.</aside>
+</section>
+
+<!-- ============ PART 1: VARIABLES, THE IDEA ============ -->
+
+<section class="slide" id="recap" data-sec="Variables: the idea" data-ex="Functions recap">
+  <span class="turn">Your turn</span>
+  <div class="billing">Variables: the idea · 10:15</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:8px">Functions, one more time</h2>
+  <p class="lede" style="margin-bottom:12px">On Monday we chopped an onion. On Tuesday we wrote functions. Chopping is a function too.</p>
+  <div class="rows qz" id="rc"></div>
+  <div class="fb" id="rc-fb" style="margin-top:12px"></div>
+  <aside class="nt">About five minutes. Make sure functions really landed before building on them: a function is a named process; you can call it again with different inputs; it can hand back a result. Let pairs answer on their laptops, then take hands. If the third question splits the room, go back to Tuesday's five jobs (packaging, reuse, abstraction, transformation, organisation). Motivate today: functions need something to work on, and something to hand back. That something is data.</aside>
+</section>
+
+<section class="slide" id="onion" data-sec="Variables: the idea" data-demo="Chop the onion">
+  <span class="turn try">Try it</span>
+  <div class="billing">Variables: the idea · From process to data</div><hr class="rule">
+  <h2 class="h1">The chopping ends. The count stays.</h2>
+  <div class="row" style="gap:36px;align-items:flex-start;flex-wrap:nowrap">
+    <div class="proc" id="on-proc" style="width:430px">
+      <div class="bar p"><span>chopping one red onion</span><span id="on-state">ready</span></div>
+      <ol class="plain" id="on-steps"><li>1 · Halve it</li><li>2 · Slice each half into strips</li><li>3 · Dice across the strips</li></ol>
+      <div class="count">pieces so far: <b id="on-count">0</b></div>
+    </div>
+    <div class="arrow" style="margin-top:80px">→</div>
+    <div class="stack" style="gap:14px;margin-top:40px">
+      <div class="vbox" id="on-box"><span class="lb">pieces</span><span class="vl empty" id="on-val">—</span></div>
+      <p class="small muted" id="on-use" style="margin:0;max-width:300px;visibility:hidden">6 minutes of chopping ÷ 24 pieces = <b>15 seconds a piece</b></p>
+    </div>
+  </div>
+  <p class="dir" id="on-dir" style="margin-top:18px;min-height:64px"></p>
+  <div class="row"><button class="btn ghost" id="on-back">Back</button><button class="btn" id="on-next">Next</button><button class="btn ghost" id="on-reset">Start again</button></div>
+  <aside class="nt">Pick up Monday's onion exercise. Then it was a process: break chopping into sub-steps, go deeper. Today we look at what the process leaves behind. Step through: the count grows, the chopping finishes and the action is gone, but the number it produced is worth keeping. A variable is where we put that number so it outlives the process that made it. The last step shows why we'd keep it: to work something out later. Say it plainly: the process happens once; the value it gives us we hold on to, by name.</aside>
+</section>
+
+<section class="slide" id="many-onions" data-sec="Variables: the idea" data-demo="Chop another onion">
+  <span class="turn try">Try it</span>
+  <div class="billing">Variables: the idea · Functions hand back values</div><hr class="rule">
+  <h2 class="h1">One process, many results</h2>
+  <div class="cols wide-r" style="gap:40px">
+    <div class="stack">
+      <div class="named" style="margin:0"><div class="nm">chop</div><div class="rl">Takes in: an onion. Gives back: how many pieces it made.</div></div>
+      <p class="lede" style="margin:0">Chopping is a function: the same process, applied to a different onion each time. Each time, it hands something back.</p>
+      <div class="row"><button class="btn" id="mo-go">Chop another onion</button><button class="btn ghost" id="mo-reset">Clear the table</button></div>
+    </div>
+    <div class="stack">
+      <div class="row" id="mo-boxes" style="gap:18px;align-items:flex-start;min-height:120px"></div>
+      <p class="dir" id="mo-dir">The function is the action. The box catches what it hands back, and remembers it.</p>
+    </div>
+  </div>
+  <aside class="nt">Bridge to Tuesday. The chopping is reusable: give it another onion and it runs again. This onion gave 24 pieces, that one 30. Click a few times: each result lands in its own named box. The function is the action; the variable catches and remembers what it hands back. Without the box, the 24 would be gone the moment the next onion started.</aside>
+</section>
+
+<section class="slide" id="jobs" data-sec="Variables: the idea">
+  <div class="billing">Variables: the idea · Meaning</div><hr class="rule">
+  <h2 class="h1">Same number, different jobs</h2>
+  <div class="three">
+    <div class="panel"><div class="bar"><span>Quantity</span><span>how many, how much</span></div><div class="pbody"><div class="big">24</div><p>Pieces from one onion. 180 grams of onion. Adding them or doubling them makes sense.</p></div></div>
+    <div class="panel"><div class="bar y"><span>Order</span><span>which place</span></div><div class="pbody"><div class="big">3</div><p>Step 3 of the chopping: after 2, before 4. Step 2 plus step 3 doesn't mean anything.</p></div></div>
+    <div class="panel"><div class="bar m"><span>Ranking</span><span>a judgement</span></div><div class="pbody"><div class="big">5</div><p>Five for clean chopping, three for middling, one for a real mess. An opinion, written as a number.</p></div></div>
+  </div>
+  <p class="dir" style="margin-top:24px">The meaning isn't in the number. It's in how we use it and what we call it.</p>
+  <aside class="nt">Short discussion. Quantity answers "how many / how much", and arithmetic on it makes sense. Order marks a place in a sequence: adding step numbers is nonsense. Ranking is a judgement on a scale. The punchline sets up naming later: a 5 alone tells you nothing; a box called "rating" tells you a lot.</aside>
+</section>
+
+<section class="slide" id="jobs-quiz" data-sec="Variables: the idea" data-ex="Quantity, order or ranking?">
+  <span class="turn">Your turn</span>
+  <div class="billing">Variables: the idea · Check</div><hr class="rule">
+  <h2 class="h1">Quantity, order or ranking?</h2>
+  <div class="rows qz" id="jq"></div>
+  <div class="fb" id="jq-fb" style="margin-top:14px"></div>
+  <aside class="nt">Students vote on their own laptops (or by hands if laptops are closed). Keep it quick: two or three minutes including the discussion. The weight is a nice extra: still a quantity, just not a count.</aside>
+</section>
+
+<section class="slide" id="steer" data-sec="Variables: the idea" data-demo="Onions to cut">
+  <span class="turn try">Try it</span>
+  <div class="billing">Variables: the idea · Values going in</div><hr class="rule">
+  <h2 class="h1">A value can steer the process</h2>
+  <p class="lede">Some values are set before the work starts, and decide how much work there is.</p>
+  <div class="row" style="gap:28px;align-items:center;flex-wrap:nowrap;margin-top:6px">
+    <div class="stack" style="gap:10px;align-items:center">
+      <div class="vbox steer"><span class="lb">onions to cut</span><span class="vl" id="st-n" style="text-align:center">1</span></div>
+      <div class="row"><button class="btn ghost" id="st-minus" aria-label="One onion fewer">−</button><button class="btn ghost" id="st-plus" aria-label="One onion more">+</button></div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="proc" style="width:300px"><div class="bar p"><span>chop, onion by onion</span></div><ol class="plain" id="st-list"></ol></div>
+    <div class="arrow">→</div>
+    <div class="vbox" id="st-outbox"><span class="lb">pieces in the bowl</span><span class="vl" id="st-out">24</span></div>
+  </div>
+  <p class="dir" style="margin-top:18px">One box steers the process. Another remembers what it produced.</p>
+  <aside class="nt">So far the variable caught the result. A variable can also feed in and change what the process does. The number of onions to cut is set before the chopping starts, and it drives the work. Click + and −: the input box steers, the output box remembers. Ask: in a music app, what's a value that steers? (Volume, tempo, which song.)</aside>
+</section>
+
+<section class="slide" id="words" data-sec="Variables: the idea">
+  <div class="billing">Variables: the idea · Not only numbers</div><hr class="rule">
+  <h2 class="h1">Boxes hold words too</h2>
+  <div class="row" style="gap:28px;align-items:flex-start">
+    <div class="vbox"><span class="lb">pieces</span><span class="vl">24</span><span class="ty">a number</span></div>
+    <div class="vbox"><span class="lb">kind of onion</span><span class="vl word">red</span><span class="ty">a word</span></div>
+    <div class="vbox" style="max-width:420px"><span class="lb">step 2</span><span class="vl word" style="font-size:26px">Slice each half into strips</span><span class="ty">a sentence: an instruction, stored</span></div>
+  </div>
+  <p class="lede" style="margin-top:34px">Red, yellow or shallot: the kind of onion is a word, not a number. A box holds it just as happily. So does the text of an instruction.</p>
+  <aside class="nt">Ease toward text. Same onion, other kinds of information: the kind of onion is a word; a step in the recipe is a whole sentence. Don't name types yet; that's in part 2, when "a word" becomes "a string". Just make the point that boxes aren't only for counting.</aside>
+</section>
+
+<section class="slide" id="change" data-sec="Variables: the idea" data-ex="Changes or stays">
+  <span class="turn">Your turn</span>
+  <div class="billing">Variables: the idea · Check</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:8px">Some things change, some stay</h2>
+  <p class="lede" style="margin-bottom:10px">Once you've picked a red onion, it stays a red onion. The number of pieces keeps growing while you chop.</p>
+  <div class="rows qz" id="cq"></div>
+  <div class="fb" id="cq-fb" style="margin-top:12px"></div>
+  <aside class="nt">Sets up let and const for part 2, without saying the words. Some items are debatable (the knife: you could swap it). Let them argue; the point is noticing that some values are meant to stay fixed once set, while others are expected to change as the process runs.</aside>
+</section>
+
+<section class="slide" id="id-card" data-sec="Variables: the idea" data-demo="Swap the card">
+  <span class="turn try">Try it</span>
+  <div class="billing">Variables: the idea · Your student card</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:14px">The labels stay. The card changes.</h2>
+  <div class="row" style="gap:190px;align-items:flex-start;flex-wrap:nowrap">
+    <div class="idwrap">
+      <div class="idcard">
+        <div class="low"></div>
+        <div class="mk">PRACTICE CARD</div>
+        <div class="ph" id="id-ph">M</div>
+        <div class="st">STUDENT</div>
+        <div class="f fn" id="id-name"></div>
+        <div class="f fc" id="id-cardno"></div>
+        <div class="f fp" id="id-pnr"></div>
+      </div>
+      <div class="transp">
+        <span class="bx" style="top:349px;width:250px;height:58px"></span><span class="tl" style="top:366px">name</span>
+        <span class="bx" style="top:415px;width:160px;height:30px"></span><span class="tl" style="top:418px">card number</span>
+        <span class="bx" style="top:450px;width:220px;height:30px"></span><span class="tl" style="top:453px">personal number</span>
+      </div>
+    </div>
+    <div class="stack" style="gap:14px;width:420px">
+      <div class="rows readoff" id="id-read"></div>
+      <div class="row"><button class="btn" id="id-swap">Swap the card</button><a class="btn alt" href="card/" target="_blank" rel="noopener" style="text-decoration:none">Make a practice card</a></div>
+      <p class="small muted" style="margin:0">Don't want to pass your own card around? Make a practice card with an invented face, name and numbers.</p>
+    </div>
+  </div>
+  <aside class="nt">Physical activity with the transparencies. In pairs: put the transparency (labels and empty boxes) over a student card and read off the values. Then slide a different card underneath. The labels don't change; the values do. That's a variable declaration: a reusable template with names, filled with different data each time. Same idea as a function applied to different inputs this morning. Anyone who doesn't want to share their real card can open "Make a practice card" (data/card/) on a laptop or phone and put the transparency over that. Calibrate the size once with the slider on that page and a bank card. Nothing typed or shown here is saved.</aside>
+</section>
+
+<!-- ============ PART 2: VARIABLES IN JAVASCRIPT ============ -->
+
+<section class="slide stage" id="written-down" data-sec="Variables in JavaScript">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Variables in JavaScript · 10:35</div>
+    <h2 class="hero md">Now we write it down.</h2>
+    <p class="lede">Everything from the last twenty minutes, in real JavaScript. Same ideas, new spelling.</p>
+    <div class="terms"><span>let</span><span>const</span><span>=</span><span>"red"</span><span>24</span><span>undefined</span><span>null</span></div>
+  </div>
+  <aside class="nt">The handoff from idea to code. Laptops open on this deck from now on: the code exercises run inside the slides, no installs needed.</aside>
+</section>
+
+<section class="slide" id="handoff" data-sec="Variables in JavaScript" data-demo="The onion in code">
+  <span class="turn try">Try it</span>
+  <div class="billing">Variables in JavaScript · From idea to code</div><hr class="rule">
+  <h2 class="h1">The onion, written down</h2>
+  <div class="cols" style="gap:32px">
+    <div class="rows map" style="grid-template-columns:1fr">
+      <div style="grid-template-columns:1fr"><span class="idea">A box called <b>pieces</b>, holding the count 24</span><pre class="code" id="ho-a"></pre></div>
+      <div style="grid-template-columns:1fr"><span class="idea">The <b>kind of onion</b>, a word that won't change</span><pre class="code" id="ho-b"></pre></div>
+    </div>
+    <div class="panel mini" id="mini-handoff"></div>
+  </div>
+  <aside class="nt">Don't start variables cold. Each line is "the thing we described earlier, now written down". The count becomes let onionPieces = 24. The kind of onion becomes a string in quotation marks, with const because it doesn't change. Run it, then change the 24 and run again. console.log is from Tuesday: it shows a value in the console.</aside>
+</section>
+
+<section class="slide" id="assign" data-sec="Variables in JavaScript" data-demo="Step through =">
+  <span class="turn try">Try it</span>
+  <div class="billing">Variables in JavaScript · Assignment</div><hr class="rule">
+  <h2 class="h1">= puts a value into a name</h2>
+  <div class="cols wide-l" style="gap:40px">
+    <div class="stack">
+      <div class="panel"><div class="bar"><span>onion.js</span><span id="as-n">step 0 of 5</span></div><pre class="code lg" id="as-code"></pre></div>
+      <p class="dir" id="as-dir" style="min-height:96px"></p>
+      <div class="row"><button class="btn ghost" id="as-back">Back</button><button class="btn" id="as-next">Next</button><button class="btn ghost" id="as-reset">Start again</button></div>
+    </div>
+    <div class="stack" style="align-items:flex-start;gap:18px;padding-top:10px">
+      <div class="vbox" id="as-box" style="visibility:hidden"><span class="lb">onionPieces</span><span class="vl empty" id="as-val">—</span></div>
+      <div class="panel" style="width:100%"><div class="bar y"><span>console</span></div><div class="console" id="as-con"></div></div>
+    </div>
+  </div>
+  <aside class="nt">Read = as "becomes" or "gets", not "equals". JavaScript works out the right-hand side first, then puts the result in the box on the left. Changing a let variable replaces the value; the name stays. Common mistake: writing 24 = onionPieces (the name must be on the left).</aside>
+</section>
+
+<section class="slide" id="types" data-sec="Variables in JavaScript">
+  <div class="billing">Variables in JavaScript · Primitive types</div><hr class="rule">
+  <h2 class="h1">Four kinds of value, for now</h2>
+  <div class="rows types">
+    <div><span class="tn">string</span><span class="ex"><span>"red"</span><span>'step 2'</span></span><span class="ds">Text. Always inside quotation marks, double or single.</span></div>
+    <div><span class="tn">number</span><span class="ex"><span>24</span><span>3.5</span><span>-2</span></span><span class="ds">Plain digits, no quotation marks. Whole or decimal.</span></div>
+    <div><span class="tn">undefined</span><span class="ex"><span>let rating;</span></span><span class="ds">A box with nothing put in yet. JavaScript fills it with <code>undefined</code>.</span></div>
+    <div><span class="tn">null</span><span class="ex"><span>let winner = null;</span></span><span class="ds">Empty on purpose: "there's deliberately nothing here".</span></div>
+  </div>
+  <p class="dir" style="margin-top:16px">A value written straight into the code, like <code>24</code> or <code>"red"</code>, is called a literal.</p>
+  <aside class="nt">The primitive types as literals. Quotation marks make a string; plain digits make a number. undefined: declared but nothing assigned. null: deliberately empty. Skip typeof today. Booleans (true/false) come in the next lecture with comparisons.</aside>
+</section>
+
+<section class="slide" id="literals-quiz" data-sec="Variables in JavaScript" data-ex="String or number?">
+  <span class="turn">Your turn</span>
+  <div class="billing">Variables in JavaScript · Check</div><hr class="rule">
+  <h2 class="h1">String or number?</h2>
+  <div class="rows qz" id="lq"></div>
+  <div class="fb" id="lq-fb" style="margin-top:12px"></div>
+  <aside class="nt">The point: 24 and "24" look alike but are different values. The last one, red without quotes, isn't a string at all: JavaScript looks for a variable called red and stops with ReferenceError: red is not defined. Discuss together.</aside>
+</section>
+
+<section class="slide" id="let-const" data-sec="Variables in JavaScript" data-demo="let vs const">
+  <span class="turn try">Try it</span>
+  <div class="billing">Variables in JavaScript · let and const</div><hr class="rule">
+  <h2 class="h1">let can change. const can't.</h2>
+  <div class="cols" style="gap:32px">
+    <div class="stack" style="gap:12px">
+      <div class="rows" style="border-top:1px solid var(--ink-900)">
+        <div style="grid-template-columns:110px 1fr"><code style="font-size:22px">let</code><span style="font-size:19px">For values that change as the program runs: the pieces, while we chop.</span></div>
+        <div style="grid-template-columns:110px 1fr"><code style="font-size:22px">const</code><span style="font-size:19px">For values that stay fixed once set: the kind of onion.</span></div>
+        <div style="grid-template-columns:110px 1fr"><code style="font-size:22px;color:var(--ink-500)">var</code><span style="font-size:19px;color:var(--ink-500)">The old way. You'll meet it in older code online. We don't use it in this course.</span></div>
+      </div>
+      <p class="dir">Run it. Line 7 stops the code: a const can't be given a new value.</p>
+    </div>
+    <div class="panel mini" id="mini-letconst"></div>
+  </div>
+  <aside class="nt">Pay off the onion setup: the piece count changes (let), the kind of onion is fixed (const). Run the code: 24 is logged, then TypeError: Assignment to constant variable. Then ask a student to fix it two ways: change const to let, or delete line 7. Mention var once so it isn't confusing when they meet it, then move on.</aside>
+</section>
+
+<section class="slide" id="let-const-quiz" data-sec="Variables in JavaScript" data-ex="let or const?">
+  <span class="turn">Your turn</span>
+  <div class="billing">Variables in JavaScript · Check</div><hr class="rule">
+  <h2 class="h1">let or const?</h2>
+  <div class="rows qz" id="kq"></div>
+  <div class="fb" id="kq-fb" style="margin-top:12px"></div>
+  <aside class="nt">Values from the onion and the student card. Ask: "will this change while the program runs?" A student number could in theory change; for one card, it doesn't. Accept good arguments.</aside>
+</section>
+
+<section class="slide" id="naming" data-sec="Variables in JavaScript" data-demo="Break a rule">
+  <span class="turn try">Try it</span>
+  <div class="billing">Variables in JavaScript · Naming</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:16px">Rules versus conventions</h2>
+  <div class="cols" style="gap:28px">
+    <div class="stack" style="gap:14px">
+      <div class="panel"><div class="bar m"><span>Rules</span><span>break one: the code won't run</span></div>
+        <ul class="plainlist"><li>No spaces</li><li>Can't start with a digit</li><li>Only letters, digits, <code>_</code> and <code>$</code></li><li>Not a reserved word: <code>let</code>, <code>const</code>, <code>if</code> …</li><li>Capitals matter: <code>onionPieces</code> ≠ <code>onionpieces</code></li></ul></div>
+      <div class="panel"><div class="bar p"><span>Conventions</span><span>break one: it runs, but reads badly</span></div>
+        <ul class="plainlist"><li>camelCase: <code>onionPieces</code>, <code>onionType</code></li><li>Say what it holds: <code>onionPieces</code>, not <code>x</code></li></ul></div>
+    </div>
+    <div class="panel mini" id="mini-naming"></div>
+  </div>
+  <aside class="nt">Make the difference explicit: beginners treat both as equally fixed. Run the editor: let onion pieces = 24 stops with a SyntaxError. Fix it to onionPieces and run again. Then try let 2ndOnion = 30. Link back to the opening: the meaning of a value lives in its name, so a good name does real work.</aside>
+</section>
+
+<section class="slide" id="naming-quiz" data-sec="Variables in JavaScript" data-ex="Allowed? Good style?">
+  <span class="turn">Your turn</span>
+  <div class="billing">Variables in JavaScript · Check</div><hr class="rule">
+  <h2 class="h1">Allowed? Good style?</h2>
+  <div class="rows qz" id="nq"></div>
+  <div class="fb" id="nq-fb" style="margin-top:12px"></div>
+  <aside class="nt">Some names break a rule (won't run), some only break a convention (run, but read badly). onion_pieces is allowed and common in other languages; in JavaScript we use camelCase.</aside>
+</section>
+
+<!-- ============ PART 3: CHANGING DATA, THE IDEA ============ -->
+
+<section class="slide stage" id="storing-half" data-sec="Changing data: the idea">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Changing data: the idea · 10:55</div>
+    <h2 class="hero md">Storing is half the job.</h2>
+    <p class="lede">Programs rarely show exactly what they stored. They make something new from it: a sentence, a total, a tidier version.</p>
+  </div>
+  <aside class="nt">Laptops can close for a few minutes: this part is ideas only, no code. We've been holding information. Now: why change it? Because what we stored is rarely the exact shape we need. Changing data isn't a new world; it's more process, applied to values we already have.</aside>
+</section>
+
+<section class="slide" id="three-moves" data-sec="Changing data: the idea" data-demo="Three ways">
+  <span class="turn try">Try it</span>
+  <div class="billing">Changing data: the idea · Three ways</div><hr class="rule">
+  <h2 class="h1">Three ways to make a new value</h2>
+  <div class="three moves">
+    <div class="panel"><div class="bar"><span>Combine</span></div><div class="pbody">
+      <div class="ins"><div class="vbox"><span class="lb">pieces</span><span class="vl">24</span></div><div class="vbox"><span class="lb">kind</span><span class="vl">red</span></div></div>
+      <button class="btn ghost mv" data-mv="0">Glue them</button>
+      <div class="vbox new" hidden><span class="lb">label</span><span class="vl">24 pieces of red onion</span></div>
+      <p class="dir" hidden>Stored things glued into one new piece of text.</p></div></div>
+    <div class="panel"><div class="bar y"><span>Work out</span></div><div class="pbody">
+      <div class="ins"><div class="vbox"><span class="lb">weight</span><span class="vl">180 g</span></div><div class="vbox"><span class="lb">pieces</span><span class="vl">24</span></div></div>
+      <button class="btn ghost mv" data-mv="1">Work it out</button>
+      <div class="vbox new" hidden><span class="lb">per piece</span><span class="vl">7.5 g</span></div>
+      <p class="dir" hidden>Never stored. Worked out from two values we had.</p></div></div>
+    <div class="panel"><div class="bar m"><span>Reshape</span></div><div class="pbody">
+      <div class="ins"><div class="vbox"><span class="lb">step 2</span><span class="vl" style="font-size:20px">slice each half</span></div></div>
+      <button class="btn ghost mv" data-mv="2">Reshape it</button>
+      <div class="vbox new" hidden><span class="lb">card version</span><span class="vl" style="font-size:20px">SLICE EACH HALF</span></div>
+      <p class="dir" hidden>Same information, a different form.</p></div></div>
+  </div>
+  <p class="dir" style="margin-top:16px">Each time, the values we started with are still there, unchanged. A new value comes out.</p>
+  <aside class="nt">Three seeds for part 2, in plain language. Combine: the count and the kind become one sentence for a label. Work out: weight per piece was never stored; it comes from weight and count. Reshape: the recipe card wants the step in capitals. Through-line: the original stays as it was; changing data usually means making a new value. Click each button in turn.</aside>
+</section>
+
+<section class="slide" id="moves-quiz" data-sec="Changing data: the idea" data-ex="Combine, work out or reshape?">
+  <span class="turn">Your turn</span>
+  <div class="billing">Changing data: the idea · Check</div><hr class="rule">
+  <h2 class="h1">Combine, work out or reshape?</h2>
+  <div class="rows qz" id="mq"></div>
+  <div class="fb" id="mq-fb" style="margin-top:12px"></div>
+  <aside class="nt">The ideas carry beyond the onion: these are things the apps on their phones do all the time. Quick round, then break. Tell them part 4 gives each of the three its JavaScript.</aside>
+</section>
+
+<!-- ============ BREAK ============ -->
+
+<section class="slide stage" id="break" data-sec="Break">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Break · 11:05–11:20</div>
+    <div class="timer" id="tm" aria-live="off">15:00</div>
+    <p class="lede" id="tm-msg" style="margin-top:22px">Stretch, refill, and keep this deck open on your laptop. After the break, we write the changes in code.</p>
+    <div class="row" style="margin-top:20px"><button class="btn alt" id="tm-go">Start</button><button class="btn ghost" id="tm-reset">Reset</button></div>
+  </div>
+  <aside class="nt">15-minute break. Remind them to keep the deck open: part 4 has code exercises inside the slides.</aside>
+</section>
+
+<!-- ============ PART 4: WORKING WITH DATA ============ -->
+
+<section class="slide" id="combine" data-sec="Working with data" data-ex="Combine">
+  <span class="turn">Your turn</span>
+  <div class="billing">Working with data · 11:20</div><hr class="rule">
+  <h2 class="h1">Combine: + glues text together</h2>
+  <div class="cols" style="gap:32px">
+    <div class="stack" style="gap:14px">
+      <p class="lede" style="margin:0">With text, <code>+</code> doesn't add. It glues: the number 24 joins the sentence as text.</p>
+      <p class="dir" style="font-size:20px">The spaces live inside the quotation marks. Forget them and you get <code>24pieces of redonion</code>.</p>
+      <div class="task"><span class="tk">Your turn</span>Change line 4 so it logs <code>24 pieces of red onion, chopped by Sam</code> (any name).</div>
+      <div class="fb" id="cb-fb"></div>
+    </div>
+    <div class="panel mini" id="mini-combine"></div>
+  </div>
+  <aside class="nt">Pays off "combine" from before the break. Run it as it is, then do the task. Common mistakes: missing spaces, a missing + between pieces, quotation marks around the variable name ("onionType" gives the word onionType, not red). Template literals (`${onionPieces} pieces`) are held back for the advanced track this afternoon.</aside>
+</section>
+
+<section class="slide" id="work-out" data-sec="Working with data" data-ex="Work it out">
+  <span class="turn">Your turn</span>
+  <div class="billing">Working with data · Arithmetic</div><hr class="rule">
+  <h2 class="h1">Work out a new value</h2>
+  <div class="cols" style="gap:32px">
+    <div class="stack" style="gap:12px">
+      <div class="row" style="gap:10px"><code class="chip" style="cursor:default">+</code><code class="chip" style="cursor:default">-</code><code class="chip" style="cursor:default">*</code><code class="chip" style="cursor:default">/</code><span class="small muted">add, subtract, multiply, divide</span></div>
+      <p class="lede" style="margin:0"><code>Math.round()</code> rounds to the nearest whole number. Use it when a division gets ugly.</p>
+      <div class="task"><span class="tk">Your turn</span>Chopping took 7 minutes. On line 7, work out the <b>seconds per piece</b>, rounded, and log it.</div>
+      <div class="fb" id="wo-fb"></div>
+    </div>
+    <div class="panel mini" id="mini-workout"></div>
+  </div>
+  <aside class="nt">Pays off "work out". Run it first: 185 / 24 gives 7.708333333333333. Wrap it in Math.round and it gives 8. The originals stay as they were. Task answer: Math.round(7 * 60 / onionPieces) is 18 (17.5 rounds up). Some will forget to turn minutes into seconds: ask "what unit is 7 in?"</aside>
+</section>
+
+<section class="slide" id="reshape" data-sec="Working with data" data-demo="String methods">
+  <span class="turn try">Try it</span>
+  <div class="billing">Working with data · String methods</div><hr class="rule">
+  <h2 class="h1">Same information, new shape</h2>
+  <div class="cols wide-l" style="gap:32px">
+    <div class="stack" style="gap:12px">
+      <div class="panel"><div class="bar"><span>step.js</span></div><pre class="code" id="rs-code"></pre></div>
+      <div class="row" id="rs-btns" style="gap:8px"></div>
+      <div class="panel"><div class="bar y"><span>console</span></div><div class="console" id="rs-con"></div></div>
+    </div>
+    <div class="rows" style="border-top:1px solid var(--ink-900)">
+      <div style="grid-template-columns:1fr"><span style="font-size:18px"><code>.toUpperCase()</code> <code>.toLowerCase()</code> change the capitals.</span></div>
+      <div style="grid-template-columns:1fr"><span style="font-size:18px"><code>.length</code> counts the characters. Spaces count. No brackets.</span></div>
+      <div style="grid-template-columns:1fr"><span style="font-size:18px"><code>.slice(0, 5)</code> takes characters 0 to 4. Counting starts at 0; the end isn't included.</span></div>
+      <div style="grid-template-columns:1fr"><span style="font-size:18px">Each one gives back a <b>new</b> value. <code>step</code> itself never changes.</span></div>
+    </div>
+  </div>
+  <aside class="nt">Pays off "reshape". Click each method; the console also shows that step is untouched. .length is a property (no brackets); the others are methods (brackets). Counting from 0 will feel odd; it comes back with arrays. Students can try these in the workspace (W) if they want.</aside>
+</section>
+
+<section class="slide" id="methods-quiz" data-sec="Working with data" data-ex="Predict the result">
+  <span class="turn">Your turn</span>
+  <div class="billing">Working with data · Check</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:10px">Predict the result</h2>
+  <div class="panel" style="margin-bottom:12px"><pre class="code" id="mq2-code"></pre></div>
+  <div class="rows qz" id="sq"></div>
+  <div class="fb" id="sq-fb" style="margin-top:12px"></div>
+  <aside class="nt">"dice the halves" has 15 characters: 4 + 1 + 3 + 1 + 6, spaces included. slice(0, 4) stops before character 4, so it's "dice" with no space. The third question is the important one: toUpperCase gives back a new value; step stays lowercase unless you store the new value.</aside>
+</section>
+
+<section class="slide" id="random" data-sec="Working with data" data-demo="Roll">
+  <span class="turn try">Try it</span>
+  <div class="billing">Working with data · An aside</div><hr class="rule">
+  <h2 class="h1">A value nobody stored</h2>
+  <div class="cols" style="gap:40px">
+    <div class="stack" style="gap:14px">
+      <p class="lede" style="margin:0"><code>Math.random()</code> gives back a new number between 0 and 1 every time. You can't predict it. If you need it again, store it.</p>
+      <div class="seg"><button class="btn ghost sel" data-r="0">Math.random()</button><button class="btn ghost" data-r="1">A dice roll</button></div>
+      <div class="panel"><pre class="code" id="rn-code"></pre></div>
+      <button class="btn" id="rn-go" style="align-self:flex-start">Roll</button>
+    </div>
+    <div class="stack" style="gap:10px">
+      <div class="out-big" id="rn-out">–</div>
+      <div class="panel"><div class="bar y"><span>earlier rolls</span></div><div class="console" id="rn-log"></div></div>
+    </div>
+  </div>
+  <aside class="nt">A fun aside: the opposite of a stored value. The dice version multiplies by 6, rounds down with Math.floor and adds 1. Don't dwell on it; the advanced track uses Math.random this afternoon.</aside>
+</section>
+
+<section class="slide" id="coercion" data-sec="Working with data" data-demo="Type coercion">
+  <span class="turn try">Try it</span>
+  <div class="billing">Working with data · Type coercion</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:12px">JavaScript quietly changes the type</h2>
+  <p class="lede">When an operation needs a different type, JavaScript converts the value for you, without asking. That's called type coercion. Click to see what happens.</p>
+  <div class="rows reveal" id="co"></div>
+  <aside class="nt">The first time the word gets real weight. "5" + 3: + with a string glues, so 3 becomes "3", result "53". "5" - 3: minus only does maths, so "5" becomes 5, result 2. It matters because text from an input field is always a string: "24" + 1 is "241". NaN means "not a number": a sum that couldn't be done.</aside>
+</section>
+
+<!-- ============ PART 5: EXPERIMENTS ============ -->
+
+<section class="slide" id="coercion-quiz" data-sec="Quick data experiments" data-ex="What does it give?">
+  <span class="turn">Your turn</span>
+  <div class="billing">Quick data experiments · 11:45</div><hr class="rule">
+  <h2 class="h1">What does it give?</h2>
+  <div class="rows qz" id="xq"></div>
+  <div class="fb" id="xq-fb" style="margin-top:12px"></div>
+  <aside class="nt">Warm-up for the experiments. Discuss together, then move to the next slide.</aside>
+</section>
+
+<section class="slide" id="experiments" data-sec="Quick data experiments" data-ex="Predict, then test">
+  <span class="turn">Your turn</span>
+  <div class="billing">Quick data experiments · In pairs</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:6px">Predict, then test</h2>
+  <p class="small muted" style="margin:0 0 8px">Write what you expect (quotation marks for text), then test it. Talk about every surprise with your neighbour.</p>
+  <div class="rows ex8" id="xp"></div>
+  <aside class="nt">About eight minutes. Pairs predict first, then test. The feedback separates "right value, wrong type" (53 vs "53") from a real surprise. Walk the room; collect the best surprises for the wrap-up. "4" + 4 - 4 is a favourite: "44" - 4 is 40. The last row lets them test anything.</aside>
+</section>
+
+<!-- ============ WRAP-UP ============ -->
+
+<section class="slide stage" id="recap-end" data-sec="Wrap-up">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Wrap-up · 11:55</div>
+    <h2 class="hero md">Name it, keep it, make something new.</h2>
+    <div class="terms"><span>let</span><span>const</span><span>string</span><span>number</span><span>undefined</span><span>null</span><span>+</span><span>.length</span><span>.slice()</span><span>type coercion</span></div>
+    <p class="lede">One box, one value. What about a whole bag of onions, or everything on your card in one place? Arrays and objects are coming.</p>
+  </div>
+  <aside class="nt">Summarise: a variable remembers a value by name; let for values that change, const for fixed ones; strings, numbers, undefined, null; changing data makes new values (combine, work out, reshape); JavaScript sometimes converts types for you. Go back to the objectives slide if there's time. Tease arrays and objects: one box holds one value, so how would we keep a list of onions, or a whole student card together?</aside>
+</section>
+
+<section class="slide" id="next" data-sec="Wrap-up">
+  <div class="billing">After lunch · Group learning and exercises</div><hr class="rule">
+  <h2 class="h1">This afternoon, in VS Code</h2>
+  <div class="cols">
+    <div class="stack">
+      <p class="lede" style="margin:0">The Data exercises, in groups, in VS Code, with teachers in the room. Three tracks: pick the one that fits.</p>
+      <p class="lede" style="margin:0">Further along? The advanced track adds template literals and <code>Math.random()</code>.</p>
+    </div>
+    <div class="rows lab" style="border-top:1px solid var(--ink-900)">
+      <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://mau.instructure.com/courses/22858/modules/137080" target="_blank" rel="noopener">Canvas: Data module</a> (exercises are posted there)</span></div>
+      <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://eloquentjavascript.net/01_values.html" target="_blank" rel="noopener">Eloquent JavaScript, chapter 1: Values, types and operators</a></span></div>
+      <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://www.freecodecamp.org/" target="_blank" rel="noopener">freeCodeCamp: variables and strings</a></span></div>
+      <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://scrimba.com/" target="_blank" rel="noopener">Scrimba: Practice time, part 1</a></span></div>
+    </div>
+  </div>
+  <aside class="nt">Preview the afternoon group work: show the Exercises: Data page and the three tracks. Remind them about the slide links: this deck stays online.</aside>
+</section>
+
+</div>
+</main>
+
+<script src="../shared/deck.js"></script>
+<script src="../shared/workspace.js"></script>
+<script>
+(function(){
+"use strict";
+var D=Deck,$=D.$,$$=D.$$,esc=D.esc,code=D.code,fb=D.fb,conLines=D.conLines;
+
+/* ---------- helpers: chip quiz, embedded editor ---------- */
+/* Q: [{t: html, a: answer index, w: why (shown when right), h: hint (shown when wrong)}] */
+function quiz(box,fbel,choices,Q,doneMsg){
+  var done=0;
+  Q.forEach(function(q){
+    var row=document.createElement("div"),answered=false;
+    row.innerHTML='<div class="sc">'+q.t+'</div><div class="ch"></div>';
+    var ch=row.querySelector(".ch");
+    choices.forEach(function(c,i){
+      var b=document.createElement("button");b.className="chip";b.textContent=c;
+      b.addEventListener("click",function(){
+        if(answered)return;
+        if(i===q.a){b.classList.add("right");answered=true;done++;fb(fbel,"pass","Correct. "+q.w+(done===Q.length&&doneMsg?" "+doneMsg:""))}
+        else{b.classList.add("wrong");fb(fbel,"note",q.h||"Not quite. Look again.")}
+      });
+      ch.appendChild(b);
+    });
+    box.appendChild(row);
+  });
+}
+/* An editor + Run + console inside a slide. check(result) returns [kind, html] or null. */
+function mini(host,file,start,o){
+  o=o||{};
+  host.innerHTML='<div class="bar"><span>'+esc(file)+'</span><span>Ctrl / ⌘ + Enter runs</span></div>'+
+    '<textarea class="code-ed" spellcheck="false" rows="'+(o.rows||8)+'" aria-label="Code editor: '+esc(file)+'"></textarea>'+
+    '<div class="tools"><button class="btn">Run</button><button class="btn ghost">Reset</button></div>'+
+    '<div class="console"><span class="dim">Press Run to see what the code logs.</span></div>';
+  var ed=host.querySelector("textarea"),con=host.querySelector(".console"),bs=host.querySelectorAll(".tools .btn"),key="mini:"+host.id;
+  ed.value=D.store.get(key)||start;
+  ed.addEventListener("input",function(){D.store.set(key,ed.value)});
+  function go(){
+    var r=D.run(ed.value),lines=[{c:"in",t:"run "+file}].concat(r.logs);
+    if(r.error)lines.push({c:"bad",t:r.blocked?r.error.message:"The code stopped: "+(r.error.name||"Error")+": "+r.error.message});
+    else if(!r.logs.length)lines.push({c:"dim",t:"(nothing was logged)"});
+    conLines(con,lines);con.scrollTop=con.scrollHeight;
+    if(o.check&&o.fb){var c=o.check(r,ed.value);if(c)fb(o.fb,c[0],c[1]);else fb(o.fb)}
+  }
+  D.edKeys(ed,go);
+  bs[0].addEventListener("click",go);
+  bs[1].addEventListener("click",function(){ed.value=start;D.store.set(key,start);conLines(con,[{c:"dim",t:"Press Run to see what the code logs."}]);if(o.fb)fb(o.fb)});
+}
+function stepper(n,render,back,next,reset){
+  var i=0;function r(){render(i);back.disabled=i===0;next.disabled=i===n-1}
+  next.addEventListener("click",function(){if(i<n-1){i++;r()}});
+  back.addEventListener("click",function(){if(i>0){i--;r()}});
+  reset.addEventListener("click",function(){i=0;r()});
+  r();
+}
+function flashEl(el){el.classList.remove("flashbox");void el.offsetWidth;el.classList.add("flashbox")}
+
+/* ---------- recap ---------- */
+quiz($("#rc"),$("#rc-fb"),["What it takes in","Its name","What it gives back"],[
+  {t:"Chopping works on whatever onion you give it. In function terms, the onion is…",a:0,w:"The onion goes in. A different onion, the same process.",h:"Think about which part changes from one call to the next."},
+  {t:"Each chop ends with a count: this onion made 24 pieces. The count is…",a:2,w:"It's the result: what the function hands back.",h:"Is the count there before the chopping starts, or after?"},
+  {t:"You say \"chop\" and everyone knows the whole process. \"Chop\" is…",a:1,w:"One name stands for all the steps: packaging, from Tuesday.",h:"Which one lets you ask for the whole process with one word?"}
+],"That's Tuesday, in onions.");
+
+/* ---------- onion step-through ---------- */
+(function(){
+  var S=[
+    {s:-1,c:0,box:"",st:"ready",d:"A red onion on the board. Nothing chopped, nothing counted."},
+    {s:0,c:2,box:"",st:"chopping",d:"Halve it: 2 pieces."},
+    {s:1,c:12,box:"",st:"chopping",d:"Slice each half into strips: 12 pieces."},
+    {s:2,c:24,box:"",st:"chopping",d:"Dice across the strips: 24 pieces."},
+    {s:-1,c:24,box:"24",st:"finished",done:true,d:"The chopping is over. The action is gone, but the count is worth keeping, so we put it in a box with a name."},
+    {s:-1,c:24,box:"24",st:"finished",done:true,use:true,d:"Because we kept it, we can use it later. That box is a variable."}
+  ];
+  stepper(S.length,function(i){
+    var st=S[i];
+    $$("#on-steps li").forEach(function(li,j){li.classList.toggle("on",j===st.s)});
+    $("#on-count").textContent=st.c;$("#on-state").textContent=st.st;
+    $("#on-proc").classList.toggle("done",!!st.done);
+    var v=$("#on-val"),was=v.textContent;v.textContent=st.box||"—";v.classList.toggle("empty",!st.box);
+    if(st.box&&was!==st.box)flashEl($("#on-box"));
+    $("#on-use").style.visibility=st.use?"visible":"hidden";
+    $("#on-dir").textContent=st.d;
+  },$("#on-back"),$("#on-next"),$("#on-reset"));
+})();
+
+/* ---------- many onions ---------- */
+(function(){
+  var C=[24,30,18,27],N=["first","second","third","fourth"],n=0;
+  $("#mo-go").addEventListener("click",function(){
+    if(n>=C.length){$("#mo-dir").textContent="Four onions, four results, four boxes. That's enough onion for one morning.";return}
+    var d=document.createElement("div");d.className="vbox";
+    d.innerHTML='<span class="lb">'+N[n]+' onion</span><span class="vl">'+C[n]+'</span>';
+    $("#mo-boxes").appendChild(d);flashEl(d);n++;
+    $("#mo-dir").textContent="chop handed back "+C[n-1]+". The box remembers it, even after the next onion starts.";
+  });
+  $("#mo-reset").addEventListener("click",function(){n=0;$("#mo-boxes").innerHTML="";$("#mo-dir").textContent="The function is the action. The box catches what it hands back, and remembers it."});
+})();
+
+/* ---------- jobs quiz ---------- */
+quiz($("#jq"),$("#jq-fb"),["Quantity","Order","Ranking"],[
+  {t:"The onion made <b>24</b> pieces.",a:0,w:"A count. Doubling it would make sense.",h:"Would adding two of these together mean something?"},
+  {t:"<b>Step 3</b>: dice across the strips.",a:1,w:"A place in the sequence, not an amount.",h:"Is this how much of something, or where it comes?"},
+  {t:"Your chopping gets a <b>5</b> out of 5.",a:2,w:"A judgement on a scale.",h:"Who decided this number, and how?"},
+  {t:"The onion weighs <b>180</b> grams.",a:0,w:"Not a count, but still how much: a measure.",h:"Does it answer \"how much\", \"which place\" or \"how good\"?"}
+],"All four.");
+
+/* ---------- steer ---------- */
+(function(){
+  var C=[24,30,18,27,21],n=1;
+  function r(){
+    $("#st-n").textContent=n;
+    $("#st-list").innerHTML=C.slice(0,n).map(function(c,i){return "<li>Onion "+(i+1)+" · "+c+" pieces</li>"}).join("");
+    var t=C.slice(0,n).reduce(function(a,b){return a+b},0);
+    $("#st-out").textContent=t;flashEl($("#st-outbox"));
+    $("#st-minus").disabled=n===1;$("#st-plus").disabled=n===C.length;
+  }
+  $("#st-minus").addEventListener("click",function(){if(n>1){n--;r()}});
+  $("#st-plus").addEventListener("click",function(){if(n<C.length){n++;r()}});
+  r();
+})();
+
+/* ---------- changes or stays ---------- */
+quiz($("#cq"),$("#cq-fb"),["Changes","Stays"],[
+  {t:"The kind of onion",a:1,w:"Once picked, a red onion stays red.",h:"Can a red onion turn yellow halfway through?"},
+  {t:"Pieces so far",a:0,w:"It grows with every cut.",h:"Is it the same after each cut?"},
+  {t:"Time spent chopping",a:0,w:"It keeps ticking while you work.",h:"Does the clock stop while you chop?"},
+  {t:"Weight of the whole onion, before you start",a:1,w:"Weighed once, then fixed.",h:"Once it's weighed, does it change?"},
+  {t:"Which step you're on",a:0,w:"1, then 2, then 3.",h:"Are you always on the same step?"}
+],"Fixed values and changing values: in code, those get two different words.");
+
+/* ---------- student card (made-up people, nothing saved) ---------- */
+(function(){
+  var P=[["Mika Lindqvist","412870395","20040317-2286"],["Sam Okafor","730164852","20020911-4471"],["Noor Haddad","158392046","20060128-3815"]],i=0;
+  function r(){
+    var p=P[i];$("#id-name").textContent=p[0];$("#id-cardno").textContent=p[1];$("#id-pnr").textContent=p[2];$("#id-ph").textContent=p[0][0];
+    $("#id-read").innerHTML=[["name",p[0]],["card number",p[1]],["personal number",p[2]]].map(function(x){return '<div><span class="k">'+x[0]+'</span><span class="v">'+esc(x[1])+'</span></div>'}).join("");
+    $$("#id-read .v").forEach(flashEl);
+  }
+  $("#id-swap").addEventListener("click",function(){i=(i+1)%P.length;r()});
+  r();
+})();
+
+/* ---------- part 2 ---------- */
+code($("#ho-a"),"let onionPieces = 24;");
+code($("#ho-b"),'const onionType = "red";');
+mini($("#mini-handoff"),"onion.js",'let onionPieces = 24;\nconst onionType = "red";\n\nconsole.log(onionPieces);\nconsole.log(onionType);',{rows:7});
+
+(function(){
+  var SRC="let onionPieces = 6 * 4;\nonionPieces = 30;\nconsole.log(onionPieces);";
+  var S=[
+    {l:[],v:null,box:false,c:[],d:"Three lines. Before anything runs, there's no box called onionPieces."},
+    {l:[0],v:null,box:true,c:[],d:"let onionPieces: JavaScript makes a new box and writes the name on it. It's empty for a moment."},
+    {l:[0],v:null,box:true,c:[],x:"6 * 4 is 24",d:"Then it works out the right-hand side first: 6 * 4 is 24."},
+    {l:[0],v:"24",box:true,c:[],d:"= puts the result in the box. Read it as \"onionPieces becomes 24\"."},
+    {l:[1],v:"30",box:true,c:[],d:"onionPieces = 30: no let this time, the box already exists. The 24 is replaced. The name stays."},
+    {l:[2],v:"30",box:true,c:["30"],d:"console.log looks in the box and shows what's there now: 30."}
+  ];
+  stepper(S.length,function(i){
+    var s=S[i];code($("#as-code"),SRC,s.l);
+    $("#as-n").textContent="step "+i+" of "+(S.length-1);
+    $("#as-box").style.visibility=s.box?"visible":"hidden";
+    var v=$("#as-val"),was=v.textContent;v.textContent=s.v||(s.x?"6 * 4 …":"—");v.classList.toggle("empty",!s.v);
+    if(s.v&&was!==s.v)flashEl($("#as-box"));
+    conLines($("#as-con"),s.c.length?[{c:"in",t:"run onion.js"}].concat(s.c):[{c:"dim",t:"(nothing logged yet)"}]);
+    $("#as-dir").textContent=s.d;
+  },$("#as-back"),$("#as-next"),$("#as-reset"));
+})();
+
+quiz($("#lq"),$("#lq-fb"),["String","Number","Neither"],[
+  {t:"<code>24</code>",a:1,w:"Plain digits, no quotation marks.",h:"Are there quotation marks around it?"},
+  {t:"<code>\"24\"</code>",a:0,w:"The quotation marks make it text that happens to contain digits.",h:"Look at what's around the digits."},
+  {t:"<code>\"red\"</code>",a:0,w:"Text in quotation marks.",h:"What do quotation marks tell JavaScript?"},
+  {t:"<code>3.5</code>",a:1,w:"Decimals are numbers too.",h:"Does a decimal point change what kind of value it is?"},
+  {t:"<code>'onion'</code>",a:0,w:"Single quotation marks work as well as double ones.",h:"Are single quotation marks allowed?"},
+  {t:"<code>red</code>",a:2,w:"Without quotation marks JavaScript reads it as a name, looks for a variable called red, and stops: ReferenceError: red is not defined.",h:"No quotation marks, and not digits either. What would JavaScript think it is?"}
+],"Quotation marks make the difference.");
+
+mini($("#mini-letconst"),"letconst.js",'let onionPieces = 0;\nonionPieces = 12;\nonionPieces = 24;\nconsole.log(onionPieces);\n\nconst onionType = "red";\nonionType = "yellow";\nconsole.log(onionType);',{rows:8});
+
+quiz($("#kq"),$("#kq-fb"),["let","const"],[
+  {t:"The number of pieces, while you chop",a:0,w:"It changes as the program runs.",h:"Does it stay the same the whole time?"},
+  {t:"The kind of onion you picked",a:1,w:"Picked once, never changed.",h:"Will it change after you pick it?"},
+  {t:"The name on a student card",a:1,w:"Set once for this card.",h:"Does the card's name change while you read it?"},
+  {t:"Onions left to cut",a:0,w:"Goes down by one after each onion.",h:"What happens to it after each onion?"},
+  {t:"Seconds spent chopping",a:0,w:"Keeps growing.",h:"Is the time the same at the end as at the start?"}
+],"If it will change, let. If not, const.");
+
+mini($("#mini-naming"),"names.js","let onion pieces = 24;\nconsole.log(onion pieces);",{rows:5});
+
+quiz($("#nq"),$("#nq-fb"),["Breaks a rule","Poor style","Good name"],[
+  {t:"<code>secondOnion</code>",a:2,w:"camelCase, and it says what it holds.",h:"Check the rules first, then the conventions. Anything wrong?"},
+  {t:"<code>onion pieces</code>",a:0,w:"Spaces aren't allowed: SyntaxError.",h:"Look between the words."},
+  {t:"<code>2ndOnion</code>",a:0,w:"Names can't start with a digit.",h:"Look at the first character."},
+  {t:"<code>x</code>",a:1,w:"Allowed, but x says nothing about what it holds.",h:"Would JavaScript run it? Would a reader understand it?"},
+  {t:"<code>let</code>",a:0,w:"let is a reserved word: JavaScript needs it for itself.",h:"Is this word already taken by JavaScript?"},
+  {t:"<code>onion_pieces</code>",a:1,w:"It runs, but in JavaScript we write camelCase: onionPieces.",h:"It runs. Does it follow the JavaScript convention?"}
+],"Rules make it run. Conventions make it readable.");
+
+/* ---------- part 3 ---------- */
+$$(".mv").forEach(function(b){
+  b.addEventListener("click",function(){
+    var p=b.parentNode;$$(".vbox.new,.dir",p).forEach(function(e){e.hidden=false});
+    flashEl(p.querySelector(".vbox.new"));b.disabled=true;
+  });
+});
+quiz($("#mq"),$("#mq-fb"),["Combine","Work out","Reshape"],[
+  {t:"A sign shows the city <b>malmö</b> as <b>MALMÖ</b>.",a:2,w:"Same word, different form.",h:"Is anything added, or is the same information shown differently?"},
+  {t:"A shop shows the price per kilo, from the price and the weight.",a:1,w:"A new number from two stored ones.",h:"Was the price per kilo ever stored?"},
+  {t:"\"Hi, \" and your first name become <b>Hi, Sam</b>.",a:0,w:"Two stored pieces of text glued into one.",h:"How many values went in?"},
+  {t:"A calendar shows <b>October</b> as <b>Oct</b>.",a:2,w:"Part of the same word: a new shape.",h:"Is this new information, or a shorter form of old information?"},
+  {t:"A step counter turns your steps into kilometres.",a:1,w:"A calculation on a stored number.",h:"Does it glue things, or calculate something?"}
+],"Part 4 gives each of these its JavaScript.");
+
+/* ---------- break timer ---------- */
+(function(){
+  var total=15*60,left=total,t=null,BRK="Stretch, refill, and keep this deck open on your laptop. After the break, we write the changes in code.";
+  function show(){var m=Math.floor(left/60),s=left%60;$("#tm").textContent=m+":"+(s<10?"0":"")+s;if(left===0){$("#tm-msg").textContent="Time's up. We start again now.";stop()}}
+  function stop(){clearInterval(t);t=null;$("#tm-go").textContent=left===0?"Start":"Resume"}
+  $("#tm-go").addEventListener("click",function(){
+    if(t){stop();return}
+    if(left===0)left=total;
+    $("#tm-msg").textContent=BRK;
+    t=setInterval(function(){left=Math.max(0,left-1);show()},1000);this.textContent="Pause";
+  });
+  $("#tm-reset").addEventListener("click",function(){stop();left=total;show();$("#tm-go").textContent="Start";$("#tm-msg").textContent=BRK});
+})();
+
+/* ---------- part 4 ---------- */
+mini($("#mini-combine"),"label.js",'let onionPieces = 24;\nconst onionType = "red";\n\nlet label = onionPieces + " pieces of " + onionType + " onion";\nconsole.log(label);',{rows:7,fb:$("#cb-fb"),check:function(r){
+  var last=r.logs[r.logs.length-1]||"";
+  if(/^24 pieces of red onion, chopped by \S/.test(last))return ["pass","Correct. Four pieces of text and a number, glued into one new string."];
+  if(/^24 pieces of red onion$/.test(last))return null;
+  if(/chopped by/.test(last)&&!/, chopped by /.test(last))return ["note","Close. Check the comma and the spaces: they live inside the quotation marks."];
+  if(/onionType|onionPieces/.test(last))return ["note","The variable's name ended up in the text. Did you put quotation marks around it?"];
+  return ["note","Not quite yet. The goal: <code>24 pieces of red onion, chopped by Sam</code>."];
+}});
+
+mini($("#mini-workout"),"perpiece.js",'const onionWeight = 185;   // grams\nlet onionPieces = 24;\n\nlet gramsPerPiece = onionWeight / onionPieces;\nconsole.log(gramsPerPiece);\nconsole.log(Math.round(gramsPerPiece));\n\n',{rows:8,fb:$("#wo-fb"),check:function(r){
+  var last=r.logs[r.logs.length-1];
+  if(r.logs.length<3)return null;
+  if(last==="18")return ["pass","Correct. 420 seconds ÷ 24 pieces is 17.5, which rounds to 18."];
+  if(last==="17.5")return ["note","Right sum. Now round it with <code>Math.round()</code>."];
+  if(last==="0"||last==="0.2916666666666667")return ["note","That looks like minutes per piece. How many seconds are in 7 minutes?"];
+  return ["note","Not 18 yet. Seconds first (7 minutes × 60), then divide by the pieces, then round."];
+}});
+
+(function(){
+  var STEP="slice each half into strips";
+  code($("#rs-code"),'const step = "'+STEP+'";');
+  var M=[["step.toUpperCase()",function(){return STEP.toUpperCase()}],["step.length",function(){return STEP.length}],["step.slice(0, 5)",function(){return STEP.slice(0,5)}],["step.slice(6)",function(){return STEP.slice(6)}]];
+  function repr(v){return typeof v==="string"?'"'+v+'"':String(v)}
+  conLines($("#rs-con"),[{c:"dim",t:"Click a method."}]);
+  M.forEach(function(m){
+    var b=document.createElement("button");b.className="btn cy";b.style.textTransform="none";b.textContent=m[0];
+    b.addEventListener("click",function(){conLines($("#rs-con"),[{c:"in",t:m[0]},repr(m[1]()),{c:"dim",t:"step is still "+repr(STEP)}])});
+    $("#rs-btns").appendChild(b);
+  });
+})();
+
+code($("#mq2-code"),'const step = "dice the halves";');
+quiz($("#sq"),$("#sq-fb"),["13","15","3"],[
+  {t:"<code>step.length</code>",a:1,w:"4 + 1 + 3 + 1 + 6: the spaces count.",h:"Count again, and count the spaces too."}
+]);
+(function(){
+  var box=$("#sq"),extra=[
+    {t:"<code>step.slice(0, 4)</code>",o:['"dice"','"dice "','"ice"'],a:0,w:"Characters 0, 1, 2 and 3. The end, 4, isn't included.",h:"Counting starts at 0, and slice stops before the end number."},
+    {t:"<code>step.toUpperCase();</code><br>then <code>step</code> is…",o:['"DICE THE HALVES"','"dice the halves"'],a:1,w:"toUpperCase gives back a new string. step itself never changes.",h:"Does a method change the string, or give back a new one?"}
+  ];
+  extra.forEach(function(q){
+    var row=document.createElement("div"),ans=false;row.innerHTML='<div class="sc">'+q.t+'</div><div class="ch"></div>';
+    q.o.forEach(function(o,i){var b=document.createElement("button");b.className="chip";b.textContent=o;
+      b.addEventListener("click",function(){if(ans)return;if(i===q.a){ans=true;b.classList.add("right");fb($("#sq-fb"),"pass","Correct. "+q.w)}else{b.classList.add("wrong");fb($("#sq-fb"),"note",q.h)}});
+      row.querySelector(".ch").appendChild(b)});
+    box.appendChild(row);
+  });
+})();
+
+(function(){
+  var mode=0,hist=[],SRC=["Math.random()","Math.floor(Math.random() * 6) + 1"];
+  function show(){code($("#rn-code"),SRC[mode])}
+  $$("[data-r]").forEach(function(b){b.addEventListener("click",function(){mode=+b.dataset.r;$$("[data-r]").forEach(function(x){x.classList.toggle("sel",x===b)});show()})});
+  $("#rn-go").addEventListener("click",function(){
+    var v=mode?Math.floor(Math.random()*6)+1:Math.random();
+    $("#rn-out").textContent=String(v);flashEl($("#rn-out"));
+    hist.unshift(String(v));hist=hist.slice(0,5);conLines($("#rn-log"),hist);
+  });
+  show();conLines($("#rn-log"),[{c:"dim",t:"(none yet)"}]);
+})();
+
+(function(){
+  var R=[['"5" + 3','<code>"53"</code>. With a string, + glues: 3 becomes "3".'],
+         ['"5" - 3','<code>2</code>. Minus only does maths: "5" becomes 5.'],
+         ['"24" + 1','<code>"241"</code>. Text from a form field is always a string, so this happens in real apps.'],
+         ['"onion" - 1','<code>NaN</code>, "not a number": the sum couldn\'t be done.']];
+  R.forEach(function(x){var r=document.createElement("div");
+    r.innerHTML='<button class="opt" style="font-family:var(--font-mono);font-size:22px"></button><span class="ans" hidden>'+x[1]+'</span>';
+    r.querySelector("button").textContent=x[0];
+    r.querySelector("button").addEventListener("click",function(){r.querySelector(".ans").hidden=false;this.classList.add("right")});
+    $("#co").appendChild(r)});
+})();
+
+/* ---------- part 5 ---------- */
+(function(){
+  var Q=[{t:'<code>"10" + 5</code>',o:['15','"105"','an error'],a:1,w:'+ with a string glues: "105".',h:"Is one side text? What does + do then?"},
+         {t:'<code>"10" - 5</code>',o:['5','"105"','"10-5"'],a:0,w:"Minus only does maths, so \"10\" becomes 10.",h:"Can minus glue text?"},
+         {t:'<code>24 + " pieces"</code>',o:['"24 pieces"','24','NaN'],a:0,w:"The number joins the text.",h:"One side is text. What does + do?"}];
+  Q.forEach(function(q){
+    var row=document.createElement("div"),ans=false;row.innerHTML='<div class="sc">'+q.t+'</div><div class="ch"></div>';
+    q.o.forEach(function(o,i){var b=document.createElement("button");b.className="chip";b.textContent=o;
+      b.addEventListener("click",function(){if(ans)return;if(i===q.a){ans=true;b.classList.add("right");fb($("#xq-fb"),"pass","Correct. "+q.w)}else{b.classList.add("wrong");fb($("#xq-fb"),"note",q.h)}});
+      row.querySelector(".ch").appendChild(b)});
+    $("#xq").appendChild(row);
+  });
+})();
+
+(function(){
+  var X=['"5" + 3','"5" - 3','"5" * "2"','10 + 5 + " onions"','"onions: " + 10 + 5','"4" + 4 - 4','"onion" - 1','"red onion".length'];
+  function repr(v){if(typeof v==="string")return JSON.stringify(v);if(typeof v==="number"&&isNaN(v))return "NaN";return String(v)}
+  function evaluate(expr){
+    var r=D.run("function __value() { return (" + expr + "\n); }","__value");
+    if(r.error)return {err:r.blocked?r.error.message:"The code stopped: "+(r.error.name||"Error")+": "+r.error.message};
+    try{return {v:repr(r.value())}}catch(e){return {err:"The code stopped: "+(e.name||"Error")+": "+e.message}}
+  }
+  function norm(s){s=s.trim();if(/^'.*'$/.test(s))s='"'+s.slice(1,-1)+'"';return s}
+  function row(expr,own){
+    var d=document.createElement("div");if(own)d.className="own";
+    d.innerHTML=(own?'<input class="t" aria-label="Your own expression" placeholder="your own, e.g. &quot;7&quot; * 3">':'<code></code>')+
+      '<input class="t" aria-label="Your prediction" placeholder="I think…"><button class="btn">Test</button><span class="got"></span>';
+    if(!own)d.querySelector("code").textContent=expr;
+    var ins=d.querySelectorAll("input"),pred=ins[ins.length-1],got=d.querySelector(".got");
+    function test(){
+      var e=own?ins[0].value.trim():expr;
+      if(!e){got.innerHTML='<small class="w">Type an expression first.</small>';return}
+      var res=evaluate(e),p=norm(pred.value);
+      got.textContent="";
+      if(res.err){var s=document.createElement("small");s.className="x";s.textContent=res.err;got.appendChild(s);return}
+      got.appendChild(document.createTextNode(res.v));
+      var tag=document.createElement("small");
+      if(!p){tag.className="w";tag.textContent="No prediction. Predict first next time."}
+      else if(p===res.v){tag.className="y";tag.textContent="✓ spot on"}
+      else if(p.replace(/"/g,"")===res.v.replace(/"/g,"")){tag.className="w";tag.textContent="Right value, wrong type: look at the quotation marks."}
+      else{tag.className="x";tag.textContent="A surprise. Why?"}
+      got.appendChild(tag);flashEl(got);
+    }
+    d.querySelector(".btn").addEventListener("click",test);
+    Array.prototype.forEach.call(ins,function(i){i.addEventListener("keydown",function(ev){if(ev.key==="Enter")test()})});
+    $("#xp").appendChild(d);
+  }
+  X.forEach(function(x){row(x,false)});row(null,true);
+})();
+})();
+</script>
+</body>
+</html>

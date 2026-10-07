@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tools of the trade · KD402D Programming</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<link rel="stylesheet" href="../shared/deck.css">
+<style>
+/* styles used only by this lecture */
+kbd{font-family:var(--font-mono);font-size:.78em;font-weight:700;background:var(--paper-000);border:2px solid var(--ink-900);box-shadow:2px 2px 0 var(--ink-900);border-radius:2px;padding:0 6px;color:var(--ink-900);white-space:nowrap}
+.bar.g{background:var(--applause-500)}
+.pbody p+p{margin-top:10px}
+.pbody p{margin:0}
+.big{font-family:var(--font-display);font-weight:700;font-size:34px;line-height:1.05;letter-spacing:-.03em;color:var(--ink-900);margin-bottom:8px}
+
+/* running order */
+.order>div{grid-template-columns:72px 120px 1fr;align-items:center;padding:9px 0}
+.order .tm{font-family:var(--font-mono);font-size:16px;color:var(--ink-500)}
+.order .nm{font-size:22px;color:var(--ink-900);font-weight:500}
+.order .nm small{display:block;font-size:16px;color:var(--ink-500);font-weight:400}
+.order .act .nm{color:var(--curtain-600)}
+
+/* three cards in a row */
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;align-items:start}
+
+/* do-now slides: numbered steps, a side column, and a status strip along the bottom */
+.slide.do{padding-bottom:72px}
+.do .h1{font-size:46px;margin-bottom:16px}
+.do-grid{display:grid;grid-template-columns:1.45fr 1fr;gap:32px;align-items:start;min-height:0}
+.lab .tx code,.pbody code{background:var(--spot-200);color:var(--ink-900);padding:0 4px;border-radius:2px}
+.steps>div{grid-template-columns:48px 1fr;gap:14px;padding:8px 0}
+.steps .num{font-size:28px}
+.steps .tx{font-size:20px;line-height:1.4;color:var(--ink-700)}
+.steps .tx b{color:var(--ink-900)}
+.steps .tx small{display:block;font-size:16px;color:var(--ink-500);margin-top:2px}
+.side .panel+.panel,.side .panel+p{margin-top:16px}
+.side .pbody{font-size:18px;line-height:1.45}
+.signals{position:absolute;left:0;right:0;bottom:0;display:flex;border-top:2px solid var(--ink-900);font-family:var(--font-mono);font-size:14px;font-weight:700;line-height:1.3}
+.signals>div{flex:1;padding:11px 22px;display:flex;align-items:center;gap:10px}
+.signals .g{background:var(--applause-500);color:var(--ink-900)}
+.signals .r{background:var(--curtain-600);color:var(--paper-000)}
+.signals .t{background:var(--paper-000);color:var(--ink-500);flex:.9;justify-content:flex-end;gap:14px;white-space:nowrap}
+.signals .t .left{color:var(--curtain-600)}
+.dot{width:14px;height:14px;border:2px solid currentColor;display:inline-block;flex:none}
+.signals .g .dot{background:var(--ink-900)}
+.signals .r .dot{background:var(--paper-000)}
+.do .console{font-size:17px;min-height:0}
+
+/* vocabulary */
+.vocab>div{grid-template-columns:190px 1fr;padding:11px 0}
+.vocab b{font-family:var(--font-mono);font-size:20px;color:var(--curtain-600)}
+.vocab span{font-size:21px}
+
+/* folder tree */
+.tree{margin:0;font-family:var(--font-mono);font-size:17px;line-height:1.6;padding:12px 16px;white-space:pre;color:var(--ink-700);background:var(--paper-000)}
+.tree .yes{background:var(--applause-500);color:var(--ink-900);padding:0 4px;font-weight:700}
+.tree .no{color:var(--ink-500)}
+
+/* the commit loop */
+.loop{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:4px 0 30px}
+.loop .s{border:2px solid var(--ink-900);box-shadow:3px 3px 0 var(--ink-900);background:var(--paper-000);border-radius:2px;padding:11px 15px;font-family:var(--font-mono);font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-900)}
+.loop .s.on{background:var(--spot-400)}
+.loop .a{font-size:24px;color:var(--curtain-600);font-weight:700}
+.msgs{font-family:var(--font-mono);font-size:18px;line-height:1.7;color:var(--ink-900)}
+.msgs.bad{color:var(--ink-500)}
+
+/* troubleshooting sheet */
+#trouble{inset:24px 24px auto;max-height:calc(100% - 120px);overflow:auto;padding:20px 24px;top:calc(24px + env(safe-area-inset-top,0px))}
+#trouble h2{font-family:var(--font-mono);font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--spot-400);margin:0 0 6px;font-weight:700;display:flex;justify-content:space-between}
+#trouble h2 span{color:var(--ink-300)}
+#trouble .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:0 32px}
+#trouble .grid div{padding:12px 0;border-bottom:1px solid var(--ink-700);font-size:16px;line-height:1.5;color:var(--paper-200)}
+#trouble .grid b:first-child{display:block;font-family:var(--font-mono);color:var(--spot-400);font-size:14px;margin-bottom:2px}
+#trouble code{color:var(--cyan-400)}
+#trouble kbd{background:var(--ink-800);color:var(--paper-100);border-color:var(--ink-300);box-shadow:none}
+</style>
+</head>
+<!-- data-lecture: a short unique name; it namespaces this lecture's saved data -->
+<body data-lecture="tools-of-the-trade" data-home="../">
+<main id="stage">
+<div id="deck">
+
+<!-- 01 COVER -->
+<section class="slide stage" id="cover" data-sec="Opening">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Act I · TA session · Week 41</div>
+    <h1 class="hero">Tools of the trade</h1>
+    <p class="lede">VS Code, Git and GitHub. By three o'clock, your own code is on GitHub.</p>
+  </div>
+  <div style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
+    <div class="m" style="font-size:17px;color:var(--ink-200)">KD402D Programming · Wed 7 Oct · 10:15–12:00 · 13:15–15:00</div>
+  </div>
+  <aside class="nt">Set-up day. Until now everything happened in the browser workspace; today students get the tools they'll use for the rest of the course. Students open this same link on their laptops: the do-now slides have the steps, and T opens the troubleshooting list. Hand out green and red sticky notes as people come in.</aside>
+</section>
+
+<!-- 02 RUNNING ORDER -->
+<section class="slide" id="running-order" data-sec="Opening">
+  <div class="billing">Running order · Today</div><hr class="rule">
+  <h2 class="h1">The plan</h2>
+  <div class="rows order">
+    <div><span class="num">01</span><span class="tm">10:15</span><span class="nm">Install check<small>VS Code, Git, a GitHub account</small></span></div>
+    <div><span class="num">02</span><span class="tm">10:40</span><span class="nm">Version control, enacted<small>Then Git vs GitHub</small></span></div>
+    <div class="act"><span class="num">03</span><span class="tm">11:15</span><span class="nm">Fork the exercises repo, then clone it into VS Code</span></div>
+    <div><span class="num">04</span><span class="tm">13:15</span><span class="nm">A tour of VS Code and Live Preview</span></div>
+    <div class="act"><span class="num">05</span><span class="tm">14:05</span><span class="nm">Commit and push, again and again</span></div>
+    <div><span class="num">06</span><span class="tm">14:40</span><span class="nm">Your own change<small>Start to finish, no instructions</small></span></div>
+  </div>
+  <p class="dir" style="margin-top:12px">Lunch 12:00–13:15.</p>
+  <aside class="nt">Read through the day in one breath. The goal is concrete: by three, everyone has pushed their own commits to their own fork on GitHub. The morning is set-up and ideas; the afternoon is the loop they'll repeat all course.</aside>
+</section>
+
+<!-- 03 HOW TODAY WORKS -->
+<section class="slide" id="how" data-sec="Opening">
+  <div class="billing">Opening · How today works</div><hr class="rule">
+  <h2 class="h1">Pairs, signals, no waiting</h2>
+  <div class="three">
+    <div class="panel"><div class="bar"><span>Work in pairs</span></div><div class="pbody"><p>Check each other at every step.</p><p><b>Ask your neighbour first</b>, then the teacher.</p></div></div>
+    <div class="panel"><div class="bar g"><span>Show your status</span></div><div class="pbody"><p><b>Green</b> sticky on your lid: done with this step.</p><p><b>Red</b> sticky: stuck.</p></div></div>
+    <div class="panel"><div class="bar y"><span>Done early?</span></div><div class="pbody"><p>Go and help someone with a red sticky.</p><p>We move on when most of the room is green.</p></div></div>
+  </div>
+  <p class="lede" style="margin-top:34px;max-width:none">Stuck on something odd? Press <kbd>T</kbd> on this deck for the troubleshooting list.</p>
+  <aside class="nt">Set the rules for the whole day. Installing things goes wrong in thirty different ways, so pairs and stickies keep the queue short: neighbours fix most problems before a teacher gets there. Show the T panel once so they know it exists.</aside>
+</section>
+
+<!-- 04 DO: INSTALL CHECK -->
+<section class="slide do" id="install" data-sec="Install check" data-ex="Install check" data-until="10:40">
+  <span class="turn">Your turn</span>
+  <div class="billing">Scene 01 · Install check · In pairs · 10:15</div><hr class="rule">
+  <h2 class="h1">Is everything installed?</h2>
+  <div class="do-grid">
+    <div class="rows lab steps">
+      <div><span class="num">1</span><span class="tx"><b>VS Code</b> opens on your laptop.</span></div>
+      <div><span class="num">2</span><span class="tx">In VS Code, open a terminal: <b>Terminal → New Terminal</b>.</span></div>
+      <div><span class="num">3</span><span class="tx">Type <code>git --version</code> and press Enter.<small>You should see something like <span class="m">git version 2.4x.x</span>.</small></span></div>
+      <div><span class="num">4</span><span class="tx">You can log in to your <b>GitHub account</b> at github.com.</span></div>
+      <div><span class="num">5</span><span class="tx">Check your neighbour's laptop too. Both done? <b>Green sticky.</b></span></div>
+    </div>
+    <div class="side">
+      <div class="panel"><div class="bar m"><span>No Git?</span></div><div class="pbody"><p><b>Mac:</b> run <code>git --version</code> and accept the Command Line Tools install.</p><p><b>Windows:</b> install Git for Windows (git-scm.com), then <b>restart VS Code</b>.</p></div></div>
+      <div class="panel"><div class="bar y"><span>No GitHub account?</span></div><div class="pbody"><p>Sign up at github.com now. Use an email you'll keep.</p></div></div>
+    </div>
+  </div>
+  <div class="signals"><div class="g"><span class="dot"></span>Done → green sticky</div><div class="r"><span class="dot"></span>Stuck → red sticky, ask your neighbour</div><div class="t"><span class="clock"></span><span>T · help</span></div></div>
+  <aside class="nt">25 minutes. Most problems: Git missing on Windows (VS Code doesn't bundle it), or the Mac Command Line Tools install still running in the background. After installing Git on Windows, VS Code must be restarted before the terminal finds it. A student's school email may disappear after graduation; suggest a personal one for GitHub. Move on at 10:40 even if a few are still red; TAs keep helping them during the enactment.</aside>
+</section>
+
+<!-- 05 VERSION CONTROL -->
+<section class="slide stage" id="version-control" data-sec="Version control">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Scene 02 · Version control · 10:40</div>
+    <h2 class="hero md">Why keep a history?</h2>
+    <p class="lede">Undo anything. See what changed and when. Work on the same code as other people.</p>
+  </div>
+  <div style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
+    <div class="m" style="font-size:17px;color:var(--ink-200)">Everyone stand up</div>
+  </div>
+  <aside class="nt">Ask first: who has a file called final_v2_REALLY_final.docx? That's version control done by hand. Git keeps every saved version for you, with a note on what changed. Then get everyone on their feet for the enactment.</aside>
+</section>
+
+<!-- 06 ENACTMENT -->
+<section class="slide stage" id="enact" data-sec="Version control">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Version control · On your feet</div>
+    <h2 class="hero">Let's enact commits!</h2>
+  </div>
+  <aside class="nt">About 20 minutes on your feet. One way to run it: each student who joins the front of the room is a commit, holding a sticky with a short message saying what changed; they line up in order, so the line is the history. "Undo" means walking back along the line to an earlier commit. A second line in another corner is GitHub: pushing copies the new commits across, pulling copies them back. Finish by naming what they acted: commit, history, push, pull.</aside>
+</section>
+
+<!-- 07 VOCABULARY -->
+<section class="slide" id="vocab" data-sec="Version control">
+  <div class="billing">Version control · Words for today · 11:05</div><hr class="rule">
+  <h2 class="h1">Six words</h2>
+  <div class="rows vocab">
+    <div><b>repository</b><span>A project folder plus its whole history. "Repo" for short.</span></div>
+    <div><b>clone</b><span>Copy a repo from GitHub onto your laptop.</span></div>
+    <div><b>commit</b><span>Save a snapshot of your changes into the history, with a message.</span></div>
+    <div><b>push</b><span>Send your new commits from your laptop to GitHub.</span></div>
+    <div><b>pull</b><span>Bring new commits from GitHub down to your laptop.</span></div>
+    <div><b>fork</b><span>Make your own copy of someone else's repo, on GitHub, under your account.</span></div>
+  </div>
+  <aside class="nt">Tie each word back to the enactment: who was the commit, what did pushing look like. Fork is the only one they didn't act; it's next. Leave this slide up while you switch to Git vs GitHub if people are still writing.</aside>
+</section>
+
+<!-- 08 GIT VS GITHUB -->
+<section class="slide" id="git-github" data-sec="Version control">
+  <div class="billing">Version control · Two different things</div><hr class="rule">
+  <h2 class="h1">Git is not GitHub</h2>
+  <div class="cols">
+    <div class="panel"><div class="bar"><span>Git</span></div><div class="pbody"><div class="big">A tool on your laptop</div><p>Keeps the history of a folder. Works offline. VS Code uses it behind the scenes.</p></div></div>
+    <div class="panel"><div class="bar y"><span>GitHub</span></div><div class="pbody"><div class="big">A website</div><p>Hosts copies of repositories online, so you can back them up, share them and work together.</p></div></div>
+  </div>
+  <aside class="nt">The most common confusion of the day. Git works without the internet and without GitHub; GitHub is one of several sites (GitLab, Bitbucket) that host Git repos. In the enactment, the line at the front was Git on your laptop; the line in the corner was GitHub.</aside>
+</section>
+
+<!-- 09 DO: FORK -->
+<section class="slide do" id="fork" data-sec="Fork and clone" data-ex="Fork the repo" data-until="11:30">
+  <span class="turn">Your turn</span>
+  <div class="billing">Scene 03 · Fork and clone · Watch, then do · 11:15</div><hr class="rule">
+  <h2 class="h1">Make your own copy</h2>
+  <div class="do-grid">
+    <div class="rows lab steps">
+      <div><span class="num">1</span><span class="tx">Log in at <b>github.com</b>.</span></div>
+      <div><span class="num">2</span><span class="tx">Open the course exercises repo:<small><a class="m" href="https://github.com/IDBCourses/kd402d-exercises" target="_blank" rel="noopener">github.com/IDBCourses/kd402d-exercises</a></small></span></div>
+      <div><span class="num">3</span><span class="tx">Click <b>Fork</b> (top right), then <b>Create fork</b>.</span></div>
+      <div><span class="num">4</span><span class="tx">Check the top left. It should say <b>your-username / kd402d-exercises</b> and, underneath, <b>forked from</b> the course repo.</span></div>
+    </div>
+    <div class="side">
+      <div class="panel"><div class="bar"><span>Why fork?</span></div><div class="pbody"><p>The course repo belongs to the course. Your fork belongs to <b>you</b>, so you can push to it. You only do this <b>once</b> for the whole course.</p></div></div>
+    </div>
+  </div>
+  <div class="signals"><div class="g"><span class="dot"></span>Done → green sticky</div><div class="r"><span class="dot"></span>Stuck → red sticky, ask your neighbour</div><div class="t"><span class="clock"></span><span>T · help</span></div></div>
+  <aside class="nt">Demo it once on the projector, then they do it. The link on this slide works on their laptops. The check in step 4 matters: anyone who skips it may clone the course repo instead of their fork and hit a permission error when pushing this afternoon.</aside>
+</section>
+
+<!-- 10 DO: CLONE -->
+<section class="slide do" id="clone" data-sec="Fork and clone" data-ex="Clone your fork" data-until="11:55">
+  <span class="turn">Your turn</span>
+  <div class="billing">Fork and clone · Watch, then do</div><hr class="rule">
+  <h2 class="h1">Get your fork onto your laptop</h2>
+  <div class="do-grid">
+    <div class="stack" style="gap:12px">
+      <div class="rows lab steps">
+        <div><span class="num">1</span><span class="tx">Open the Command Palette: <kbd>⌘⇧P</kbd> Mac · <kbd>Ctrl+Shift+P</kbd> Windows.</span></div>
+        <div><span class="num">2</span><span class="tx">Type <b>Git: Clone</b> → <b>Clone from GitHub</b>. Sign in to GitHub when VS Code asks.</span></div>
+        <div><span class="num">3</span><span class="tx">Pick <b>your-username/kd402d-exercises</b>.<small>Your fork, not the course repo.</small></span></div>
+        <div><span class="num">4</span><span class="tx">Choose a plain local folder, e.g. <code>Documents/code</code>. Then click <b>Open</b>.</span></div>
+        <div><span class="num">5</span><span class="tx">Tell Git who you are, in the VS Code terminal:</span></div>
+      </div>
+      <div class="console"><span class="in">git config --global user.name "Your Name"</span>
+<span class="in">git config --global user.email "you@example.com"</span></div>
+    </div>
+    <div class="side">
+      <div class="panel"><div class="bar m"><span>Not in OneDrive</span></div><div class="pbody"><p>No OneDrive, iCloud or Dropbox folders. Syncing breaks Git in strange ways.</p></div></div>
+      <div class="panel"><div class="bar y"><span>Same email</span></div><div class="pbody"><p>Use the email from your GitHub account, so your commits show up as yours.</p></div></div>
+    </div>
+  </div>
+  <div class="signals"><div class="g"><span class="dot"></span>Done → green sticky</div><div class="r"><span class="dot"></span>Stuck → red sticky, ask your neighbour</div><div class="t"><span class="clock"></span><span>T · help</span></div></div>
+  <aside class="nt">Demo first. Watch for: Windows Documents folders that OneDrive silently syncs (move the repo to C:\code or similar); the GitHub sign-in opening in a browser tab they don't notice; people picking the course repo in step 3. The git config lines can be done any time before the first commit, but doing them now saves an error message this afternoon.</aside>
+</section>
+
+<!-- 11 CHECKPOINT -->
+<section class="slide" id="checkpoint" data-sec="Fork and clone">
+  <div class="billing">Fork and clone · Checkpoint · 11:55</div><hr class="rule">
+  <h2 class="h1">Before lunch</h2>
+  <div class="cols">
+    <div class="panel"><div class="bar g"><span>Your fork is open in VS Code</span></div><div class="pbody"><div class="big">Green sticky.</div><p>You're ready for the afternoon. Enjoy lunch.</p></div></div>
+    <div class="panel"><div class="bar m"><span>Not there yet</span></div><div class="pbody"><div class="big">Red sticky.</div><p>Tell the teacher before you go. Come back at <b>13:15</b> and we'll fix it first thing.</p></div></div>
+  </div>
+  <p class="lede" style="margin-top:36px">Back at <b>13:15</b>. Keep VS Code open.</p>
+  <aside class="nt">Count the reds and write down names so nobody slips through. Anyone not cloned yet comes to the front at 13:15 while the rest start the VS Code tour.</aside>
+</section>
+
+<!-- 12 AFTERNOON -->
+<section class="slide stage" id="afternoon" data-sec="VS Code">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Scene 04 · Afternoon · 13:15</div>
+    <h2 class="hero md">Change, commit, push</h2>
+    <p class="lede">Not cloned yet? Come to the front now. Everyone else: a tour of VS Code is next.</p>
+  </div>
+  <div style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
+    <div class="m" style="font-size:17px;color:var(--ink-200)">13:15–15:00</div>
+  </div>
+  <aside class="nt">One TA takes the morning's red stickies at the front and gets them cloned; everyone else follows the tour. Give the front group about ten minutes before starting the tour.</aside>
+</section>
+
+<!-- 13 VS CODE TOUR -->
+<section class="slide" id="vscode-tour" data-sec="VS Code" data-demo="VS Code tour">
+  <span class="turn try">Try it</span>
+  <div class="billing">VS Code · A tour · 13:25</div><hr class="rule">
+  <h2 class="h1">Five places you'll use</h2>
+  <div class="rows lab">
+    <div><span class="num">01</span><span class="tx"><b>Explorer</b>: the files and folders in your repo. <span class="muted small">Left bar, top icon.</span></span></div>
+    <div><span class="num">02</span><span class="tx"><b>Editor</b>: where you write code. Save often: <kbd>⌘S</kbd> / <kbd>Ctrl+S</kbd>.</span></div>
+    <div><span class="num">03</span><span class="tx"><b>Terminal</b>: type commands. <span class="muted small">Terminal → New Terminal.</span></span></div>
+    <div><span class="num">04</span><span class="tx"><b>Command Palette</b>: find any command by name. <kbd>⌘⇧P</kbd> / <kbd>Ctrl+Shift+P</kbd></span></div>
+    <div><span class="num">05</span><span class="tx"><b>Extensions</b>: add features to VS Code. <span class="muted small">Left bar, the four-squares icon.</span></span></div>
+  </div>
+  <aside class="nt">Show each one live on the projector, with the cloned repo open, and have students find it on their own screen. Point out the white dot on an unsaved editor tab: unsaved changes are invisible to Git and to the browser.</aside>
+</section>
+
+<!-- 14 DO: LIVE PREVIEW -->
+<section class="slide do" id="live-preview" data-sec="VS Code" data-ex="Run the starter code" data-until="14:05">
+  <span class="turn">Your turn</span>
+  <div class="billing">VS Code · Run the starter code</div><hr class="rule">
+  <h2 class="h1">See your code run</h2>
+  <div class="do-grid">
+    <div class="rows lab steps">
+      <div><span class="num">1</span><span class="tx">Extensions: search <b>Live Preview</b> (by Microsoft) → <b>Install</b>.</span></div>
+      <div><span class="num">2</span><span class="tx">In Explorer, open <code>tools/start/index.html</code>.</span></div>
+      <div><span class="num">3</span><span class="tx">Click the <b>Show Preview</b> icon (top right of the editor).</span></div>
+      <div><span class="num">4</span><span class="tx">Open the page in your browser and open the <b>console</b>.<small>Chrome: <kbd>⌥⌘J</kbd> Mac · <kbd>Ctrl+Shift+J</kbd> Windows. Find the output from <span class="m">script.js</span>.</small></span></div>
+      <div><span class="num">5</span><span class="tx">Change something in <code>script.js</code>, save, and watch it update.</span></div>
+    </div>
+    <div class="side">
+      <div class="panel"><div class="bar p"><span>Your fork</span></div><pre class="tree">kd402d-exercises/
+├── README.md     <span class="no">don't touch</span>
+└── tools/
+    ├── <span class="yes">start/</span>    <span class="no">← you work here</span>
+    ├── in-class/ <span class="no">what we wrote</span>
+    └── reference/</pre></div>
+      <p class="small" style="line-height:1.45">Only edit inside <b>start/</b> folders. That keeps your fork easy to update later.</p>
+    </div>
+  </div>
+  <div class="signals"><div class="g"><span class="dot"></span>Output in the console → green sticky</div><div class="r"><span class="dot"></span>Stuck → red sticky, ask your neighbour</div><div class="t"><span class="clock"></span><span>T · help</span></div></div>
+  <aside class="nt">The Live Preview pane inside VS Code has no console students can easily find, so step 4 sends them to a real browser tab. Make sure they install the Microsoft extension, not a look-alike. Explain the folder layout: each session gets a folder; start/ is theirs, in-class/ and reference/ are filled in by the course. Editing only start/ means Sync fork never conflicts.</aside>
+</section>
+
+<!-- 15 THE LOOP -->
+<section class="slide" id="loop" data-sec="Commit and push">
+  <div class="billing">Scene 05 · Commit and push · 14:05</div><hr class="rule">
+  <h2 class="h1">The loop you'll repeat all course</h2>
+  <div class="loop">
+    <span class="s">Change</span><span class="a">→</span><span class="s">Save</span><span class="a">→</span><span class="s">Check the diff</span><span class="a">→</span><span class="s on">Commit</span><span class="a">→</span><span class="s on">Push</span><span class="a">→</span><span class="s">Check github.com</span>
+  </div>
+  <div class="cols">
+    <div class="panel"><div class="bar g"><span>Good messages say what changed</span></div><div class="pbody msgs">Greet the user by name<br>Fix typo in the TODO output<br>Add a function that doubles a number</div></div>
+    <div class="panel"><div class="bar m"><span>Not helpful later</span></div><div class="pbody msgs bad">update<br>stuff<br>asdf</div></div>
+  </div>
+  <aside class="nt">Walk the loop once live on the projector, then hand over. Commit and push are the new steps; the rest they did this morning. A good message finishes the sentence "This commit will…". Ask: in three weeks, which list helps you find the commit where things broke?</aside>
+</section>
+
+<!-- 16 DO: COMMIT AND PUSH -->
+<section class="slide do" id="commit-push" data-sec="Commit and push" data-ex="Commit and push" data-until="14:40">
+  <span class="turn">Your turn</span>
+  <div class="billing">Commit and push · Once per TODO</div><hr class="rule">
+  <h2 class="h1">Commit and push each TODO</h2>
+  <div class="do-grid">
+    <div class="rows lab steps">
+      <div><span class="num">1</span><span class="tx">Do one <code>// TODO</code> in <code>script.js</code>. Save.</span></div>
+      <div><span class="num">2</span><span class="tx">Open <b>Source Control</b> (left bar, the branch icon). Click the file to see the <b>diff</b>.</span></div>
+      <div><span class="num">3</span><span class="tx">Write a message that says what changed.</span></div>
+      <div><span class="num">4</span><span class="tx">Click <b>Commit</b>.<small>If it asks to stage all changes, say <b>Yes</b>.</small></span></div>
+      <div><span class="num">5</span><span class="tx">Click <b>Sync Changes</b> to push.</span></div>
+      <div><span class="num">6</span><span class="tx">Refresh your fork on <b>github.com</b> and find your commit.</span></div>
+    </div>
+    <div class="side">
+      <div class="panel"><div class="bar"><span>Then repeat</span></div><div class="pbody"><p>Next TODO → same loop. One commit per change, not one big one at the end.</p></div></div>
+      <div class="panel"><div class="bar m"><span>"Please tell me who you are"</span></div><div class="pbody"><p>Run the two <code>git config</code> lines from this morning, then commit again.</p></div></div>
+    </div>
+  </div>
+  <div class="signals"><div class="g"><span class="dot"></span>Commit visible on github.com → green</div><div class="r"><span class="dot"></span>Stuck → red sticky, ask your neighbour</div><div class="t"><span class="clock"></span><span>T · help</span></div></div>
+  <aside class="nt">35 minutes. Common snags: an unsaved file (nothing shows in Source Control); a commit with an empty message (VS Code opens a COMMIT_EDITMSG tab; close it to cancel); a push that asks for a password (sign in through VS Code's GitHub prompt instead); a permission error (they cloned the course repo, not their fork). Green means they can see the commit on github.com, not only in VS Code.</aside>
+</section>
+
+<!-- 17 DO: YOUR OWN CHANGE -->
+<section class="slide do" id="own-change" data-sec="Your own change" data-ex="Your own change" data-until="14:55">
+  <span class="turn">Your turn</span>
+  <div class="billing">Scene 06 · Your own change · On your own · 14:40</div><hr class="rule">
+  <h2 class="h1">Your own change</h2>
+  <p class="lede" style="max-width:none;margin-bottom:24px">Change anything you like in <code>tools/start/</code>, then take it all the way to GitHub. <b>No instructions this time.</b></p>
+  <div class="three">
+    <div class="panel"><div class="bar y"><span>Ideas</span></div><div class="pbody">Write a new function.<br>Call a function with different values.<br>Change what gets printed.</div></div>
+    <div class="panel"><div class="bar"><span>Done when</span></div><div class="pbody">Your commit is on <b>github.com</b> with a message that says what changed.</div></div>
+    <div class="panel"><div class="bar g"><span>Finished?</span></div><div class="pbody">Do it again. Or go and help someone with a red sticky.</div></div>
+  </div>
+  <div class="signals"><div class="g"><span class="dot"></span>Pushed → green sticky</div><div class="r"><span class="dot"></span>Stuck → red sticky, ask your neighbour</div><div class="t"><span class="clock"></span><span>T · help</span></div></div>
+  <aside class="nt">The real test of the day: the whole loop with no slide to follow. Resist giving step-by-step help; ask "what's the next step in the loop?" and point at the loop slide if needed. Functions came up yesterday, so writing one is a good stretch.</aside>
+</section>
+
+<!-- 18 DO: CHECK OUT -->
+<section class="slide do" id="check-out" data-sec="Curtain call" data-ex="Check out" data-until="15:00">
+  <span class="turn">Your turn</span>
+  <div class="billing">Curtain call · Before you leave · 14:55</div><hr class="rule">
+  <h2 class="h1">Show your neighbour</h2>
+  <div class="rows lab" style="max-width:900px">
+    <div><span class="num">1</span><span class="tx">On <b>github.com</b>, open your fork and click <b>Commits</b>.</span></div>
+    <div><span class="num">2</span><span class="tx">Show your neighbour your list of commits. Read one message aloud.</span></div>
+    <div><span class="num">3</span><span class="tx"><b>No pushed commits?</b> Tell the teacher before you leave.</span></div>
+  </div>
+  <div class="signals"><div class="g"><span class="dot"></span>Commits on GitHub → you're done</div><div class="r"><span class="dot"></span>None yet → tell the teacher</div><div class="t"><span class="clock"></span><span>T · help</span></div></div>
+  <aside class="nt">A five-minute exit check. Reading a message aloud makes the point about good messages better than any slide. Note the names of anyone without a pushed commit and follow up before the next exercise session.</aside>
+</section>
+
+<!-- 19 FROM NOW ON -->
+<section class="slide" id="from-now-on" data-sec="Curtain call">
+  <div class="billing">Curtain call · Every exercise session from now on</div><hr class="rule">
+  <h2 class="h1">Start and end every session like this</h2>
+  <div class="rows lab">
+    <div><span class="num">01</span><span class="tx">On github.com, open your fork and click <b>Sync fork</b>. <span class="muted small">Gets the new folders from the course repo.</span></span></div>
+    <div><span class="num">02</span><span class="tx">In VS Code: <b>Pull</b>. <span class="muted small">Source Control → ⋯ → Pull.</span></span></div>
+    <div><span class="num">03</span><span class="tx">Work in that session's <code>start/</code> folder.</span></div>
+    <div><span class="num">04</span><span class="tx">Commit small and often.</span></div>
+    <div><span class="num">05</span><span class="tx"><b>Push</b> before you leave.</span></div>
+  </div>
+  <aside class="nt">Curtain call (a.k.a. the recap). This is the routine for every exercise session from now on; leave it on screen while people pack up. Sync fork brings the course's new folders into their fork on GitHub; Pull brings them down to the laptop. Pushing before they leave means their work is safe even if the laptop isn't.</aside>
+</section>
+
+</div>
+</main>
+
+<div class="sheet" id="trouble" hidden role="dialog" aria-label="Troubleshooting">
+  <h2>Troubleshooting <span>T or Esc to close</span></h2>
+  <div class="grid">
+    <div><b>No Git</b>VS Code doesn't include Git. Mac: run <code>git --version</code> and accept the Command Line Tools install. Windows: install Git for Windows, then restart VS Code.</div>
+    <div><b>"Please tell me who you are"</b>Run <code>git config --global user.name "Your Name"</code> and <code>git config --global user.email "you@example.com"</code>. Use your GitHub email.</div>
+    <div><b>Push asks for a password</b>Sign in through VS Code's GitHub prompt instead. GitHub doesn't accept your account password for Git.</div>
+    <div><b>Repo is in OneDrive / iCloud / Dropbox</b>Move it to a plain local folder, e.g. <code>Documents/code</code>, and open it from there.</div>
+    <div><b>Push fails with a permission error</b>You cloned the course repo, not your fork. Clone again and pick <b>your-username/kd402d-exercises</b>.</div>
+    <div><b>Nothing in the console</b>Open the page in your browser and open dev tools (Chrome: <kbd>⌥⌘J</kbd> / <kbd>Ctrl+Shift+J</kbd>).</div>
+  </div>
+</div>
+
+<script src="../shared/deck.js"></script>
+<script>
+(function(){
+"use strict";
+var D=Deck,$=D.$,$$=D.$$;
+
+/* Troubleshooting sheet: T toggles it, Esc closes it */
+var trouble=$("#trouble");
+D.addButton({label:"Help",key:"t",onClick:function(){trouble.hidden=!trouble.hidden}});
+D.onEscape(function(){trouble.hidden=true});
+
+/* Do-now slides: clock in the status strip, counting down to data-until */
+function pad(n){return (n<10?"0":"")+n}
+function tick(){
+  var now=new Date(),hhmm=pad(now.getHours())+":"+pad(now.getMinutes());
+  $$(".slide[data-until]").forEach(function(s){
+    var c=s.querySelector(".clock");if(!c)return;
+    var p=s.dataset.until.split(":"),end=new Date(now.getTime());
+    end.setHours(+p[0],+p[1],0,0);
+    var mins=Math.round((end-now)/60000);
+    var left=mins>0&&mins<180?mins+" min left":"until "+s.dataset.until;
+    c.innerHTML='Now '+hhmm+' · <span class="left">'+left+'</span>';
+  });
+}
+tick();setInterval(tick,15000);
+})();
+</script>
+</body>
+</html>
