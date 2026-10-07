@@ -153,7 +153,7 @@ ol.plain li.on{background:var(--spot-200);box-shadow:inset 3px 0 0 var(--spot-40
   <div class="rows lab">
     <div><span class="num">01</span><span class="tx">Explain a variable as a named place that remembers a value, and how a value can also steer a process.</span></div>
     <div><span class="num">02</span><span class="tx">Tell values that change from values that stay fixed, and write both kinds in JavaScript.</span></div>
-    <div><span class="num">03</span><span class="tx">Recognise strings, numbers, undefined and null, and give variables good names.</span></div>
+    <div><span class="num">03</span><span class="tx">Recognise strings, numbers and null, and give variables good names.</span></div>
     <div><span class="num">04</span><span class="tx">Make new values from stored ones: join text, do sums, use string methods.</span></div>
     <div><span class="num">05</span><span class="tx">Predict what happens when JavaScript mixes text and numbers.</span></div>
   </div>
@@ -288,19 +288,19 @@ ol.plain li.on{background:var(--spot-200);box-shadow:inset 3px 0 0 var(--spot-40
         <div class="f fc" id="id-cardno"></div>
         <div class="f fp" id="id-pnr"></div>
       </div>
-      <div class="transp">
+      <div class="transp" id="id-transp" hidden>
         <span class="bx" style="top:349px;width:250px;height:58px"></span><span class="tl" style="top:366px">name</span>
         <span class="bx" style="top:415px;width:160px;height:30px"></span><span class="tl" style="top:418px">card number</span>
         <span class="bx" style="top:450px;width:220px;height:30px"></span><span class="tl" style="top:453px">personal number</span>
       </div>
     </div>
     <div class="stack" style="gap:14px;width:420px">
-      <div class="rows readoff" id="id-read"></div>
-      <div class="row"><button class="btn" id="id-swap">Swap the card</button><a class="btn alt" href="card/" target="_blank" rel="noopener" style="text-decoration:none">Make a practice card</a></div>
+      <div class="rows readoff" id="id-read" style="visibility:hidden"></div>
+      <div class="row"><button class="btn" id="id-labels">Show the labels</button><button class="btn ghost" id="id-swap">Swap the card</button><a class="btn alt" href="card/" target="_blank" rel="noopener" style="text-decoration:none">Make a practice card</a></div>
       <p class="small muted" style="margin:0">Don't want to pass your own card around? Make a practice card with an invented face, name and numbers.</p>
     </div>
   </div>
-  <aside class="nt">Physical activity with the transparencies. In pairs: put the transparency (labels and empty boxes) over a student card and read off the values. Then slide a different card underneath. The labels don't change; the values do. That's a variable declaration: a reusable template with names, filled with different data each time. Same idea as a function applied to different inputs this morning. Anyone who doesn't want to share their real card can open "Make a practice card" (data/card/) on a laptop or phone and put the transparency over that. Calibrate the size once with the slider on that page and a bank card. Nothing typed or shown here is saved.</aside>
+  <aside class="nt">Start with the labels hidden: ask what information is on the card and what each piece is called. Then press Show the labels. Physical activity with the transparencies. In pairs: put the transparency (labels and empty boxes) over a student card and read off the values. Then slide a different card underneath. The labels don't change; the values do. That's a variable declaration: a reusable template with names, filled with different data each time. Same idea as a function applied to different inputs this morning. Anyone who doesn't want to share their real card can open "Make a practice card" (data/card/) on a laptop or phone and put the transparency over that. Calibrate the size once with the slider on that page and a bank card. Nothing typed or shown here is saved.</aside>
 </section>
 
 <!-- ============ PART 2: VARIABLES IN JAVASCRIPT ============ -->
@@ -311,7 +311,7 @@ ol.plain li.on{background:var(--spot-200);box-shadow:inset 3px 0 0 var(--spot-40
     <div class="billing">Variables in JavaScript · 10:35</div>
     <h2 class="hero md">Now we write it down.</h2>
     <p class="lede">Everything from the last twenty minutes, in real JavaScript. Same ideas, new spelling.</p>
-    <div class="terms"><span>let</span><span>const</span><span>=</span><span>"red"</span><span>24</span><span>undefined</span><span>null</span></div>
+    <div class="terms"><span>let</span><span>const</span><span>=</span><span>"red"</span><span>24</span><span>null</span></div>
   </div>
   <aside class="nt">The handoff from idea to code. Laptops open on this deck from now on: the code exercises run inside the slides, no installs needed.</aside>
 </section>
@@ -350,15 +350,14 @@ ol.plain li.on{background:var(--spot-200);box-shadow:inset 3px 0 0 var(--spot-40
 
 <section class="slide" id="types" data-sec="Variables in JavaScript">
   <div class="billing">Variables in JavaScript · Primitive types</div><hr class="rule">
-  <h2 class="h1">Four kinds of value, for now</h2>
+  <h2 class="h1">Three kinds of value, for now</h2>
   <div class="rows types">
     <div><span class="tn">string</span><span class="ex"><span>"red"</span><span>'step 2'</span></span><span class="ds">Text. Always inside quotation marks, double or single.</span></div>
     <div><span class="tn">number</span><span class="ex"><span>24</span><span>3.5</span><span>-2</span></span><span class="ds">Plain digits, no quotation marks. Whole or decimal.</span></div>
-    <div><span class="tn">undefined</span><span class="ex"><span>let rating;</span></span><span class="ds">A box with nothing put in yet. JavaScript fills it with <code>undefined</code>.</span></div>
     <div><span class="tn">null</span><span class="ex"><span>let winner = null;</span></span><span class="ds">Empty on purpose: "there's deliberately nothing here".</span></div>
   </div>
   <p class="dir" style="margin-top:16px">A value written straight into the code, like <code>24</code> or <code>"red"</code>, is called a literal.</p>
-  <aside class="nt">The primitive types as literals. Quotation marks make a string; plain digits make a number. undefined: declared but nothing assigned. null: deliberately empty. Skip typeof today. Booleans (true/false) come in the next lecture with comparisons.</aside>
+  <aside class="nt">The primitive types as literals. Quotation marks make a string; plain digits make a number. null: deliberately empty. undefined is left out on purpose for now; it comes up when they meet functions that don't return. Skip typeof today. Booleans (true/false) come in the next lecture with comparisons.</aside>
 </section>
 
 <section class="slide" id="literals-quiz" data-sec="Variables in JavaScript" data-ex="String or number?">
@@ -527,12 +526,11 @@ ol.plain li.on{background:var(--spot-200);box-shadow:inset 3px 0 0 var(--spot-40
     </div>
     <div class="rows" style="border-top:1px solid var(--ink-900)">
       <div style="grid-template-columns:1fr"><span style="font-size:18px"><code>.toUpperCase()</code> <code>.toLowerCase()</code> change the capitals.</span></div>
-      <div style="grid-template-columns:1fr"><span style="font-size:18px"><code>.length</code> counts the characters. Spaces count. No brackets.</span></div>
-      <div style="grid-template-columns:1fr"><span style="font-size:18px"><code>.slice(0, 5)</code> takes characters 0 to 4. Counting starts at 0; the end isn't included.</span></div>
+      <div style="grid-template-columns:1fr"><span style="font-size:18px"><code>.length</code> counts the characters. Spaces count. No brackets: it's a property, not a method.</span></div>
       <div style="grid-template-columns:1fr"><span style="font-size:18px">Each one gives back a <b>new</b> value. <code>step</code> itself never changes.</span></div>
     </div>
   </div>
-  <aside class="nt">Pays off "reshape". Click each method; the console also shows that step is untouched. .length is a property (no brackets); the others are methods (brackets). Counting from 0 will feel odd; it comes back with arrays. Students can try these in the workspace (W) if they want.</aside>
+  <aside class="nt">Pays off "reshape". Click each method; the console also shows that step is untouched. .length is a property (no brackets); the others are methods (brackets). Students can try these in the workspace (W) if they want.</aside>
 </section>
 
 <section class="slide" id="methods-quiz" data-sec="Working with data" data-ex="Predict the result">
@@ -542,7 +540,7 @@ ol.plain li.on{background:var(--spot-200);box-shadow:inset 3px 0 0 var(--spot-40
   <div class="panel" style="margin-bottom:12px"><pre class="code" id="mq2-code"></pre></div>
   <div class="rows qz" id="sq"></div>
   <div class="fb" id="sq-fb" style="margin-top:12px"></div>
-  <aside class="nt">"dice the halves" has 15 characters: 4 + 1 + 3 + 1 + 6, spaces included. slice(0, 4) stops before character 4, so it's "dice" with no space. The third question is the important one: toUpperCase gives back a new value; step stays lowercase unless you store the new value.</aside>
+  <aside class="nt">"dice the halves" has 15 characters: 4 + 1 + 3 + 1 + 6, spaces included. (step + "!").length is 16: the brackets glue first, then length counts the new string. The third question is the important one: toUpperCase gives back a new value; step stays lowercase unless you store the new value.</aside>
 </section>
 
 <section class="slide" id="random" data-sec="Working with data" data-demo="Roll">
@@ -600,10 +598,10 @@ ol.plain li.on{background:var(--spot-200);box-shadow:inset 3px 0 0 var(--spot-40
   <div class="inner">
     <div class="billing">Wrap-up · 11:55</div>
     <h2 class="hero md">Name it, keep it, make something new.</h2>
-    <div class="terms"><span>let</span><span>const</span><span>string</span><span>number</span><span>undefined</span><span>null</span><span>+</span><span>.length</span><span>.slice()</span><span>type coercion</span></div>
+    <div class="terms"><span>let</span><span>const</span><span>string</span><span>number</span><span>null</span><span>+</span><span>.length</span><span>.toUpperCase()</span><span>type coercion</span></div>
     <p class="lede">One box, one value. What about a whole bag of onions, or everything on your card in one place? Arrays and objects are coming.</p>
   </div>
-  <aside class="nt">Summarise: a variable remembers a value by name; let for values that change, const for fixed ones; strings, numbers, undefined, null; changing data makes new values (combine, work out, reshape); JavaScript sometimes converts types for you. Go back to the objectives slide if there's time. Tease arrays and objects: one box holds one value, so how would we keep a list of onions, or a whole student card together?</aside>
+  <aside class="nt">Summarise: a variable remembers a value by name; let for values that change, const for fixed ones; strings, numbers, null; changing data makes new values (combine, work out, reshape); JavaScript sometimes converts types for you. Go back to the objectives slide if there's time. Tease arrays and objects: one box holds one value, so how would we keep a list of onions, or a whole student card together?</aside>
 </section>
 
 <section class="slide" id="next" data-sec="Wrap-up">
@@ -767,6 +765,10 @@ quiz($("#cq"),$("#cq-fb"),["Changes","Stays"],[
     $$("#id-read .v").forEach(flashEl);
   }
   $("#id-swap").addEventListener("click",function(){i=(i+1)%P.length;r()});
+  $("#id-labels").addEventListener("click",function(){
+    var on=$("#id-transp").hidden;$("#id-transp").hidden=!on;$("#id-read").style.visibility=on?"visible":"hidden";
+    this.textContent=on?"Hide the labels":"Show the labels";if(on)$$("#id-read .v").forEach(flashEl);
+  });
   r();
 })();
 
@@ -875,9 +877,9 @@ mini($("#mini-workout"),"perpiece.js",'const onionWeight = 185;   // grams\nlet 
 }});
 
 (function(){
-  var STEP="slice each half into strips";
+  var STEP="Slice each half into strips";
   code($("#rs-code"),'const step = "'+STEP+'";');
-  var M=[["step.toUpperCase()",function(){return STEP.toUpperCase()}],["step.length",function(){return STEP.length}],["step.slice(0, 5)",function(){return STEP.slice(0,5)}],["step.slice(6)",function(){return STEP.slice(6)}]];
+  var M=[["step.toUpperCase()",function(){return STEP.toUpperCase()}],["step.toLowerCase()",function(){return STEP.toLowerCase()}],["step.length",function(){return STEP.length}]];
   function repr(v){return typeof v==="string"?'"'+v+'"':String(v)}
   conLines($("#rs-con"),[{c:"dim",t:"Click a method."}]);
   M.forEach(function(m){
@@ -893,7 +895,7 @@ quiz($("#sq"),$("#sq-fb"),["13","15","3"],[
 ]);
 (function(){
   var box=$("#sq"),extra=[
-    {t:"<code>step.slice(0, 4)</code>",o:['"dice"','"dice "','"ice"'],a:0,w:"Characters 0, 1, 2 and 3. The end, 4, isn't included.",h:"Counting starts at 0, and slice stops before the end number."},
+    {t:"<code>(step + \"!\").length</code>",o:['15','16','"dice the halves!"'],a:1,w:"The + glues first, making a new string one character longer: 16.",h:"Work out the brackets first. What does + do to the string?"},
     {t:"<code>step.toUpperCase();</code><br>then <code>step</code> is…",o:['"DICE THE HALVES"','"dice the halves"'],a:1,w:"toUpperCase gives back a new string. step itself never changes.",h:"Does a method change the string, or give back a new one?"}
   ];
   extra.forEach(function(q){
