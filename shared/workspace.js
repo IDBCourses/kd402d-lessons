@@ -4,7 +4,8 @@
    Any element with class "ws-open" opens the drawer. W toggles it.
    The workspace content is saved per browser and shared by every lecture,
    so code written in one session is still there in the next.
-   Adds to window.Deck: run(src, fnName, env), edKeys(textarea, onRun), workspace.{show, append, env, onRun}. */
+   Every textarea.code-ed on the page is colour-coded as students type.
+   Adds to window.Deck: run(src, fnName, env), edKeys(textarea, onRun), colourEditor(textarea), workspace.{show, append, env, onRun}. */
 (function(){
 "use strict";
 var D=window.Deck,$=D.$,$$=D.$$;
@@ -53,6 +54,39 @@ function edKeys(ta,onRun){
     else if(e.key==="Escape"){ta.blur()}
   });
 }
+
+/* ============ colour-coded editors ============
+   A textarea can't colour its own text, so every textarea.code-ed gets a highlighted copy of its code
+   drawn underneath it (pre.ed-hl), and its own text is made transparent. The caret and selection stay
+   the textarea's, so typing works as before. The copy follows typing, scrolling, resizing, and code
+   set from a script (ed.value = …). Applies to the workspace and to every editor a lecture adds. */
+var VALUE=Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype,"value");
+var COPY=["fontFamily","fontSize","fontWeight","lineHeight","letterSpacing","tabSize","whiteSpace","wordBreak","overflowWrap",
+          "paddingTop","paddingLeft","paddingBottom","borderTopWidth","borderLeftWidth"];
+function colour(ta){
+  if(ta.__hl||!ta.parentNode)return;
+  var pre=document.createElement("pre");pre.className="ed-hl";pre.setAttribute("aria-hidden","true");
+  ta.parentNode.insertBefore(pre,ta);ta.__hl=pre;ta.classList.add("ed-on");
+  var par=ta.parentNode;if(getComputedStyle(par).position==="static")par.style.position="relative";
+  function paint(){pre.innerHTML=D.hl(VALUE.get.call(ta))+"\n ";sync()}
+  function sync(){pre.scrollTop=ta.scrollTop;pre.scrollLeft=ta.scrollLeft}
+  function place(){
+    var cs=getComputedStyle(ta);
+    COPY.forEach(function(k){pre.style[k]=cs[k]});
+    pre.style.top=ta.offsetTop+"px";pre.style.left=ta.offsetLeft+"px";
+    pre.style.width=ta.offsetWidth+"px";pre.style.height=ta.offsetHeight+"px";
+    /* the textarea's scrollbar narrows its text area: match it so lines wrap in the same places */
+    pre.style.paddingRight=(parseFloat(cs.paddingRight)+ta.offsetWidth-ta.clientWidth)+"px";
+    sync();
+  }
+  Object.defineProperty(ta,"value",{configurable:true,get:function(){return VALUE.get.call(ta)},set:function(v){VALUE.set.call(ta,v);paint()}});
+  ta.addEventListener("input",paint);
+  ta.addEventListener("scroll",sync);
+  ta.addEventListener("focus",place);
+  if(window.ResizeObserver){var ro=new ResizeObserver(place);ro.observe(ta);ro.observe(par)}
+  paint();place();
+}
+function colourAll(root){$$("textarea.code-ed",root).forEach(colour)}
 
 /* ============ drawer ============ */
 var START="// Type along here, then press Run.\n\n";
@@ -103,5 +137,11 @@ function append(src){
   D.courseStore.set("workspace",ed.value);show(true);
 }
 
-D.run=run;D.edKeys=edKeys;D.workspace={show:show,append:append,env:env,onRun:function(f){hooks.push(f)}};
+/* colour the workspace now, and each lecture's editors as its script adds them */
+colourAll(document);
+if(window.MutationObserver)new MutationObserver(function(ms){ms.forEach(function(m){Array.prototype.forEach.call(m.addedNodes,function(n){
+  if(n.nodeType!==1)return;if(n.matches&&n.matches("textarea.code-ed"))colour(n);else colourAll(n);
+})})}).observe(document.body,{childList:true,subtree:true});
+
+D.run=run;D.edKeys=edKeys;D.colourEditor=colour;D.workspace={show:show,append:append,env:env,onRun:function(f){hooks.push(f)}};
 })();

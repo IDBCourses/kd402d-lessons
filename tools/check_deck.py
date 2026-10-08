@@ -2,7 +2,7 @@
 """Check KD402D lecture decks.
 
 Serves the repo over HTTP, opens each lecture in headless Chromium, steps through every slide, and reports:
-  - content that overflows the 1280x720 slide (decorative .beam/.scan elements are ignored)
+  - content that overflows the 1280x720 slide (decorative .beam/.scan elements and editors' coloured copies are ignored)
   - JavaScript errors and failed requests (Google Fonts failures are reported separately)
   - slides missing speaker notes, duplicate slide ids, exercises without a "Your turn" chip
 Screenshots of every slide go to tools/out/<lecture>/NN-<id>.png.
@@ -41,7 +41,7 @@ SLIDE_INFO = """() => {
   const s=[...document.querySelectorAll('#deck .slide')].find(x=>!x.hidden);
   const r=s.getBoundingClientRect(), k=r.width/1280, bad=[];
   s.querySelectorAll('*').forEach(el=>{
-    if(el.closest('.beam,.scan,.nt')) return;
+    if(el.closest('.beam,.scan,.nt,.ed-hl')) return;   // .ed-hl: an editor's coloured copy, clipped and scrolled like its textarea
     const b=el.getBoundingClientRect();
     if(!b.width||!b.height) return;
     if(b.bottom>r.bottom+1||b.right>r.right+1||b.left<r.left-1)
