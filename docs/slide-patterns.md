@@ -189,6 +189,8 @@ var r = D.run(src);               // {logs:[...], error?, blocked?}
 var r = D.run(src, "double");     // also returns the student's function as r.value
 var r = D.run(src, null, {Tone: Tone});  // extra globals for the code (a library, helpers)
 D.edKeys(textarea, runFn);        // Tab indents, Ctrl/⌘+Enter runs
+// Every textarea.code-ed is colour-coded automatically (workspace.js draws a highlighted copy under it).
+// Set code with ta.value = …: the colours follow. D.colourEditor(ta) exists for editors made some other way.
 ```
 
 Pass libraries through `env` rather than relying on `window`, so the fallback interpreter (which is
