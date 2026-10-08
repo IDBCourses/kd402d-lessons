@@ -44,6 +44,7 @@ pre.code.xxs{font-size:13.5px;line-height:1.4;padding:8px 14px}
 .quiz.tight>div{grid-template-columns:1fr auto;gap:14px;padding:6px 0}
 .quiz.tight .ch{flex-wrap:nowrap}
 .quiz.tight .sc{font-size:17px}
+.quiz.grid2{display:grid;grid-template-columns:1fr 1fr;column-gap:24px}
 .steps .tx code{white-space:nowrap}
 .steps .tx code,.tracks code,.small code,.pbody code,.quiz code,.vals code{background:var(--spot-200);color:var(--ink-900);padding:0 4px;border-radius:2px}
 .btn.codey{text-transform:none;letter-spacing:0;font-size:15px}
@@ -210,11 +211,9 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
     </div>
     <div class="stack" style="gap:12px">
       <div class="panel"><div class="bar p"><span>your fork</span></div><pre class="code xs" style="background:var(--paper-000);color:var(--ink-900)">kd402d-exercises/
-├── functions/
-├── data/
+├── functions/, data/ …
 └── conditionals/
     ├── start/       ← work here
-    │   ├── index.html
     │   ├── setup.js        instruments
     │   ├── exercise1.js    … up to
     │   ├── exercise8.js    core
@@ -256,7 +255,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
     <div class="stack" style="gap:10px">
       <div class="panel"><div class="bar"><span>exercise1.js</span><span>after 1b</span></div><pre class="code xs" id="fa-code"></pre></div>
       <div class="small-h">Boolean or string?</div>
-      <div class="rows quiz tight" id="fa-q"></div>
+      <div class="rows quiz tight grid2" id="fa-q"></div>
       <div class="fb" id="fa-fb"></div>
     </div>
   </div>
