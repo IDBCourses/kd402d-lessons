@@ -18,7 +18,7 @@
 <section class="slide stage" id="cover" data-sec="Opening">
   <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
   <div class="inner">
-    <div class="billing">Act I · Topic · Week NN</div>
+    <div class="billing">KD402D Programming · Week NN</div>
     <h1 class="hero">Seven words or fewer.</h1>
     <p class="lede">One or two sentences on what this lecture covers.</p>
   </div>
@@ -26,7 +26,7 @@
 </section>
 
 <section class="slide" id="example" data-sec="Section name">
-  <div class="billing">Scene 01 · Section name · 10:15</div><hr class="rule">
+  <div class="billing">Section name · 10:15</div><hr class="rule">
   <h2 class="h1">A content slide</h2>
   <p class="lede">Prose, panels, code blocks: see functions/index.html for every pattern.</p>
   <aside class="nt">Notes for this slide.</aside>
@@ -56,7 +56,7 @@ var D=Deck,$=D.$,fb=D.fb;
 /* One small block per interactive slide. Example: a multiple-choice question. */
 [["Right answer",true],["Wrong answer",false]].forEach(function(o){
   var b=document.createElement("button");b.className="opt";b.textContent=o[0];
-  b.addEventListener("click",function(){b.classList.add(o[1]?"right":"wrong");fb($("#q-fb"),o[1]?"pass":"note",o[1]?"Applause.":"Look again.")});
+  b.addEventListener("click",function(){b.classList.add(o[1]?"right":"wrong");fb($("#q-fb"),o[1]?"pass":"note",o[1]?"Correct.":"Look again.")});
   $("#q-opts").appendChild(b);
 });
 })();
