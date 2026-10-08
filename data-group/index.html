@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Data: group work · KD402D Programming</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<link rel="stylesheet" href="../shared/deck.css">
+<style>
+/* styles used only by this lecture */
+:root{--track-purple:#7a3cf0}
+.order>div{grid-template-columns:72px 120px 1fr;align-items:center;padding:7px 0}
+.order .tm{font-family:var(--font-mono);font-size:16px;color:var(--ink-500)}
+.order .nm{font-size:22px;color:var(--ink-900);font-weight:500}
+.order .nm small{display:block;font-size:16px;color:var(--ink-500);font-weight:400}
+.order .act .nm{color:var(--curtain-600)}
+/* track swatches: black = core, blue = intermediate, purple = advanced */
+.sw{display:inline-block;width:14px;height:14px;border:2px solid var(--ink-900);vertical-align:-1px;margin-right:6px}
+.sw.k{background:var(--ink-900)}.sw.b{background:var(--blue-600)}.sw.p{background:var(--track-purple)}
+.tracks>div{grid-template-columns:200px 1fr 250px;padding:14px 0}
+.tracks .tn{font-family:var(--font-display);font-weight:700;font-size:28px;color:var(--ink-900);letter-spacing:-.02em}
+.tracks .tw{font-family:var(--font-mono);font-size:15px;color:var(--ink-500)}
+.slide.stage.adv{background:var(--track-purple)}
+/* exercise slides: steps on the left, something to try on the right, "done when" at the foot */
+.h1.sm{font-size:44px;margin-bottom:14px}
+.ex{flex:1;min-height:0}
+.steps>div{grid-template-columns:46px 1fr;gap:12px;padding:8px 0}
+.steps .num{font-size:24px;color:var(--ink-300)}
+.steps .tx{font-size:18px;line-height:1.42;color:var(--ink-700)}
+.steps .tx small{display:block;font-size:15px;color:var(--ink-500);margin-top:2px}
+.foot{margin-top:auto;display:flex;gap:16px;align-items:center;border-top:1px solid var(--ink-900);padding-top:10px}
+.foot p{margin:0;font-size:17px;line-height:1.4;flex:1}
+.foot b{font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-500);margin-right:8px}
+.foot .bn{font-weight:600;color:var(--ink-900)}
+.btn.mark.on{background:var(--applause-500);color:var(--ink-900)}
+.btn.mark.on:hover{background:var(--applause-600)}
+.small-h{font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-500);margin:0}
+pre.code.xs{font-size:15px;line-height:1.5;padding:10px 14px}
+.slide .fb{font-size:16px;padding:8px 12px;min-height:0}
+.quiz.tight>div{grid-template-columns:1fr auto;gap:14px;padding:6px 0}
+.quiz.tight .ch{flex-wrap:nowrap}
+.steps .tx code{white-space:nowrap}
+.steps .tx code,.tracks code,.small code,.pbody code{background:var(--spot-200);color:var(--ink-900);padding:0 4px;border-radius:2px}
+.small-h code{text-transform:none;letter-spacing:0;font-size:13px}
+.btn.codey{text-transform:none;letter-spacing:0;font-size:15px}
+.quiz.tight .sc{font-size:17px}
+/* memory: the variables and what each one holds */
+table.mem{border-collapse:collapse;width:100%;font-family:var(--font-mono);font-size:18px}
+table.mem th{font-family:var(--font-ui);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-500);text-align:left;font-weight:500;padding:5px 10px;border-bottom:2px solid var(--ink-900)}
+table.mem td{padding:6px 10px;border-bottom:1px solid var(--paper-300);color:var(--ink-900)}
+table.mem td.v{color:var(--curtain-600);font-weight:700}
+table.mem td.k{color:var(--ink-500);font-size:15px}
+table.mem tr.hit td{animation:hit .9s var(--ease)}
+@keyframes hit{from{background:var(--spot-300)}to{background:transparent}}
+@media (prefers-reduced-motion:reduce){table.mem tr.hit td{animation:none}}
+.acts{display:flex;flex-wrap:wrap;gap:8px}
+.acts .btn{font-family:var(--font-mono);text-transform:none;letter-spacing:0;font-size:15px;padding:7px 10px}
+/* an expression and what it gives back */
+.evals>div{grid-template-columns:250px 1fr;gap:14px;padding:4px 0;align-items:center}
+.evals .btn{font-family:var(--font-mono);text-transform:none;letter-spacing:0;font-size:15px;padding:5px 10px;text-align:left}
+.evals .out{font-family:var(--font-mono);font-size:18px;color:var(--curtain-600);font-weight:700}
+.evals .out.dim{color:var(--ink-300);font-weight:400}
+/* tempo timeline */
+.tl{position:relative;height:56px;background:var(--paper-200);border-bottom:1px solid var(--ink-900);margin:6px 14px 22px}
+.tl .b{position:absolute;top:12px;height:30px;border:2px solid var(--ink-900);background:var(--cyan-400);border-radius:2px;font-family:var(--font-mono);font-size:12px;font-weight:700;color:var(--ink-900);display:grid;place-items:center;min-width:34px;transition:left .2s var(--ease)}
+.tl .b.on{background:var(--spot-400)}
+.tl .tk{position:absolute;bottom:-20px;font-family:var(--font-mono);font-size:11px;color:var(--ink-500);transform:translateX(-50%)}
+input[type=range]{width:100%;accent-color:var(--curtain-600)}
+.bpm{display:flex;align-items:baseline;gap:12px}
+.bpm .big{font-family:var(--font-display);font-weight:700;font-size:54px;letter-spacing:-.03em;color:var(--ink-900);line-height:1}
+.more{margin:0;font-size:15px;line-height:1.45;color:var(--ink-500)}
+.more b{font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--track-purple)}
+.console{font-size:15px}
+.con-sm{height:132px;overflow:auto;padding:8px 14px}
+.notes-tbl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:18px;align-items:baseline}
+.notes-tbl code{font-size:17px}
+.reveal.long>div{grid-template-columns:500px 1fr;padding:9px 0;gap:20px}
+.reveal.long .opt{font-family:var(--font-ui);font-weight:500;font-size:19px;letter-spacing:0;padding:10px 14px}
+.reveal.long .ans{font-size:18px;line-height:1.4}
+/* progress */
+.prog{display:grid;grid-template-columns:1fr 1fr;gap:0 40px;border-top:1px solid var(--ink-900)}
+.prog>div{display:grid;grid-template-columns:24px 1fr auto;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid var(--paper-300);font-size:18px}
+.prog .ck{width:22px;height:22px;border:2px solid var(--ink-900);border-radius:2px;display:grid;place-items:center;font-size:15px;font-weight:700;color:var(--ink-900)}
+.prog .on .ck{background:var(--applause-500)}
+.prog a{font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+</style>
+</head>
+<body data-lecture="data-group" data-home="../">
+<main id="stage">
+<div id="deck">
+
+<!-- 01 COVER -->
+<section class="slide stage" id="cover" data-sec="Opening">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Act I · Data · Group work · Week 41</div>
+    <h1 class="hero">Every note is data.</h1>
+    <p class="lede">This morning you stored onions in variables. This afternoon you store notes, lengths and tempos, and your riff starts listening to them.</p>
+  </div>
+  <div style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
+    <div class="m" style="font-size:17px;color:var(--ink-200)">KD402D Programming · Thu 8 Oct · 13:15–17:00</div>
+  </div>
+  <aside class="nt">Group learning and exercises for the Data day. This afternoon is self-directed: students open this same link on their laptops and work through it at their own pace, with the code in VS Code (data/start in their fork of the exercises repo). David and the TAs circulate. Ask everyone to plug in headphones now. Keys: arrows, I for the index, N for notes, E for the next exercise, S stops all sound in the deck.</aside>
+</section>
+
+<!-- 02 RUNNING ORDER -->
+<section class="slide" id="running-order" data-sec="Opening">
+  <div class="billing">Running order · This afternoon</div><hr class="rule">
+  <h2 class="h1">Seven scenes until five</h2>
+  <div class="rows order">
+    <div><span class="num">01</span><span class="tm">13:15</span><span class="nm">Introduction<small>A note is data. Get today's code, pick your pace</small></span></div>
+    <div class="act"><span class="num">02</span><span class="tm">13:30</span><span class="nm">Notes as data<small>Exercises 1 to 5: store a sound, build a note, keep tempo</small></span></div>
+    <div><span class="num">03</span><span class="tm">14:20</span><span class="nm">Pair check-in</span></div>
+    <div class="act"><span class="num">04</span><span class="tm">14:45</span><span class="nm">Transforming musical data<small>Exercises 6 to 8: new values from old ones, and a bug hunt</small></span></div>
+    <div><span class="num">05</span><span class="tm">15:30</span><span class="nm">Pair check-in</span></div>
+    <div class="act"><span class="num">06</span><span class="tm">15:40</span><span class="nm">Blue and purple tracks<small>Go further, or build a piece that writes itself</small></span></div>
+    <div><span class="num">07</span><span class="tm">16:40</span><span class="nm">Wrap-up and curtain call</span></div>
+  </div>
+  <p class="dir" style="margin-top:12px">Intermission at 14:30.</p>
+  <aside class="nt">The Notion plan has the sections but no clock times; these are a suggestion, matching Tuesday's afternoon (break 14:30–14:45). The times are a guide, not a gate: students move on when they're done. The two pair check-ins are the only moments everyone stops together, apart from the break and the wrap-up.</aside>
+</section>
+
+<!-- 03 OBJECTIVES -->
+<section class="slide" id="objectives" data-sec="Opening">
+  <div class="billing">By five you can</div><hr class="rule">
+  <h2 class="h1">Four things to take home</h2>
+  <div class="rows lab big">
+    <div style="padding:15px 0"><span class="num">01</span><span class="tx">Say what a variable remembers, and whether it changes while the piece plays.</span></div>
+    <div style="padding:15px 0"><span class="num">02</span><span class="tx">Let one stored value steer a whole phrase: a tempo, a length, a note.</span></div>
+    <div style="padding:15px 0"><span class="num">03</span><span class="tx">Work out new values from stored ones, and know the original stays put.</span></div>
+    <div style="padding:15px 0"><span class="num">04</span><span class="tx">Spot when a number is really text, and fix it.</span></div>
+  </div>
+  <aside class="nt">Adapted from the session's learning objectives. 01 is variables and let/const (conceptual 1 and 5). 02 is a value shaping a process (conceptual 2). 03 is storing vs transforming (conceptual 4), with the same-number-different-jobs idea (conceptual 3) on the way. 04 is type coercion. Practical objectives (strings, numbers, variables in small challenges) run through all of it. Come back to these at the curtain call.</aside>
+</section>
+
+<!-- 04 HOW TODAY WORKS -->
+<section class="slide" id="how" data-sec="Opening">
+  <div class="billing">Opening · How this afternoon works</div><hr class="rule">
+  <h2 class="h1">Your pace, your laptop, these slides</h2>
+  <div class="rows tracks">
+    <div><span class="tn"><span class="sw k"></span>Core</span><span>Exercises 1 to 8, in order. Everyone does these. Black square in the corner of the slide.</span><span class="tw">Everyone, from 13:30</span></div>
+    <div><span class="tn"><span class="sw b"></span>Blue</span><span>Two more small challenges with tempo and text, once core is done.</span><span class="tw">Finished core? Go on</span></div>
+    <div><span class="tn"><span class="sw p"></span>Purple</span><span>A piece that writes its own melody, with template literals and <code>Math.random()</code>.</span><span class="tw">Coded before? After core</span></div>
+  </div>
+  <p class="lede" style="margin-top:18px;font-size:20px">Each exercise slide says what to do in <code>script.js</code>, gives you something to try, and ends with <b>Done when</b>. Press <b>Mark as done</b> when it is; <b>E</b> jumps to the next exercise. Stuck for five minutes? Ask your neighbour, then a TA.</p>
+  <aside class="nt">Three-track system from the plan: core (black), blue (intermediate), purple (advanced). Nobody should feel behind for staying on core all afternoon: core covers every objective. Mark as done is saved in their own browser and shows up on the progress slide near the end; it's for them, nobody else sees it.</aside>
+</section>
+
+<!-- 05 A NOTE IS DATA -->
+<section class="slide" id="note-is-data" data-sec="Opening" data-demo="A note is data">
+  <span class="turn try">Try it</span>
+  <div class="billing">Opening · Recap through sound</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:14px">A note is data</h2>
+  <div class="cols">
+    <div class="stack" style="gap:12px">
+      <div class="panel"><div class="bar"><span>values in code</span><span>every one typed in</span></div><pre class="code" id="nd-code"></pre></div>
+      <p class="dir" style="font-size:19px">Every value in that call is data. Some are strings, some are numbers. Today they move out of the call and into variables.</p>
+    </div>
+    <div class="stack" style="gap:10px">
+      <div class="small-h">String or number?</div>
+      <div class="rows quiz tight" id="nd-q"></div>
+      <div class="fb" id="nd-fb"></div>
+    </div>
+  </div>
+  <aside class="nt">Recap the morning lecture through sound, five minutes at most. Ask the room before anyone clicks: "C4" and "8n" are strings (quotes); 90 and 440 are numbers. Tone.js accepts a note as a name ("A4") or as a frequency (440): the same note, two kinds of data. Mention that "8n" looks a bit like a number but it's text, in quotes.</aside>
+</section>
+
+<!-- 06 GET THE CODE -->
+<section class="slide" id="get-code" data-sec="Opening" data-ex="Get today's code">
+  <span class="turn">Your turn</span>
+  <div class="billing">Opening · Get today's code</div><hr class="rule">
+  <h2 class="h1 sm">Sync, pull, open data/start</h2>
+  <div class="cols ex">
+    <div class="rows lab steps">
+      <div><span class="num">1</span><span class="tx">On <b>github.com</b>, open your fork of <b>kd402d-exercises</b> and click <b>Sync fork</b> → <b>Update branch</b>.</span></div>
+      <div><span class="num">2</span><span class="tx">In VS Code, open the Source Control panel and click <b>Sync Changes</b> (or <b>Pull</b>). A <b>data</b> folder appears.</span></div>
+      <div><span class="num">3</span><span class="tx">Open <code>data/start/index.html</code> and run <b>Live Preview: Show Preview (External Browser)</b>.</span></div>
+      <div><span class="num">4</span><span class="tx">Open the console (<code>F12</code>, or <code>Cmd+Option+I</code>). You should see <code>Exercise 2: fullNote is E4</code>.</span></div>
+      <div><span class="num">5</span><span class="tx">Click <b>1 · Store a sound</b>. Three notes. Now open <code>data/start/script.js</code>.</span></div>
+    </div>
+    <div class="stack" style="gap:12px">
+      <div class="panel"><div class="bar p"><span>your fork</span></div><pre class="code xs" style="background:var(--paper-000);color:var(--ink-900)">kd402d-exercises/
+├── functions/
+└── data/
+    ├── start/       ← work here
+    │   ├── index.html
+    │   ├── script.js       core + blue
+    │   └── generative.js   purple
+    └── reference/   ← a finished version</pre></div>
+      <div class="panel"><div class="bar"><span>VS Code not working?</span></div><div class="pbody small" style="padding:10px 14px">Press <b>W</b> for the workspace in this deck: Tone.js works there too. Paste in an exercise and call it at the bottom: <code>exercise1(Tone.now());</code>. Get a TA to look at VS Code with you at the break.</div></div>
+    </div>
+  </div>
+  <div class="foot"><p><b>Done when</b>you hear three notes and see <code>E4</code> in the console.</p><button class="btn ghost mark" data-done="get-code">Mark as done</button></div>
+  <aside class="nt">The routine from Wednesday's curtain call. Snags: Sync fork forgotten (no data folder after pulling); Live Preview opening inside VS Code instead of the browser (the console is then hidden: use the External Browser command); no sound until a button is clicked. Anyone whose VS Code or Git isn't working: workspace (W) for now, fix it with a TA at the break. If the reference folder shouldn't be visible until after the session, remove it from the course repo before class (the exercises repo README says it's added afterwards).</aside>
+</section>
+
+<!-- 07 BLOCK 1 OPENER -->
+<section class="slide stage" id="block-1" data-sec="Notes as data">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Scene 02 · Notes as data · 13:30</div>
+    <h2 class="hero md">Give the note a name.</h2>
+    <p class="lede">Pull the values out of Tuesday's calls and into variables. Then change one variable and hear the whole riff follow.</p>
+  </div>
+  <aside class="nt">About 50 minutes of work time, exercises 1 to 5. Students work at their own pace; TAs circulate. Watch for people who make it run but can't say what a variable holds: that's what the pair check-in at 14:20 picks up.</aside>
+</section>
+
+<!-- 08 EXERCISE 1 -->
+<section class="slide" id="store" data-sec="Notes as data" data-ex="Store a sound">
+  <span class="turn">Your turn</span>
+  <div class="billing"><span class="sw k"></span>Core · Exercise 1 · script.js</div><hr class="rule">
+  <h2 class="h1 sm">Store a sound</h2>
+  <div class="cols ex">
+    <div class="stack" style="gap:10px">
+      <div class="rows lab steps">
+        <div><span class="num">1a</span><span class="tx">Above <code>exercise1</code>, store the first note and its length:<small><code>const note = "C4";</code> and <code>let duration = "8n";</code> Use them in the first call.</small></span></div>
+        <div><span class="num">1b</span><span class="tx">For each one: does it change while the piece plays (<code>let</code>), or stay fixed (<code>const</code>)?</span></div>
+        <div><span class="num">1c</span><span class="tx">On a new line, change it: <code>duration = "2n";</code> Play. Hear the difference?</span></div>
+        <div><span class="num">1d</span><span class="tx">Try <code>note = "D4";</code> Read the error in the console, then delete that line.</span></div>
+      </div>
+    </div>
+    <div class="stack" style="gap:10px">
+      <div class="panel"><div class="bar"><span>script.js</span><span>after 1a</span></div><pre class="code xs" id="st-code"></pre></div>
+      <div class="small-h">Practise 1b: let or const?</div>
+      <div class="rows quiz tight" id="st-q"></div>
+      <div class="fb" id="st-fb"></div>
+    </div>
+  </div>
+  <div class="foot"><p><b>Done when</b>the first note plays from your variables, and you've read <code>TypeError: Assignment to constant variable.</code></p><button class="btn ghost mark" data-done="store">Mark as done</button></div>
+  <aside class="nt">The onion again: the kind of onion stays fixed (const), the piece count grows while we chop (let). Here the note is fixed and the length is the one we play with. 1d breaks the script on purpose: when the error happens, nothing below it runs, so none of the buttons work until the line is gone. That's worth saying out loud: one error stops everything after it. Common snag: writing let duration = "2n" a second time (SyntaxError: Identifier 'duration' has already been declared); to change it, leave out let.</aside>
+</section>
+
+<!-- 09 EXERCISE 2 -->
+<section class="slide" id="parts" data-sec="Notes as data" data-ex="A note from parts">
+  <span class="turn">Your turn</span>
+  <div class="billing"><span class="sw k"></span>Core · Exercise 2 · script.js</div><hr class="rule">
+  <h2 class="h1 sm">Build a note from parts</h2>
+  <div class="cols ex">
+    <div class="stack" style="gap:10px">
+      <div class="panel"><div class="bar"><span>script.js</span><span>already there</span></div><pre class="code xs" id="pa-code"></pre></div>
+      <div class="rows lab steps">
+        <div><span class="num">2a</span><span class="tx">Raise the octave: <code>octave = octave + 1;</code></span></div>
+        <div><span class="num">2b</span><span class="tx">Log <code>fullNote</code> again. Predict first: has it changed?</span></div>
+        <div><span class="num">2c</span><span class="tx">Rebuild it from its parts, log it, and play exercise 2.</span></div>
+      </div>
+    </div>
+    <div class="stack" style="gap:10px">
+      <div class="small-h">Try it here first: what each variable holds</div>
+      <table class="mem"><thead><tr><th>Name</th><th>Holds</th><th>Kind</th></tr></thead><tbody id="pa-mem"></tbody></table>
+      <div class="acts" id="pa-acts"></div>
+      <div class="fb note" id="pa-fb">Click a line to run it. Watch which values change.</div>
+    </div>
+  </div>
+  <div class="foot"><p><b>Done when</b>your console shows <code>E4</code>, then <code>E4</code> again, then <code>E5</code>, and you can say why.</p><button class="btn ghost mark" data-done="parts">Mark as done</button></div>
+  <aside class="nt">Two ideas. First, coercion working for you: "E" + 4 glues a number onto a string and gives "E4". Second, and more important: a variable remembers a value, not a recipe. fullNote was worked out once, from octave as it was then. Raising octave afterwards doesn't reach back into fullNote; you have to rebuild it. Ask the room to predict before anyone clicks octave = octave + 1. The "pitchName = …" button shows the const error again.</aside>
+</section>
+
+<!-- 10 EXERCISE 3 -->
+<section class="slide" id="tempo" data-sec="Notes as data" data-ex="Tempo arithmetic">
+  <span class="turn">Your turn</span>
+  <div class="billing"><span class="sw k"></span>Core · Exercise 3 · script.js</div><hr class="rule">
+  <h2 class="h1 sm">One number sets the pace</h2>
+  <div class="cols ex">
+    <div class="stack" style="gap:10px">
+      <div class="rows lab steps">
+        <div><span class="num">3a</span><span class="tx">Log the beat in milliseconds, rounded: <code>Math.round(beat * 1000)</code></span></div>
+        <div><span class="num">3b</span><span class="tx">In <code>exercise3</code>, play <code>"E4"</code> one beat after <code>start</code>, and <code>"G4"</code> two beats after.<small>Use <code>start + beat</code> and <code>start + beat * 2</code>, not numbers you worked out yourself.</small></span></div>
+        <div><span class="num">3c</span><span class="tx">Change only <code>bpm</code>: try 60, then 160. Which lines did you have to change?</span></div>
+      </div>
+      <div class="panel"><div class="bar"><span>script.js</span><span>with your bpm</span></div><pre class="code xs" id="tp-code"></pre></div>
+    </div>
+    <div class="stack" style="gap:10px">
+      <div class="small-h">Try it here: drag the tempo</div>
+      <div class="bpm"><span class="big" id="tp-n">90</span><span class="muted">beats per minute</span></div>
+      <input type="range" id="tp-r" min="40" max="200" step="1" value="90" aria-label="Beats per minute">
+      <div class="panel"><div class="bar y"><span>when each note starts</span><span id="tp-len">phrase: 1.33 s</span></div><div class="tl" id="tp-tl"></div></div>
+      <div class="row"><button class="btn" id="tp-play">Play the phrase</button></div>
+    </div>
+  </div>
+  <div class="foot"><p><b>Done when</b>changing <code>bpm</code>, and nothing else, speeds up or slows down all three notes.</p><button class="btn ghost mark" data-done="tempo">Mark as done</button></div>
+  <aside class="nt">The variable that shapes a process, not just records its result: the number of onions to chop, set before the chopping starts. 60 / bpm is seconds per beat: 60 seconds a minute, bpm beats a minute. At 90, a beat is 0.6666666666666666 seconds, which is why Math.round earns its place (667 ms). In the exercise files, start comes from the button: it is Tone.now() at the moment of the click, so notes are timed from then.</aside>
+</section>
+
+<!-- 11 EXERCISES 4 AND 5 -->
+<section class="slide" id="args" data-sec="Notes as data" data-ex="Variables as arguments">
+  <span class="turn">Your turn</span>
+  <div class="billing"><span class="sw k"></span>Core · Exercises 4 and 5 · script.js</div><hr class="rule">
+  <h2 class="h1 sm">Feed the function, then watch it</h2>
+  <div class="cols ex">
+    <div class="stack" style="gap:10px">
+      <div class="rows lab steps">
+        <div><span class="num">4a</span><span class="tx">Above <code>exercise4</code>, store the three notes and one length in variables.</span></div>
+        <div><span class="num">4b</span><span class="tx">Call <code>playNote</code> with those variables instead of the typed-in values.</span></div>
+        <div><span class="num">4c</span><span class="tx">Change the length variable once. Do all three notes change?</span></div>
+        <div><span class="num">5</span><span class="tx">In <code>playNote</code>, log what is playing before it plays:<small><code>console.log("Playing " + name + " for " + length);</code></small></span></div>
+      </div>
+      <div class="small-h">Predict: you change <code>noteLength</code> to <code>"4n"</code>. How many lines change?</div>
+      <div class="row" id="ar-q"></div>
+      <div class="fb" id="ar-fb"></div>
+    </div>
+    <div class="stack" style="gap:10px">
+      <div class="panel"><div class="bar"><span>script.js</span><span>one way to write 4</span></div><pre class="code xs" id="ar-code"></pre></div>
+      <div class="panel"><div class="bar y"><span>console</span><span>after exercise 5</span></div><div class="console con-sm" id="ar-con" style="height:96px"></div></div>
+    </div>
+  </div>
+  <div class="foot"><p><b>Done when</b>one change to a variable changes the music, and the console says what played.</p><button class="btn ghost mark" data-done="args">Mark as done</button></div>
+  <aside class="nt">Tuesday's functions, now fed with variables. Point out that the arguments are variables and the parameters (name, length, time) are the function's own names for what arrives: rootNote goes in, and inside playNote it's called name. Exercise 5 makes the data visible: logging is how you see what a program is doing, and it's the first thing to try when a note sounds wrong (that's exercise 8).</aside>
+</section>
+
+<!-- 12 PAIR CHECK-IN 1 -->
+<section class="slide" id="check-in-1" data-sec="Pair check-in" data-ex="Pair check-in">
+  <span class="turn">Your turn</span>
+  <div class="billing">Scene 03 · Pair check-in · 14:20</div><hr class="rule">
+  <h2 class="h1">Point at one variable</h2>
+  <p class="lede" style="margin-bottom:12px">In pairs, take turns. Point at one variable in your sketch and answer out loud:</p>
+  <div class="rows reveal long" id="ci1"></div>
+  <div class="row" style="margin-top:12px"><button class="btn ghost" id="ci1-all">Reveal all</button></div>
+  <aside class="nt">Ten minutes, before the break. TAs listen in and note anyone who can make the code run but can't explain it; they get a visit first after the break. The revealed lines are what a good answer sounds like, not the only right answer.</aside>
+</section>
+
+<!-- 13 BREAK -->
+<section class="slide stage" id="break" data-sec="Intermission">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Intermission · 14:30–14:45</div>
+    <div class="timer" id="tm" aria-live="off">15:00</div>
+    <p class="lede" id="tm-msg" style="margin-top:22px">Stretch, refill, rest your ears. Commit and push before you go.</p>
+    <div class="row" style="margin-top:20px"><button class="btn alt" id="tm-go">Start</button><button class="btn ghost" id="tm-reset">Reset</button></div>
+  </div>
+  <aside class="nt">15-minute break. Press S first so the room is quiet. Good moment for a TA to sort out anyone whose VS Code or Git isn't working.</aside>
+</section>
+
+<!-- 14 BLOCK 2 OPENER -->
+<section class="slide stage" id="block-2" data-sec="Transforming musical data">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Scene 04 · Transforming musical data · 14:45</div>
+    <h2 class="hero md">New value out. Original stays.</h2>
+    <p class="lede">Work out new pitches from a frequency, slice notes out of a string, and find out why a note comes out 41 octaves too high.</p>
+  </div>
+  <aside class="nt">About 45 minutes, exercises 6 to 8. The through-line from the morning: transforming produces a new value from a stored one, and the stored one usually stays as it was. Every exercise in this block ends by logging the original to prove it.</aside>
+</section>
+
+<!-- 15 EXERCISE 6 -->
+<section class="slide" id="frequency" data-sec="Transforming musical data" data-ex="Same number, different jobs">
+  <span class="turn">Your turn</span>
+  <div class="billing"><span class="sw k"></span>Core · Exercise 6 · script.js</div><hr class="rule">
+  <h2 class="h1 sm">Same number, different jobs</h2>
+  <div class="cols ex">
+    <div class="stack" style="gap:10px">
+      <div class="rows lab steps">
+        <div><span class="num">6a</span><span class="tx"><code>a4</code> is the note A4 as a frequency: 440 vibrations a second. In <code>exercise6</code>, play <code>a4 * 2</code>, <code>a4 * 1.5</code> and <code>a4 / 2</code>, half a second apart.</span></div>
+        <div><span class="num">6b</span><span class="tx">Log <code>a4 * 2</code>, then <code>a4</code>. Did multiplying change what <code>a4</code> holds?</span></div>
+      </div>
+      <div class="small-h">Three numbers. What job does each do?</div>
+      <div class="rows quiz tight" id="fq-q"></div>
+      <div class="fb" id="fq-fb"></div>
+    </div>
+    <div class="stack" style="gap:10px">
+      <div class="small-h">Try it here: click to hear each value</div>
+      <div class="rows evals" id="fq-ev"></div>
+    </div>
+  </div>
+  <div class="foot"><p><b>Done when</b>you hear four pitches, and the console shows <code>a4</code> is still 440.</p><button class="btn ghost mark" data-done="frequency">Mark as done</button></div>
+  <aside class="nt">Conceptual objective 3: the same kind of value plays different roles. 440 is a frequency (doubling it makes sense: an octave up). 4 in octave is a position on the keyboard (doubling it doesn't mean "twice as high"). 90 in bpm is a speed. All numbers; the meaning lives in how we use them and what we name them, like the onion's count, step number and rating this morning. Times 1.5 gives a fifth, the most consonant interval after the octave: a little music theory in arithmetic.</aside>
+</section>
+
+<!-- 16 EXERCISE 7 -->
+<section class="slide" id="chord" data-sec="Transforming musical data" data-ex="A chord from a string">
+  <span class="turn">Your turn</span>
+  <div class="billing"><span class="sw k"></span>Core · Exercise 7 · script.js</div><hr class="rule">
+  <h2 class="h1 sm">Slice a chord out of a string</h2>
+  <div class="cols ex">
+    <div class="stack" style="gap:10px">
+      <div class="rows lab steps">
+        <div><span class="num">7a</span><span class="tx">Log <code>chord.toUpperCase()</code> and <code>chord.length</code>. Predict the length first.</span></div>
+        <div><span class="num">7b</span><span class="tx">Store <code>tidyChord</code>, then slice out <code>bottomNote</code>, <code>middleNote</code> and <code>topNote</code>.</span></div>
+        <div><span class="num">7c</span><span class="tx">In <code>exercise7</code>, play all three at <code>start</code> on <code>chordSynth</code>, which can play several notes at once.</span></div>
+        <div><span class="num">7d</span><span class="tx">Log <code>chord</code> one last time. Has it changed?</span></div>
+      </div>
+      <div class="small-h">Predict: what is <code>chord.length</code>?</div>
+      <div class="row" id="ch-q"></div>
+      <div class="fb" id="ch-fb"></div>
+    </div>
+    <div class="stack" style="gap:10px">
+      <div class="small-h">Try it here: click to see what each gives back</div>
+      <div class="panel"><div class="bar"><span>script.js</span></div><pre class="code xs" id="ch-code"></pre></div>
+      <div class="rows evals" id="ch-ev"></div>
+      <div class="row"><button class="btn" id="ch-play">Play the chord</button></div>
+    </div>
+  </div>
+  <div class="foot"><p><b>Done when</b>you hear one chord of three notes, and <code>chord</code> still logs <code>c4 e4 g4</code>.</p><button class="btn ghost mark" data-done="chord">Mark as done</button></div>
+  <aside class="nt">String methods from Part 2 of the lecture: toUpperCase changes the form, length counts characters (spaces count: 8), slice takes a part (from the first index up to, not including, the second). Positions count from 0, which most people trip on: slice(0, 2) is characters 0 and 1. Each method gives back a new string and leaves chord alone. Tone.js reads lowercase note names too, but tidy data is easier to read in the console. No arrays: three calls with the same start, which only works on a PolySynth.</aside>
+</section>
+
+<!-- 17 EXERCISE 8 -->
+<section class="slide" id="bug-hunt" data-sec="Transforming musical data" data-ex="Bug hunt">
+  <span class="turn">Your turn</span>
+  <div class="billing"><span class="sw k"></span>Core · Exercise 8 · script.js</div><hr class="rule">
+  <h2 class="h1 sm">Bug hunt: the octave that came as text</h2>
+  <div class="cols ex">
+    <div class="stack" style="gap:10px">
+      <div class="panel"><div class="bar"><span>script.js</span><span>exercise 8</span></div><pre class="code xs" id="bh-code"></pre></div>
+      <div class="rows lab steps">
+        <div><span class="num">8a</span><span class="tx">Predict what <code>noteUp</code> and <code>noteDown</code> hold. Then log them and play exercise 8.</span></div>
+        <div><span class="num">8b</span><span class="tx">One note is wildly wrong. Fix <code>noteUp</code> so it really is one octave up.</span></div>
+      </div>
+    </div>
+    <div class="stack" style="gap:10px">
+      <div class="small-h">Predict: what is <code>noteUp</code>?</div>
+      <div class="row" id="bh-q"></div>
+      <div class="fb" id="bh-fb"></div>
+      <div class="row"><button class="btn ghost codey" id="bh-down">Play noteDown</button><button class="btn ghost codey" id="bh-up">Play noteUp</button></div>
+      <div class="panel" id="bh-hint" hidden><div class="bar p"><span>A way to fix it</span></div><div class="pbody small" style="padding:10px 14px"><code>Number(typedOctave)</code> gives back the number 4 from the text <code>"4"</code>. Do the arithmetic on that: <code>"C" + (Number(typedOctave) + 1)</code>. And <code>typedOctave</code> itself? Still <code>"4"</code>.</div></div>
+    </div>
+  </div>
+  <div class="foot"><p><b>Done when</b><code>noteUp</code> logs <code>C5</code> and you can say why it was <code>C41</code>.</p><button class="btn ghost mark" data-done="bug-hunt">Mark as done</button></div>
+  <aside class="nt">Type coercion, the one the morning set up with "5" + 3 vs "5" - 3. Plus with a string glues: "4" + 1 is "41", so the note is C41, 41 octaves up and far beyond hearing (Tone.js either plays nothing you can hear or stops with an error). Minus only works on numbers, so JavaScript quietly turns "4" into 4 and gives 3: it worked by luck. Number() is new: it's a function that takes text and gives back a number, so it's also a transformation that leaves typedOctave untouched. Brief the TAs on this one. Logging the note before playing it (exercise 5) is how you'd find this bug in real code.</aside>
+</section>
+
+<!-- 18 PAIR CHECK-IN 2 -->
+<section class="slide" id="check-in-2" data-sec="Pair check-in" data-ex="Second check-in">
+  <span class="turn">Your turn</span>
+  <div class="billing">Scene 05 · Pair check-in · 15:30</div><hr class="rule">
+  <h2 class="h1">Before you move on</h2>
+  <p class="lede" style="margin-bottom:12px">In pairs, answer out loud before going on to blue or purple:</p>
+  <div class="rows reveal long" id="ci2"></div>
+  <div class="row" style="margin-top:12px"><button class="btn ghost" id="ci2-all">Reveal all</button></div>
+  <aside class="nt">Ten minutes. Both questions are about the conceptual objectives (3 and 4), not about the code running. If a pair can't answer the second, send them back to exercise 6b or 7d: logging the original after transforming it is the proof.</aside>
+</section>
+
+<!-- 19 TRACKS -->
+<section class="slide" id="tracks" data-sec="Blue and purple tracks">
+  <div class="billing">Scene 06 · Blue and purple tracks · 15:40</div><hr class="rule">
+  <h2 class="h1">Core done? Pick your next track</h2>
+  <div class="rows tracks">
+    <div><span class="tn"><span class="sw k"></span>Not yet</span><span>Keep going on core. Exercises 1 to 8 cover everything this afternoon is for.</span><span class="tw">Most people</span></div>
+    <div><span class="tn"><span class="sw b"></span>Blue</span><span>Two small challenges at the bottom of <code>script.js</code>: how long a phrase lasts, and a line of track info.</span><span class="tw">Next slide</span></div>
+    <div><span class="tn"><span class="sw p"></span>Purple</span><span>A generative piece in <code>generative.js</code>: a melody that writes itself, effects, movement, and musical time as text.</span><span class="tw">If you've coded before</span></div>
+  </div>
+  <p class="dir" style="margin-top:18px">Commit before you switch tracks. Purple uses two things the morning held back: template literals and <code>Math.random()</code>.</p>
+  <aside class="nt">An hour until the wrap-up. Blue is short; anyone who finishes it can try purple P1, which is only a few lines. Purple is open-ended: P1 to P4 each add a layer, and stopping anywhere is fine.</aside>
+</section>
+
+<!-- 20 BLUE -->
+<section class="slide" id="blue" data-sec="Blue and purple tracks" data-ex="Blue track">
+  <span class="turn">Your turn</span>
+  <div class="billing"><span class="sw b"></span>Blue track · B1 and B2 · script.js</div><hr class="rule">
+  <h2 class="h1 sm">Do the sums, then say it</h2>
+  <div class="cols ex">
+    <div class="stack" style="gap:10px">
+      <div class="rows lab steps">
+        <div><span class="num">B1</span><span class="tx">A phrase is 12 beats long. Work out how long it lasts in seconds from <code>beat</code>, round it, and log it.<small>Store the number of beats in a variable too.</small></span></div>
+        <div><span class="num">B2</span><span class="tx">Store a title and a key for your track. Log one line built from them and <code>bpm</code>:<small><code>Night Bus · 90 BPM · A minor</code></small></span></div>
+      </div>
+      <div class="small-h">Predict B1: 12 beats at 90 bpm last…</div>
+      <div class="row" id="bl-q"></div>
+      <div class="fb" id="bl-fb"></div>
+    </div>
+    <div class="stack" style="gap:10px">
+      <div class="panel"><div class="bar y"><span>console</span><span>what you're aiming for</span></div><div class="console con-sm" id="bl-con" style="height:76px"></div></div>
+      <p class="more"><b>Go further</b> Change <code>bpm</code>: does your phrase length and your track info both follow? Then log the phrase length in minutes and seconds: <code>Math.floor()</code> rounds down.<br><b>Read</b> <a href="https://javascript.info/operators" target="_blank" rel="noopener">Basic operators (javascript.info)</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round" target="_blank" rel="noopener">Math.round (MDN)</a></p>
+    </div>
+  </div>
+  <div class="foot"><p><b>Done when</b>both lines are in the console, built only from stored values.</p><button class="btn ghost mark" data-done="blue">Mark as done</button></div>
+  <aside class="nt">Small, closed challenges that combine the afternoon. B1: 12 × 0.667 = 8 seconds. Check that they used beat (or bpm), not the number 8 typed in. B2 is concatenation with a number in the middle; "key" is a fine variable name, though musicalKey says more. Early finishers: purple P1.</aside>
+</section>
+
+<!-- 21 PURPLE DIVIDER -->
+<section class="slide stage adv" id="purple" data-sec="Blue and purple tracks">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Purple track · generative.js</div>
+    <h2 class="hero md">A piece that writes itself.</h2>
+    <p class="lede">Four layers, P1 to P4. Each one is a working piece; stop wherever time runs out. Read the code, change the numbers, take it further than the task asks.</p>
+  </div>
+  <aside class="nt">For the advanced students, once core is done. Everything is in data/start/generative.js, with its own Play and Stop buttons on the page. It uses Tone's Transport (a clock that keeps musical time) and Tone.Loop, which calls a function on every eighth note: that's a function passed as an argument, which the advanced room met on Tuesday.</aside>
+</section>
+
+<!-- 22 P1 -->
+<section class="slide" id="p1" data-sec="Blue and purple tracks" data-ex="P1 melody">
+  <span class="turn">Your turn</span>
+  <div class="billing"><span class="sw p"></span>Purple · P1 · generative.js</div><hr class="rule">
+  <h2 class="h1 sm">A melody that writes itself</h2>
+  <div class="cols wide-l ex">
+    <div class="panel"><div class="bar"><span>generative.js</span><span>P1</span></div><pre class="code xs" id="p1-code"></pre></div>
+    <div class="stack" style="gap:10px">
+      <p class="small" style="margin:0">Pick a random letter from the scale and a random octave, build the note with a <b>template literal</b>, and let <code>Tone.Loop</code> call your function every eighth note. Always in key, never the same twice.</p>
+      <div class="row"><button class="btn" id="p1-play">Hear one</button><button class="btn ghost" id="p1-stop">Stop</button></div>
+      <div class="panel"><div class="bar y"><span>console</span></div><div class="console con-sm" id="p1-con"></div></div>
+      <p class="more"><b>Go further</b> Another scale (<code>"ACDEG"</code>), three octaves, or a random length.<br><b>Read</b> <a href="https://javascript.info/string#quotes" target="_blank" rel="noopener">Template literals (javascript.info)</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random" target="_blank" rel="noopener">Math.random (MDN)</a></p>
+    </div>
+  </div>
+  <div class="foot"><p><b>Done when</b><span class="bn">Play the piece</span> gives a different melody every time, and the console logs each note.</p><button class="btn ghost mark" data-done="p1">Mark as done</button></div>
+  <aside class="nt">Template literals: backticks, and ${…} drops a value into the text. `${pitch}${randomOctave}` is the same as pitch + randomOctave, and `Playing ${note}` is "Playing " + note. Math.random() gives a number from 0 up to (not including) 1; times 5, rounded down, gives 0 to 4: a position in "CDEGA". A pentatonic scale has no notes that clash, so any order sounds fine. The Hear one button plays sixteen notes from this exact code.</aside>
+</section>
+
+<!-- 23 P2 -->
+<section class="slide" id="p2" data-sec="Blue and purple tracks" data-ex="P2 effects">
+  <span class="turn">Your turn</span>
+  <div class="billing"><span class="sw p"></span>Purple · P2 · generative.js</div><hr class="rule">
+  <h2 class="h1 sm">Shape the sound with effects</h2>
+  <div class="cols wide-l ex">
+    <div class="panel"><div class="bar"><span>generative.js</span><span>P2</span></div><pre class="code xs" id="p2-code"></pre></div>
+    <div class="stack" style="gap:10px">
+      <div class="rows lab steps">
+        <div><span class="num">a</span><span class="tx">Store the settings in variables: <code>cutoff</code>, <code>feedback</code>, <code>reverbDecay</code>.</span></div>
+        <div><span class="num">b</span><span class="tx">Make the filter, the delay and the reverb from them.</span></div>
+        <div><span class="num">c</span><span class="tx">Take <code>.toDestination()</code> off <code>lead</code>, and <code>chain</code> it through the effects instead.</span></div>
+        <div><span class="num">d</span><span class="tx">Change one number. Listen to the whole space change.</span></div>
+      </div>
+      <p class="more"><b>Read</b> <a href="https://tonejs.github.io/docs/15.1.22/classes/Filter.html" target="_blank" rel="noopener">Filter</a> · <a href="https://tonejs.github.io/docs/15.1.22/classes/FeedbackDelay.html" target="_blank" rel="noopener">FeedbackDelay</a> · <a href="https://tonejs.github.io/docs/15.1.22/classes/Reverb.html" target="_blank" rel="noopener">Reverb</a> (Tone.js docs)</p>
+    </div>
+  </div>
+  <div class="foot"><p><b>Done when</b>the melody plays through all three effects, and one variable change is clearly audible.</p><button class="btn ghost mark" data-done="p2">Mark as done</button></div>
+  <aside class="nt">Variables steering a process again, now the sound itself. Filter: lets through frequencies below cutoff (lower = darker). FeedbackDelay: echoes; feedback 0 to 1 is how much of each echo comes back (near 1 it never stops). Reverb: decay in seconds. chain connects them in order and ends at the speakers. Common snag: leaving .toDestination() on lead as well, so you hear the dry and wet sound together.</aside>
+</section>
+
+<!-- 24 P3 AND P4 -->
+<section class="slide" id="p3-p4" data-sec="Blue and purple tracks" data-ex="P3 and P4">
+  <span class="turn">Your turn</span>
+  <div class="billing"><span class="sw p"></span>Purple · P3 and P4 · generative.js</div><hr class="rule">
+  <h2 class="h1 sm">Make it move, then give it a shape</h2>
+  <div class="cols ex">
+    <div class="stack" style="gap:8px">
+      <div class="small-h">P3 · Sweep the filter</div>
+      <div class="panel"><div class="bar"><span>generative.js</span><span>P3</span></div><pre class="code xs" id="p3-code"></pre></div>
+      <p class="small" style="margin:0">An LFO is a slow, silent wave that moves a setting up and down: here, the filter's cutoff, once every two bars (<code>"2m"</code>). The top is worked out from the bottom.</p>
+    </div>
+    <div class="stack" style="gap:8px">
+      <div class="small-h">P4 · Musical time is text</div>
+      <div class="panel"><div class="bar"><span>generative.js</span><span>P4</span></div><pre class="code xs" id="p4-code"></pre></div>
+      <p class="small" style="margin:0">Tone writes a position as <code>"bars:beats:sixteenths"</code>, counting from 0. Build the position from a <code>bar</code> number with a template literal. Then stop the piece at bar 16 the same way.</p>
+    </div>
+  </div>
+  <div class="foot"><p><b>Done when</b>the sound opens and closes on its own, a drone comes in at bar 4, and the piece ends by itself.</p><button class="btn ghost mark" data-done="p3-p4">Mark as done</button></div>
+  <aside class="nt">P3: highCutoff = lowCutoff * 8 means one change to lowCutoff moves the whole sweep: stored values feeding other stored values. P4: positions are strings, so a template literal builds them from a number. Bars count from 0, so bar 4 is "3:0:0"; that's an off-by-one worth naming. transport.schedule takes a function and a position, like Tone.Loop. Stopping at bar 16: a function that calls transport.stop(time), scheduled at `${endBar}:0:0`.</aside>
+</section>
+
+<!-- 25 MISTAKES -->
+<section class="slide" id="mistakes" data-sec="Wrap-up" data-ex="What went wrong">
+  <span class="turn">Your turn</span>
+  <div class="billing">Scene 07 · Wrap-up · 16:40</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:14px">What went wrong today</h2>
+  <div class="rows reveal long" id="mk"></div>
+  <aside class="nt">Ask the room which of these happened to them before revealing each fix. Add any other mistakes the TAs saw a lot.</aside>
+</section>
+
+<!-- 26 PROGRESS -->
+<section class="slide" id="progress" data-sec="Wrap-up">
+  <div class="billing">Wrap-up · Your progress</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:14px">What you got through</h2>
+  <div class="prog" id="pg"></div>
+  <p class="dir" style="margin-top:16px" id="pg-sum"></p>
+  <aside class="nt">Each student sees their own list, from the Mark as done buttons; it's only in their browser. Use it as a moment to commit and push. Anything not done is fine to finish at home: the reference folder has one way to do every exercise.</aside>
+</section>
+
+<!-- 27 CURTAIN CALL -->
+<section class="slide stage" id="curtain-call" data-sec="Curtain call">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Curtain call · 16:50</div>
+    <h2 class="hero md">Name it. Feed it. Transform it.</h2>
+    <div class="terms"><span>variable</span><span>let</span><span>const</span><span>string</span><span>number</span><span>coercion</span></div>
+  </div>
+  <aside class="nt">Curtain call (a.k.a. the recap) for the whole week: functions plus data. Back through the music: a variable remembers a note or a tempo; one value can steer a whole phrase (bpm); the same number can be a frequency, an octave or a tempo; transforming makes a new value while the original stays (a4, chord, typedOctave). Hands up for each of the four objectives.</aside>
+</section>
+
+<!-- 28 NEXT -->
+<section class="slide" id="next" data-sec="Curtain call">
+  <div class="billing">Next · Resources</div><hr class="rule">
+  <h2 class="h1">Next week: true or false</h2>
+  <div class="cols">
+    <div class="stack">
+      <p class="lede" style="margin:0"><b>Next week:</b> Boolean values and conditionals. Your riff learns to make decisions: play this note <i>if</i>…</p>
+      <p class="lede" style="margin:0"><b>Before you go:</b> commit and push. The <code>reference</code> folder has one way to do every exercise.</p>
+    </div>
+    <div class="rows lab" style="border-top:1px solid var(--ink-900)">
+      <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://mau.instructure.com/courses/22858/modules/137080" target="_blank" rel="noopener">Canvas: Data module</a></span></div>
+      <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://eloquentjavascript.net/01_values.html" target="_blank" rel="noopener">Eloquent JavaScript, chapter 1: Values, types and operators</a></span></div>
+      <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://www.theodinproject.com/" target="_blank" rel="noopener">The Odin Project: Variables and operators</a></span></div>
+      <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://www.codecademy.com/" target="_blank" rel="noopener">Codecademy: Variables</a></span></div>
+      <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://tonejs.github.io/" target="_blank" rel="noopener">Tone.js: documentation and examples</a></span></div>
+    </div>
+  </div>
+  <aside class="nt">Point to the Data module on Canvas for the study material. Preview next week: Boolean values and conditionals. Reminder that the next exercise session starts with Sync fork and Pull again.</aside>
+</section>
+
+</div>
+</main>
+
+<script src="../shared/vendor/tone.min.js"></script>
+<script src="../shared/deck.js"></script>
+<script src="../shared/workspace.js"></script>
+<script>
+(function(){
+"use strict";
+var D=Deck,$=D.$,$$=D.$$,esc=D.esc,code=D.code,fb=D.fb,conLines=D.conLines;
+
+/* ============ sound ============
+   The deck only plays sound for its own demos; students write code in VS Code. */
+var inst={};
+/* An instrument for the current audio context (stopAll swaps the context, so old ones go silent). */
+function get(name,make){
+  var i=inst[name];
+  if(!i||i.disposed||i.context!==Tone.getContext()){i=make();inst[name]=i}
+  return i;
+}
+function synth(){return get("synth",function(){return new Tone.Synth().toDestination()})}
+function poly(){return get("poly",function(){return new Tone.PolySynth(Tone.Synth).toDestination()})}
+var loop=null;
+/* Silence everything: stop the transport and swap in a fresh audio context. */
+function stopAll(){
+  if(loop){try{loop.dispose()}catch(e){}loop=null}
+  try{var tr=Tone.getTransport();tr.stop();tr.cancel()}catch(e){}
+  try{var old=Tone.getContext();Tone.setContext(new Tone.Context());old.dispose()}catch(e){}
+}
+D.addButton({label:"Stop sound",key:"s",onClick:stopAll});
+D.workspace.env.Tone=Tone;
+D.workspace.onRun(function(){stopAll();Tone.start()});
+
+/* ============ mark as done ============ */
+var DONE=[["get-code","Get today's code","k"],["store","1 · Store a sound","k"],["parts","2 · A note from parts","k"],["tempo","3 · Tempo","k"],["args","4 and 5 · Variables as arguments","k"],
+  ["frequency","6 · Same number, different jobs","k"],["chord","7 · A chord from a string","k"],["bug-hunt","8 · Bug hunt","k"],
+  ["blue","Blue · B1 and B2","b"],["p1","Purple · P1 melody","p"],["p2","Purple · P2 effects","p"],["p3-p4","Purple · P3 and P4","p"]];
+function isDone(id){return D.store.get("done:"+id)==="1"}
+function progress(){
+  $("#pg").innerHTML=DONE.map(function(d){var on=isDone(d[0]);
+    return '<div class="'+(on?"on":"")+'"><span class="ck">'+(on?"✓":"")+'</span><span><span class="sw '+d[2]+'"></span>'+esc(d[1])+'</span><a href="#'+d[0]+'">'+(on?"Look again":"Go there")+'</a></div>'}).join("");
+  var core=DONE.filter(function(d){return d[2]==="k"}),n=core.filter(function(d){return isDone(d[0])}).length;
+  $("#pg-sum").textContent=n===core.length?"All of core done. Applause. Commit, push, and take a bow.":n+" of "+core.length+" core steps marked done. Whatever's left, the reference folder shows one way to do it.";
+}
+$$(".mark").forEach(function(b){
+  var id=b.dataset.done;
+  function show(){var on=isDone(id);b.classList.toggle("on",on);b.textContent=on?"Done ✓":"Mark as done"}
+  b.addEventListener("click",function(){D.store.set("done:"+id,isDone(id)?"0":"1");show();progress()});
+  show();
+});
+progress();
+
+/* A row of chip questions: Q = [[html prompt, [choices], right index, why]] */
+function chipQuiz(box,fbe,Q,wrong){
+  var done=0;
+  Q.forEach(function(q){
+    var row=document.createElement("div"),answered=false;
+    row.innerHTML='<span class="sc">'+q[0]+'</span><span class="ch"></span>';
+    q[1].forEach(function(c,i){
+      var b=document.createElement("button");b.className="chip";b.textContent=c;
+      b.addEventListener("click",function(){
+        if(answered)return;
+        if(i===q[2]){b.classList.add("right");answered=true;done++;fb(fbe,"pass",q[3]+(done===Q.length?" That's all of them.":""))}
+        else{b.classList.add("wrong");fb(fbe,"note",wrong)}
+      });
+      row.querySelector(".ch").appendChild(b);
+    });
+    box.appendChild(row);
+  });
+}
+/* One predict question with chip answers: A = [[label, right?, feedback]] */
+function predict(box,fbe,A,after){
+  var answered=false;
+  A.forEach(function(a){
+    var b=document.createElement("button");b.className="chip";b.textContent=a[0];
+    b.addEventListener("click",function(){
+      if(answered)return;
+      b.classList.add(a[1]?"right":"wrong");fb(fbe,a[1]?"pass":"note",a[2]);
+      if(a[1]){answered=true;if(after)after()}
+    });
+    box.appendChild(b);
+  });
+}
+/* Rows of prompts that reveal an answer on click. */
+function reveal(box,all,Q){
+  Q.forEach(function(q){var r=document.createElement("div");r.innerHTML='<button class="opt">'+esc(q[0])+'</button><span class="ans" hidden>'+esc(q[1])+'</span>';r.querySelector("button").addEventListener("click",function(){r.querySelector(".ans").hidden=false;this.classList.add("right")});box.appendChild(r)});
+  if(all)all.addEventListener("click",function(){$$(".ans",box).forEach(function(a){a.hidden=false});$$(".opt",box).forEach(function(b){b.classList.add("right")})});
+}
+function q(s){return '"'+s+'"'}
+
+/* ---------- a note is data ---------- */
+code($("#nd-code"),'synth.triggerAttackRelease("C4", "8n", start);\n\nTone.getTransport().bpm.value = 90;\nsynth.triggerAttackRelease(440, "8n", start);',[0]);
+chipQuiz($("#nd-q"),$("#nd-fb"),[
+  ['<code>"C4"</code>: which note',["string","number"],0,"A string: it's in quotes. Tone.js reads the letter and the octave out of the text."],
+  ['<code>"8n"</code>: how long',["string","number"],0,"A string, even though it has a number in it. The quotes decide."],
+  ['<code>90</code>: the tempo',["string","number"],1,"A number: no quotes, and you can do arithmetic with it. That's exercise 3."],
+  ['<code>440</code>: a note, as a frequency',["string","number"],1,"A number: the same A4 as <code>\"A4\"</code>, written another way. That's exercise 6."]
+],"Look for the quotation marks. Quotes make a string, whatever is inside them.");
+
+/* ---------- exercise 1: let or const ---------- */
+code($("#st-code"),'const note = "C4";\nlet duration = "8n";\n\nfunction exercise1(start) {\n  synth.triggerAttackRelease(note, duration, start);\n  …\n}',[0,1,4]);
+chipQuiz($("#st-q"),$("#st-fb"),[
+  ["The riff's first note, which never changes",["let","const"],1,"<code>const</code>: it stays fixed while the piece plays, like the kind of onion."],
+  ["The length, which you change in 1c",["let","const"],0,"<code>let</code>: you give it a new value later, so it has to be allowed to change."],
+  ["How many notes have played so far",["let","const"],0,"<code>let</code>: it grows while the piece plays, like the onion's piece count."]
+],"Ask: will this value ever get a new one while the program runs? Yes means let.");
+
+/* ---------- exercise 2: build a note from parts ---------- */
+(function(){
+  var S={pitchName:"E",octave:4,fullNote:"E4"},warned=false,hit=null;
+  code($("#pa-code"),'const pitchName = "E";\nlet octave = 4;\nlet fullNote = pitchName + octave;\nconsole.log("Exercise 2: fullNote is " + fullNote);');
+  function kind(v){return typeof v==="number"?"number":"string"}
+  function show(v){return typeof v==="string"?q(v):String(v)}
+  function render(){
+    $("#pa-mem").innerHTML=["pitchName","octave","fullNote"].map(function(k){
+      return '<tr'+(k===hit?' class="hit"':'')+'><td>'+k+'</td><td class="v">'+esc(show(S[k]))+'</td><td class="k">'+kind(S[k])+(k==="pitchName"?" · const":" · let")+'</td></tr>'}).join("");
+    hit=null;
+  }
+  var A=[
+    ["octave = octave + 1;",function(){S.octave+=1;hit="octave";
+      if(S.fullNote!==S.pitchName+S.octave&&!warned){warned=true;return ["warn","<code>octave</code> is now "+S.octave+". Look at <code>fullNote</code>: it still remembers <code>"+esc(q(S.fullNote))+"</code>. It was worked out once, from the octave as it was then."]}
+      return ["note","<code>octave</code> is now "+S.octave+"."]}],
+    ["octave = octave - 1;",function(){S.octave-=1;hit="octave";return ["note","<code>octave</code> is now "+S.octave+"."]}],
+    ["fullNote = pitchName + octave;",function(){S.fullNote=S.pitchName+S.octave;hit="fullNote";return ["pass","Rebuilt: <code>\"E\" + "+S.octave+"</code> gives <code>"+esc(q(S.fullNote))+"</code>. The number was glued onto the string as text."]}],
+    ['pitchName = "G";',function(){return ["err","The scene stopped: <code>TypeError: Assignment to constant variable.</code> <code>pitchName</code> is a <code>const</code>."]}],
+    ["play fullNote",function(){Tone.start();try{synth().triggerAttackRelease(S.fullNote,"4n")}catch(e){}return ["note","Playing <code>"+esc(q(S.fullNote))+"</code>."]}]
+  ];
+  A.forEach(function(a){var b=document.createElement("button");b.className="btn "+(a[0]==="play fullNote"?"":"ghost");b.textContent=a[0];
+    b.addEventListener("click",function(){var r=a[1]();render();fb($("#pa-fb"),r[0],r[1])});$("#pa-acts").appendChild(b)});
+  render();
+})();
+
+/* ---------- exercise 3: tempo ---------- */
+(function(){
+  var r=$("#tp-r");
+  function draw(){
+    var bpm=+r.value,beat=60/bpm,span=Math.max(2.5,beat*2+.5),tl=$("#tp-tl");
+    $("#tp-n").textContent=bpm;
+    code($("#tp-code"),"const bpm = "+bpm+";\nconst beat = 60 / bpm;      // "+beat+"\nMath.round(beat * 1000)      // "+Math.round(beat*1000)+" ms",[0]);
+    var html="";for(var s=0;s<=span;s+=.5)html+='<span class="tk" style="left:'+(s/span*100)+'%">'+s+'s</span>';
+    ["C4","E4","G4"].forEach(function(n,i){html+='<span class="b" data-i="'+i+'" style="left:calc('+(i*beat/span*100)+'% - 0px)">'+n+'</span>'});
+    tl.innerHTML=html;
+    $("#tp-len").textContent="beats at 0 · "+(Math.round(beat*100)/100)+" · "+(Math.round(beat*200)/100)+" s";
+  }
+  r.addEventListener("input",draw);draw();
+  $("#tp-play").addEventListener("click",function(){
+    Tone.start();var beat=60/(+r.value),t=Tone.now()+.05,s=synth();
+    ["C4","E4","G4"].forEach(function(n,i){
+      try{s.triggerAttackRelease(n,"8n",t+i*beat)}catch(e){}
+      setTimeout(function(){var b=$('#tp-tl .b[data-i="'+i+'"]');if(b){b.classList.add("on");setTimeout(function(){b.classList.remove("on")},200)}},(.05+i*beat)*1000);
+    });
+  });
+})();
+
+/* ---------- exercises 4 and 5 ---------- */
+code($("#ar-code"),'const rootNote = "C4";\nconst thirdNote = "E4";\nconst fifthNote = "G4";\nlet noteLength = "8n";\n\nfunction exercise4(start) {\n  playNote(rootNote, noteLength, start);\n  playNote(thirdNote, noteLength, start + beat);\n  playNote(fifthNote, noteLength, start + beat * 2);\n}',[3]);
+conLines($("#ar-con"),["Playing C4 for 8n","Playing E4 for 8n","Playing G4 for 8n"]);
+predict($("#ar-q"),$("#ar-fb"),[["One",true,"One line: <code>let noteLength = \"4n\";</code>. Every call reads the variable, so every note follows."],["Three",false,"Look at the three calls on the right. Do any of them have <code>\"8n\"</code> typed in?"],["Four",false,"Look at the three calls on the right. Do any of them have <code>\"8n\"</code> typed in?"]],
+  function(){conLines($("#ar-con"),["Playing C4 for 4n","Playing E4 for 4n","Playing G4 for 4n"])});
+
+/* ---------- pair check-in 1 ---------- */
+reveal($("#ci1"),$("#ci1-all"),[
+  ["What does it remember?","\"bpm remembers the tempo: 90 beats a minute.\" Name the value and what it means."],
+  ["Does it change while the piece plays?","If it gets a new value later, it's let (duration in 1c). If not, const (note)."],
+  ["Which part of the sound does it control?","\"beat sets the gap between every note in exercise 3.\" Point at the lines that use it."],
+  ["Change it. What happens?","Do it live for your partner: change the one variable, play, listen."]]);
+
+/* ---------- timer ---------- */
+(function(){
+  var total=15*60,left=total,t=null,BRK=$("#tm-msg").textContent;
+  function show(){var m=Math.floor(left/60),s=left%60;$("#tm").textContent=m+":"+(s<10?"0":"")+s;if(left===0){$("#tm-msg").textContent="Places, please. We start again now.";stop()}}
+  function stop(){clearInterval(t);t=null;$("#tm-go").textContent=left===0?"Start":"Resume"}
+  $("#tm-go").addEventListener("click",function(){
+    if(t){stop();return}
+    if(left===0)left=total;
+    $("#tm-msg").textContent=BRK;
+    t=setInterval(function(){left=Math.max(0,left-1);show()},1000);this.textContent="Pause";
+  });
+  $("#tm-reset").addEventListener("click",function(){stop();left=total;show();$("#tm-go").textContent="Start";$("#tm-msg").textContent=BRK});
+})();
+
+/* An expression row: a button with code, and what it gives back. play(value) is optional. */
+function evals(box,E){
+  E.forEach(function(e){
+    var r=document.createElement("div");
+    r.innerHTML='<button class="btn ghost">'+esc(e[0])+'</button><span class="out dim">click to see</span>';
+    r.querySelector("button").addEventListener("click",function(){
+      var o=r.querySelector(".out");o.classList.remove("dim");o.textContent="→ "+e[1];
+      if(e[2])e[2]();
+    });
+    box.appendChild(r);
+  });
+}
+function tone(n,len){return function(){Tone.start();try{synth().triggerAttackRelease(n,len||"4n")}catch(e){}}}
+
+/* ---------- exercise 6 ---------- */
+evals($("#fq-ev"),[["a4","440",tone(440)],["a4 * 2","880 · an octave up",tone(880)],["a4 * 1.5","660 · a fifth up",tone(660)],["a4 / 2","220 · an octave down",tone(220)],["a4  (after all that)","440 · unchanged"]]);
+chipQuiz($("#fq-q"),$("#fq-fb"),[
+  ["<code>440</code> in <code>a4</code>",["speed","pitch","position"],1,"A pitch, as a frequency: doubling it goes up an octave."],
+  ["<code>4</code> in <code>octave</code>",["speed","pitch","position"],2,"A position on the keyboard. Doubling it to 8 doesn't mean twice as high."],
+  ["<code>90</code> in <code>bpm</code>",["speed","pitch","position"],0,"A speed: beats per minute. Bigger means faster."]
+],"Look at the name and at what the code does with it. The number alone can't tell you.");
+
+/* ---------- exercise 7 ---------- */
+(function(){
+  var chord="c4 e4 g4",tidy=chord.toUpperCase();
+  code($("#ch-code"),'const chord = "c4 e4 g4";\nconst tidyChord = chord.toUpperCase();');
+  evals($("#ch-ev"),[["chord.toUpperCase()",q(tidy)],["tidyChord.slice(0, 2)",q(tidy.slice(0,2))],["tidyChord.slice(3, 5)",q(tidy.slice(3,5))],["tidyChord.slice(6, 8)",q(tidy.slice(6,8))],["chord",q(chord)+" · unchanged"]]);
+  predict($("#ch-q"),$("#ch-fb"),[["3",false,"That's the number of notes. <code>.length</code> counts characters."],["6",false,"Count again, and count the spaces too."],["8",true,"8: six characters for the notes, plus two spaces. Spaces count."],["9",false,"Close. Count each character once: c, 4, space…"]]);
+  $("#ch-play").addEventListener("click",function(){Tone.start();var t=Tone.now()+.05,p=poly();[tidy.slice(0,2),tidy.slice(3,5),tidy.slice(6,8)].forEach(function(n){try{p.triggerAttackRelease(n,"2n",t)}catch(e){}})});
+})();
+
+/* ---------- exercise 8 ---------- */
+code($("#bh-code"),'const typedOctave = "4";\nconst noteUp = "C" + (typedOctave + 1);\nconst noteDown = "C" + (typedOctave - 1);',[1]);
+predict($("#bh-q"),$("#bh-fb"),[
+  ['"C5"',false,"That's what we wanted. But <code>typedOctave</code> is in quotes. What does <code>+</code> do with a string?"],
+  ['"C41"',true,"<code>\"4\" + 1</code> glues text and gives <code>\"41\"</code>: a C 41 octaves up, far beyond hearing. Minus only works on numbers, so <code>\"4\" - 1</code> quietly became 3. That one worked by luck."],
+  ["NaN",false,"Not this time. <code>+</code> with a string doesn't fail: it glues. Try <code>\"4\" + 1</code> in your console."],
+  ["an error",false,"No error: JavaScript quietly changes the number into text so <code>+</code> can work. That's what makes this bug sneaky."]
+],function(){$("#bh-hint").hidden=false});
+$("#bh-down").addEventListener("click",function(){tone("C3")();fb($("#bh-fb"),"note","<code>noteDown</code> is <code>\"C3\"</code>. Fine.")});
+$("#bh-up").addEventListener("click",function(){
+  Tone.start();var ok=true;try{synth().triggerAttackRelease("C41","4n")}catch(e){ok=false}
+  fb($("#bh-fb"),"warn","<code>noteUp</code> is <code>\"C41\"</code>"+(ok?", far too high to hear.":". Tone.js refused to play it.")+" Hear anything? Neither did we.");
+});
+
+/* ---------- pair check-in 2 ---------- */
+reveal($("#ci2"),$("#ci2-all"),[
+  ["Which number in today's code did more than one job?","440 was a pitch; 4 was a position; 90 was a speed. Or the same 4 as text and as a number in exercise 8."],
+  ["Which line transformed a value, rather than storing it?","a4 * 2, chord.toUpperCase(), tidyChord.slice(0, 2), Number(typedOctave)…"],
+  ["What happened to the original?","Nothing. Log it and see: a4 is still 440, chord is still \"c4 e4 g4\"."]]);
+
+/* ---------- blue ---------- */
+conLines($("#bl-con"),["A 12-beat phrase lasts 8 seconds","Night Bus · 90 BPM · A minor"]);
+predict($("#bl-q"),$("#bl-fb"),[["12 s",false,"That's one second a beat, which is 60 bpm. At 90 a beat is shorter."],["8 s",true,"8 seconds: <code>12 * beat</code>, and a beat is 60 / 90 = 0.667 seconds."],["1080 s",false,"That's 12 × 90. How long is one beat at 90 bpm?"],["7.5 s",false,"Close. Work out one beat first: <code>60 / bpm</code>."]]);
+
+/* ---------- purple ---------- */
+var P1='const scale = "CDEGA";\nconst tempo = 100;\n\nfunction playRandomNote(time) {\n  const index = Math.floor(Math.random() * scale.length);\n  const pitch = scale.slice(index, index + 1);\n  const randomOctave = Math.floor(Math.random() * 2) + 4;\n  const note = `${pitch}${randomOctave}`;\n  console.log(`Playing ${note}`);\n  lead.triggerAttackRelease(note, "8n", time);\n}\n\ntransport.bpm.value = tempo;\nnew Tone.Loop(playRandomNote, "8n").start(0);';
+code($("#p1-code"),P1,[7,8]);
+conLines($("#p1-con"),[{c:"dim",t:"Press Hear one."}]);
+(function(){
+  var lines=[],count=0;
+  $("#p1-play").addEventListener("click",function(){
+    stopAll();Tone.start();lines=[];count=0;
+    var tr=Tone.getTransport(),lead=synth(),scale="CDEGA";
+    tr.bpm.value=100;
+    loop=new Tone.Loop(function(time){
+      if(count>=16){Tone.getDraw().schedule(function(){tr.stop()},time);return}
+      count++;
+      var index=Math.floor(Math.random()*scale.length),note=scale.slice(index,index+1)+(Math.floor(Math.random()*2)+4);
+      lead.triggerAttackRelease(note,"8n",time);
+      Tone.getDraw().schedule(function(){lines.push("Playing "+note);conLines($("#p1-con"),lines.slice(-6))},time);
+    },"8n").start(0);
+    tr.start();
+  });
+  $("#p1-stop").addEventListener("click",stopAll);
+})();
+code($("#p2-code"),'const lead = new Tone.Synth();   // no .toDestination()\n\nconst cutoff = 1200;\nconst feedback = 0.4;\nconst reverbDecay = 4;\n\nconst filter = new Tone.Filter(cutoff, "lowpass");\nconst delay = new Tone.FeedbackDelay("8n", feedback);\nconst reverb = new Tone.Reverb(reverbDecay);\n\nlead.chain(filter, delay, reverb, Tone.getDestination());',[2,3,4]);
+code($("#p3-code"),'const lowCutoff = 300;\nconst highCutoff = lowCutoff * 8;\n\nnew Tone.LFO("2m", lowCutoff, highCutoff)\n  .connect(filter.frequency)\n  .start();',[1]);
+code($("#p4-code"),'const drone = new Tone.Synth().toDestination();\nconst droneBar = 3;   // bar 4: counting from 0\nconst dronePosition = `${droneBar}:0:0`;\n\nfunction playDrone(time) {\n  drone.triggerAttackRelease("C2", "4m", time);\n}\n\ntransport.schedule(playDrone, dronePosition);',[2]);
+
+/* ---------- mistakes ---------- */
+reveal($("#mk"),null,[
+  ["TypeError: Assignment to constant variable.","A const got a new value. If it really changes while the program runs, make it let. And one error stops everything after it: none of the buttons worked."],
+  ["SyntaxError: Identifier 'duration' has already been declared","let or const twice for the same name. To change a variable you already have, leave out let: duration = \"2n\";"],
+  ["I changed octave, but fullNote didn't change.","A variable remembers a value, not how it was made. Rebuild it: fullNote = pitchName + octave;"],
+  ["The note came out as C41.","\"4\" + 1 glues text. Turn text into a number before arithmetic: Number(typedOctave) + 1."],
+  ["slice(1, 3) gave me \"4 \", not \"E4\".","Positions count from 0, and the end isn't included. \"C4 E4 G4\".slice(3, 5) is \"E4\"."]]);
+})();
+</script>
+</body>
+</html>
