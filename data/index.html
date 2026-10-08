@@ -190,25 +190,7 @@ ol.plain li.on{background:var(--spot-200);box-shadow:inset 3px 0 0 var(--spot-40
   </div>
   <p class="dir" id="on-dir" style="margin-top:18px;min-height:64px"></p>
   <div class="row"><button class="btn ghost" id="on-back">Back</button><button class="btn" id="on-next">Next</button><button class="btn ghost" id="on-reset">Start again</button></div>
-  <aside class="nt">Pick up Monday's onion exercise. Then it was a process: break chopping into sub-steps, go deeper. Today we look at what the process leaves behind. Step through: the count grows, the chopping finishes and the action is gone, but the number it produced is worth keeping. A variable is where we put that number so it outlives the process that made it. The last step shows why we'd keep it: to work something out later. Say it plainly: the process happens once; the value it gives us we hold on to, by name.</aside>
-</section>
-
-<section class="slide" id="many-onions" data-sec="Variables: the idea" data-demo="Chop another onion">
-  <span class="turn try">Try it</span>
-  <div class="billing">Variables: the idea · Functions hand back values</div><hr class="rule">
-  <h2 class="h1">One process, many results</h2>
-  <div class="cols wide-r" style="gap:40px">
-    <div class="stack">
-      <div class="named" style="margin:0"><div class="nm">chop</div><div class="rl">Takes in: an onion. Gives back: how many pieces it made.</div></div>
-      <p class="lede" style="margin:0">Chopping is a function: the same process, applied to a different onion each time. Each time, it hands something back.</p>
-      <div class="row"><button class="btn" id="mo-go">Chop another onion</button><button class="btn ghost" id="mo-reset">Clear the table</button></div>
-    </div>
-    <div class="stack">
-      <div class="row" id="mo-boxes" style="gap:18px;align-items:flex-start;min-height:120px"></div>
-      <p class="dir" id="mo-dir">The function is the action. The box catches what it hands back, and remembers it.</p>
-    </div>
-  </div>
-  <aside class="nt">Bridge to Tuesday. The chopping is reusable: give it another onion and it runs again. This onion gave 24 pieces, that one 30. Click a few times: each result lands in its own named box. The function is the action; the variable catches and remembers what it hands back. Without the box, the 24 would be gone the moment the next onion started.</aside>
+  <aside class="nt">Pick up Monday's onion exercise. Then it was a process: break chopping into sub-steps, go deeper. Today we look at what the process leaves behind. Step through: the count grows, the chopping finishes and the action is gone, but the number it produced is worth keeping. A variable is where we put that number so it outlives the process that made it. The last step shows why we'd keep it: to work something out later. Say it plainly: the process happens once; the value it gives us we hold on to, by name. Bridge to Tuesday: chopping is a function you can apply to another onion, and each time it hands back a count (24, then 30). The function is the action; the variable catches and remembers what it hands back.</aside>
 </section>
 
 <section class="slide" id="jobs" data-sec="Variables: the idea">
@@ -709,19 +691,6 @@ quiz($("#rc"),$("#rc-fb"),["What it takes in","Its name","What it gives back"],[
     $("#on-use").style.visibility=st.use?"visible":"hidden";
     $("#on-dir").textContent=st.d;
   },$("#on-back"),$("#on-next"),$("#on-reset"));
-})();
-
-/* ---------- many onions ---------- */
-(function(){
-  var C=[24,30,18,27],N=["first","second","third","fourth"],n=0;
-  $("#mo-go").addEventListener("click",function(){
-    if(n>=C.length){$("#mo-dir").textContent="Four onions, four results, four boxes. That's enough onion for one morning.";return}
-    var d=document.createElement("div");d.className="vbox";
-    d.innerHTML='<span class="lb">'+N[n]+' onion</span><span class="vl">'+C[n]+'</span>';
-    $("#mo-boxes").appendChild(d);flashEl(d);n++;
-    $("#mo-dir").textContent="chop handed back "+C[n-1]+". The box remembers it, even after the next onion starts.";
-  });
-  $("#mo-reset").addEventListener("click",function(){n=0;$("#mo-boxes").innerHTML="";$("#mo-dir").textContent="The function is the action. The box catches what it hands back, and remembers it."});
 })();
 
 /* ---------- jobs quiz ---------- */
