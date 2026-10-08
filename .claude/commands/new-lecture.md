@@ -22,12 +22,14 @@ Follow CLAUDE.md, `docs/design-system.md` and `docs/slide-patterns.md` throughou
 Write a slide-by-slide outline, grouped by the Session Plan's sections with their start times:
 
 ```
-Scene 02 · <section> · 10:25
+<section> · 10:25
   07 <slide id>: <title (≤ 7 words)>: <what's on it>  [Try it | Your turn: what the student does]
 ```
 
-Include: cover, running order, objectives, a stage-band opener per section where it helps, a break slide
-with timer if the plan has a break, a curtain call, and a resources slide with the plan's links.
+Include: cover, running order, objectives, a band-slide opener per section where it helps, a break slide
+with timer if the plan has a break, a recap, and a resources slide with the plan's links.
+Use plain words in the outline and on the slides: sections, break, recap. No theatre vocabulary (see
+"Drama pedagogy, not theatre" in `docs/design-system.md`).
 
 Then ask, in one message:
 - Where may code first appear? (In Functions: nothing before the break.)
@@ -42,13 +44,14 @@ Do not start building until David answers.
   `data-lecture`.
 - Build slide by slide. Every slide gets speaker notes. Interactive slides work both for the presenter on
   the projector and for a student on their own laptop.
-- Reuse components from `shared/deck.css`. Copy lecture-local ones from `functions/` if needed.
+- Reuse components from `shared/deck.css`. Copy lecture-local ones from `functions/` if needed
+  (its markup, not its theatre wording).
 
 ## 4. Check
 
 - Run `python3 tools/check_deck.py $ARGUMENTS`. Fix every overflow and error it reports.
 - Open the screenshots in `tools/out/$ARGUMENTS/` and look at each one: text fitting, nothing clipped,
-  nothing overlapping the "Your turn" chip, stage beams clear of headlines.
+  nothing overlapping the "Your turn" chip, band-slide beams clear of headlines.
 - Exercise each interactive slide at least once (click the options, run the code, step through).
 
 ## 5. Finish
