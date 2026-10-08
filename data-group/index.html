@@ -140,7 +140,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
     <div><span class="tn"><span class="sw b"></span>Blue</span><span>Two more small challenges with tempo and text, once core is done.</span><span class="tw">Finished core? Go on</span></div>
     <div><span class="tn"><span class="sw p"></span>Purple</span><span>A piece that writes its own melody, with template literals and <code>Math.random()</code>.</span><span class="tw">Coded before? After core</span></div>
   </div>
-  <p class="lede" style="margin-top:18px;font-size:20px">Each exercise slide says what to do in <code>script.js</code>, gives you something to try, and ends with <b>Done when</b>. Press <b>Mark as done</b> when it is; <b>E</b> jumps to the next exercise. Stuck for five minutes? Ask your neighbour, then a TA.</p>
+  <p class="lede" style="margin-top:18px;font-size:20px">Each exercise slide says what to do and in which file, gives you something to try, and ends with <b>Done when</b>. Press <b>Mark as done</b> when it is; <b>E</b> jumps to the next exercise. Stuck for five minutes? Ask your neighbour, then a TA.</p>
   <aside class="nt">Three-track system from the plan: core (black), blue (intermediate), purple (advanced). Nobody should feel behind for staying on core all afternoon: core covers every objective. Mark as done is saved in their own browser and shows up on the progress slide near the end; it's for them, nobody else sees it.</aside>
 </section>
 
@@ -174,7 +174,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
       <div><span class="num">2</span><span class="tx">In VS Code, open the Source Control panel and click <b>Sync Changes</b> (or <b>Pull</b>). A <b>data</b> folder appears.</span></div>
       <div><span class="num">3</span><span class="tx">Open <code>data/start/index.html</code> and run <b>Live Preview: Show Preview (External Browser)</b>.</span></div>
       <div><span class="num">4</span><span class="tx">Open the console: right-click the page, click <b>Inspect</b>, then the <b>Console</b> tab. You should see <code>Exercise 2: fullNote is E4</code>.<small>Or press <code>F12</code> (<code>Cmd+Option+I</code> on a Mac).</small></span></div>
-      <div><span class="num">5</span><span class="tx">Click <b>1 · Store a sound</b>. Three notes. Now open <code>data/start/script.js</code>.</span></div>
+      <div><span class="num">5</span><span class="tx">Click <b>1 · Store a sound</b>. Three notes. Now open <code>data/start/exercise1.js</code>.</span></div>
     </div>
     <div class="stack" style="gap:12px">
       <div class="panel"><div class="bar p"><span>your fork</span></div><pre class="code xs" style="background:var(--paper-000);color:var(--ink-900)">kd402d-exercises/
@@ -182,14 +182,17 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
 └── data/
     ├── start/       ← work here
     │   ├── index.html
-    │   ├── script.js       core + blue
+    │   ├── setup.js        instruments
+    │   ├── exercise1.js    … up to
+    │   ├── exercise8.js    core
+    │   ├── blue.js         blue
     │   └── generative.js   purple
     └── reference/   ← a finished version</pre></div>
-      <div class="panel"><div class="bar"><span>VS Code not working?</span></div><div class="pbody small" style="padding:10px 14px">Press <b>W</b> for the workspace in this deck: Tone.js works there too. Paste in an exercise and call it at the bottom: <code>exercise1(Tone.now());</code>. Get a TA to look at VS Code with you when one is free.</div></div>
+      <div class="panel"><div class="bar"><span>VS Code not working?</span></div><div class="pbody small" style="padding:10px 14px">Press <b>W</b> for the workspace. Paste in <code>setup.js</code> and an exercise, then call it: <code>exercise1(Tone.now());</code></div></div>
     </div>
   </div>
   <div class="foot"><p><b>Done when</b>you hear three notes and see <code>E4</code> in the console.</p><button class="btn ghost mark" data-done="get-code">Mark as done</button></div>
-  <aside class="nt">The routine from the end of Wednesday's session. Snags: Sync fork forgotten (no data folder after pulling); Live Preview opening inside VS Code instead of the browser (the console is then hidden: use the External Browser command); no sound until a button is clicked. Anyone whose VS Code or Git isn't working: workspace (W) for now, fix it with a TA when one is free. If the reference folder shouldn't be visible until after the session, remove it from the course repo before class (the exercises repo README says it's added afterwards).</aside>
+  <aside class="nt">The routine from the end of Wednesday's session. Snags: Sync fork forgotten (no data folder after pulling); Live Preview opening inside VS Code instead of the browser (the console is then hidden: use the External Browser command); no sound until a button is clicked. Anyone whose VS Code or Git isn't working: workspace (W) for now (Tone.js works there; they paste in setup.js, then one exercise file), fix it with a TA when one is free. If the reference folder shouldn't be visible until after the session, remove it from the course repo before class (the exercises repo README says it's added afterwards).</aside>
 </section>
 
 <!-- 07 BLOCK 1 OPENER -->
@@ -206,7 +209,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
 <!-- 08 EXERCISE 1 -->
 <section class="slide" id="store" data-sec="Notes as data" data-ex="Store a sound">
   <span class="turn">Your turn</span>
-  <div class="billing"><span class="sw k"></span>Core · Exercise 1 · script.js</div><hr class="rule">
+  <div class="billing"><span class="sw k"></span>Core · Exercise 1 · exercise1.js</div><hr class="rule">
   <h2 class="h1 sm">Store a sound</h2>
   <div class="cols ex">
     <div class="stack" style="gap:10px">
@@ -218,24 +221,24 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
       </div>
     </div>
     <div class="stack" style="gap:10px">
-      <div class="panel"><div class="bar"><span>script.js</span><span>after 1a</span></div><pre class="code xs" id="st-code"></pre></div>
+      <div class="panel"><div class="bar"><span>exercise1.js</span><span>after 1a</span></div><pre class="code xs" id="st-code"></pre></div>
       <div class="small-h">Practise 1b: let or const?</div>
       <div class="rows quiz tight" id="st-q"></div>
       <div class="fb" id="st-fb"></div>
     </div>
   </div>
   <div class="foot"><p><b>Done when</b>the first note plays from your variables, and you've read <code>TypeError: Assignment to constant variable.</code></p><button class="btn ghost mark" data-done="store">Mark as done</button></div>
-  <aside class="nt">The onion again: the kind of onion stays fixed (const), the piece count grows while we chop (let). Here the note is fixed and the length is the one we play with. 1d breaks the script on purpose: when the error happens, nothing below it runs, so none of the buttons work until the line is gone. That's worth saying out loud: one error stops everything after it. Common snag: writing let duration = "2n" a second time (SyntaxError: Identifier 'duration' has already been declared); to change it, leave out let.</aside>
+  <aside class="nt">The onion again: the kind of onion stays fixed (const), the piece count grows while we chop (let). Here the note is fixed and the length is the one we play with. 1d breaks the file on purpose: when the error happens, nothing below it in exercise1.js runs, so button 1 stops working until the line is gone (the other exercises are in their own files and keep working). That's worth saying out loud: one error stops everything after it in that file. Common snag: writing let duration = "2n" a second time (SyntaxError: Identifier 'duration' has already been declared); to change it, leave out let.</aside>
 </section>
 
 <!-- 09 EXERCISE 2 -->
 <section class="slide" id="parts" data-sec="Notes as data" data-ex="A note from parts">
   <span class="turn">Your turn</span>
-  <div class="billing"><span class="sw k"></span>Core · Exercise 2 · script.js</div><hr class="rule">
+  <div class="billing"><span class="sw k"></span>Core · Exercise 2 · exercise2.js</div><hr class="rule">
   <h2 class="h1 sm">Build a note from parts</h2>
   <div class="cols ex">
     <div class="stack" style="gap:10px">
-      <div class="panel"><div class="bar"><span>script.js</span><span>already there</span></div><pre class="code xs" id="pa-code"></pre></div>
+      <div class="panel"><div class="bar"><span>exercise2.js</span><span>already there</span></div><pre class="code xs" id="pa-code"></pre></div>
       <div class="rows lab steps">
         <div><span class="num">2a</span><span class="tx">Raise the octave: <code>octave = octave + 1;</code></span></div>
         <div><span class="num">2b</span><span class="tx">Log <code>fullNote</code> again. Predict first: has it changed?</span></div>
@@ -256,7 +259,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
 <!-- 10 EXERCISE 3 -->
 <section class="slide" id="tempo" data-sec="Notes as data" data-ex="Tempo arithmetic">
   <span class="turn">Your turn</span>
-  <div class="billing"><span class="sw k"></span>Core · Exercise 3 · script.js</div><hr class="rule">
+  <div class="billing"><span class="sw k"></span>Core · Exercise 3 · exercise3.js</div><hr class="rule">
   <h2 class="h1 sm">One number sets the pace</h2>
   <div class="cols ex">
     <div class="stack" style="gap:10px">
@@ -265,7 +268,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
         <div><span class="num">3b</span><span class="tx">In <code>exercise3</code>, play <code>"E4"</code> one beat after <code>start</code>, and <code>"G4"</code> two beats after.<small>Use <code>start + beat</code> and <code>start + beat * 2</code>, not numbers you worked out yourself.</small></span></div>
         <div><span class="num">3c</span><span class="tx">Change only <code>bpm</code>: try 60, then 160. Which lines did you have to change?</span></div>
       </div>
-      <div class="panel"><div class="bar"><span>script.js</span><span>with your bpm</span></div><pre class="code xs" id="tp-code"></pre></div>
+      <div class="panel"><div class="bar"><span>exercise3.js</span><span>with your bpm</span></div><pre class="code xs" id="tp-code"></pre></div>
     </div>
     <div class="stack" style="gap:10px">
       <div class="small-h">Try it here: drag the tempo</div>
@@ -282,7 +285,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
 <!-- 11 EXERCISES 4 AND 5 -->
 <section class="slide" id="args" data-sec="Notes as data" data-ex="Variables as arguments">
   <span class="turn">Your turn</span>
-  <div class="billing"><span class="sw k"></span>Core · Exercises 4 and 5 · script.js</div><hr class="rule">
+  <div class="billing"><span class="sw k"></span>Core · Exercises 4 and 5 · exercise4-5.js</div><hr class="rule">
   <h2 class="h1 sm">Feed the function, then watch it</h2>
   <div class="cols ex">
     <div class="stack" style="gap:10px">
@@ -297,7 +300,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
       <div class="fb" id="ar-fb"></div>
     </div>
     <div class="stack" style="gap:10px">
-      <div class="panel"><div class="bar"><span>script.js</span><span>one way to write 4</span></div><pre class="code xs" id="ar-code"></pre></div>
+      <div class="panel"><div class="bar"><span>exercise4-5.js</span><span>one way to write 4</span></div><pre class="code xs" id="ar-code"></pre></div>
       <div class="panel"><div class="bar y"><span>console</span><span>after exercise 5</span></div><div class="console con-sm" id="ar-con" style="height:96px"></div></div>
     </div>
   </div>
@@ -330,7 +333,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
 <!-- 15 EXERCISE 6 -->
 <section class="slide" id="frequency" data-sec="Transforming musical data" data-ex="Same number, different jobs">
   <span class="turn">Your turn</span>
-  <div class="billing"><span class="sw k"></span>Core · Exercise 6 · script.js</div><hr class="rule">
+  <div class="billing"><span class="sw k"></span>Core · Exercise 6 · exercise6.js</div><hr class="rule">
   <h2 class="h1 sm">Same number, different jobs</h2>
   <div class="cols ex">
     <div class="stack" style="gap:10px">
@@ -354,7 +357,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
 <!-- 16 EXERCISE 7 -->
 <section class="slide" id="chord" data-sec="Transforming musical data" data-ex="A chord">
   <span class="turn">Your turn</span>
-  <div class="billing"><span class="sw k"></span>Core · Exercise 7 · script.js</div><hr class="rule">
+  <div class="billing"><span class="sw k"></span>Core · Exercise 7 · exercise7.js</div><hr class="rule">
   <h2 class="h1 sm">Three notes at once</h2>
   <div class="cols ex">
     <div class="stack" style="gap:10px">
@@ -372,22 +375,22 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
       <div class="small-h">Try it here: one synth, then the other</div>
       <div class="row"><button class="btn ghost codey" id="ch-mono">Play on synth</button><button class="btn ghost codey" id="ch-poly">Play on chordSynth</button></div>
       <div class="fb" id="ch-pfb"></div>
-      <div class="panel"><div class="bar"><span>script.js</span></div><pre class="code xs" id="ch-code"></pre></div>
+      <div class="panel"><div class="bar"><span>exercise7.js</span></div><pre class="code xs" id="ch-code"></pre></div>
       <div class="rows evals" id="ch-ev"></div>
     </div>
   </div>
   <div class="foot"><p><b>Done when</b>you hear one chord of three notes, and <code>chord</code> still logs <code>c4 e4 g4</code>.</p><button class="btn ghost mark" data-done="chord">Mark as done</button></div>
-  <aside class="nt">New idea first: a chord is several notes at the same moment. The synth from Tuesday is monophonic, one voice: asked for a second note at the same start, Tone.js stops with "Start time must be strictly greater than previous start time", so students hear one note and see one red error. That's on purpose; let them read it before you explain. chordSynth is a PolySynth ("poly" means many), made at the top of script.js; it hands each note to its own voice. Same call, same arguments, different instrument. Then strings from Part 2 of the lecture: + glues the notes into one string, toUpperCase changes the form, length counts characters (spaces count: 8). toUpperCase gives back a new string and leaves chord alone. Tone.js reads lowercase note names too. No arrays: three calls with the same start.</aside>
+  <aside class="nt">New idea first: a chord is several notes at the same moment. The synth from Tuesday is monophonic, one voice: asked for a second note at the same start, Tone.js stops with "Start time must be strictly greater than previous start time", so students hear one note and see one red error. That's on purpose; let them read it before you explain. chordSynth is a PolySynth ("poly" means many), made in setup.js; it hands each note to its own voice. Same call, same arguments, different instrument. Then strings from Part 2 of the lecture: + glues the notes into one string, toUpperCase changes the form, length counts characters (spaces count: 8). toUpperCase gives back a new string and leaves chord alone. Tone.js reads lowercase note names too. No arrays: three calls with the same start.</aside>
 </section>
 
 <!-- 17 EXERCISE 8 -->
 <section class="slide" id="bug-hunt" data-sec="Transforming musical data" data-ex="Bug hunt">
   <span class="turn">Your turn</span>
-  <div class="billing"><span class="sw k"></span>Core · Exercise 8 · script.js</div><hr class="rule">
+  <div class="billing"><span class="sw k"></span>Core · Exercise 8 · exercise8.js</div><hr class="rule">
   <h2 class="h1 sm">Bug hunt: the octave that came as text</h2>
   <div class="cols ex">
     <div class="stack" style="gap:10px">
-      <div class="panel"><div class="bar"><span>script.js</span><span>exercise 8</span></div><pre class="code xs" id="bh-code"></pre></div>
+      <div class="panel"><div class="bar"><span>exercise8.js</span><span>exercise 8</span></div><pre class="code xs" id="bh-code"></pre></div>
       <div class="rows lab steps">
         <div><span class="num">8a</span><span class="tx">Predict what <code>noteUp</code> and <code>noteDown</code> hold. Then log them and play exercise 8.</span></div>
         <div><span class="num">8b</span><span class="tx">One note is wildly wrong. Fix <code>noteUp</code> so it really is one octave up.</span></div>
@@ -422,7 +425,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
   <h2 class="h1">Core done? Pick your next track</h2>
   <div class="rows tracks">
     <div><span class="tn"><span class="sw k"></span>Not yet</span><span>Keep going on core. Exercises 1 to 8 cover everything this afternoon is for.</span><span class="tw">Most people</span></div>
-    <div><span class="tn"><span class="sw b"></span>Blue</span><span>Two small challenges at the bottom of <code>script.js</code>: how long a phrase lasts, and a line of track info.</span><span class="tw">Next slide</span></div>
+    <div><span class="tn"><span class="sw b"></span>Blue</span><span>Two small challenges in <code>blue.js</code>: how long a phrase lasts, and a line of track info.</span><span class="tw">Next slide</span></div>
     <div><span class="tn"><span class="sw p"></span>Purple</span><span>A generative piece in <code>generative.js</code>: a melody that writes itself, effects, movement, and musical time as text.</span><span class="tw">If you've coded before</span></div>
   </div>
   <p class="dir" style="margin-top:18px">Commit before you switch tracks. Purple uses three things the morning held back: template literals, <code>Math.random()</code> and <code>.slice()</code>.</p>
@@ -432,7 +435,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
 <!-- 20 BLUE -->
 <section class="slide" id="blue" data-sec="Blue and purple tracks" data-ex="Blue track">
   <span class="turn">Your turn</span>
-  <div class="billing"><span class="sw b"></span>Blue track · B1 and B2 · script.js</div><hr class="rule">
+  <div class="billing"><span class="sw b"></span>Blue track · B1 and B2 · blue.js</div><hr class="rule">
   <h2 class="h1 sm">Do the sums, then say it</h2>
   <div class="cols ex">
     <div class="stack" style="gap:10px">
