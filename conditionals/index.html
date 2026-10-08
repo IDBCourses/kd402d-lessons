@@ -158,6 +158,34 @@
 .loopx>div{grid-template-columns:150px 1fr;padding:9px 0;gap:16px}
 .loopx code{font-size:17px;font-weight:700;color:var(--ink-900)}
 .loopx span{font-size:18px;line-height:1.4}
+/* flowcharts: the shape of a decision */
+.fcgrid{display:grid;grid-template-columns:1fr 520px;gap:28px;flex:1;min-height:0}
+.fcgrid pre.code{font-size:15px;line-height:1.5;padding:10px 16px}
+.fcgrid .dir{font-size:18px}
+.fcgrid .dir code{font-size:16px}
+.fc-ctl{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.fc-ctl .lb{font-family:var(--font-mono);font-size:15px;color:var(--ink-900);margin-right:6px}
+.fc-ctl .val{font-family:var(--font-mono);font-weight:700;font-size:18px;color:var(--ink-900);min-width:28px;text-align:center;display:inline-block}
+.fc-ctl .btn{padding:6px 11px}
+.fc-ctl .grp{display:flex;align-items:center;gap:6px}
+.fc-tabs{margin:0 0 14px}
+.fc{background:var(--paper-000);padding:6px}
+.fc svg{display:block;width:100%;height:auto}
+.fc .e{fill:none;stroke:var(--ink-300);stroke-width:2;stroke-dasharray:5 4}
+.fc .e.on{stroke:var(--ink-900);stroke-width:3;stroke-dasharray:none}
+.fc .el{font-family:var(--font-mono);font-weight:700;font-size:12px;letter-spacing:.06em;fill:var(--ink-300)}
+.fc .el.on{fill:var(--ink-900)}
+.fc .mk-off{fill:var(--ink-300)}.fc .mk-on{fill:var(--ink-900)}
+.fc .nd .bd{fill:var(--paper-000);stroke:var(--ink-300);stroke-width:1.5;stroke-dasharray:5 4}
+.fc .nd .sh{display:none;fill:var(--ink-900)}
+.fc .nd.on .sh{display:inline}
+.fc .nd.on .bd{stroke:var(--ink-900);stroke-width:2;stroke-dasharray:none}
+.fc .nd.q.on .bd{fill:var(--spot-400)}
+.fc .nd.do.on .bd{fill:var(--cyan-400)}
+.fc .nd.se.on .bd{fill:var(--paper-200)}
+.fc .nd.cur .bd{stroke:var(--curtain-600);stroke-width:4}
+.fc .nd text{font-family:var(--font-mono);font-size:14px;fill:var(--ink-300)}
+.fc .nd.on text{fill:var(--ink-900);font-weight:700}
 </style>
 </head>
 <body data-lecture="conditionals" data-home="../">
@@ -430,6 +458,22 @@
   <aside class="nt">The plain-language and, or, not from the opening, now real operators. ! flips: !isMuted is true when isMuted is false. && needs both sides true; || needs at least one. Play it, then change one value at a time and predict: isMuted = true (silence from the first if, the high G still plays), energy = 2, note = "G4" and "D4". The || key is usually Shift + backslash; on Swedish keyboards it's Alt Gr + the key left of Z, or Option + 7 on a Mac.</aside>
 </section>
 
+<section class="slide" id="flowchart" data-sec="Part 2: Conditionals and logical operators" data-demo="Draw the decision">
+  <span class="turn try">Try it</span>
+  <div class="billing">Part 2 · Flowcharts</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:10px">Draw the decision</h2>
+  <div class="seg fc-tabs" id="fc-tabs"></div>
+  <div class="fcgrid">
+    <div class="stack" style="gap:12px">
+      <div class="panel"><div class="bar"><span>decide.js</span><span>bright lines run</span></div><pre class="code" id="fc-code"></pre></div>
+      <div class="fc-ctl" id="fc-ctl"></div>
+      <p class="dir" id="fc-cap"></p>
+    </div>
+    <div class="panel fc"><svg id="fc-svg" viewBox="0 0 560 440" role="img" aria-label="Flowchart"></svg></div>
+  </div>
+  <aside class="nt">The same decisions as pictures, so the shape of each one is visible. Change a value: the path through the chart and the code lines that run light up together; dashed boxes are never visited. "Walk it" goes one box at a time and plays the sound at the end. Pick two or three tabs live (else if and &amp;&amp; carry the most); students can try the rest on their laptops. Points to land: if / else is one question, two paths, never both. else if is a chain: the first true wins and the later questions are never asked (set energy to 2). &amp;&amp; and || are two questions in a row: JavaScript stops as soon as the answer is settled (mute it, and "energy &gt; 3" is never asked). The song's beat is three separate ifs: on one beat none, one or several blocks can run. Compare it with else if, where exactly one runs. Act it out if the room has energy: draw the else if chart on the board or tape it on the floor, give one student a value card ("energy = 5"), and have the class call out true or false at each question while the student walks the arrows. Come back to the song tab during the worked example.</aside>
+</section>
+
 <section class="slide" id="which-runs" data-sec="Part 2: Conditionals and logical operators" data-ex="Which block runs?">
   <span class="turn">Your turn</span>
   <div class="billing">Part 2 · Check</div><hr class="rule">
@@ -487,7 +531,7 @@
       <div class="row"><button class="btn ghost" id="sg-back">Back</button><button class="btn" id="sg-next">Next step</button><button class="btn ghost" id="sg-reset">Start again</button></div>
     </div>
   </div>
-  <aside class="nt">Seven views of the six steps in the plan (step 6 is split: the melody, then the ending). Bright lines are what changed; functions that didn't change are folded to one line. At every step: ask what they'll hear, then Play. Step 1: Tuesday's functions, called by hand. Step 2: Tone takes over the calling: a bass note on every beat. Step 3: the beat count, with a decision attached (if beat > 4, back to 1): yesterday's changing variables. Step 4: the groove comes from conditions, not from writing notes out. Step 5: bars give sections; && and !== earn their place: the melody comes in at bar 3 and never on beat 1. Step 6: if / else if / else on bar changes the melody. Step 7: the piece ends after bar 8. "Open in workspace" copies the current step into the workspace to change and run. The same steps are TODOs in the exercises repo, conditionals/start/song.js. In the workspace the song plays, but the console there only shows what was logged at the moment Run was pressed, so the beat-by-beat logs don't appear: watch the console on this slide instead.</aside>
+  <aside class="nt">Seven views of the six steps in the plan (step 6 is split: the melody, then the ending). Bright lines are what changed; functions that didn't change are folded to one line. At every step: ask what they'll hear, then Play. Step 1: Tuesday's functions, called by hand. Step 2: Tone takes over the calling: a bass note on every beat. Step 3: the beat count, with a decision attached (if beat > 4, back to 1): yesterday's changing variables. Step 4: the groove comes from conditions, not from writing notes out. Step 5: bars give sections; && and !== earn their place: the melody comes in at bar 3 and never on beat 1. Step 6: if / else if / else on bar changes the melody. Step 7: the piece ends after bar 8. "Open in workspace" copies the current step into the workspace to change and run. At step 4 or 5, the flowchart slide's "The song's beat" tab shows playStep as a chart. The same steps are TODOs in the exercises repo, conditionals/start/song.js. In the workspace the song plays, but the console there only shows what was logged at the moment Run was pressed, so the beat-by-beat logs don't appear: watch the console on this slide instead.</aside>
 </section>
 
 <!-- ============ WRAP-UP ============ -->
@@ -927,6 +971,168 @@ soundEd({el:$("#s-logic"),file:"logic.js",store:"snd:logic",
   task:'<div class="lg-t"><code>&amp;&amp;</code><span>and: true only if both sides are true</span><code>||</code><span>or: true if at least one side is true</span><code>!</code><span>not: turns true into false, false into true</span></div>'+
     '<p style="margin:8px 0 0">Change one value at a time. Predict, then play.</p>',
   start:MONO+'\nlet isMuted = false;\nlet energy = 5;\nlet note = "C4";\n\nif (!isMuted && energy > 3) {\n  synth.triggerAttackRelease(note, "4n");\n}\n\nif (note === "C4" || note === "G4") {\n  synth.triggerAttackRelease("G5", "8n", Tone.now() + 0.5);\n}\n'});
+
+/* ---------- flowcharts ----------
+   Each chart: code(state) → source; nodes {id: [type, x, y, w, h, label, code lines]} (type q = question,
+   do = action, se = start / end); edges [from, to, points, label?, label x, label y, anchor?];
+   path(state) → node ids in the order JavaScript visits them. Unvisited nodes are drawn dashed. */
+(function(){
+  var NS="http://www.w3.org/2000/svg",svg=$("#fc-svg");
+  function mk(tag,a,parent){var e=document.createElementNS(NS,tag);for(var k in a)e.setAttribute(k,a[k]);if(parent)parent.appendChild(e);return e}
+  var syn=null;
+  function sound(notes,dur){
+    wake();
+    try{if(!syn||syn.disposed||syn.context!==Tone.getContext())syn=new Tone.PolySynth().toDestination();
+      notes.forEach(function(n){syn.triggerAttackRelease(n,dur)})}catch(e){}
+  }
+  function c(v){return "<code>"+esc(String(v))+"</code>"}
+  var CH=[
+    {tab:"if / else",st:{isPeeled:false},ctl:[{k:"isPeeled",t:"bool"}],
+     code:function(s){return 'let isPeeled = '+s.isPeeled+';\n\nif (isPeeled) {\n  console.log("Chop it");\n} else {\n  console.log("Peel it first");\n  console.log("Then chop it");\n}'},
+     vars:[0],
+     nodes:{s:["se",280,28,120,34,"start",[]],q:["q",280,108,180,50,"isPeeled",[2]],a:["do",140,215,230,46,'log "Chop it"',[3]],
+            b:["do",420,222,250,62,'log "Peel it first"\nlog "Then chop it"',[4,5,6]],e:["se",280,370,140,34,"carry on",[]]},
+     edges:[["s","q",[[280,45],[280,83]]],["q","a",[[190,108],[140,108],[140,192]],"true",150,98],["q","b",[[370,108],[420,108],[420,191]],"false",380,98],
+            ["a","e",[[140,238],[140,370],[210,370]]],["b","e",[[420,253],[420,370],[350,370]]]],
+     path:function(s){return ["s","q",s.isPeeled?"a":"b","e"]},
+     cap:function(s){return "isPeeled is "+c(s.isPeeled)+", so "+(s.isPeeled?"the if block":"the else block")+" runs. One question, two paths, never both."}},
+    {tab:"else if",st:{energy:5},ctl:[{k:"energy",t:"num",min:1,max:10}],
+     code:function(s){return 'let energy = '+s.energy+';\n\nif (energy < 4) {\n  synth.triggerAttackRelease("C3", "4n");\n} else if (energy < 8) {\n  synth.triggerAttackRelease("C4", "4n");\n} else {\n  synth.triggerAttackRelease("C5", "4n");\n}'},
+     vars:[0],
+     nodes:{s:["se",150,26,120,34,"start",[]],q1:["q",150,100,200,48,"energy < 4",[2]],c3:["do",420,100,170,44,'play "C3"',[3]],
+            q2:["q",150,200,200,48,"energy < 8",[4]],c4:["do",420,200,170,44,'play "C4"',[5]],c5:["do",150,300,170,44,'play "C5"',[6,7]],
+            e:["se",300,395,140,34,"carry on",[]]},
+     edges:[["s","q1",[[150,43],[150,76]]],["q1","c3",[[250,100],[335,100]],"true",262,91],["q1","q2",[[150,124],[150,176]],"false",142,155,"end"],
+            ["q2","c4",[[250,200],[335,200]],"true",262,191],["q2","c5",[[150,224],[150,278]],"false",142,255,"end"],
+            ["c3","e",[[505,100],[540,100],[540,395],[370,395]]],["c4","e",[[505,200],[540,200],[540,395],[370,395]]],["c5","e",[[150,322],[150,395],[230,395]]]],
+     path:function(s){return s.energy<4?["s","q1","c3","e"]:s.energy<8?["s","q1","q2","c4","e"]:["s","q1","q2","c5","e"]},
+     snd:{c3:[["C3"],"4n"],c4:[["C4"],"4n"],c5:[["C5"],"4n"]},
+     cap:function(s){var e=s.energy;
+       if(e<4)return "energy is "+e+": the first question says true. The other two blocks are never even asked about.";
+       if(e<8)return "energy is "+e+": the first question says false, the second says true. The first true wins; else is never reached.";
+       return "energy is "+e+": both questions say false, so the else block runs."}},
+    {tab:"&&",st:{isMuted:false,energy:5},ctl:[{k:"isMuted",t:"bool"},{k:"energy",t:"num",min:1,max:10}],
+     code:function(s){return 'let isMuted = '+s.isMuted+';\nlet energy = '+s.energy+';\n\nif (!isMuted && energy > 3) {\n  synth.triggerAttackRelease("C4", "4n");\n}'},
+     vars:[0,1],
+     nodes:{s:["se",200,26,120,34,"start",[]],q1:["q",200,100,180,48,"!isMuted",[3]],q2:["q",200,205,180,48,"energy > 3",[3]],
+            p:["do",200,305,170,44,'play "C4"',[4]],e:["se",200,395,140,34,"carry on",[]]},
+     edges:[["s","q1",[[200,43],[200,76]]],["q1","q2",[[200,124],[200,181]],"true",192,157,"end"],["q2","p",[[200,229],[200,283]],"true",192,260,"end"],
+            ["p","e",[[200,327],[200,378]]],["q1","e",[[290,100],[460,100],[460,395],[270,395]],"false",302,91],["q2","e",[[290,205],[460,205],[460,395],[270,395]],"false",302,196]],
+     path:function(s){return s.isMuted?["s","q1","e"]:s.energy>3?["s","q1","q2","p","e"]:["s","q1","q2","e"]},
+     snd:{p:[["C4"],"4n"]},
+     cap:function(s){var a=!s.isMuted,b=s.energy>3;
+       if(!a)return c("!isMuted")+" is "+c(false)+", so the whole "+c("&&")+" is false. JavaScript doesn't ask the second question.";
+       return c("true && "+b)+" is "+c(b)+". With "+c("&&")+", both answers must be true."}},
+    {tab:"||",st:{note:"C4"},ctl:[{k:"note",t:"pick",o:["C4","D4","G4"]}],
+     code:function(s){return 'let note = "'+s.note+'";\n\nif (note === "C4" || note === "G4") {\n  synth.triggerAttackRelease("G5", "8n");\n}'},
+     vars:[0],
+     nodes:{s:["se",200,26,120,34,"start",[]],q1:["q",200,100,210,48,'note === "C4"',[2]],q2:["q",200,215,210,48,'note === "G4"',[2]],
+            p:["do",450,158,150,44,'play "G5"',[3]],e:["se",200,395,140,34,"carry on",[]]},
+     edges:[["s","q1",[[200,43],[200,76]]],["q1","p",[[305,100],[450,100],[450,135]],"true",317,91],["q1","q2",[[200,124],[200,191]],"false",192,160,"end"],
+            ["q2","p",[[305,215],[450,215],[450,181]],"true",317,206],["q2","e",[[200,239],[200,378]],"false",192,300,"end"],
+            ["p","e",[[525,158],[545,158],[545,395],[270,395]]]],
+     path:function(s){return s.note==="C4"?["s","q1","p","e"]:s.note==="G4"?["s","q1","q2","p","e"]:["s","q1","q2","e"]},
+     snd:{p:[["G5"],"8n"]},
+     cap:function(s){
+       if(s.note==="C4")return "The first answer is "+c(true)+", so the whole "+c("||")+" is true. JavaScript doesn't ask the second question.";
+       if(s.note==="G4")return c("false || true")+" is "+c(true)+". With "+c("||")+", one true answer is enough.";
+       return c("false || false")+" is "+c(false)+": nothing plays."}},
+    {tab:"The song's beat",st:{bar:3,beat:1},ctl:[{k:"bar",t:"num",min:1,max:8},{k:"beat",t:"num",min:1,max:4},{t:"next"}],
+     code:function(s){return 'function playStep(time) {\n  if (beat === 1) {\n    playBass(time);\n  }\n  if (beat === 1 || beat === 3) {\n    playChord(time);\n  }\n  if (bar > 2 && beat !== 1) {\n    playMelody(time);\n  }\n  // count the beat (step 3)\n}'},
+     vars:[],
+     nodes:{s:["se",165,24,170,32,"playStep(time)",[0]],q1:["q",165,85,260,44,"beat === 1",[1]],bass:["do",470,85,140,40,"playBass",[2]],
+            q2:["q",165,170,260,44,"beat === 1 || beat === 3",[4]],chord:["do",470,170,140,40,"playChord",[5]],
+            q3:["q",165,255,260,44,"bar > 2 && beat !== 1",[7]],mel:["do",470,255,140,40,"playMelody",[8]],
+            cnt:["do",165,335,200,38,"count the beat",[10]],e:["se",165,408,230,32,"wait for the next beat",[]]},
+     edges:[["s","q1",[[165,40],[165,63]]],["q1","bass",[[295,85],[400,85]],"true",305,76],["q1","q2",[[165,107],[165,148]],"false",157,123,"end"],
+            ["bass","q2",[[470,105],[470,128],[165,128],[165,148]]],["q2","chord",[[295,170],[400,170]],"true",305,161],["q2","q3",[[165,192],[165,233]],"false",157,208,"end"],
+            ["chord","q3",[[470,190],[470,213],[165,213],[165,233]]],["q3","mel",[[295,255],[400,255]],"true",305,246],["q3","cnt",[[165,277],[165,316]],"false",157,293,"end"],
+            ["mel","cnt",[[470,275],[470,298],[165,298],[165,316]]],["cnt","e",[[165,354],[165,392]]]],
+     path:function(s){var p=["s","q1"];if(s.beat===1)p.push("bass");p.push("q2");if(s.beat===1||s.beat===3)p.push("chord");
+       p.push("q3");if(s.bar>2&&s.beat!==1)p.push("mel");return p.concat(["cnt","e"])},
+     snd:{bass:[["C2"],"8n"],chord:[["C4","E4","G4"],"4n"],mel:[["G4"],"8n"]},
+     cap:function(s){var p=this.path(s),on=[];if(p.indexOf("bass")>-1)on.push("bass");if(p.indexOf("chord")>-1)on.push("chord");if(p.indexOf("mel")>-1)on.push("melody");
+       return "Bar "+s.bar+", beat "+s.beat+": "+(on.length?on.join(" and "):"nothing")+(on.length===1?" plays.":on.length?" play.":" plays.")+" Three separate ifs, so none, one or several can run. With else if, exactly one would."}}
+  ];
+  var cur=0,walk=null,reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function draw(ch,path,at){
+    /* path: visited node ids so far; at: the node being visited now (while walking) */
+    svg.innerHTML="";
+    var defs=mk("defs",{},svg);
+    ["on","off"].forEach(function(k){var m=mk("marker",{id:"fc-a-"+k,viewBox:"0 0 10 10",refX:"9",refY:"5",markerWidth:k==="on"?"5":"6",markerHeight:k==="on"?"5":"6",orient:"auto-start-reverse"},defs);
+      mk("path",{d:"M0,0 L10,5 L0,10 z","class":"mk-"+k},m)});
+    function onEdge(e){var i=path.indexOf(e[0]);return i>-1&&path[i+1]===e[1]}
+    var edges=ch.edges.slice().sort(function(a,b){return onEdge(a)-onEdge(b)});   /* lit edges on top */
+    edges.forEach(function(e){
+      var on=onEdge(e);
+      mk("polyline",{points:e[2].map(function(p){return p.join(",")}).join(" "),"class":"e"+(on?" on":""),"marker-end":"url(#fc-a-"+(on?"on":"off")+")"},svg);
+      if(e[3]){var t=mk("text",{x:e[4],y:e[5],"class":"el"+(on?" on":""),"text-anchor":e[6]||"start"},svg);t.textContent=e[3]}
+    });
+    Object.keys(ch.nodes).forEach(function(id){
+      var n=ch.nodes[id],ty=n[0],x=n[1],y=n[2],w=n[3],h=n[4],on=path.indexOf(id)>-1;
+      var g=mk("g",{"class":"nd "+ty+(on?" on":"")+(id===at?" cur":"")},svg);
+      function shape(dx,cls){
+        if(ty==="q"){var a=14,pts=[[x-w/2,y],[x-w/2+a,y-h/2],[x+w/2-a,y-h/2],[x+w/2,y],[x+w/2-a,y+h/2],[x-w/2+a,y+h/2]];
+          return mk("polygon",{points:pts.map(function(p){return (p[0]+dx)+","+(p[1]+dx)}).join(" "),"class":cls},g)}
+        return mk("rect",{x:x-w/2+dx,y:y-h/2+dx,width:w,height:h,rx:ty==="se"?h/2:2,"class":cls},g);
+      }
+      shape(3,"sh");shape(0,"bd");
+      var ls=n[5].split("\n");
+      ls.forEach(function(l,i){var t=mk("text",{x:x,y:y+5+(i-(ls.length-1)/2)*20,"text-anchor":"middle"},g);t.textContent=l});
+    });
+    var lines={};ch.vars.forEach(function(l){lines[l]=1});
+    (at?[at]:path).forEach(function(id){ch.nodes[id][6].forEach(function(l){lines[l]=1})});
+    code($("#fc-code"),ch.code(ch.st),Object.keys(lines).map(Number));
+    svg.setAttribute("aria-label","Flowchart. The path visits: "+path.map(function(id){return ch.nodes[id][5].replace("\n"," / ")}).join(", then "));
+  }
+  function stopWalk(){if(walk){clearTimeout(walk);walk=null}}
+  function show(){stopWalk();var ch=CH[cur];draw(ch,ch.path(ch.st));$("#fc-cap").innerHTML=ch.cap(ch.st)}
+  function walkIt(){
+    stopWalk();var ch=CH[cur],p=ch.path(ch.st),i=0;
+    function stepTo(){
+      var id=p[i];draw(ch,p.slice(0,i+1),id);
+      if(ch.snd&&ch.snd[id])sound(ch.snd[id][0],ch.snd[id][1]);
+      i++;walk=i<p.length?setTimeout(stepTo,650):setTimeout(show,900);
+    }
+    if(reduce){p.forEach(function(id){if(ch.snd&&ch.snd[id])sound(ch.snd[id][0],ch.snd[id][1])});show();return}
+    stepTo();
+  }
+  function controls(){
+    var ch=CH[cur],box=$("#fc-ctl");box.innerHTML="";
+    ch.ctl.forEach(function(k){
+      var g=document.createElement("div");g.className="grp";
+      if(k.t==="next"){g.innerHTML='<button class="btn ghost">Next beat</button>';
+        g.firstChild.addEventListener("click",function(){var s=ch.st;s.beat++;if(s.beat>4){s.beat=1;s.bar=s.bar%8+1}controls();show();walkIt()});
+        box.appendChild(g);return}
+      g.innerHTML='<span class="lb">'+esc(k.k)+'</span>';
+      if(k.t==="num"){
+        g.innerHTML+='<button class="btn ghost" aria-label="'+esc(k.k)+' down">−</button><span class="val">'+ch.st[k.k]+'</span><button class="btn ghost" aria-label="'+esc(k.k)+' up">+</button>';
+        var bs=g.querySelectorAll("button");
+        bs[0].disabled=ch.st[k.k]<=k.min;bs[1].disabled=ch.st[k.k]>=k.max;
+        bs[0].addEventListener("click",function(){ch.st[k.k]--;controls();show()});
+        bs[1].addEventListener("click",function(){ch.st[k.k]++;controls();show()});
+      }else{
+        var seg=document.createElement("div");seg.className="seg";
+        (k.t==="bool"?[false,true]:k.o).forEach(function(v){
+          var b=document.createElement("button");b.className="btn ghost cd"+(ch.st[k.k]===v?" sel":"");
+          b.textContent=k.t==="pick"?'"'+v+'"':String(v);
+          b.addEventListener("click",function(){ch.st[k.k]=v;controls();show()});seg.appendChild(b);
+        });
+        g.appendChild(seg);
+      }
+      box.appendChild(g);
+    });
+    var w=document.createElement("button");w.className="btn";w.textContent="Walk it";w.addEventListener("click",walkIt);box.appendChild(w);
+  }
+  CH.forEach(function(ch,i){
+    var b=document.createElement("button");b.className="btn ghost cd"+(i?"":" sel");b.textContent=ch.tab;
+    b.addEventListener("click",function(){cur=i;$$("#fc-tabs .btn").forEach(function(x,j){x.classList.toggle("sel",j===i)});controls();show()});
+    $("#fc-tabs").appendChild(b);
+  });
+  controls();show();
+  onLeave(svg.closest(".slide"),stopWalk);
+})();
 
 (function(){
   code($("#wr-code"),'if (beat === 1) {\n  console.log("bass");\n} else if (beat === 1 || beat === 3) {\n  console.log("chord");\n} else {\n  console.log("rest");\n}');
