@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Booleans and conditionals · KD402D Programming</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<link rel="stylesheet" href="../shared/deck.css">
+<style>
+/* styles used only by this lecture */
+/* show === != <= >= as the characters students type, not as ligatures */
+*{font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0}
+.order>div{grid-template-columns:72px 120px 1fr 90px;align-items:center;padding:9px 0}
+.order .tm{font-family:var(--font-mono);font-size:16px;color:var(--ink-500)}
+.order .nm{font-size:23px;color:var(--ink-900);font-weight:500}
+.order .nm small{display:block;font-size:16px;color:var(--ink-500);font-weight:400}
+.order .kd{font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:2px solid var(--ink-900);border-radius:999px;padding:2px 10px;justify-self:start;color:var(--ink-900);background:var(--paper-000)}
+.order .kd.code{background:var(--cyan-400)}
+.order .num{font-size:34px}
+
+/* a named box (from Data): a value with a name */
+.vbox{display:inline-flex;flex-direction:column;border:2px solid var(--ink-900);border-radius:2px;background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900);min-width:150px}
+.vbox .lb{font-family:var(--font-mono);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--spot-400);color:var(--ink-900);padding:5px 12px;border-bottom:2px solid var(--ink-900)}
+.vbox .vl{font-family:var(--font-display);font-weight:700;font-size:44px;letter-spacing:-.03em;color:var(--ink-900);padding:8px 14px;line-height:1.1;min-height:66px}
+.vbox .vl.word{font-size:30px;padding-top:14px}
+.vbox .vl.code{font-family:var(--font-mono);font-size:34px;letter-spacing:0;padding-top:12px}
+.vbox .ty{font-size:14px;color:var(--ink-500);padding:0 14px 8px}
+.vbox.yn .lb{background:var(--cyan-400)}
+.vbox.yes .vl{color:var(--pass-ink)}.vbox.no .vl{color:var(--error-ink)}
+.flashbox{animation:flashlite .9s ease}
+.arrow{font-family:var(--font-display);font-weight:700;font-size:44px;color:var(--ink-500);line-height:1}
+
+/* the check before the action */
+.ask{border:2px solid var(--ink-900);border-radius:2px;background:var(--spot-200);box-shadow:3px 3px 0 var(--ink-900);padding:14px 18px;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.ask .q{font-family:var(--font-display);font-weight:700;font-size:30px;letter-spacing:-.02em;color:var(--ink-900);line-height:1.1}
+.paths{display:flex;flex-direction:column;gap:14px}
+.path{display:grid;grid-template-columns:70px 1fr;align-items:center;border:2px solid var(--ink-900);border-radius:2px;background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900);transition:opacity .2s}
+.path .pk{font-family:var(--font-mono);font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;align-self:stretch;display:grid;place-items:center;border-right:2px solid var(--ink-900);background:var(--paper-200)}
+.path .d{font-size:21px;color:var(--ink-900);padding:12px 16px;line-height:1.35}
+.path.on{box-shadow:3px 3px 0 var(--ink-900),0 0 0 4px var(--spot-300)}
+.path.on .pk{background:var(--applause-500)}
+.path.off{opacity:.38;box-shadow:none;border-style:dashed}
+
+/* and, or, not in plain words */
+.facts>div{grid-template-columns:1fr 330px 190px;align-items:center;padding:14px 0;gap:20px}
+.facts .sn{font-size:21px;color:var(--ink-900);line-height:1.4}
+.facts .sn b{font-family:var(--font-mono);font-size:17px;background:var(--spot-400);border:2px solid var(--ink-900);padding:0 6px;border-radius:2px;letter-spacing:.04em}
+.facts .tg{display:flex;flex-direction:column;gap:6px}
+.facts .tg button{font-family:var(--font-ui);font-size:16px;text-align:left;padding:5px 10px;border:2px solid var(--ink-900);border-radius:2px;background:var(--paper-000);color:var(--ink-900);cursor:pointer;box-shadow:2px 2px 0 var(--ink-900)}
+.facts .tg button b{font-family:var(--font-mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin-left:6px}
+.facts .tg button.y b{color:var(--pass-ink)}.facts .tg button.n b{color:var(--error-ink)}
+.facts .out{font-family:var(--font-display);font-weight:700;font-size:26px;letter-spacing:-.02em;padding:8px 12px;border:2px solid var(--ink-900);border-radius:2px;text-align:center}
+.facts .out.y{background:var(--pass-surface);color:var(--pass-ink)}.facts .out.n{background:var(--error-surface);color:var(--error-ink)}
+
+/* mapping idea → code */
+.map>div{grid-template-columns:1fr;gap:8px;padding:12px 0}
+.map .idea{font-size:20px;color:var(--ink-700)}
+.map pre.code{font-size:19px;padding:10px 14px}
+
+/* embedded editor (from Data) */
+.mini{display:flex;flex-direction:column}
+.mini textarea.code-ed{font-size:17px}
+.mini .tools{display:flex;gap:10px;align-items:center;padding:8px 12px;background:var(--ink-800);border-top:2px solid var(--ink-900)}
+.mini .tools .btn{padding:7px 12px;font-size:13px}
+.mini .tools span{font-family:var(--font-mono);font-size:12px;color:var(--ink-200);margin-left:auto}
+.mini .console{font-size:16px;min-height:56px;max-height:150px;overflow:auto;border-top:2px solid var(--ink-900)}
+.task{background:var(--spot-200);border:2px solid var(--ink-900);padding:10px 14px;font-size:18px;line-height:1.45;color:var(--ink-900)}
+.task .tk{font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:2px}
+
+/* quizzes */
+.qz>div{grid-template-columns:1fr auto;gap:20px;padding:12px 0;align-items:center}
+.qz .sc{font-size:21px;line-height:1.4;color:var(--ink-900)}
+.qz .sc code{background:var(--spot-200);color:var(--ink-900);padding:1px 6px;border-radius:2px;font-size:19px}
+.qz .ch{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.qz .chip{font-size:15px;padding:7px 14px}
+.qz.long>div{grid-template-columns:330px 1fr}
+.qz.long .ch{justify-content:flex-start}
+.qz.long .chip{font-family:var(--font-ui);font-weight:500;font-size:17px;text-align:left}
+
+/* six comparisons */
+.ops>div{grid-template-columns:90px 300px 330px 1fr;align-items:center;padding:8px 0;gap:18px}
+.ops .op{font-family:var(--font-mono);font-weight:700;font-size:30px;color:var(--ink-900)}
+.ops .rd{font-size:19px}
+.ops .opt{font-family:var(--font-mono);font-size:19px;padding:7px 12px}
+.ops .ans{font-size:18px;line-height:1.35}
+.ops .ans code{font-size:18px}
+
+/* predict, then test */
+.pred>div{grid-template-columns:300px 210px 1fr;gap:16px;padding:7px 0;align-items:center}
+.pred code{font-family:var(--font-mono);font-size:20px;color:var(--ink-900);background:var(--spot-200);padding:2px 8px;border-radius:2px}
+.pred .ch{display:flex;gap:8px}
+.pred .chip{font-size:15px;padding:6px 12px}
+.pred .got{font-family:var(--font-mono);font-size:18px;color:var(--ink-900)}
+.pred .got small{font-family:var(--font-ui);font-size:15px;margin-left:8px}
+.pred .got .y{color:var(--pass-ink)}.pred .got .w{color:var(--cue-ink)}.pred .got .x{color:var(--error-ink)}
+.pred input.t{font-family:var(--font-mono);font-size:17px;padding:5px 8px;width:100%}
+
+/* reveal rows with code prompts */
+.reveal.cd>div{grid-template-columns:330px 1fr;padding:12px 0;gap:22px}
+.reveal.cd .opt{font-family:var(--font-mono);font-weight:700;font-size:22px;letter-spacing:0}
+.reveal.cd .ans{font-size:19px;line-height:1.4}
+
+/* words become symbols */
+.syms>div{grid-template-columns:180px 70px 120px 1fr;align-items:center;padding:14px 0;gap:16px}
+.syms .w{font-family:var(--font-display);font-weight:700;font-size:40px;letter-spacing:-.03em;color:var(--ink-900)}
+.syms .s{font-family:var(--font-mono);font-weight:700;font-size:40px;color:var(--paper-400)}
+.syms .ex{font-size:19px}
+
+/* if / else anatomy */
+.anat{display:flex;flex-direction:column;gap:10px}
+.anat .lbl{font-size:18px;line-height:1.4;margin:0}
+.btn.cd{text-transform:none;letter-spacing:0;font-size:15px}
+.anat .lbl b{font-family:var(--font-mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;background:var(--spot-400);border:2px solid var(--ink-900);padding:1px 6px;border-radius:2px;margin-right:6px}
+.ln.skip{opacity:.4}
+
+/* sound editor */
+.snd{display:grid;grid-template-columns:1.05fr .95fr;gap:28px;flex:1;min-height:0}
+.snd .left{display:flex;flex-direction:column;gap:12px;min-height:0}
+.snd .ed{display:flex;flex-direction:column;flex:1;min-height:0}
+.snd .ed textarea{flex:1;min-height:0;font-size:15px;line-height:1.42;white-space:pre;overflow-x:auto;padding:10px 16px}
+.snd .console{min-height:0;height:56px;overflow:auto;font-size:15px;padding:8px 14px}
+.snd .side{display:flex;flex-direction:column;gap:12px;min-height:0}
+.snd .task{margin:0;font-size:18px;line-height:1.45}
+.snd .fb{font-size:16px;padding:8px 12px;min-height:0}
+.lg-t{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:17px;line-height:1.35;margin:0}
+.lg-t code{font-size:17px;font-weight:700;background:var(--spot-200);padding:0 5px;border-radius:2px;color:var(--ink-900)}
+/* piano roll: what played, and when (from Functions: group work) */
+.roll{position:relative;height:110px;background:var(--paper-200);margin:0 12px 22px;border-bottom:1px solid var(--ink-900)}
+.roll .nt-b{position:absolute;height:14px;border:1.5px solid var(--ink-900);background:var(--cyan-400);border-radius:2px;font-family:var(--font-mono);font-size:10px;line-height:11px;color:var(--ink-900);padding:0 2px;overflow:hidden;white-space:nowrap}
+.roll .tk{position:absolute;bottom:-20px;font-family:var(--font-mono);font-size:11px;color:var(--ink-500);transform:translateX(-50%)}
+.roll .tk::before{content:"";position:absolute;left:50%;top:-4px;height:4px;border-left:1px solid var(--ink-900)}
+.roll .empty{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--font-display);font-style:italic;color:var(--ink-500);font-size:17px}
+.rollwrap{padding-top:10px}
+
+/* song player: what plays on each beat */
+.sp{display:flex;flex-direction:column;gap:10px}
+.sp .btn{padding:8px 12px;font-size:13px}
+.beats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px 10px}
+.barbox{display:flex;flex-direction:column;gap:2px}
+.barbox .bn{font-family:var(--font-mono);font-size:11px;color:var(--ink-500);letter-spacing:.06em;text-transform:uppercase}
+.barbox .cells{display:grid;grid-template-columns:repeat(4,1fr);gap:3px}
+.cell{height:40px;border:2px solid var(--ink-900);border-radius:2px;background:var(--paper-000);display:flex;flex-direction:column;justify-content:flex-end;padding:2px;gap:2px}
+.cell.now{box-shadow:0 0 0 3px var(--spot-400)}
+.cell i{display:block;height:9px;border-radius:1px}
+.cell i.b{background:var(--ink-900)}.cell i.c{background:var(--cyan-400)}.cell i.m{background:var(--curtain-500)}
+.legend{display:flex;gap:14px;font-size:14px;color:var(--ink-500);align-items:center}
+.legend i{display:inline-block;width:14px;height:10px;margin-right:5px;border:1px solid var(--ink-900)}
+.legend i.b{background:var(--ink-900)}.legend i.c{background:var(--cyan-400)}.legend i.m{background:var(--curtain-500)}
+.pos{font-family:var(--font-display);font-weight:700;font-size:26px;letter-spacing:-.02em;color:var(--ink-900);margin-left:auto}
+.sp .console{font-size:14px;line-height:1.5;min-height:0;height:72px;overflow:hidden;padding:6px 12px}
+
+/* the song, step by step */
+.songgrid{display:grid;grid-template-columns:600px 1fr;gap:30px;flex:1;min-height:0}
+.songgrid pre.code{font-size:13.5px;line-height:1.38;padding:10px 16px;overflow:hidden;flex:1}
+.songgrid .h1{font-size:44px;margin:0 0 6px}
+.songgrid .steplbl{font-family:var(--font-mono);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--curtain-600)}
+.songgrid .dir{font-size:18px;min-height:80px}
+.loopx>div{grid-template-columns:150px 1fr;padding:9px 0;gap:16px}
+.loopx code{font-size:17px;font-weight:700;color:var(--ink-900)}
+.loopx span{font-size:18px;line-height:1.4}
+</style>
+</head>
+<body data-lecture="conditionals" data-home="../">
+<main id="stage">
+<div id="deck">
+
+<!-- ============ RECAP AND OPENING ============ -->
+
+<section class="slide stage" id="cover" data-sec="Recap and opening">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">KD402D Programming · Week 41</div>
+    <h1 class="hero">Ask first, then decide.</h1>
+    <p class="lede">Booleans and conditionals: how a program asks a yes-or-no question, and does different things depending on the answer.</p>
+  </div>
+  <div style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
+    <div class="m" style="font-size:17px;color:var(--ink-200)">KD402D Programming · Fri 9 Oct · 10:15–12:00</div>
+  </div>
+  <aside class="nt">Welcome back. Keys: arrows to move, I for the slide index, N for these notes, E to jump to the next exercise, S to stop any sound. Students open the same link on their laptops: the "Your turn" slides and the code editors work on their own screens. The first twenty minutes are ideas, in plain language, with the onion again. Code starts at 10:35. Yesterday ran long: the notes mark slides you can skip if time is short.</aside>
+</section>
+
+<section class="slide" id="running-order" data-sec="Recap and opening">
+  <div class="billing">Running order · Today</div><hr class="rule">
+  <h2 class="h1">Today in five parts</h2>
+  <div class="rows order">
+    <div><span class="num">01</span><span class="tm">10:15</span><span class="nm">Recap and opening<small>Decisions, yes-or-no facts, questions, and / or / not</small></span><span class="kd">Idea</span></div>
+    <div><span class="num">02</span><span class="tm">10:35</span><span class="nm">Part 1: Boolean values and comparison<small>true, false, ===, !==, &lt;, &gt;</small></span><span class="kd code">Code</span></div>
+    <div><span class="num">03</span><span class="tm">11:15</span><span class="nm">Part 2: Conditionals and logical operators<small>if, else if, else, &amp;&amp;, ||, !</small></span><span class="kd code">Code</span></div>
+    <div><span class="num">04</span><span class="tm">11:35</span><span class="nm">Worked example: building a song<small>Functions, variables and conditionals in one piece</small></span><span class="kd code">Code</span></div>
+    <div><span class="num">05</span><span class="tm">11:55</span><span class="nm">Wrap-up</span><span></span></div>
+  </div>
+  <p class="dir" style="margin-top:12px">Break at 11:05.</p>
+  <aside class="nt">Same rhythm as yesterday: the ideas first, in plain language, then the same ideas in code. Laptops are useful from 10:35. Everything runs inside these slides today; VS Code comes back this afternoon.</aside>
+</section>
+
+<section class="slide" id="objectives" data-sec="Recap and opening">
+  <div class="billing">By noon you can</div><hr class="rule">
+  <h2 class="h1">What you'll be able to do</h2>
+  <div class="rows lab">
+    <div><span class="num">01</span><span class="tx">Explain what a boolean value is, and how it decides what a program does next.</span></div>
+    <div><span class="num">02</span><span class="tx">Write comparisons with <code>===</code>, <code>!==</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code> and <code>&gt;=</code>.</span></div>
+    <div><span class="num">03</span><span class="tx">Write conditional statements with <code>if</code>, <code>else if</code> and <code>else</code>.</span></div>
+    <div><span class="num">04</span><span class="tx">Combine conditions with <code>&amp;&amp;</code>, <code>||</code> and <code>!</code>.</span></div>
+  </div>
+  <aside class="nt">The four learning objectives from the course plan. Don't explain the symbols yet: they're here so students recognise them later. Come back to this slide at the wrap-up.</aside>
+</section>
+
+<section class="slide" id="recap" data-sec="Recap and opening" data-ex="Data recap">
+  <span class="turn">Your turn</span>
+  <div class="billing">Recap and opening · 10:15</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:8px">Data, one more time</h2>
+  <p class="lede" style="margin-bottom:10px">Yesterday we stored values, and every value had a kind. Today the program starts to make decisions about them.</p>
+  <div class="rows qz" id="rc"></div>
+  <div class="fb" id="rc-fb" style="margin-top:12px"></div>
+  <aside class="nt">About four minutes. Check that the basics from yesterday landed: a stored value has a kind (string or number), let can change, const can't. Let pairs answer on their laptops, then take hands. The third one gets an error on purpose: TypeError: Assignment to constant variable. Then motivate today: yesterday we stored and transformed data; today the program looks at that data and decides what to do.</aside>
+</section>
+
+<section class="slide" id="check-first" data-sec="Recap and opening" data-demo="Peeled?">
+  <span class="turn try">Try it</span>
+  <div class="billing">Recap and opening · The shape of a decision</div><hr class="rule">
+  <h2 class="h1">The check comes before the chop</h2>
+  <div class="row" style="gap:40px;align-items:center;flex-wrap:nowrap">
+    <div class="ask" style="width:360px">
+      <span class="q">Is the onion peeled?</span>
+      <div class="seg" id="cf-seg"><button class="btn ghost" data-v="1">Yes</button><button class="btn ghost" data-v="0">No</button></div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="paths" style="flex:1">
+      <div class="path" id="cf-yes"><span class="pk">Yes</span><span class="d">Chop it.</span></div>
+      <div class="path" id="cf-no"><span class="pk">No</span><span class="d">Peel it first. Then chop it.</span></div>
+    </div>
+  </div>
+  <p class="dir" id="cf-dir" style="margin-top:28px;min-height:70px">Before you chop, you check. Pick an answer.</p>
+  <aside class="nt">Beat 1: the shape of a decision. Not about booleans yet. Before you chop, you check: is it peeled? Depending on the answer you do different work. The distinction to draw out: the decision isn't the chopping, it's the question you ask first, and the answer decides which work happens. Click Yes, then No: only one path runs each time, never both. Say it plainly: a program asks a yes-or-no question about the state of things, and does different work depending on the answer. Don't say "conditional" yet.</aside>
+</section>
+
+<section class="slide" id="yes-no-fact" data-sec="Recap and opening" data-demo="A yes or no is a value">
+  <span class="turn try">Try it</span>
+  <div class="billing">Recap and opening · A fact you can keep</div><hr class="rule">
+  <h2 class="h1">A yes or no is a value too</h2>
+  <div class="row" style="gap:28px;align-items:flex-start">
+    <div class="vbox"><span class="lb">pieces</span><span class="vl">24</span><span class="ty">a number</span></div>
+    <div class="vbox"><span class="lb">kind of onion</span><span class="vl word">red</span><span class="ty">a word</span></div>
+    <div class="vbox yn" id="yn-box"><span class="lb">peeled?</span><span class="vl word" id="yn-val">yes</span><span class="ty" id="yn-ty">a yes or a no</span></div>
+  </div>
+  <p class="lede" style="margin-top:30px">Yesterday a box held a count or a word. "Is the onion peeled?" has an answer too, and the answer can go in a box.</p>
+  <div class="row"><button class="btn" id="yn-name">Give it a name</button></div>
+  <p class="dir" id="yn-dir" style="margin-top:16px;visibility:hidden">A yes-or-no value is called a <b>boolean</b>. In code it's <code>true</code> or <code>false</code>: only those two, and no quotation marks.</p>
+  <aside class="nt">Beat 2: narrow from "a decision" to the fact the decision rests on. Yesterday's boxes held a count or a word; a box can also hold a yes-or-no answer. Concept first, vocabulary second: only after they have the idea, press "Give it a name". That's a boolean, written true or false in code. Point out: no quotation marks, unlike yesterday's strings. Named after George Boole, if anyone asks.</aside>
+</section>
+
+<section class="slide" id="question" data-sec="Recap and opening" data-demo="More than 20?">
+  <span class="turn try">Try it</span>
+  <div class="billing">Recap and opening · Where the fact comes from</div><hr class="rule">
+  <h2 class="h1">A comparison is a question</h2>
+  <div class="row" style="gap:26px;align-items:center;flex-wrap:nowrap;margin-top:6px">
+    <div class="stack" style="gap:10px;align-items:center">
+      <div class="vbox"><span class="lb">pieces</span><span class="vl" id="qn-n" style="text-align:center">24</span></div>
+      <div class="row"><button class="btn ghost" id="qn-minus" aria-label="Fewer pieces">−</button><button class="btn ghost" id="qn-plus" aria-label="More pieces">+</button></div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="ask" style="width:330px"><span class="q">More than 20 pieces?</span></div>
+    <div class="arrow">→</div>
+    <div class="vbox yn" id="qn-box"><span class="lb">answer</span><span class="vl word" id="qn-out">yes</span></div>
+  </div>
+  <p class="dir" style="margin-top:26px">Yesterday we worked out a new number from stored ones. This is the same move, except what comes out is a yes or a no.</p>
+  <aside class="nt">Beat 3: you don't always have a boolean sitting there; often you make one by comparing. "Are there more than twenty pieces?" is a question whose honest answer is yes or no. Click − until it's 20: is 20 more than 20? (No. That's the edge case that makes <= and >= worth having later.) Connect back to yesterday: weight per piece was a new number worked out from stored ones; a comparison is the same move, but the answer is a yes/no. That's what will make onionPieces > 20 feel familiar in ten minutes.</aside>
+</section>
+
+<section class="slide" id="combine" data-sec="Recap and opening" data-demo="And, or, not">
+  <span class="turn try">Try it</span>
+  <div class="billing">Recap and opening · Several facts</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:10px">Most decisions rest on several facts</h2>
+  <div class="rows facts" id="fx"></div>
+  <p class="dir" style="margin-top:14px">You already combine facts with <i>and</i>, <i>or</i> and <i>not</i> every day. JavaScript has a symbol for each.</p>
+  <aside class="nt">Beat 4: real decisions usually rest on more than one check. Click the yes/no buttons. "And" needs both; "or" needs at least one; "not" flips the answer. Ask the room: with "and", how many ways are there to get a no? (Three.) Students combine conditions like this all the time in speech. Name it now, so that &&, || and ! after the break are new symbols for words they've used their whole lives. Don't show the symbols yet.</aside>
+</section>
+
+<section class="slide" id="spot-it" data-sec="Recap and opening" data-ex="Spot the decision">
+  <span class="turn">Your turn</span>
+  <div class="billing">Recap and opening · Check</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:10px">Spot the decision</h2>
+  <p class="lede" style="margin-bottom:6px">Each situation hides a yes-or-no question. Which one?</p>
+  <div class="rows qz long" id="sp"></div>
+  <div class="fb" id="sp-fb" style="margin-top:10px"></div>
+  <aside class="nt">Three items, about three minutes including the discussion. Students answer on their laptops, then discuss together. The wrong options are either the action (not the question) or a question whose answer is a number, not a yes or no. Recap the four ideas in one breath before the code: a decision is a check before an action; the answer is a value; a comparison makes that value; and, or, not combine them.</aside>
+</section>
+
+<!-- ============ PART 1: BOOLEAN VALUES AND COMPARISON ============ -->
+
+<section class="slide stage" id="written-down" data-sec="Part 1: Boolean values and comparison">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Part 1: Boolean values and comparison · 10:35</div>
+    <h2 class="hero md">Now we write it down.</h2>
+    <p class="lede">The yes-or-no fact, and the questions that make it, in real JavaScript.</p>
+    <div class="terms"><span>true</span><span>false</span><span>===</span><span>!==</span><span>&lt;</span><span>&gt;</span><span>&lt;=</span><span>&gt;=</span></div>
+  </div>
+  <aside class="nt">The handoff from idea to code. Laptops open on this deck from now on: the editors run inside the slides. Each idea is shown twice: first with the onion, then with sound, using only what everyone has from the exercises: notes and lengths (strings), tempos and frequencies (numbers), and triggerAttackRelease.</aside>
+</section>
+
+<section class="slide" id="boolean" data-sec="Part 1: Boolean values and comparison" data-demo="true and false">
+  <span class="turn try">Try it</span>
+  <div class="billing">Part 1 · A boolean</div><hr class="rule">
+  <h2 class="h1">true and false, no quotation marks</h2>
+  <div class="cols" style="gap:32px">
+    <div class="stack" style="gap:14px">
+      <div class="rows map">
+        <div><span class="idea">Is the onion peeled? <b>Yes.</b></span><pre class="code" id="bo-a"></pre></div>
+        <div><span class="idea">Is the sound muted? <b>No.</b></span><pre class="code" id="bo-b"></pre></div>
+      </div>
+      <p class="dir" style="font-size:20px">A name like <code>isPeeled</code> reads as a yes-or-no question. That's the convention for booleans.</p>
+    </div>
+    <div class="panel mini" id="mini-boolean"></div>
+  </div>
+  <aside class="nt">The yes/no fact from the opening, now written down. A bare true or false, no quotation marks: "true" with quotes is a string, a different value. isMuted is a fact about the sound: plain boolean, no new Tone.js needed. Run it. Then ask someone to add quotation marks around true and run it again: it logs the same text, which is exactly why the difference is hard to spot. typeof is held back; the comparison on the next slide shows the difference.</aside>
+</section>
+
+<section class="slide" id="compare" data-sec="Part 1: Boolean values and comparison" data-ex="A comparison">
+  <span class="turn">Your turn</span>
+  <div class="billing">Part 1 · Comparison</div><hr class="rule">
+  <h2 class="h1">A comparison gives back a boolean</h2>
+  <div class="cols" style="gap:32px">
+    <div class="stack" style="gap:14px">
+      <p class="lede" style="margin:0">A comparison is a question. JavaScript works it out and hands back the answer: <code>true</code> or <code>false</code>.</p>
+      <p class="dir" style="font-size:20px">It works for numbers, like the onion pieces, and for strings, like a note length.</p>
+      <div class="task"><span class="tk">Your turn</span>Change <code>onionPieces</code> to <code>12</code> and <code>duration</code> to <code>"4n"</code>. Predict each line before you run it.</div>
+      <div class="fb" id="cp-fb"></div>
+    </div>
+    <div class="panel mini" id="mini-compare"></div>
+  </div>
+  <aside class="nt">onionPieces > 20 evaluated live: it hands back true. Then a value they already have from the exercises: the duration. duration === "8n" is true; duration !== "4n" is true. Run it, then do the task: with 12 and "4n" all three flip to false. Comparison only: no if yet, that's Part 2. Point out === is three equals signs; the next slides explain why.</aside>
+</section>
+
+<section class="slide" id="operators" data-sec="Part 1: Boolean values and comparison" data-demo="Six comparisons">
+  <span class="turn try">Try it</span>
+  <div class="billing">Part 1 · The operators</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:8px">Six ways to compare</h2>
+  <p class="small muted" style="margin:0 0 6px">With <code>let onionPieces = 24;</code> Predict, then click to check.</p>
+  <div class="rows reveal ops" id="ops"></div>
+  <aside class="nt">Work through the full set. For each row, ask the room first, then click. Read the operators aloud: "is the same as", "is not the same as", "is less than", "is more than", "is at most", "is at least". <= and >= include the edge: 24 <= 24 is true. Common mistake: writing => instead of >=. => means something else in JavaScript.</aside>
+</section>
+
+<section class="slide" id="predict" data-sec="Part 1: Boolean values and comparison" data-ex="Predict, then test">
+  <span class="turn">Your turn</span>
+  <div class="billing">Part 1 · In pairs</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:6px">true or false?</h2>
+  <p class="small muted" style="margin:0 0 6px">Pick your prediction. The slide runs it and shows what JavaScript says. Talk about every surprise.</p>
+  <div class="rows pred" id="pr"></div>
+  <aside class="nt">About five minutes, in pairs. Each click is a prediction; the code then runs. The surprises worth discussing: "C4" === "c4" is false (capitals count); 24 === "24" is false (a number and a string are never the same: that's the next slide); 0.1 + 0.2 === 0.3 is false (decimals in computers are slightly off; note it and move on). The last row lets them test their own expression.</aside>
+</section>
+
+<section class="slide" id="pitfall" data-sec="Part 1: Boolean values and comparison" data-demo="== and ===">
+  <span class="turn try">Try it</span>
+  <div class="billing">Part 1 · A common mistake</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:12px">One, two or three equals signs</h2>
+  <div class="rows reveal cd" id="pf"></div>
+  <p class="dir" style="margin-top:16px">In this course: always <code>===</code> and <code>!==</code>.</p>
+  <aside class="nt">The == vs === pitfall. == converts the types first (yesterday's type coercion), so 24 == "24" is true. === compares value and type, so it's false. Text from an input field is always a string, so == hides real bugs. And a single = isn't a question at all: it puts a value in the box. That one will cause the most bugs this afternoon, inside if. Open the workspace (W) and try them in the console if there's time.</aside>
+</section>
+
+<section class="slide" id="handoff" data-sec="Part 1: Boolean values and comparison">
+  <div class="billing">Part 1 · After the break</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:10px">And, or, not get symbols</h2>
+  <div class="rows syms">
+    <div><span class="w">and</span><span class="arrow">→</span><span class="s">?</span><span class="ex">Cook if the onion is chopped <i>and</i> the pan is hot.</span></div>
+    <div><span class="w">or</span><span class="arrow">→</span><span class="s">?</span><span class="ex">Take a jacket if it's raining <i>or</i> it's cold.</span></div>
+    <div><span class="w">not</span><span class="arrow">→</span><span class="s">?</span><span class="ex">Do the step if it's <i>not</i> done yet.</span></div>
+  </div>
+  <p class="dir" style="margin-top:18px">After the break: the symbols, and a way to act on the answer.</p>
+  <aside class="nt">A short bridge, under a minute; skip if time is short. The opening named and, or, not in plain language. After the break they get their symbols (&&, ||, !) and go to work inside conditionals. Ask: who can guess one of the symbols?</aside>
+</section>
+
+<!-- ============ BREAK ============ -->
+
+<section class="slide stage" id="break" data-sec="Break">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Break · 11:05–11:15</div>
+    <div class="timer" id="tm" aria-live="off">10:00</div>
+    <p class="lede" id="tm-msg" style="margin-top:22px">Stretch, refill, and keep this deck open. After the break, booleans start making decisions, and we make some noise: bring headphones if you have them.</p>
+    <div class="row" style="margin-top:20px"><button class="btn alt" id="tm-go">Start</button><button class="btn ghost" id="tm-reset">Reset</button></div>
+  </div>
+  <aside class="nt">10-minute break. Remind them about headphones: Part 2 and the song make sound on their laptops.</aside>
+</section>
+
+<!-- ============ PART 2: CONDITIONALS AND LOGICAL OPERATORS ============ -->
+
+<section class="slide" id="if-else" data-sec="Part 2: Conditionals and logical operators" data-demo="if and else">
+  <span class="turn try">Try it</span>
+  <div class="billing">Part 2: Conditionals and logical operators · 11:15</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:14px">if acts on the answer</h2>
+  <div class="cols" style="gap:36px">
+    <div class="anat">
+      <p class="lede" style="margin:0 0 4px">If the onion is peeled, chop it. Otherwise, peel it first.</p>
+      <p class="lbl"><b>( )</b>The question goes in round brackets. Its answer is a boolean.</p>
+      <p class="lbl"><b>{ }</b>Each block of work goes in curly brackets.</p>
+      <p class="lbl"><b>else</b>What to do when the answer is <code>false</code>. Optional.</p>
+      <div class="seg" id="ie-seg" style="margin-top:10px"><button class="btn ghost cd sel" data-v="0">isPeeled = false</button><button class="btn ghost cd" data-v="1">isPeeled = true</button></div>
+    </div>
+    <div class="stack" style="gap:12px">
+      <div class="panel"><div class="bar"><span>onion.js</span><span>bright lines run</span></div><pre class="code" id="ie-code"></pre></div>
+      <div class="panel"><div class="bar y"><span>console</span></div><div class="console" id="ie-con"></div></div>
+    </div>
+  </div>
+  <aside class="nt">Pick up the handoff. We've been making booleans; now we use one to choose what happens next. Read it aloud in plain language first: if the onion is peeled, chop it, else peel it first. Toggle the value: JavaScript asks the question in the brackets, runs one block, skips the other. Never both, never neither. if (isPeeled) is enough: no need to write isPeeled === true, the value is already a yes/no. Common mistakes this afternoon: a semicolon after the brackets, if (isPeeled); { … }, which ends the if right there; and a missing closing curly bracket.</aside>
+</section>
+
+<section class="slide" id="if-sound" data-sec="Part 2: Conditionals and logical operators" data-demo="A boolean picks the sound">
+  <span class="turn try">Try it</span>
+  <div class="billing">Part 2 · if / else with sound</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:14px">A boolean picks the chord</h2>
+  <div class="snd" id="s-if"></div>
+  <aside class="nt">Leave the onion behind; now a boolean decides what you hear. Play it: bright. Change isHappy to false and play again: darker. The chord is three notes on a PolySynth, which can play several at once (from yesterday's exercise 7). Then ask for a comparison instead of a plain boolean: if (duration === "8n"), with let duration = "8n" at the top. Keep it short: under three minutes.</aside>
+</section>
+
+<section class="slide" id="else-if" data-sec="Part 2: Conditionals and logical operators" data-ex="else if">
+  <span class="turn">Your turn</span>
+  <div class="billing">Part 2 · A middle case</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:14px">else if adds a middle case</h2>
+  <div class="snd" id="s-elseif"></div>
+  <aside class="nt">A value falls in a low, middle or high band and picks the pitch. JavaScript asks the questions from the top and runs the first block whose answer is true; the rest are skipped. Predict for 2, 5 and 9 before playing. Then the edges: 4 is not less than 4, so it's middle; 8 is high. Ask: what if we swap the order, energy < 8 first? (Then 2 plays the middle note: the first true wins.)</aside>
+</section>
+
+<section class="slide" id="logic" data-sec="Part 2: Conditionals and logical operators" data-demo="&& || !">
+  <span class="turn try">Try it</span>
+  <div class="billing">Part 2 · Logical operators</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:14px">and, or, not: &amp;&amp;, ||, !</h2>
+  <div class="snd" id="s-logic"></div>
+  <aside class="nt">The plain-language and, or, not from the opening, now real operators. ! flips: !isMuted is true when isMuted is false. && needs both sides true; || needs at least one. Play it, then change one value at a time and predict: isMuted = true (silence from the first if, the high G still plays), energy = 2, note = "G4" and "D4". The || key is usually Shift + backslash; on Swedish keyboards it's Alt Gr + the key left of Z, or Option + 7 on a Mac.</aside>
+</section>
+
+<section class="slide" id="which-runs" data-sec="Part 2: Conditionals and logical operators" data-ex="Which block runs?">
+  <span class="turn">Your turn</span>
+  <div class="billing">Part 2 · Check</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:10px">Which block runs?</h2>
+  <div class="cols" style="gap:30px;grid-template-columns:430px 1fr">
+    <div class="panel"><div class="bar"><span>beat.js</span></div><pre class="code sm" id="wr-code"></pre></div>
+    <div class="stack" style="gap:8px">
+      <div class="rows qz" id="wr"></div>
+      <div class="fb" id="wr-fb"></div>
+    </div>
+  </div>
+  <aside class="nt">This code is a preview of the song. beat = 1: only "bass", because the first true wins, even though the else if would also be true. beat = 3: "chord". beat = 2: the else. The last question is the && from the song: bar 3, beat 1 is false, because beat !== 1 is false. Discuss together, then on to the song.</aside>
+</section>
+
+<!-- ============ WORKED EXAMPLE: BUILDING A SONG ============ -->
+
+<section class="slide stage" id="song-open" data-sec="Worked example: building a song">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Worked example: building a song · 11:35</div>
+    <h2 class="hero md">Decisions give a song its shape.</h2>
+    <p class="lede">Tuesday's functions, yesterday's variables, today's conditionals: one piece that plays.</p>
+  </div>
+  <aside class="nt">The synthesis. Build it live (VS Code, conditionals/start in the exercises repo, or the workspace), running after every addition and asking for a prediction before each play. The next slides have the same six steps for students to play on their own laptops, and for you if the live version goes sideways. The finished version is in conditionals/reference.</aside>
+</section>
+
+<section class="slide" id="tone-loop" data-sec="Worked example: building a song" data-demo="Tone.Loop">
+  <span class="turn try">Try it</span>
+  <div class="billing">Worked example · The one new thing</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:12px">Tone calls this function every beat</h2>
+  <div class="cols" style="gap:32px;grid-template-columns:1.05fr .95fr">
+    <div class="stack" style="gap:12px">
+      <div class="panel"><div class="bar"><span>pulse.js</span></div><pre class="code sm" id="tl-code"></pre></div>
+      <div class="rows loopx">
+        <div><code>playStep</code><span>Your function. You don't call it: Tone does, once every beat.</span></div>
+        <div><code>time</code><span>Tone hands in the exact moment to play. Pass it on.</span></div>
+        <div><code>"4n"</code><span>Every quarter note: once a beat, every half second.</span></div>
+      </div>
+    </div>
+    <div class="sp" id="sp-loop"></div>
+  </div>
+  <aside class="nt">The only new API today. It's advanced-track material in the exercises, so assume nobody has seen it. Frame it as a black box: "Tone calls this function for us, once every beat." Don't explain how it works inside, and don't call it a loop in the programming sense: loops come later in the course. Its only job is to give our conditionals something to decide about, beat after beat. Tone.Transport is Tone's clock; start() starts it. Press Play, then Stop. Outside these slides, sound only starts after a click with Tone.start(): the Play button here does that for you.</aside>
+</section>
+
+<section class="slide" id="song" data-sec="Worked example: building a song" data-demo="The song, step by step">
+  <span class="turn try">Try it</span>
+  <div class="billing">Worked example · Step by step</div><hr class="rule">
+  <div class="songgrid">
+    <div class="panel" style="display:flex;flex-direction:column"><div class="bar"><span>song.js</span><span id="sg-n">step 1 of 7</span></div><pre class="code" id="sg-code"></pre></div>
+    <div class="stack" style="gap:10px">
+      <h2 class="h1">The song, step by step</h2>
+      <span class="steplbl" id="sg-lbl"></span>
+      <p class="dir" id="sg-dir"></p>
+      <div class="sp" id="sp-song"></div>
+      <div class="row"><button class="btn ghost" id="sg-back">Back</button><button class="btn" id="sg-next">Next step</button><button class="btn ghost" id="sg-reset">Start again</button></div>
+    </div>
+  </div>
+  <aside class="nt">Seven views of the six steps in the plan (step 6 is split: the melody, then the ending). Bright lines are what changed; functions that didn't change are folded to one line. At every step: ask what they'll hear, then Play. Step 1: Tuesday's functions, called by hand. Step 2: Tone takes over the calling: a bass note on every beat. Step 3: the beat count, with a decision attached (if beat > 4, back to 1): yesterday's changing variables. Step 4: the groove comes from conditions, not from writing notes out. Step 5: bars give sections; && and !== earn their place: the melody comes in at bar 3 and never on beat 1. Step 6: if / else if / else on bar changes the melody. Step 7: the piece ends after bar 8. "Open in workspace" copies the current step into the workspace to change and run. The same steps are TODOs in the exercises repo, conditionals/start/song.js. In the workspace the song plays, but the console there only shows what was logged at the moment Run was pressed, so the beat-by-beat logs don't appear: watch the console on this slide instead.</aside>
+</section>
+
+<!-- ============ WRAP-UP ============ -->
+
+<section class="slide stage" id="recap-end" data-sec="Wrap-up">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Wrap-up · 11:55</div>
+    <h2 class="hero md">Ask a question. Act on the answer.</h2>
+    <div class="terms"><span>true</span><span>false</span><span>===</span><span>!==</span><span>&lt; &gt; &lt;= &gt;=</span><span>if</span><span>else if</span><span>else</span><span>&amp;&amp;</span><span>||</span><span>!</span></div>
+    <p class="lede">Next week the user decides: clicks and key presses become the facts your conditions check.</p>
+  </div>
+  <aside class="nt">Summarise: a boolean is a yes/no value, true or false; a comparison makes one; if / else if / else acts on it, and the first true wins; &&, || and ! combine them. Go back to the objectives slide if there's time. Tease User Input: so far the values were typed into the code; next, they come from the person using the program.</aside>
+</section>
+
+<section class="slide" id="next" data-sec="Wrap-up">
+  <div class="billing">After lunch · Group learning and exercises</div><hr class="rule">
+  <h2 class="h1">This afternoon, in VS Code</h2>
+  <div class="cols">
+    <div class="stack">
+      <p class="lede" style="margin:0">The conditionals exercises, in groups, with teachers in the room. Sync your fork first: the song from this morning is in <code>conditionals/start</code>, to build yourself step by step.</p>
+      <p class="lede" style="margin:0">Practice quiz on Canvas: Boolean expressions and if-else statements.</p>
+    </div>
+    <div class="rows lab" style="border-top:1px solid var(--ink-900)">
+      <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://mau.instructure.com/courses/22858/modules/137081" target="_blank" rel="noopener">Canvas: Boolean values, comparison, and conditional statements</a></span></div>
+      <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://mau.instructure.com/courses/22858/pages/exercises-boolean-values-comparison-conditional-statements" target="_blank" rel="noopener">Canvas: the exercises page</a></span></div>
+      <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://eloquentjavascript.net/01_values.html" target="_blank" rel="noopener">Eloquent JavaScript, chapter 1: Boolean values</a></span></div>
+      <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://eloquentjavascript.net/02_program_structure.html" target="_blank" rel="noopener">Eloquent JavaScript, chapter 2: Conditional execution</a></span></div>
+      <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://scrimba.com/" target="_blank" rel="noopener">Scrimba: Making decisions</a></span></div>
+    </div>
+  </div>
+  <aside class="nt">Preview the afternoon: the exercises page and the three tracks, plus the song in the exercises repo (sync fork, then pull). Remind them about the practice quiz on Canvas. This deck stays online, and the editors keep what students typed.</aside>
+</section>
+
+</div>
+</main>
+
+<script src="../shared/vendor/tone.min.js"></script>
+<script src="../shared/deck.js"></script>
+<script src="../shared/workspace.js"></script>
+<script>
+(function(){
+"use strict";
+var D=Deck,$=D.$,$$=D.$$,esc=D.esc,code=D.code,fb=D.fb,conLines=D.conLines,run=D.run;
+
+/* ---------- helpers: quizzes, embedded editor, stepper ---------- */
+/* Q: [{t: html, o: [option labels], a: answer index, w: why (shown when right), h: hint (shown when wrong)}] */
+function quiz(box,fbel,Q,doneMsg){
+  var done=0;
+  Q.forEach(function(q){
+    var row=document.createElement("div"),answered=false;
+    row.innerHTML='<div class="sc">'+q.t+'</div><div class="ch"></div>';
+    var ch=row.querySelector(".ch");
+    q.o.forEach(function(c,i){
+      var b=document.createElement("button");b.className="chip";b.textContent=c;
+      b.addEventListener("click",function(){
+        if(answered)return;
+        if(i===q.a){b.classList.add("right");answered=true;done++;fb(fbel,"pass","Correct. "+q.w+(done===Q.length&&doneMsg?" "+doneMsg:""))}
+        else{b.classList.add("wrong");fb(fbel,"note",q.h||"Not quite. Look again.")}
+      });
+      ch.appendChild(b);
+    });
+    box.appendChild(row);
+  });
+}
+/* An editor + Run + console inside a slide. check(result) returns [kind, html] or null. */
+function mini(host,file,start,o){
+  o=o||{};
+  host.innerHTML='<div class="bar"><span>'+esc(file)+'</span><span>Ctrl / ⌘ + Enter runs</span></div>'+
+    '<textarea class="code-ed" spellcheck="false" rows="'+(o.rows||8)+'" aria-label="Code editor: '+esc(file)+'"></textarea>'+
+    '<div class="tools"><button class="btn">Run</button><button class="btn ghost">Reset</button></div>'+
+    '<div class="console"><span class="dim">Press Run to see what the code logs.</span></div>';
+  var ed=host.querySelector("textarea"),con=host.querySelector(".console"),bs=host.querySelectorAll(".tools .btn"),key="mini:"+host.id;
+  ed.value=D.store.get(key)||start;
+  ed.addEventListener("input",function(){D.store.set(key,ed.value)});
+  function go(){
+    var r=run(ed.value),lines=[{c:"in",t:"run "+file}].concat(r.logs);
+    if(r.error)lines.push({c:"bad",t:r.blocked?r.error.message:"The code stopped: "+(r.error.name||"Error")+": "+r.error.message});
+    else if(!r.logs.length)lines.push({c:"dim",t:"(nothing was logged)"});
+    conLines(con,lines);con.scrollTop=con.scrollHeight;
+    if(o.check&&o.fb){var c=o.check(r,ed.value);if(c)fb(o.fb,c[0],c[1]);else fb(o.fb)}
+  }
+  D.edKeys(ed,go);
+  bs[0].addEventListener("click",go);
+  bs[1].addEventListener("click",function(){ed.value=start;D.store.set(key,start);conLines(con,[{c:"dim",t:"Press Run to see what the code logs."}]);if(o.fb)fb(o.fb)});
+}
+function stepper(n,render,back,next,reset){
+  var i=0;function r(){render(i);back.disabled=i===0;next.disabled=i===n-1}
+  next.addEventListener("click",function(){if(i<n-1){i++;r()}});
+  back.addEventListener("click",function(){if(i>0){i--;r()}});
+  reset.addEventListener("click",function(){i=0;r()});
+  r();
+}
+function flashEl(el){el.classList.remove("flashbox");void el.offsetWidth;el.classList.add("flashbox")}
+/* Work out one expression with the student-code runner. */
+function repr(v){if(typeof v==="string")return JSON.stringify(v);if(typeof v==="number"&&isNaN(v))return "NaN";return String(v)}
+function evaluate(expr){
+  var r=run("function __value() { return (" + expr + "\n); }","__value");
+  if(r.error)return {err:r.blocked?r.error.message:"The code stopped: "+(r.error.name||"Error")+": "+r.error.message};
+  try{return {v:repr(r.value())}}catch(e){return {err:"The code stopped: "+(e.name||"Error")+": "+e.message}}
+}
+/* Stop sound when a slide is left. */
+function onLeave(slide,f){new MutationObserver(function(){if(slide.hidden)f()}).observe(slide,{attributes:true,attributeFilter:["hidden"]})}
+
+/* ============ sound runtime (adapted from Functions: group work) ============
+   Every triggerAttackRelease is recorded, so the slides can show what played and when. */
+var REC={on:false,notes:[]};
+(function(){
+  ["Synth","PolySynth"].forEach(function(n){
+    var p=Tone[n]&&Tone[n].prototype;
+    while(p&&!Object.prototype.hasOwnProperty.call(p,"triggerAttackRelease"))p=Object.getPrototypeOf(p);
+    if(!p||Object.prototype.hasOwnProperty.call(p,"__kd"))return;
+    var orig=p.triggerAttackRelease;
+    p.triggerAttackRelease=function(note,dur,time){
+      var ret=orig.apply(this,arguments);
+      if(REC.on){
+        try{var t=time===undefined?Tone.now():this.toSeconds(time),d=this.toSeconds(dur),m=null;
+          try{m=Tone.Frequency(note).toMidi()}catch(e){}
+          REC.notes.push({n:String(note),t:t,d:d,m:isFinite(m)?m:null,k:this.name});
+        }catch(e){}
+      }
+      return ret;
+    };
+    p.__kd=1;
+  });
+})();
+/* Silence everything: stop the clock and swap in a fresh audio context (scheduled notes die with the old one). */
+function stopAll(){
+  try{var tr=Tone.getTransport();tr.stop();tr.cancel()}catch(e){}
+  try{var old=Tone.getContext();Tone.setContext(new Tone.Context());old.dispose()}catch(e){}
+}
+/* Start sound (needs a click). A context swapped out mid-start rejects its promise: that's expected. */
+function wake(){try{Tone.start().catch(function(){})}catch(e){}}
+function startRec(){REC.on=true;REC.notes=[]}
+D.addButton({label:"Stop sound",key:"s",onClick:stopAll});
+/* Tone.Transport in Tone.js is fixed to the first audio context; stopAll swaps contexts,
+   so student code gets a Tone whose Transport is always the current clock. */
+var ToneEnv=Object.create(Tone);
+Object.defineProperty(ToneEnv,"Transport",{get:function(){return Tone.getTransport()}});
+D.workspace.env.Tone=ToneEnv;
+D.workspace.onRun(function(){stopAll();wake();startRec()});
+
+function errText(err){
+  var m=(err.name||"Error")+": "+err.message,h="";
+  if(/strictly greater than previous start/.test(err.message))h=" One <code>Tone.Synth</code> plays one note at a time. Give each note its own time, or use a <code>PolySynth</code>.";
+  else if(/setValueAtTime: "/.test(err.message))h=" That note name isn't one Tone.js knows. Notes are A to G, then a number: <code>\"C4\"</code>.";
+  else if(/is not defined/.test(err.message))h=" Check the spelling, capitals included, and the quotation marks around notes.";
+  else if(/Unexpected token|missing \)|Unexpected end/.test(err.message))h=" A bracket is missing or one too many. Every <code>(</code> needs its <code>)</code>, every <code>{</code> its <code>}</code>.";
+  return "The code stopped: <code>"+esc(m)+"</code>."+h;
+}
+/* Draw notes into a .roll: x is time, y is pitch. */
+function roll(el,notes,t0){
+  notes=notes.filter(function(n){return isFinite(n.t)&&isFinite(n.d)});
+  if(!notes.length){el.innerHTML='<div class="empty">Nothing played yet.</div>';return}
+  var ts=notes.map(function(n){return Math.max(0,n.t-t0)});
+  var end=Math.max.apply(null,notes.map(function(n,i){return ts[i]+n.d}));
+  var span=Math.max(2,Math.ceil(end));
+  var ms=notes.map(function(n){return n.m}).filter(function(m){return m!==null});
+  var lo=ms.length?Math.min.apply(null,ms):0,hi=ms.length?Math.max.apply(null,ms):1;
+  var H=el.clientHeight||100,html="";
+  for(var s=0;s<=span;s++)html+='<span class="tk" style="left:'+(s/span*100)+'%">'+s+'s</span>';
+  notes.forEach(function(n,i){
+    var y=n.m===null?H-16:(hi===lo?(H-16)/2:(hi-n.m)/(hi-lo)*(H-18));
+    html+='<span class="nt-b" title="'+esc(n.n)+'" style="left:'+(ts[i]/span*100)+'%;width:'+Math.max(.9,n.d/span*100)+'%;top:'+y+'px">'+esc(n.n)+'</span>';
+  });
+  el.innerHTML=html;
+}
+
+/* ============ sound editor ============
+   o: {el, file, task (html), start, store, check(notes, src) -> [kind, html] or null} */
+function soundEd(o){
+  var el=o.el;
+  el.innerHTML='<div class="left"><div class="panel ed"><div class="bar"><span>'+esc(o.file)+'</span><span>Ctrl / ⌘ + Enter plays</span></div><textarea class="code-ed" spellcheck="false" aria-label="Code for '+esc(o.file)+'"></textarea></div>'+
+    '<div class="panel"><div class="console"><span class="dim">Your console.log output appears here.</span></div></div></div>'+
+    '<div class="side"><div class="task">'+o.task+'</div>'+
+    '<div class="row"><button class="btn play">Play</button><button class="btn ghost stop">Stop</button><button class="btn ghost reset">Reset</button></div>'+
+    '<div class="fb"></div>'+
+    '<div class="panel"><div class="bar y"><span>what played</span><span class="cnt">0 notes</span></div><div class="rollwrap"><div class="roll"></div></div></div></div>';
+  var ta=$("textarea",el),con=$(".console",el),fbe=$(".fb",el),rl=$(".roll",el),cnt=$(".cnt",el);
+  ta.value=D.store.get(o.store)||o.start;
+  ta.addEventListener("input",function(){D.store.set(o.store,ta.value)});
+  roll(rl,[],0);
+  function play(){
+    stopAll();wake();startRec();
+    var t0=Tone.now(),r=run(ta.value,null,{Tone:ToneEnv});
+    var lines=r.logs.slice();
+    if(r.error&&!r.blocked)lines.push({c:"bad",t:(r.error.name||"Error")+": "+r.error.message});
+    conLines(con,lines.length?lines:[{c:"dim",t:"(nothing logged)"}]);
+    roll(rl,REC.notes,t0);cnt.textContent=REC.notes.length+(REC.notes.length===1?" note":" notes");
+    if(r.blocked){fb(fbe,"note",esc(r.error.message));return}
+    if(r.error){fb(fbe,"err",errText(r.error));return}
+    var out=o.check?o.check(REC.notes,ta.value):null;
+    if(!out)out=REC.notes.length?null:["note","Nothing played. Which block ran? Look at the values at the top."];
+    if(out)fb(fbe,out[0],out[1]);else fb(fbe);
+  }
+  $(".play",el).addEventListener("click",play);
+  D.edKeys(ta,play);
+  $(".stop",el).addEventListener("click",stopAll);
+  var armed=false;
+  $(".reset",el).addEventListener("click",function(){
+    var b=this;
+    if(!armed){armed=true;b.textContent="Sure? Click again";setTimeout(function(){armed=false;b.textContent="Reset"},2500);return}
+    armed=false;b.textContent="Reset";ta.value=o.start;D.store.set(o.store,o.start);fb(fbe);
+  });
+  onLeave(el.closest(".slide"),stopAll);
+}
+
+/* ============ song player ============
+   Runs code that plays on Tone's clock and shows, beat by beat, what played:
+   bass (Synth), chord (PolySynth, quarter notes), melody (PolySynth, shorter). getSrc() gives the code. */
+var BEAT=0.5; /* seconds per beat at Tone's default 120 bpm */
+function songPlayer(host,getSrc){
+  var cells="";
+  for(var b=0;b<8;b++){cells+='<div class="barbox"><span class="bn">bar '+(b+1)+'</span><div class="cells">';for(var k=0;k<4;k++)cells+='<div class="cell" data-i="'+(b*4+k)+'"></div>';cells+='</div></div>'}
+  host.innerHTML='<div class="row"><button class="btn sp-play">Play</button><button class="btn ghost sp-stop">Stop</button><button class="btn alt sp-ws">Open in workspace</button><span class="pos">–</span></div>'+
+    '<div class="beats">'+cells+'</div>'+
+    '<div class="legend"><span><i class="b"></i>bass</span><span><i class="c"></i>chord</span><span><i class="m"></i>melody</span></div>'+
+    '<div class="panel"><div class="console"><span class="dim">Press Play. What do you expect to hear?</span></div></div>';
+  var pos=$(".pos",host),con=$(".console",host),timer=null,drawn=0,t0=null,logs=[],started=false,lastIdx=-1;
+  function clear(){$$(".cell",host).forEach(function(c){c.innerHTML="";c.classList.remove("now")})}
+  function kind(n){return n.k==="PolySynth"?(n.d>=BEAT-0.01?"c":"m"):"b"}
+  function tick(){
+    var now=Tone.immediate(),notes=REC.notes,state;
+    if(t0===null&&notes.length)t0=Math.min.apply(null,notes.map(function(n){return n.t}));
+    while(drawn<notes.length&&notes[drawn].t<=now+0.02){
+      var n=notes[drawn],i=Math.round((n.t-t0)/BEAT);
+      if(i>=32&&i%32===0&&i!==lastIdx){clear()}
+      var c=host.querySelector('.cell[data-i="'+(i%32)+'"]');
+      if(c&&!c.querySelector("i."+kind(n))){var m=document.createElement("i");m.className=kind(n);c.appendChild(m)}
+      lastIdx=i;drawn++;
+    }
+    try{state=Tone.getTransport().state}catch(e){state=""}
+    if(state==="started")started=true;
+    $$(".cell.now",host).forEach(function(c){c.classList.remove("now")});
+    if(state==="started"&&t0!==null&&now>=t0){
+      var cur=Math.floor((now-t0)/BEAT+1e-6),cc=host.querySelector('.cell[data-i="'+(cur%32)+'"]');
+      if(cc)cc.classList.add("now");
+      pos.textContent="bar "+(Math.floor(cur/4)+1)+" · beat "+(cur%4+1);
+    }else if(started&&state!=="started"){pos.textContent="stopped"}
+    var shown=logs.slice(-3);
+    conLines(con,shown.length?shown:[{c:"dim",t:"(nothing logged)"}]);
+  }
+  function stop(){if(timer){clearInterval(timer);timer=null}stopAll();$$(".cell.now",host).forEach(function(c){c.classList.remove("now")});if(started)pos.textContent="stopped"}
+  function play(){
+    stop();wake();startRec();clear();
+    drawn=0;t0=null;started=false;lastIdx=-1;pos.textContent="–";
+    var r=run(getSrc(),null,{Tone:ToneEnv});logs=r.logs;
+    if(r.error){conLines(con,[{c:"bad",t:r.blocked?r.error.message:(r.error.name||"Error")+": "+r.error.message}]);return}
+    if(!/Tone\.Loop/.test(getSrc()))pos.textContent="no beat yet";
+    timer=setInterval(tick,40);tick();
+  }
+  $(".sp-play",host).addEventListener("click",play);
+  $(".sp-stop",host).addEventListener("click",stop);
+  $(".sp-ws",host).addEventListener("click",function(){stop();D.workspace.append(getSrc())});
+  onLeave(host.closest(".slide"),stop);
+  return {stop:stop};
+}
+
+/* ---------- recap ---------- */
+quiz($("#rc"),$("#rc-fb"),[
+  {t:'<code>"8n"</code> is a…',o:["string","number"],a:0,w:"The quotation marks make it text, even with a digit inside.",h:"Look at what's around it."},
+  {t:'<code>let pieces = 24;</code> then <code>pieces = 30;</code>. Now <code>pieces</code> is…',o:["24","30","an error"],a:1,w:"let can change: the 24 is replaced, the name stays.",h:"Can a let variable get a new value?"},
+  {t:'<code>const kind = "red";</code> then <code>kind = "yellow";</code>. Now…',o:['"red"','"yellow"',"an error"],a:2,w:"TypeError: Assignment to constant variable. A const can't change.",h:"What's the difference between let and const?"}
+],"Values have kinds, and they live in boxes with names. Today: what to do with them.");
+
+/* ---------- the check before the chop ---------- */
+(function(){
+  $$("#cf-seg .btn").forEach(function(b){b.addEventListener("click",function(){
+    var y=b.dataset.v==="1";
+    $$("#cf-seg .btn").forEach(function(x){x.classList.toggle("sel",x===b)});
+    $("#cf-yes").className="path "+(y?"on":"off");$("#cf-no").className="path "+(y?"off":"on");
+    $("#cf-dir").textContent=y?"Yes: we chop. The peeling path never happens.":"No: we peel first, then chop. Same onion, different work, because the answer was different.";
+  })});
+})();
+
+/* ---------- a yes or no is a value ---------- */
+$("#yn-name").addEventListener("click",function(){
+  var v=$("#yn-val");v.textContent="true";v.className="vl code";$("#yn-ty").textContent="a boolean: true or false";
+  $("#yn-dir").style.visibility="visible";flashEl($("#yn-box"));this.disabled=true;
+});
+
+/* ---------- a comparison is a question ---------- */
+(function(){
+  var n=24;
+  function r(){
+    $("#qn-n").textContent=n;var y=n>20,o=$("#qn-out"),was=o.textContent;
+    o.textContent=y?"yes":"no";$("#qn-box").className="vbox yn "+(y?"yes":"no");
+    if(was!==o.textContent)flashEl($("#qn-box"));
+    $("#qn-minus").disabled=n<=12;$("#qn-plus").disabled=n>=30;
+  }
+  $("#qn-minus").addEventListener("click",function(){n-=2;r()});
+  $("#qn-plus").addEventListener("click",function(){n+=2;r()});
+  r();
+})();
+
+/* ---------- and, or, not ---------- */
+(function(){
+  var F=[
+    {s:"Start cooking if the onion is chopped <b>and</b> the pan is hot.",f:["the onion is chopped","the pan is hot"],v:[true,false],out:"Cook",fn:function(a){return a[0]&&a[1]}},
+    {s:"Take a jacket if it's raining <b>or</b> it's cold.",f:["it's raining","it's cold"],v:[false,true],out:"Jacket",fn:function(a){return a[0]||a[1]}},
+    {s:"Do the step if it's <b>not</b> done yet.",f:["the step is done"],v:[false],out:"Do it",fn:function(a){return !a[0]}}
+  ];
+  F.forEach(function(x){
+    var row=document.createElement("div");
+    row.innerHTML='<span class="sn">'+x.s+'</span><span class="tg"></span><span class="out"></span>';
+    var tg=row.querySelector(".tg"),out=row.querySelector(".out");
+    function r(){
+      $$("button",tg).forEach(function(b,i){b.className=x.v[i]?"y":"n";b.innerHTML=esc(x.f[i])+"? <b>"+(x.v[i]?"yes":"no")+"</b>"});
+      var y=x.fn(x.v);out.className="out "+(y?"y":"n");out.textContent=x.out+"? "+(y?"Yes":"No");
+    }
+    x.f.forEach(function(f,i){var b=document.createElement("button");b.setAttribute("aria-label","Toggle: "+f);b.addEventListener("click",function(){x.v[i]=!x.v[i];r();flashEl(out)});tg.appendChild(b)});
+    r();$("#fx").appendChild(row);
+  });
+})();
+
+/* ---------- spot the decision ---------- */
+quiz($("#sp"),$("#sp-fb"),[
+  {t:"You need to chop 1 kg of onions.",o:["Chop the onions.","Do the chopped onions weigh at least 1 kg?","How much do the onions weigh?"],a:1,w:"Its answer is yes or no, and it decides whether you keep chopping.",h:"Look for a question whose answer is only yes or no."},
+  {t:"Your phone dims the screen at night.",o:["Is it after sunset?","Make the screen darker.","How bright is the screen?"],a:0,w:"Yes or no, and it decides what the phone does.",h:"One option is the action. One has a number for an answer."},
+  {t:"A music app shows \"Skip ad\" after 5 seconds.",o:["Show the button.","How long is the ad?","Have 5 seconds passed?"],a:2,w:"A comparison: the time so far against 5. The answer is yes or no.",h:"Which question is checked again and again until the answer changes?"}
+],"Each one is a check before an action.");
+
+/* ---------- part 1 ---------- */
+code($("#bo-a"),"let isPeeled = true;");
+code($("#bo-b"),"let isMuted = false;");
+mini($("#mini-boolean"),"facts.js",'let onionPieces = 24;\nlet onionType = "red";\nlet isPeeled = true;\nlet isMuted = false;\n\nconsole.log(isPeeled);\nconsole.log(isMuted);',{rows:8});
+
+mini($("#mini-compare"),"compare.js",'let onionPieces = 24;\nconsole.log(onionPieces > 20);\n\nlet duration = "8n";\nconsole.log(duration === "8n");\nconsole.log(duration !== "4n");',{rows:7,fb:$("#cp-fb"),check:function(r,src){
+  if(r.error)return null;
+  if(r.logs.join(",")==="false,false,false")return ["pass","Correct. 12 isn't more than 20, \"4n\" isn't \"8n\", and \"4n\" is \"4n\". Three false answers."];
+  if(/onionPieces = 12/.test(src)||/duration = "4n"/.test(src))return ["note","Halfway. Change both values, and check the quotation marks around \"4n\"."];
+  return null;
+}});
+
+(function(){
+  var R=[["===","is the same as","onionPieces === 24","<code>true</code>. Same value, same type."],
+         ["!==","is not the same as","onionPieces !== 24","<code>false</code>. It is 24, so \"not 24\" is false."],
+         ["<","is less than","onionPieces < 20","<code>false</code>. 24 is more than 20."],
+         [">","is more than","onionPieces > 20","<code>true</code>."],
+         ["<=","is at most","onionPieces <= 24","<code>true</code>. The = means 24 itself counts."],
+         [">=","is at least","onionPieces >= 30","<code>false</code>. 24 is less than 30."]];
+  R.forEach(function(x){var r=document.createElement("div");
+    r.innerHTML='<span class="op"></span><span class="rd"></span><button class="opt"></button><span class="ans" hidden>'+x[3]+'</span>';
+    r.querySelector(".op").textContent=x[0];r.querySelector(".rd").textContent=x[1];r.querySelector("button").textContent=x[2];
+    r.querySelector("button").addEventListener("click",function(){r.querySelector(".ans").hidden=false;this.classList.add("right")});
+    $("#ops").appendChild(r)});
+})();
+
+(function(){
+  var X=['5 > 3','3 >= 3','"8n" === "8n"','"C4" === "c4"','24 === "24"','90 < 60','0.1 + 0.2 === 0.3'];
+  function row(expr){
+    var own=expr===null,d=document.createElement("div");
+    d.innerHTML=(own?'<input class="t" aria-label="Your own expression" placeholder="your own, e.g. 440 > 220">':'<code></code>')+
+      '<span class="ch"><button class="chip">true</button><button class="chip">false</button></span><span class="got"></span>';
+    if(!own)d.querySelector("code").textContent=expr;
+    var got=d.querySelector(".got"),cs=d.querySelectorAll(".chip");
+    Array.prototype.forEach.call(cs,function(b){b.addEventListener("click",function(){
+      var e=own?d.querySelector("input").value.trim():expr;
+      if(!e){got.innerHTML='<small class="w">Type an expression first.</small>';return}
+      var res=evaluate(e);got.textContent="";
+      Array.prototype.forEach.call(cs,function(x){x.classList.remove("right","wrong")});
+      if(res.err){var s=document.createElement("small");s.className="x";s.textContent=res.err;got.appendChild(s);return}
+      got.appendChild(document.createTextNode(res.v));
+      var tag=document.createElement("small"),hit=res.v===b.textContent;
+      if(res.v!=="true"&&res.v!=="false"){tag.className="w";tag.textContent="Not a boolean. Is it a comparison?"}
+      else if(hit){tag.className="y";tag.textContent="✓ spot on";b.classList.add("right")}
+      else{tag.className="x";tag.textContent="A surprise. Why?";b.classList.add("wrong")}
+      got.appendChild(tag);flashEl(got);
+    })});
+    $("#pr").appendChild(d);
+  }
+  X.forEach(row);row(null);
+})();
+
+(function(){
+  var R=[['24 === "24"','<code>false</code>. A number and a string are never the same, even when they look alike.'],
+         ['24 == "24"','<code>true</code>. Two equals signs convert the type first: yesterday\'s type coercion. It hides bugs.'],
+         ['onionPieces = 20','Not a question at all. One equals sign puts 20 in the box. To ask, use <code>===</code>.']];
+  R.forEach(function(x){var r=document.createElement("div");
+    r.innerHTML='<button class="opt"></button><span class="ans" hidden>'+x[1]+'</span>';
+    r.querySelector("button").textContent=x[0];
+    r.querySelector("button").addEventListener("click",function(){r.querySelector(".ans").hidden=false;this.classList.add("right")});
+    $("#pf").appendChild(r)});
+})();
+
+/* ---------- break timer ---------- */
+(function(){
+  var total=10*60,left=total,t=null,BRK=$("#tm-msg").textContent;
+  function show(){var m=Math.floor(left/60),s=left%60;$("#tm").textContent=m+":"+(s<10?"0":"")+s;if(left===0){$("#tm-msg").textContent="Time's up. We start again now.";stop()}}
+  function stop(){clearInterval(t);t=null;$("#tm-go").textContent=left===0?"Start":"Resume"}
+  $("#tm-go").addEventListener("click",function(){
+    if(t){stop();return}
+    if(left===0)left=total;
+    $("#tm-msg").textContent=BRK;
+    t=setInterval(function(){left=Math.max(0,left-1);show()},1000);this.textContent="Pause";
+  });
+  $("#tm-reset").addEventListener("click",function(){stop();left=total;show();$("#tm-go").textContent="Start";$("#tm-msg").textContent=BRK});
+})();
+
+/* ---------- part 2 ---------- */
+(function(){
+  var SRC=['let isPeeled = false;','','if (isPeeled) {','  console.log("Chop it");','} else {','  console.log("Peel it first");','  console.log("Then chop it");','}'];
+  function r(v){
+    var src=SRC.slice();src[0]="let isPeeled = "+(v?"true":"false")+";";
+    code($("#ie-code"),src.join("\n"),v?[0,2,3]:[0,2,4,5,6]);
+    $$("#ie-code .ln").forEach(function(l,i){l.classList.toggle("skip",v?(i>=4&&i<=6):i===3)});
+    conLines($("#ie-con"),[{c:"in",t:"run onion.js"}].concat(v?["Chop it"]:["Peel it first","Then chop it"]));
+  }
+  $$("#ie-seg .btn").forEach(function(b){b.addEventListener("click",function(){
+    $$("#ie-seg .btn").forEach(function(x){x.classList.toggle("sel",x===b)});r(b.dataset.v==="1")})});
+  r(false);
+})();
+
+var POLY='const synth = new Tone.PolySynth().toDestination();\n';
+var MONO='const synth = new Tone.Synth().toDestination();\n';
+soundEd({el:$("#s-if"),file:"mood.js",store:"snd:if",
+  task:'<span class="tk">Try it</span>Play it. Then change <code>isHappy</code> to <code>false</code> and play again. Same code, different chord.',
+  start:POLY+'\nlet isHappy = true;\n\nif (isHappy) {\n  // a major chord: bright\n  synth.triggerAttackRelease("C4", "2n");\n  synth.triggerAttackRelease("E4", "2n");\n  synth.triggerAttackRelease("G4", "2n");\n} else {\n  // a minor chord: darker\n  synth.triggerAttackRelease("A3", "2n");\n  synth.triggerAttackRelease("C4", "2n");\n  synth.triggerAttackRelease("E4", "2n");\n}\n',
+  check:function(notes,src){
+    var ns=notes.map(function(n){return n.n}).join(" ");
+    if(/A3/.test(ns))return ["pass","The else block ran: <code>isHappy</code> was <code>false</code>."];
+    if(/G4/.test(ns))return ["pass","The if block ran: <code>isHappy</code> was <code>true</code>. Now try <code>false</code>."];
+    return null;
+  }});
+
+soundEd({el:$("#s-elseif"),file:"energy.js",store:"snd:elseif",
+  task:'<span class="tk">Your turn</span>Predict, then play, with <code>energy</code> at 2, 5 and 9. Then the edges: 4 and 8. The first question whose answer is <code>true</code> wins.',
+  start:MONO+'\nlet energy = 5; // from 1 to 10\n\nif (energy < 4) {\n  console.log("low");\n  synth.triggerAttackRelease("C3", "4n");\n} else if (energy < 8) {\n  console.log("middle");\n  synth.triggerAttackRelease("C4", "4n");\n} else {\n  console.log("high");\n  synth.triggerAttackRelease("C5", "4n");\n}\n',
+  check:function(notes,src){
+    var m=/let energy = (-?\d+(?:\.\d+)?)/.exec(src),n=notes.length?notes[0].n:"";
+    if(!m||!n)return null;
+    var e=+m[1],band=e<4?"low":e<8?"middle":"high";
+    return ["pass","<code>energy</code> is "+e+": "+band+", so "+esc(n)+" played."+(e===4?" 4 is not less than 4, so the first question was false.":e===8?" 8 is not less than 8: high.":"")];
+  }});
+
+soundEd({el:$("#s-logic"),file:"logic.js",store:"snd:logic",
+  task:'<div class="lg-t"><code>&amp;&amp;</code><span>and: true only if both sides are true</span><code>||</code><span>or: true if at least one side is true</span><code>!</code><span>not: turns true into false, false into true</span></div>'+
+    '<p style="margin:8px 0 0">Change one value at a time. Predict, then play.</p>',
+  start:MONO+'\nlet isMuted = false;\nlet energy = 5;\nlet note = "C4";\n\nif (!isMuted && energy > 3) {\n  synth.triggerAttackRelease(note, "4n");\n}\n\nif (note === "C4" || note === "G4") {\n  synth.triggerAttackRelease("G5", "8n", Tone.now() + 0.5);\n}\n'});
+
+(function(){
+  code($("#wr-code"),'if (beat === 1) {\n  console.log("bass");\n} else if (beat === 1 || beat === 3) {\n  console.log("chord");\n} else {\n  console.log("rest");\n}');
+  quiz($("#wr"),$("#wr-fb"),[
+    {t:"<code>beat</code> is 3",o:["bass","chord","rest"],a:1,w:"The first question is false, the second is true.",h:"Ask the questions from the top. Which is the first one that's true?"},
+    {t:"<code>beat</code> is 1",o:["bass","chord","bass and chord"],a:0,w:"The first true wins. The else if is never asked.",h:"Both questions are true. How many blocks of an if / else if / else can run?"},
+    {t:"<code>beat</code> is 2",o:["bass","chord","rest"],a:2,w:"Both questions are false, so else runs.",h:"Is 2 equal to 1? Is it 1 or 3?"},
+    {t:"<code>bar &gt; 2 &amp;&amp; beat !== 1</code><br>when <code>bar</code> is 3 and <code>beat</code> is 1",o:["true","false"],a:1,w:"bar > 2 is true, but beat !== 1 is false. && needs both.",h:"Work out each side first. What does && need?"}
+  ],"That's how the song decides what plays.");
+})();
+
+/* ---------- worked example ---------- */
+var INSTR='const bass = new Tone.Synth().toDestination();\nconst synth = new Tone.PolySynth().toDestination();\n';
+code($("#tl-code"),'function playStep(time) {\n  bass.triggerAttackRelease("C2", "8n", time);\n}\n\nnew Tone.Loop(playStep, "4n").start(0);\nTone.Transport.start();');
+songPlayer($("#sp-loop"),function(){return INSTR+'\nfunction playStep(time) {\n  bass.triggerAttackRelease("C2", "8n", time);\n}\n\nnew Tone.Loop(playStep, "4n").start(0);\nTone.Transport.start();\n'});
+
+(function(){
+  var BASS='function playBass(time) {\n  bass.triggerAttackRelease("C2", "8n", time);\n}\n';
+  var CHORD='function playChord(time) {\n  synth.triggerAttackRelease("C4", "4n", time);\n  synth.triggerAttackRelease("E4", "4n", time);\n  synth.triggerAttackRelease("G4", "4n", time);\n}\n';
+  var MEL1='function playMelody(time) {\n  synth.triggerAttackRelease("G4", "8n", time);\n}\n';
+  var MEL2='function playMelody(time) {\n  if (bar <= 4) {\n    synth.triggerAttackRelease("G4", "8n", time);\n  } else if (bar <= 6) {\n    synth.triggerAttackRelease("A4", "8n", time);\n  } else {\n    synth.triggerAttackRelease("E4", "8n", time);\n  }\n}\n';
+  var LOOP='new Tone.Loop(playStep, "4n").start(0);\nTone.Transport.start();\n';
+  function step(body){return 'function playStep(time) {\n'+body+'}\n'}
+  var P3='  console.log("beat " + beat);\n  playBass(time);\n\n  beat = beat + 1;\n  if (beat > 4) {\n    beat = 1;\n  }\n';
+  var P4='  console.log("beat " + beat);\n  if (beat === 1) {\n    playBass(time);\n  }\n  if (beat === 1 || beat === 3) {\n    playChord(time);\n  }\n\n  beat = beat + 1;\n  if (beat > 4) {\n    beat = 1;\n  }\n';
+  var P5='  console.log("bar " + bar + ", beat " + beat);\n  if (beat === 1) {\n    playBass(time);\n  }\n  if (beat === 1 || beat === 3) {\n    playChord(time);\n  }\n  if (bar > 2 && beat !== 1) {\n    playMelody(time);\n  }\n\n  beat = beat + 1;\n  if (beat > 4) {\n    beat = 1;\n    bar = bar + 1;\n  }\n';
+  var P7=P5+'  if (bar > 8) {\n    Tone.Transport.stop(time);\n  }\n';
+  var V1='let beat = 1;\n',V2='let beat = 1;\nlet bar = 1;\n';
+  var S=[
+    {l:"Step 1 · Instruments as functions",d:"Tuesday's functions, one per instrument. We call each one by hand, a second apart. Predict: three sounds, low to high?",
+     full:INSTR+'\n'+BASS+'\n'+CHORD+'\n'+MEL1+'\nplayBass(Tone.now());\nplayChord(Tone.now() + 1);\nplayMelody(Tone.now() + 2);\n'},
+    {l:"Step 2 · Hand the beat to Tone",d:"We stop calling by hand. Tone calls playStep once every beat, and it plays the bass. Predict: how often do you hear it?",
+     full:INSTR+'\n'+BASS+CHORD+MEL1+'\n'+step('  playBass(time);\n')+'\n'+LOOP},
+    {l:"Step 3 · Count the beats",d:"A variable that changes while the song plays, with a decision attached: after beat 4, back to 1. Watch the console.",
+     full:INSTR+'\n'+V1+'\n'+BASS+CHORD+MEL1+'\n'+step(P3)+'\n'+LOOP},
+    {l:"Step 4 · Decide what plays on which beat",d:"The bass only on beat 1, the chord on beats 1 and 3. The groove comes from the conditions, not from writing notes out.",
+     full:INSTR+'\n'+V1+'\n'+BASS+CHORD+MEL1+'\n'+step(P4)+'\n'+LOOP},
+    {l:"Step 5 · Give the song sections",d:"A second count: the bar. The melody comes in after bar 2, and never on beat 1. That's && and !== at work. Predict: when do you first hear it?",
+     full:INSTR+'\n'+V2+'\n'+BASS+CHORD+MEL1+'\n'+step(P5)+'\n'+LOOP},
+    {l:"Step 6 · A melody for each section",d:"if / else if / else on bar: each section gets its own note. Only playMelody changes. Predict: in which bar does the note change first?",
+     full:INSTR+'\n'+V2+'\n'+BASS+CHORD+MEL2+'\n'+step(P5)+'\n'+LOOP},
+    {l:"Step 6 · And an ending",d:"After bar 8, Tone's clock stops. The song has a start, sections and an end, all from decisions.",
+     full:INSTR+'\n'+V2+'\n'+BASS+CHORD+MEL2+'\n'+step(P7)+'\n'+LOOP}
+  ];
+  /* What each step shows: unchanged functions folded to one line; lines starting with + changed in this step. */
+  var V=[null, "// bass and synth: the instruments\n\nfunction playBass(time) { … }\nfunction playChord(time) { … }\nfunction playMelody(time) { … }\n\n+function playStep(time) {\n+  playBass(time);\n+}\n\n+new Tone.Loop(playStep, \"4n\").start(0);\n+Tone.Transport.start();", "// bass and synth: the instruments\n\n+let beat = 1;\n\nfunction playBass(time) { … }\nfunction playChord(time) { … }\nfunction playMelody(time) { … }\n\nfunction playStep(time) {\n+  console.log(\"beat \" + beat);\n  playBass(time);\n\n+  beat = beat + 1;\n+  if (beat > 4) {\n+    beat = 1;\n+  }\n}\n\nnew Tone.Loop(playStep, \"4n\").start(0);\nTone.Transport.start();", "// bass and synth: the instruments\n\nlet beat = 1;\n\nfunction playBass(time) { … }\nfunction playChord(time) { … }\nfunction playMelody(time) { … }\n\nfunction playStep(time) {\n  console.log(\"beat \" + beat);\n+  if (beat === 1) {\n+    playBass(time);\n+  }\n+  if (beat === 1 || beat === 3) {\n+    playChord(time);\n+  }\n\n  beat = beat + 1;\n  if (beat > 4) {\n    beat = 1;\n  }\n}\n\nnew Tone.Loop(playStep, \"4n\").start(0);\nTone.Transport.start();", "// bass and synth: the instruments\n\nlet beat = 1;\n+let bar = 1;\n\nfunction playBass(time) { … }\nfunction playChord(time) { … }\nfunction playMelody(time) { … }\n\nfunction playStep(time) {\n+  console.log(\"bar \" + bar + \", beat \" + beat);\n  // … bass on beat 1, chord on beats 1 and 3, as in step 4 …\n+  if (bar > 2 && beat !== 1) {\n+    playMelody(time);\n+  }\n\n  beat = beat + 1;\n  if (beat > 4) {\n    beat = 1;\n+    bar = bar + 1;\n  }\n}\n\nnew Tone.Loop(playStep, \"4n\").start(0);\nTone.Transport.start();", "// bass and synth: the instruments\n\nlet beat = 1;\nlet bar = 1;\n\nfunction playBass(time) { … }\nfunction playChord(time) { … }\n\nfunction playMelody(time) {\n+  if (bar <= 4) {\n+    synth.triggerAttackRelease(\"G4\", \"8n\", time);\n+  } else if (bar <= 6) {\n+    synth.triggerAttackRelease(\"A4\", \"8n\", time);\n+  } else {\n+    synth.triggerAttackRelease(\"E4\", \"8n\", time);\n+  }\n}\n\nfunction playStep(time) { … }\n\nnew Tone.Loop(playStep, \"4n\").start(0);\nTone.Transport.start();", "// bass and synth: the instruments\n\nlet beat = 1;\nlet bar = 1;\n\nfunction playBass(time) { … }\nfunction playChord(time) { … }\nfunction playMelody(time) { … }\n\nfunction playStep(time) {\n  console.log(\"bar \" + bar + \", beat \" + beat);\n  // … what plays on which beat, as in step 5 …\n\n  beat = beat + 1;\n  if (beat > 4) {\n    beat = 1;\n    bar = bar + 1;\n  }\n+  if (bar > 8) {\n+    Tone.Transport.stop(time);\n+  }\n}\n\nnew Tone.Loop(playStep, \"4n\").start(0);\nTone.Transport.start();"];
+  var cur=0,player=songPlayer($("#sp-song"),function(){return S[cur].full});
+  stepper(S.length,function(k){
+    cur=k;player.stop();
+    var on=[],lines=(V[k]===null?S[k].full.replace(/\n$/,""):V[k]).split("\n").map(function(l,j){if(l.charAt(0)==="+"){on.push(j);return l.slice(1)}return l});
+    code($("#sg-code"),lines.join("\n"),on);
+    $("#sg-n").textContent="step "+(k+1)+" of "+S.length;
+    $("#sg-lbl").textContent=S[k].l;$("#sg-dir").textContent=S[k].d;
+  },$("#sg-back"),$("#sg-next"),$("#sg-reset"));
+})();
+})();
+</script>
+</body>
+</html>

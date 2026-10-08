@@ -230,6 +230,14 @@ has the sound editor (`soundEd`: editor, Play/Stop, a piano roll of what played,
 a recorder that sees every `triggerAttackRelease` (with a dry mode for testing a student's function silently),
 and `stopAll()`, bound to S. Copy them from there; promote to `shared/` if a third lecture needs them.
 
+`conditionals/` adds a song player (`songPlayer`: runs code on Tone's clock and fills an 8-bar beat grid as it plays).
+Two traps it works around:
+- `Tone.Transport` is fixed to the audio context that existed when Tone.js loaded. `stopAll()` swaps contexts, so after
+  the first stop, student code calling `Tone.Transport.start()` starts a dead clock. Pass student code a `Tone` whose
+  `Transport` is a getter for `Tone.getTransport()` (see `ToneEnv` in `conditionals/`).
+- JetBrains Mono draws `===`, `!==`, `<=`, `>=` as ligatures. Decks that teach these operators turn ligatures off
+  (`font-variant-ligatures:none`), so students see the characters they type.
+
 ## Lecture-local components in `functions/` worth reusing
 
 `.card` (role card), `.stagebox` + `.actor` (what's running, who's waiting), `.nest` (nested-request boxes),
