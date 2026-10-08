@@ -322,7 +322,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
   <div class="inner">
     <div class="billing">Transforming musical data</div>
     <h2 class="hero md">New value out. Original stays.</h2>
-    <p class="lede">Work out new pitches from a frequency, slice notes out of a string, and find out why a note comes out 41 octaves too high.</p>
+    <p class="lede">Work out new pitches from a frequency, play three notes at once, and find out why a note comes out 41 octaves too high.</p>
   </div>
   <aside class="nt">About 45 minutes, exercises 6 to 8. The through-line from the morning: transforming produces a new value from a stored one, and the stored one usually stays as it was. Every exercise in this block ends by logging the original to prove it.</aside>
 </section>
@@ -352,16 +352,16 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
 </section>
 
 <!-- 16 EXERCISE 7 -->
-<section class="slide" id="chord" data-sec="Transforming musical data" data-ex="A chord from a string">
+<section class="slide" id="chord" data-sec="Transforming musical data" data-ex="A chord">
   <span class="turn">Your turn</span>
   <div class="billing"><span class="sw k"></span>Core · Exercise 7 · script.js</div><hr class="rule">
-  <h2 class="h1 sm">Slice a chord out of a string</h2>
+  <h2 class="h1 sm">Three notes at once</h2>
   <div class="cols ex">
     <div class="stack" style="gap:10px">
       <div class="rows lab steps">
-        <div><span class="num">7a</span><span class="tx">Log <code>chord.toUpperCase()</code> and <code>chord.length</code>. Predict the length first.</span></div>
-        <div><span class="num">7b</span><span class="tx">Store <code>tidyChord</code>, then slice out <code>bottomNote</code>, <code>middleNote</code> and <code>topNote</code>.</span></div>
-        <div><span class="num">7c</span><span class="tx">In <code>exercise7</code>, play all three at <code>start</code> on <code>chordSynth</code>, which can play several notes at once.</span></div>
+        <div><span class="num">7a</span><span class="tx">Play exercise 7 as it is. How many notes do you hear? Read the red error in the console.</span></div>
+        <div><span class="num">7b</span><span class="tx"><code>synth</code> plays one note at a time. Change the three calls to <code>chordSynth</code>, a PolySynth: it plays several notes at once.</span></div>
+        <div><span class="num">7c</span><span class="tx">Glue the notes into <code>chord</code>, with spaces. Log <code>chord.toUpperCase()</code> and <code>chord.length</code>.</span></div>
         <div><span class="num">7d</span><span class="tx">Log <code>chord</code> one last time. Has it changed?</span></div>
       </div>
       <div class="small-h">Predict: what is <code>chord.length</code>?</div>
@@ -369,14 +369,15 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
       <div class="fb" id="ch-fb"></div>
     </div>
     <div class="stack" style="gap:10px">
-      <div class="small-h">Try it here: click to see what each gives back</div>
+      <div class="small-h">Try it here: one synth, then the other</div>
+      <div class="row"><button class="btn ghost codey" id="ch-mono">Play on synth</button><button class="btn ghost codey" id="ch-poly">Play on chordSynth</button></div>
+      <div class="fb" id="ch-pfb"></div>
       <div class="panel"><div class="bar"><span>script.js</span></div><pre class="code xs" id="ch-code"></pre></div>
       <div class="rows evals" id="ch-ev"></div>
-      <div class="row"><button class="btn" id="ch-play">Play the chord</button></div>
     </div>
   </div>
   <div class="foot"><p><b>Done when</b>you hear one chord of three notes, and <code>chord</code> still logs <code>c4 e4 g4</code>.</p><button class="btn ghost mark" data-done="chord">Mark as done</button></div>
-  <aside class="nt">String methods from Part 2 of the lecture: toUpperCase changes the form, length counts characters (spaces count: 8), slice takes a part (from the first index up to, not including, the second). Positions count from 0, which most people trip on: slice(0, 2) is characters 0 and 1. Each method gives back a new string and leaves chord alone. Tone.js reads lowercase note names too, but tidy data is easier to read in the console. No arrays: three calls with the same start, which only works on a PolySynth.</aside>
+  <aside class="nt">New idea first: a chord is several notes at the same moment. The synth from Tuesday is monophonic, one voice: asked for a second note at the same start, Tone.js stops with "Start time must be strictly greater than previous start time", so students hear one note and see one red error. That's on purpose; let them read it before you explain. chordSynth is a PolySynth ("poly" means many), made at the top of script.js; it hands each note to its own voice. Same call, same arguments, different instrument. Then strings from Part 2 of the lecture: + glues the notes into one string, toUpperCase changes the form, length counts characters (spaces count: 8). toUpperCase gives back a new string and leaves chord alone. Tone.js reads lowercase note names too. No arrays: three calls with the same start.</aside>
 </section>
 
 <!-- 17 EXERCISE 8 -->
@@ -424,7 +425,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
     <div><span class="tn"><span class="sw b"></span>Blue</span><span>Two small challenges at the bottom of <code>script.js</code>: how long a phrase lasts, and a line of track info.</span><span class="tw">Next slide</span></div>
     <div><span class="tn"><span class="sw p"></span>Purple</span><span>A generative piece in <code>generative.js</code>: a melody that writes itself, effects, movement, and musical time as text.</span><span class="tw">If you've coded before</span></div>
   </div>
-  <p class="dir" style="margin-top:18px">Commit before you switch tracks. Purple uses two things the morning held back: template literals and <code>Math.random()</code>.</p>
+  <p class="dir" style="margin-top:18px">Commit before you switch tracks. Purple uses three things the morning held back: template literals, <code>Math.random()</code> and <code>.slice()</code>.</p>
   <aside class="nt">An hour until the wrap-up. Blue is short; anyone who finishes it can try purple P1, which is only a few lines. Purple is open-ended: P1 to P4 each add a layer, and stopping anywhere is fine.</aside>
 </section>
 
@@ -478,7 +479,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
     </div>
   </div>
   <div class="foot"><p><b>Done when</b><span class="bn">Play the piece</span> gives a different melody every time, and the console logs each note.</p><button class="btn ghost mark" data-done="p1">Mark as done</button></div>
-  <aside class="nt">Template literals: backticks, and ${…} drops a value into the text. `${pitch}${randomOctave}` is the same as pitch + randomOctave, and `Playing ${note}` is "Playing " + note. Math.random() gives a number from 0 up to (not including) 1; times 5, rounded down, gives 0 to 4: a position in "CDEGA". A pentatonic scale has no notes that clash, so any order sounds fine. The Hear one button plays sixteen notes from this exact code.</aside>
+  <aside class="nt">Template literals: backticks, and ${…} drops a value into the text. `${pitch}${randomOctave}` is the same as pitch + randomOctave, and `Playing ${note}` is "Playing " + note. Math.random() gives a number from 0 up to (not including) 1; times 5, rounded down, gives 0 to 4: a position in "CDEGA". scale.slice(index, index + 1) takes one letter: slice gives back the part of a string from the first position up to, not including, the second, counting from 0. It wasn't in the lecture, so point it out. A pentatonic scale has no notes that clash, so any order sounds fine. The Hear one button plays sixteen notes from this exact code.</aside>
 </section>
 
 <!-- 23 P2 -->
@@ -607,7 +608,7 @@ D.workspace.onRun(function(){stopAll();Tone.start()});
 
 /* ============ mark as done ============ */
 var DONE=[["get-code","Get today's code","k"],["store","1 · Store a sound","k"],["parts","2 · A note from parts","k"],["tempo","3 · Tempo","k"],["args","4 and 5 · Variables as arguments","k"],
-  ["frequency","6 · Same number, different jobs","k"],["chord","7 · A chord from a string","k"],["bug-hunt","8 · Bug hunt","k"],
+  ["frequency","6 · Same number, different jobs","k"],["chord","7 · A chord","k"],["bug-hunt","8 · Bug hunt","k"],
   ["blue","Blue · B1 and B2","b"],["p1","Purple · P1 melody","p"],["p2","Purple · P2 effects","p"],["p3-p4","Purple · P3 and P4","p"]];
 function isDone(id){return D.store.get("done:"+id)==="1"}
 function progress(){
@@ -763,11 +764,20 @@ chipQuiz($("#fq-q"),$("#fq-fb"),[
 
 /* ---------- exercise 7 ---------- */
 (function(){
-  var chord="c4 e4 g4",tidy=chord.toUpperCase();
-  code($("#ch-code"),'const chord = "c4 e4 g4";\nconst tidyChord = chord.toUpperCase();');
-  evals($("#ch-ev"),[["chord.toUpperCase()",q(tidy)],["tidyChord.slice(0, 2)",q(tidy.slice(0,2))],["tidyChord.slice(3, 5)",q(tidy.slice(3,5))],["tidyChord.slice(6, 8)",q(tidy.slice(6,8))],["chord",q(chord)+" · unchanged"]]);
+  var N=["c4","e4","g4"],chord=N.join(" ");
+  code($("#ch-code"),'const chord = bottomNote + " " + middleNote + " " + topNote;');
+  evals($("#ch-ev"),[["chord",q(chord)],["chord.toUpperCase()",q(chord.toUpperCase())],["chord.length",String(chord.length)]]);
   predict($("#ch-q"),$("#ch-fb"),[["3",false,"That's the number of notes. <code>.length</code> counts characters."],["6",false,"Count again, and count the spaces too."],["8",true,"8: six characters for the notes, plus two spaces. Spaces count."],["9",false,"Close. Count each character once: c, 4, space…"]]);
-  $("#ch-play").addEventListener("click",function(){Tone.start();var t=Tone.now()+.05,p=poly();[tidy.slice(0,2),tidy.slice(3,5),tidy.slice(6,8)].forEach(function(n){try{p.triggerAttackRelease(n,"2n",t)}catch(e){}})});
+  $("#ch-mono").addEventListener("click",function(){
+    Tone.start();var t=Tone.now()+.05,s=synth(),err="";
+    try{N.forEach(function(n){s.triggerAttackRelease(n,"2n",t)})}catch(e){err=e.message}
+    fb($("#ch-pfb"),"warn","One note, then: <code>"+esc(err||"Start time must be strictly greater than previous start time")+"</code>. One voice can't start two notes at the same moment.");
+  });
+  $("#ch-poly").addEventListener("click",function(){
+    Tone.start();var t=Tone.now()+.05,p=poly();
+    N.forEach(function(n){try{p.triggerAttackRelease(n,"2n",t)}catch(e){}});
+    fb($("#ch-pfb"),"pass","Three notes at once: a C major chord. Each note gets its own voice.");
+  });
 })();
 
 /* ---------- exercise 8 ---------- */
@@ -787,7 +797,7 @@ $("#bh-up").addEventListener("click",function(){
 /* ---------- pair check-in 2 ---------- */
 reveal($("#ci2"),$("#ci2-all"),[
   ["Which number in today's code did more than one job?","440 was a pitch; 4 was a position; 90 was a speed. Or the same 4 as text and as a number in exercise 8."],
-  ["Which line transformed a value, rather than storing it?","a4 * 2, chord.toUpperCase(), tidyChord.slice(0, 2), Number(typedOctave)…"],
+  ["Which line transformed a value, rather than storing it?","a4 * 2, chord.toUpperCase(), Number(typedOctave)…"],
   ["What happened to the original?","Nothing. Log it and see: a4 is still 440, chord is still \"c4 e4 g4\"."]]);
 
 /* ---------- blue ---------- */
@@ -825,7 +835,7 @@ reveal($("#mk"),null,[
   ["SyntaxError: Identifier 'duration' has already been declared","let or const twice for the same name. To change a variable you already have, leave out let: duration = \"2n\";"],
   ["I changed octave, but fullNote didn't change.","A variable remembers a value, not how it was made. Rebuild it: fullNote = pitchName + octave;"],
   ["The note came out as C41.","\"4\" + 1 glues text. Turn text into a number before arithmetic: Number(typedOctave) + 1."],
-  ["slice(1, 3) gave me \"4 \", not \"E4\".","Positions count from 0, and the end isn't included. \"C4 E4 G4\".slice(3, 5) is \"E4\"."]]);
+  ["Start time must be strictly greater than previous start time","synth plays one note at a time, and two notes asked to start at the same moment. Give each its own time, or play them on chordSynth."]]);
 })();
 </script>
 </body>
