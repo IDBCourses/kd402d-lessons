@@ -9,8 +9,7 @@
 <style>
 /* styles used only by this lecture */
 :root{--track-purple:#7a3cf0}
-.order>div{grid-template-columns:72px 120px 1fr;align-items:center;padding:7px 0}
-.order .tm{font-family:var(--font-mono);font-size:16px;color:var(--ink-500)}
+.order>div{grid-template-columns:72px 1fr;align-items:center;padding:7px 0}
 .order .nm{font-size:22px;color:var(--ink-900);font-weight:500}
 .order .nm small{display:block;font-size:16px;color:var(--ink-500);font-weight:400}
 .order .act .nm{color:var(--curtain-600)}
@@ -98,7 +97,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
     <p class="lede">This morning you stored onions in variables. This afternoon you store notes, lengths and tempos, and your riff starts listening to them.</p>
   </div>
   <div style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
-    <div class="m" style="font-size:17px;color:var(--ink-200)">KD402D Programming · Thu 8 Oct · 13:15–17:00</div>
+    <div class="m" style="font-size:17px;color:var(--ink-200)">KD402D Programming · Thu 8 Oct</div>
   </div>
   <aside class="nt">Group learning and exercises for the Data day. This afternoon is self-directed: students open this same link on their laptops and work through it at their own pace, with the code in VS Code (data/start in their fork of the exercises repo). David and the TAs circulate. Ask everyone to plug in headphones now. Keys: arrows, I for the index, N for notes, E for the next exercise, S stops all sound in the deck.</aside>
 </section>
@@ -106,18 +105,17 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
 <!-- 02 RUNNING ORDER -->
 <section class="slide" id="running-order" data-sec="Opening">
   <div class="billing">Running order · This afternoon</div><hr class="rule">
-  <h2 class="h1">Seven scenes until five</h2>
+  <h2 class="h1">Seven parts this afternoon</h2>
   <div class="rows order">
-    <div><span class="num">01</span><span class="tm">13:15</span><span class="nm">Introduction<small>A note is data. Get today's code, pick your pace</small></span></div>
-    <div class="act"><span class="num">02</span><span class="tm">13:30</span><span class="nm">Notes as data<small>Exercises 1 to 5: store a sound, build a note, keep tempo</small></span></div>
-    <div><span class="num">03</span><span class="tm">14:20</span><span class="nm">Pair check-in</span></div>
-    <div class="act"><span class="num">04</span><span class="tm">14:45</span><span class="nm">Transforming musical data<small>Exercises 6 to 8: new values from old ones, and a bug hunt</small></span></div>
-    <div><span class="num">05</span><span class="tm">15:30</span><span class="nm">Pair check-in</span></div>
-    <div class="act"><span class="num">06</span><span class="tm">15:40</span><span class="nm">Blue and purple tracks<small>Go further, or build a piece that writes itself</small></span></div>
-    <div><span class="num">07</span><span class="tm">16:40</span><span class="nm">Wrap-up and curtain call</span></div>
+    <div><span class="num">01</span><span class="nm">Introduction<small>A note is data. Get today's code, pick your pace</small></span></div>
+    <div class="act"><span class="num">02</span><span class="nm">Notes as data<small>Exercises 1 to 5: store a sound, build a note, keep tempo</small></span></div>
+    <div><span class="num">03</span><span class="nm">Pair check-in</span></div>
+    <div class="act"><span class="num">04</span><span class="nm">Transforming musical data<small>Exercises 6 to 8: new values from old ones, and a bug hunt</small></span></div>
+    <div><span class="num">05</span><span class="nm">Pair check-in</span></div>
+    <div class="act"><span class="num">06</span><span class="nm">Blue and purple tracks<small>Go further, or build a piece that writes itself</small></span></div>
+    <div><span class="num">07</span><span class="nm">Wrap-up and recap</span></div>
   </div>
-  <p class="dir" style="margin-top:12px">Intermission at 14:30.</p>
-  <aside class="nt">The Notion plan has the sections but no clock times; these are a suggestion, matching Tuesday's afternoon (break 14:30–14:45). The times are a guide, not a gate: students move on when they're done. The two pair check-ins are the only moments everyone stops together, apart from the break and the wrap-up.</aside>
+  <aside class="nt">The Notion plan has the sections but no clock times, so the slides don't show any. Students move on when they're done. The two pair check-ins are the only moments everyone stops together, apart from the wrap-up.</aside>
 </section>
 
 <!-- 03 OBJECTIVES -->
@@ -138,7 +136,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
   <div class="billing">Opening · How this afternoon works</div><hr class="rule">
   <h2 class="h1">Your pace, your laptop, these slides</h2>
   <div class="rows tracks">
-    <div><span class="tn"><span class="sw k"></span>Core</span><span>Exercises 1 to 8, in order. Everyone does these. Black square in the corner of the slide.</span><span class="tw">Everyone, from 13:30</span></div>
+    <div><span class="tn"><span class="sw k"></span>Core</span><span>Exercises 1 to 8, in order. Everyone does these. Black square in the corner of the slide.</span><span class="tw">Everyone</span></div>
     <div><span class="tn"><span class="sw b"></span>Blue</span><span>Two more small challenges with tempo and text, once core is done.</span><span class="tw">Finished core? Go on</span></div>
     <div><span class="tn"><span class="sw p"></span>Purple</span><span>A piece that writes its own melody, with template literals and <code>Math.random()</code>.</span><span class="tw">Coded before? After core</span></div>
   </div>
@@ -187,22 +185,22 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
     │   ├── script.js       core + blue
     │   └── generative.js   purple
     └── reference/   ← a finished version</pre></div>
-      <div class="panel"><div class="bar"><span>VS Code not working?</span></div><div class="pbody small" style="padding:10px 14px">Press <b>W</b> for the workspace in this deck: Tone.js works there too. Paste in an exercise and call it at the bottom: <code>exercise1(Tone.now());</code>. Get a TA to look at VS Code with you at the break.</div></div>
+      <div class="panel"><div class="bar"><span>VS Code not working?</span></div><div class="pbody small" style="padding:10px 14px">Press <b>W</b> for the workspace in this deck: Tone.js works there too. Paste in an exercise and call it at the bottom: <code>exercise1(Tone.now());</code>. Get a TA to look at VS Code with you when one is free.</div></div>
     </div>
   </div>
   <div class="foot"><p><b>Done when</b>you hear three notes and see <code>E4</code> in the console.</p><button class="btn ghost mark" data-done="get-code">Mark as done</button></div>
-  <aside class="nt">The routine from Wednesday's curtain call. Snags: Sync fork forgotten (no data folder after pulling); Live Preview opening inside VS Code instead of the browser (the console is then hidden: use the External Browser command); no sound until a button is clicked. Anyone whose VS Code or Git isn't working: workspace (W) for now, fix it with a TA at the break. If the reference folder shouldn't be visible until after the session, remove it from the course repo before class (the exercises repo README says it's added afterwards).</aside>
+  <aside class="nt">The routine from the end of Wednesday's session. Snags: Sync fork forgotten (no data folder after pulling); Live Preview opening inside VS Code instead of the browser (the console is then hidden: use the External Browser command); no sound until a button is clicked. Anyone whose VS Code or Git isn't working: workspace (W) for now, fix it with a TA when one is free. If the reference folder shouldn't be visible until after the session, remove it from the course repo before class (the exercises repo README says it's added afterwards).</aside>
 </section>
 
 <!-- 07 BLOCK 1 OPENER -->
 <section class="slide stage" id="block-1" data-sec="Notes as data">
   <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
   <div class="inner">
-    <div class="billing">Scene 02 · Notes as data · 13:30</div>
+    <div class="billing">Notes as data</div>
     <h2 class="hero md">Give the note a name.</h2>
     <p class="lede">Pull the values out of Tuesday's calls and into variables. Then change one variable and hear the whole riff follow.</p>
   </div>
-  <aside class="nt">About 50 minutes of work time, exercises 1 to 5. Students work at their own pace; TAs circulate. Watch for people who make it run but can't say what a variable holds: that's what the pair check-in at 14:20 picks up.</aside>
+  <aside class="nt">About 50 minutes of work time, exercises 1 to 5. Students work at their own pace; TAs circulate. Watch for people who make it run but can't say what a variable holds: that's what the pair check-in picks up.</aside>
 </section>
 
 <!-- 08 EXERCISE 1 -->
@@ -310,31 +308,19 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
 <!-- 12 PAIR CHECK-IN 1 -->
 <section class="slide" id="check-in-1" data-sec="Pair check-in" data-ex="Pair check-in">
   <span class="turn">Your turn</span>
-  <div class="billing">Scene 03 · Pair check-in · 14:20</div><hr class="rule">
+  <div class="billing">Pair check-in</div><hr class="rule">
   <h2 class="h1">Point at one variable</h2>
   <p class="lede" style="margin-bottom:12px">In pairs, take turns. Point at one variable in your sketch and answer out loud:</p>
   <div class="rows reveal long" id="ci1"></div>
   <div class="row" style="margin-top:12px"><button class="btn ghost" id="ci1-all">Reveal all</button></div>
-  <aside class="nt">Ten minutes, before the break. TAs listen in and note anyone who can make the code run but can't explain it; they get a visit first after the break. The revealed lines are what a good answer sounds like, not the only right answer.</aside>
-</section>
-
-<!-- 13 BREAK -->
-<section class="slide stage" id="break" data-sec="Intermission">
-  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
-  <div class="inner">
-    <div class="billing">Intermission · 14:30–14:45</div>
-    <div class="timer" id="tm" aria-live="off">15:00</div>
-    <p class="lede" id="tm-msg" style="margin-top:22px">Stretch, refill, rest your ears. Commit and push before you go.</p>
-    <div class="row" style="margin-top:20px"><button class="btn alt" id="tm-go">Start</button><button class="btn ghost" id="tm-reset">Reset</button></div>
-  </div>
-  <aside class="nt">15-minute break. Press S first so the room is quiet. Good moment for a TA to sort out anyone whose VS Code or Git isn't working.</aside>
+  <aside class="nt">Ten minutes. TAs listen in and note anyone who can make the code run but can't explain it; they get a visit first afterwards. The revealed lines are what a good answer sounds like, not the only right answer.</aside>
 </section>
 
 <!-- 14 BLOCK 2 OPENER -->
 <section class="slide stage" id="block-2" data-sec="Transforming musical data">
   <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
   <div class="inner">
-    <div class="billing">Scene 04 · Transforming musical data · 14:45</div>
+    <div class="billing">Transforming musical data</div>
     <h2 class="hero md">New value out. Original stays.</h2>
     <p class="lede">Work out new pitches from a frequency, slice notes out of a string, and find out why a note comes out 41 octaves too high.</p>
   </div>
@@ -421,7 +407,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
 <!-- 18 PAIR CHECK-IN 2 -->
 <section class="slide" id="check-in-2" data-sec="Pair check-in" data-ex="Second check-in">
   <span class="turn">Your turn</span>
-  <div class="billing">Scene 05 · Pair check-in · 15:30</div><hr class="rule">
+  <div class="billing">Pair check-in</div><hr class="rule">
   <h2 class="h1">Before you move on</h2>
   <p class="lede" style="margin-bottom:12px">In pairs, answer out loud before going on to blue or purple:</p>
   <div class="rows reveal long" id="ci2"></div>
@@ -431,7 +417,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
 
 <!-- 19 TRACKS -->
 <section class="slide" id="tracks" data-sec="Blue and purple tracks">
-  <div class="billing">Scene 06 · Blue and purple tracks · 15:40</div><hr class="rule">
+  <div class="billing">Blue and purple tracks</div><hr class="rule">
   <h2 class="h1">Core done? Pick your next track</h2>
   <div class="rows tracks">
     <div><span class="tn"><span class="sw k"></span>Not yet</span><span>Keep going on core. Exercises 1 to 8 cover everything this afternoon is for.</span><span class="tw">Most people</span></div>
@@ -540,7 +526,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
 <!-- 25 MISTAKES -->
 <section class="slide" id="mistakes" data-sec="Wrap-up" data-ex="What went wrong">
   <span class="turn">Your turn</span>
-  <div class="billing">Scene 07 · Wrap-up · 16:40</div><hr class="rule">
+  <div class="billing">Wrap-up</div><hr class="rule">
   <h2 class="h1" style="margin-bottom:14px">What went wrong today</h2>
   <div class="rows reveal long" id="mk"></div>
   <aside class="nt">Ask the room which of these happened to them before revealing each fix. Add any other mistakes the TAs saw a lot.</aside>
@@ -559,7 +545,7 @@ input[type=range]{width:100%;accent-color:var(--curtain-600)}
 <section class="slide stage" id="curtain-call" data-sec="Curtain call">
   <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
   <div class="inner">
-    <div class="billing">Curtain call · 16:50</div>
+    <div class="billing">Recap</div>
     <h2 class="hero md">Name it. Feed it. Transform it.</h2>
     <div class="terms"><span>variable</span><span>let</span><span>const</span><span>string</span><span>number</span><span>coercion</span></div>
   </div>
@@ -752,20 +738,6 @@ reveal($("#ci1"),$("#ci1-all"),[
   ["Does it change while the piece plays?","If it gets a new value later, it's let (duration in 1c). If not, const (note)."],
   ["Which part of the sound does it control?","\"beat sets the gap between every note in exercise 3.\" Point at the lines that use it."],
   ["Change it. What happens?","Do it live for your partner: change the one variable, play, listen."]]);
-
-/* ---------- timer ---------- */
-(function(){
-  var total=15*60,left=total,t=null,BRK=$("#tm-msg").textContent;
-  function show(){var m=Math.floor(left/60),s=left%60;$("#tm").textContent=m+":"+(s<10?"0":"")+s;if(left===0){$("#tm-msg").textContent="Places, please. We start again now.";stop()}}
-  function stop(){clearInterval(t);t=null;$("#tm-go").textContent=left===0?"Start":"Resume"}
-  $("#tm-go").addEventListener("click",function(){
-    if(t){stop();return}
-    if(left===0)left=total;
-    $("#tm-msg").textContent=BRK;
-    t=setInterval(function(){left=Math.max(0,left-1);show()},1000);this.textContent="Pause";
-  });
-  $("#tm-reset").addEventListener("click",function(){stop();left=total;show();$("#tm-go").textContent="Start";$("#tm-msg").textContent=BRK});
-})();
 
 /* An expression row: a button with code, and what it gives back. play(value) is optional. */
 function evals(box,E){
