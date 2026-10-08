@@ -4,9 +4,14 @@ This repo is the public site for **KD402D Programming**, a first-year course in 
 bachelor's programme at Malmö University (K3), autumn 2026 (HT2026-KD402D-K3028, Canvas course 22858).
 It holds one interactive slide deck per lecture, published with GitHub Pages.
 
-The course teaches JavaScript to beginners through **dramatic re-enactment**: students act out what the
-machine does (one student is a function, another the call stack, someone reads the loop aloud), alongside
-rigorous basics: syntax, debugging, and planning a program before typing it.
+The course teaches JavaScript to beginners using **drama pedagogy** as a method: students physically act
+out what the computer does (one student is a function, another holds the value it returns, someone reads
+the loop aloud), alongside rigorous basics: syntax, debugging, and planning a program before typing it.
+
+Drama pedagogy is how the room learns. It is **not** a theatre theme. Slides, notes, outlines and messages
+use plain teaching language: sections, break, recap, correct. Never theatre metaphors: no acts, scenes,
+intermission, curtain call, applause, stage, cast, cues, blocking, director. The lectures built before the
+Data lecture still contain such wording; copy their code, not their words.
 
 Read these before building anything:
 - `docs/design-system.md`: colours, type, layout, voice and copy rules. Follow it exactly.
@@ -60,6 +65,9 @@ Use `/new-lecture <topic>` for a new deck. The workflow it follows:
 ## Rules that are easy to get wrong
 
 - Don't put the name of the design system ("Rehearsal") anywhere on the site.
+- No theatre vocabulary in anything you write (see above and `docs/design-system.md` → Voice). CSS names
+  like `.stage` or `--curtain-600` are fine in code; their words never go on a slide.
+- Kicker lines (`.billing`) read `Section name · 10:35`, never `Scene 02 · …`.
 - Slides are a fixed 1280×720 canvas, scaled to fit. Everything must fit at that size; never rely on scrolling a slide.
 - Interactive slides need both a presenter use (David drives it on the projector) and a student use
   (each student on their own laptop with the same link). Keep state per viewer; never require a server.
