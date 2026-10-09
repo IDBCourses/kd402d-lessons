@@ -23,23 +23,29 @@ function loadSval(){
 try{(new Function("return 1"))()}catch(e){useSval=true;loadSval()}
 
 /* Run src with a captured console. If fnName is given, returns that function as `value`.
-   env: optional {name: value} of extra globals the code can use (e.g. a library). */
+   env (optional) adds globals the code can see, e.g. {document: pad, Tone: Tone}.
+   env.console replaces the captured console (logs then go wherever it sends them). */
 function run(src,fnName,env){
-  var logs=[],names=env?Object.keys(env):[],vals=names.map(function(k){return env[k]});
+  var logs=[];
   var lg=function(){logs.push(Array.prototype.map.call(arguments,D.fmt).join(" "))};
   var fake={log:lg,error:lg,warn:lg,info:lg};
+  var names=["console"],vals=[fake],imp={console:fake};
+  if(env)Object.keys(env).forEach(function(k){
+    if(k==="console"){vals[0]=imp.console=env[k];return}
+    names.push(k);vals.push(env[k]);imp[k]=env[k];
+  });
+  function mkFn(body){return Function.apply(null,names.concat([body]))}
   var pick=fnName?"typeof "+fnName+' === "function" ? '+fnName+" : undefined":"";
   if(!useSval){
-    try{Function.apply(null,["console"].concat(names,[src]))}catch(err){if(isCSP(err)){useSval=true;loadSval()}else return {logs:logs,error:err}}
+    try{mkFn(src)}catch(err){if(isCSP(err)){useSval=true;loadSval()}else return {logs:logs,error:err}}
   }
   if(!useSval){
-    try{return {logs:logs,value:Function.apply(null,["console"].concat(names,[src+(pick?"\nreturn "+pick+";":"")])).apply(null,[fake].concat(vals))}}
+    try{return {logs:logs,value:mkFn(src+(pick?"\nreturn "+pick+";":"")).apply(null,vals)}}
     catch(err){if(isCSP(err)){useSval=true;loadSval()}else return {logs:logs,error:err}}
   }
   if(!window.Sval)return {logs:logs,blocked:true,error:new Error("The code runner is still loading. Try again in a moment.")};
   try{
     var it=new window.Sval({ecmaVer:"latest",sandBox:true});
-    var imp={console:fake};names.forEach(function(k){imp[k]=env[k]});
     it.import(imp);
     it.parse(src);
     it.run(src+(pick?"\nexports.__fn = "+pick+";":""));
