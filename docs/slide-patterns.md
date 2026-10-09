@@ -181,6 +181,8 @@ name an input where that rule would have given a different answer.
 ```js
 var r = D.run(src);               // {logs:[...], error?, blocked?}
 var r = D.run(src, "double");     // also returns the student's function as r.value
+var r = D.run(src, null, {document: fakeDoc, Tone: Tone, console: myConsole});
+                                  // extra globals; console replaces the captured one
 D.edKeys(textarea, runFn);        // Tab indents, Ctrl/⌘+Enter runs
 ```
 
@@ -193,6 +195,14 @@ See the "Five small functions" slide: tabs (`.tabs`), an editor, `Run the tests`
 Each challenge is `{f: name, task: html, start: code, tests: [[args, expected], …], check?: fn(src)}`.
 Call `r.value` with each test's arguments, compare with `===`, list ✓ / ×, and if the function returned
 `undefined`, ask whether they returned or only logged. Save code per challenge with `D.store`.
+
+### Keyboard input (lecture-local, in `input/`)
+
+`playground(id, startCode)` wires `#id-ed`, `#id-run`, `#id-reset`, `#id-pad`, `#id-con` into an editor whose
+code gets a stand-in `document` (its listeners only hear the focused `.pad`), a `Tone` whose instruments are
+disposed on every run, and a live console. `capture(el, onDown, onUp)` catches keys only while `el` has focus,
+so the deck's own shortcuts keep working. `keyboard(host, {note, synth})` draws a playable QWERTY diagram.
+Tone.js is vendored at `shared/vendor/tone.min.js` (15.1.22, the version the exercises repo uses).
 
 ### The workspace
 
