@@ -110,6 +110,10 @@ input.t,textarea.t{font-family:var(--font-mono);font-size:19px;padding:9px 12px;
 input.t:focus,textarea.t:focus{outline:2px solid var(--curtain-600);outline-offset:2px}
 textarea.code-ed{font-family:var(--font-mono);font-size:17px;line-height:1.6;background:var(--ink-900);color:var(--syn-pl);border:0;padding:14px 18px;width:100%;resize:none;display:block;tab-size:2;caret-color:var(--spot-400)}
 textarea.code-ed:focus{outline:none;box-shadow:inset 0 0 0 2px var(--spot-400)}
+/* colour-coded editors (workspace.js): the highlighted copy sits under a transparent textarea */
+pre.ed-hl{position:absolute;margin:0;z-index:0;overflow:hidden;pointer-events:none;background:var(--ink-900);color:var(--syn-pl);border:0 solid transparent;box-sizing:border-box}
+textarea.code-ed.ed-on{position:relative;z-index:1;background:transparent;color:transparent;-webkit-text-fill-color:transparent}
+textarea.code-ed.ed-on::selection{background:rgba(255,222,60,.35)}
 
 /* rule-rows */
 .rows{border-top:1px solid var(--ink-900)}

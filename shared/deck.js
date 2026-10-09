@@ -23,7 +23,7 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp
 var KW={"function":1,"return":1,"const":1,"let":1,"var":1,"if":1,"else":1,"for":1,"while":1,"of":1,"new":1,"true":1,"false":1,"null":1,"undefined":1,"typeof":1};
 /* Syntax-highlight a JavaScript snippet; returns HTML. */
 function hl(src){
-  var re=/(\/\/[^\n]*)|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_$][\w$]*)/g,out="",last=0,m;
+  var re=/(\/\/[^\n]*)|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'|`(?:[^`\\\n]|\\.)*`)|(\b\d+(?:\.\d+)?\b)|([A-Za-z_$][\w$]*)/g,out="",last=0,m;
   while((m=re.exec(src))){
     out+=esc(src.slice(last,m.index));
     var c;

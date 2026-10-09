@@ -4,6 +4,11 @@ Copy-paste reference for building decks. Everything here is styled by `shared/de
 **lecture-local** (those live in `functions/index.html`'s `<style>`; copy them into your lecture, or
 promote them to `deck.css` if a second lecture needs them).
 
+The lectures built before week 41's Data lecture (`intro/`, `functions/`, `functions-group/`,
+`tools-of-the-trade/`) still use theatre wording ("Scene 02", "Intermission", "Curtain call",
+"Applause"). Copy their markup and scripts, not their words: follow the Voice rules in
+`design-system.md`.
+
 ## Page skeleton
 
 Start from `_template/index.html`. The parts that matter:
@@ -40,13 +45,13 @@ Every slide ends with `<aside class="nt">speaker notes</aside>`.
 
 ## Slide types
 
-### Stage band (cover, section openers, big statements, break, curtain call)
+### Band slide (cover, section openers, big statements, break, recap)
 
 ```html
 <section class="slide stage" id="cover" data-sec="Opening">
   <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
   <div class="inner">
-    <div class="billing">Act I · Functions · Week 41</div>
+    <div class="billing">KD402D Programming · Week 41</div>
     <h1 class="hero">Give it a name. Call it again.</h1>      <!-- .hero.md for longer lines -->
     <p class="lede">One or two sentences.</p>
   </div>
@@ -58,13 +63,14 @@ Every slide ends with `<aside class="nt">speaker notes</aside>`.
 
 ```html
 <section class="slide" id="roles" data-sec="What functions are for">
-  <div class="billing">Scene 02 · What functions are for · 10:25</div><hr class="rule">
+  <div class="billing">What functions are for · 10:25</div><hr class="rule">
   <h2 class="h1">Five jobs a function does</h2>
   … content …
 </section>
 ```
 
-Put the scene number and start time in the billing line of the first slide of each section.
+Put the section name and start time in the kicker line (`.billing`) of the first slide of each section.
+Don't number sections ("Scene 02"); write "Part 2" only where the Session Plan itself does.
 
 ## Layout helpers
 
@@ -80,15 +86,15 @@ Put the scene number and start time in the billing line of the first slide of ea
 | Class | Use |
 |---|---|
 | `.lede` | Intro paragraph, 22px, ≤ 52ch. |
-| `.dir` | Stage direction, italic display face. |
+| `.dir` | Narration of what the computer does, italic display face. |
 | `.small`, `.muted` | 16px; muted colour. |
 | `<code>` inside `p`, `li`, `.dir`, `.lede` | Inline code with a yellow highlight. |
 | `.rows.lab` + `.num` + `.tx` | Numbered steps (objectives, lab briefs). `.lab.big` for few, large items. |
-| `.rows.script` + `.cue.a` / `.cue.b` + `.line` | A role-play script with speaker cues. |
+| `.rows.script` + `.cue.a` / `.cue.b` + `.line` | A role-play script with speaker labels. |
 | `ol.plain` | Plain list inside a panel, rule between items. |
-| `.named` (`.nm` + `.rl`) | A yellow "named thing" card: a packaged recipe, a rule, a cast card. |
-| `.terms` | Row of outlined term chips on a stage slide. |
-| `.timer` | Huge countdown numerals on a stage slide (see the break slide). |
+| `.named` (`.nm` + `.rl`) | A yellow "named thing" card: a packaged recipe, a rule, a role card. |
+| `.terms` | Row of outlined term chips on a band slide. |
+| `.timer` | Huge countdown numerals on a band slide (see the break slide). |
 
 ## Panels, code and consoles
 
@@ -117,7 +123,7 @@ Hand-marked code (for clickable parts) uses the syntax classes directly: `.k` ke
 ## Buttons and inputs
 
 ```html
-<button class="btn">Run the scene</button>        <!-- primary (magenta) -->
+<button class="btn">Run the code</button>        <!-- primary (magenta) -->
 <button class="btn alt">Open the workspace</button> <!-- yellow -->
 <button class="btn ghost">Start over</button>       <!-- white -->
 <button class="btn cy">double( )</button>           <!-- cyan, for "tools" -->
@@ -132,7 +138,7 @@ Hand-marked code (for clickable parts) uses the syntax classes directly: `.k` ke
 <div class="fb" id="q-fb"></div>
 ```
 ```js
-D.fb($("#q-fb"), "pass", "Applause. …");   // pass | err | warn | note; D.fb(el) clears it
+D.fb($("#q-fb"), "pass", "Correct. …");   // pass | err | warn | note; D.fb(el) clears it
 ```
 
 ## Interaction recipes
@@ -181,13 +187,18 @@ name an input where that rule would have given a different answer.
 ```js
 var r = D.run(src);               // {logs:[...], error?, blocked?}
 var r = D.run(src, "double");     // also returns the student's function as r.value
-var r = D.run(src, null, {document: fakeDoc, Tone: Tone, console: myConsole});
-                                  // extra globals; console replaces the captured one
+var r = D.run(src, null, {Tone: Tone});  // extra globals for the code (a library, helpers)
+var r = D.run(src, null, {document: pad, console: myConsole}); // env.console replaces the captured console
 D.edKeys(textarea, runFn);        // Tab indents, Ctrl/⌘+Enter runs
+// Every textarea.code-ed is colour-coded automatically (workspace.js draws a highlighted copy under it).
+// Set code with ta.value = …: the colours follow. D.colourEditor(ta) exists for editors made some other way.
 ```
 
+Pass libraries through `env` rather than relying on `window`, so the fallback interpreter (which is
+sandboxed) sees them too.
+
 `r.blocked` means the fallback interpreter is still loading: show `r.error.message` as a note.
-Otherwise report `r.error` as "The scene stopped: `Name: message`".
+Otherwise report `r.error` as "The code stopped: `Name: message`".
 
 ### Tested challenges
 
@@ -212,6 +223,8 @@ Any element with class `ws-open` opens the workspace drawer; `W` toggles it. Put
 <div class="ws-cta"><button class="btn alt ws-open">Open the workspace</button><p>Type it in yourself and run it.</p></div>
 ```
 `D.workspace.append(src)` adds starter code to the end of the student's workspace (it never replaces what's there).
+`D.workspace.env.Tone = Tone` makes a library available to workspace code; `D.workspace.onRun(fn)` runs `fn`
+before each workspace run (e.g. stopping sound that is still playing).
 
 ## Storage
 
@@ -221,9 +234,24 @@ D.courseStore.get("workspace");                                   // kd402d:work
 ```
 Strings only. Wrap `JSON.parse` in try/catch.
 
+## Sound (Tone.js)
+
+`shared/vendor/tone.min.js` is Tone.js, loaded before `deck.js` by lectures that make sound. `functions-group/`
+has the sound editor (`soundEd`: editor, Play/Stop, a piano roll of what played, optional pads and tests),
+a recorder that sees every `triggerAttackRelease` (with a dry mode for testing a student's function silently),
+and `stopAll()`, bound to S. Copy them from there; promote to `shared/` if a third lecture needs them.
+
+`conditionals/` adds a song player (`songPlayer`: runs code on Tone's clock and fills an 8-bar beat grid as it plays).
+Two traps it works around:
+- `Tone.Transport` is fixed to the audio context that existed when Tone.js loaded. `stopAll()` swaps contexts, so after
+  the first stop, student code calling `Tone.Transport.start()` starts a dead clock. Pass student code a `Tone` whose
+  `Transport` is a getter for `Tone.getTransport()` (see `ToneEnv` in `conditionals/`).
+- JetBrains Mono draws `===`, `!==`, `<=`, `>=` as ligatures. Decks that teach these operators turn ligatures off
+  (`font-variant-ligatures:none`), so students see the characters they type.
+
 ## Lecture-local components in `functions/` worth reusing
 
-`.card` (cast card), `.stagebox` + `.actor` (who's on stage), `.nest` (nested-request boxes),
+`.card` (role card), `.stagebox` + `.actor` (what's running, who's waiting), `.nest` (nested-request boxes),
 `.part` (clickable code parts), `.prompt` (big question text), `.expr` + `.trace` (expression builder),
 `.chat` (a chat-app mock), `.map` (four-column mapping strip), `.order` (running order).
 
@@ -236,4 +264,4 @@ Strings only. Wrap `JSON.parse` in try/catch.
 | `fb(el, kind, html)`, `conLines(el, lines)`, `fmt(value)` | Feedback, console output |
 | `store`, `courseStore` | Per-viewer storage |
 | `go(i)`, `scale()`, `addButton({label, key, onClick})`, `onEscape(fn)` | Deck control |
-| `run`, `edKeys`, `workspace.show(bool)`, `workspace.append(src)` | Added by `workspace.js` |
+| `run`, `edKeys`, `workspace.show(bool)`, `workspace.append(src)`, `workspace.env`, `workspace.onRun(fn)` | Added by `workspace.js` |
