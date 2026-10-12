@@ -150,6 +150,10 @@ table.io.evt td,table.io.evt th{font-size:15px;padding:4px 8px}
 #rc-flow .fnode{min-height:0;padding:6px 10px}
 #rc-flow .fnode .v{font-size:16px}
 #rc-flow .farr .ar{font-size:26px}
+.vsnote{margin:0;font-size:15px;line-height:1.4;color:var(--ink-700);border-left:3px solid var(--cyan-400);padding:3px 0 3px 10px}
+.vsnote .vl a{color:var(--curtain-600)}
+.vsnote .vl{display:block;font-weight:700;font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-900)}
+.vsnote code{background:var(--spot-200);color:var(--ink-900);padding:0 4px;border-radius:2px}
 </style>
 </head>
 <body data-lecture="input-group" data-home="../">
@@ -278,6 +282,25 @@ table.io.evt td,table.io.evt th{font-size:15px;padding:4px 8px}
   <aside class="nt">The same routine as last week. Snags: Sync fork forgotten (no block folders); Live Preview opening inside VS Code instead of the browser (the console is hidden there); keys typed into the console. Each part is its own folder, so there's only ever one keydown listener on the page: open block1/index.html now, block2/index.html later.</aside>
 </section>
 
+<section class="slide" id="run-vscode" data-sec="Introduction">
+  <div class="billing">Introduction · Run it in VS Code</div><hr class="rule">
+  <h2 class="h1 sm">Run it in VS Code</h2>
+  <div class="cols ex">
+    <div class="rows lab steps">
+      <div><span class="num">1</span><span class="tx">In VS Code, open the folder's <code>index.html</code>, e.g. <code>user-input/start/block1/index.html</code>.</span></div>
+      <div><span class="num">2</span><span class="tx">Command Palette (<code>Ctrl+Shift+P</code> / <code>Cmd+Shift+P</code>) → <b>Live Preview: Show Preview (External Browser)</b>. The page opens in your browser.</span></div>
+      <div><span class="num">3</span><span class="tx">Open the console: right-click the page → <b>Inspect</b> → <b>Console</b>.</span></div>
+      <div><span class="num">4</span><span class="tx">Click the page itself, then press keys. The first key switches the sound on.</span></div>
+      <div><span class="num">5</span><span class="tx">Edit the <code>.js</code> file and save. The page reloads on its own: click it again before you play.</span></div>
+    </div>
+    <div class="stack" style="gap:12px">
+      <div class="named" style="margin:0"><div class="nm">New folder, new preview</div><div class="rl">Moving on to <code>block2</code>, <code>blue</code> or <code>purple</code>? Open that folder's <code>index.html</code> and run Live Preview again. Close the old tab, so only one page is listening.</div></div>
+      <div class="named" style="margin:0"><div class="nm">The slides are a preview</div><div class="rl">The pads on the exercise slides show what the finished code does. Your own code runs in VS Code and the browser.</div></div>
+    </div>
+  </div>
+  <aside class="nt">The routine for every exercise, on one slide so students can come back to it (every "In VS Code too" note links here). Snags: Live Preview opening inside VS Code instead of the browser (choose External Browser; the console isn't there otherwise); keys typed into the console; forgetting to click the page after a reload. Two block pages open at once both make sound: close the old tab.</aside>
+</section>
+
 <section class="slide stage" id="block-1" data-sec="Block 1: listening for keys">
   <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
   <div class="inner">
@@ -303,6 +326,7 @@ table.io.evt td,table.io.evt th{font-size:15px;padding:4px 8px}
       <div class="small-h">Predict here, then press the keys on the pad</div>
       <div class="rows kp" id="hr-rows"></div>
       <div class="pad slim" id="hr-pad" tabindex="0" aria-label="Keyboard pad"></div>
+      <p class="vsnote"><span class="vl">In VS Code too · <a href="#run-vscode">how</a></span>The pad only checks your predictions. Press the same keys on the <code>block1</code> page and read them in the browser console.</p>
     </div>
   </div>
   <div class="foot"><p><b>Done when</b>you've predicted all five, checked them, and can say what kind of value <code>event.key</code> is.</p><button class="btn ghost mark" data-done="hear">Mark as done</button></div>
@@ -323,6 +347,7 @@ table.io.evt td,table.io.evt th{font-size:15px;padding:4px 8px}
     <div class="stack" style="gap:10px">
       <div class="panel"><div class="bar"><span>listening.js</span><span>bright lines run</span></div><pre class="code xs" id="ok-code"></pre></div>
       <div class="pad slim" id="ok-pad" tabindex="0" aria-label="Keyboard pad"></div>
+      <p class="vsnote"><span class="vl">In VS Code too · <a href="#run-vscode">how</a></span>The pad shows which lines run. Write the <code>if</code> in <code>block1/listening.js</code>, save, click the page in the browser, and press <b>a</b>.</p>
     </div>
   </div>
   <div class="foot"><p><b>Done when</b>pressing <b>a</b> plays a note, and every other key only logs.</p><button class="btn ghost mark" data-done="one-key">Mark as done</button></div>
@@ -344,6 +369,7 @@ table.io.evt td,table.io.evt th{font-size:15px;padding:4px 8px}
     <div class="stack" style="gap:10px">
       <div class="panel"><div class="bar"><span>listening.js</span><span>bright lines run</span></div><pre class="code xs" id="fk-code"></pre></div>
       <div class="pad slim" id="fk-pad" tabindex="0" aria-label="Keyboard pad"></div>
+      <p class="vsnote"><span class="vl">In VS Code too · <a href="#run-vscode">how</a></span>Add the <code>else if</code>s in <code>listening.js</code>, then play your tune on the <code>block1</code> page.</p>
     </div>
   </div>
   <div class="foot"><p><b>Done when</b>a, s and d play three different notes, and you can say which branch runs for each key.</p><button class="btn ghost mark" data-done="few-keys">Mark as done</button></div>
@@ -407,6 +433,7 @@ table.io.evt td,table.io.evt th{font-size:15px;padding:4px 8px}
     <div class="stack" style="gap:10px">
       <div class="small-h">Strings compare in alphabetical order. Predict, then check</div>
       <div class="rows pred" id="lt-pr"></div>
+      <p class="vsnote"><span class="vl">In VS Code too · <a href="#run-vscode">how</a></span>Log each comparison with <code>console.log</code> in <code>key-as-data.js</code>. The browser console and this slide should agree.</p>
     </div>
   </div>
   <div class="foot"><p><b>Done when</b>a to g play their own note, and h, Enter and Shift play nothing.</p><button class="btn ghost mark" data-done="letters">Mark as done</button></div>
@@ -428,6 +455,7 @@ table.io.evt td,table.io.evt th{font-size:15px;padding:4px 8px}
     <div class="stack" style="gap:10px">
       <div class="seg" role="group" aria-label="Mapping"><button class="btn ghost sel" data-map="letters">letterNote</button><button class="btn ghost" data-map="piano">noteForKey</button></div>
       <div id="pn-kb"></div>
+      <p class="vsnote"><span class="vl">In VS Code too · <a href="#run-vscode">how</a></span>This keyboard is the finished version. Write both functions in <code>key-as-data.js</code> and play them on the <code>block2</code> page.</p>
     </div>
   </div>
   <div class="foot"><p><b>Done when</b><code>noteForKey</code> plays the home row as a scale, and you've played a tune with both mappings.</p><button class="btn ghost mark" data-done="piano">Mark as done</button></div>
@@ -450,6 +478,7 @@ table.io.evt td,table.io.evt th{font-size:15px;padding:4px 8px}
       <div class="pad slim" id="sh-pad" tabindex="0" aria-label="Keyboard pad"></div>
       <div class="panel"><div class="bar p"><span>the last few keydowns</span><span>newest first</span></div>
         <table class="io evt"><thead><tr><th>event.key</th><th>event.shiftKey</th><th>.toLowerCase()</th><th>plays</th></tr></thead><tbody id="sh-rows"><tr><td colspan="4" class="muted" style="font-family:var(--font-ui)">Press a, then Shift + a.</td></tr></tbody></table></div>
+      <p class="vsnote"><span class="vl">In VS Code too · <a href="#run-vscode">how</a></span>Hold Shift on the <code>block2</code> page and read <code>event.key</code> in the browser console before you fix the lookup.</p>
     </div>
   </div>
   <div class="foot"><p><b>Done when</b>Shift + a plays C5, a on its own plays C4, and you can say why the lookup needed <code>.toLowerCase()</code>.</p><button class="btn ghost mark" data-done="shift">Mark as done</button></div>
@@ -470,6 +499,7 @@ table.io.evt td,table.io.evt th{font-size:15px;padding:4px 8px}
     <div class="stack" style="gap:10px">
       <div class="pad slim" id="vs-pad" tabindex="0" aria-label="Keyboard pad"></div>
       <div class="panel"><div class="bar y"><span>console</span><span>the finished block 2</span></div><div class="console con-sm" id="vs-con" style="height:150px"></div></div>
+      <p class="vsnote"><span class="vl">In VS Code too · <a href="#run-vscode">how</a></span>This console shows the finished block 2. Make your browser console say the same.</p>
     </div>
   </div>
   <div class="foot"><p><b>Done when</b>every key press logs one line that says what came in, and what it played or that it played nothing.</p><button class="btn ghost mark" data-done="visible">Mark as done</button></div>
@@ -513,7 +543,7 @@ table.io.evt td,table.io.evt th{font-size:15px;padding:4px 8px}
     <div class="stack" style="gap:10px">
       <div class="pad slim" id="bl-pad" tabindex="0" aria-label="Keyboard pad"></div>
       <div class="state3"><div><b>octave</b><span id="bl-oct">4</span></div><div><b>isMuted</b><span id="bl-mute">false</span></div><div><b>keydowns for this key</b><span id="bl-rep">0</span></div></div>
-      <p class="small" style="margin:0">This pad is the finished blue track. Hold <b>a</b>, then try <b>z</b>, <b>x</b> and <b>m</b>.</p>
+      <p class="vsnote"><span class="vl">In VS Code too · <a href="#run-vscode">how</a></span>This pad is the finished blue track: hold <b>a</b>, then try <b>z</b>, <b>x</b> and <b>m</b>. Then build it in <code>blue/hold.js</code> and play it on the <code>blue</code> page.</p>
     </div>
   </div>
   <div class="foot"><p><b>Done when</b>notes last as long as you hold the key, holding one doesn't stutter, and z, x and m change what the next key plays.</p><button class="btn ghost mark" data-done="blue">Mark as done</button></div>
