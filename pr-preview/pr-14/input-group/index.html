@@ -379,23 +379,24 @@ table.io.evt td,table.io.evt th{font-size:15px;padding:4px 8px}
 <section class="slide" id="name-it" data-sec="Block 1: listening for keys" data-ex="Name the handler">
   <span class="turn">Your turn</span>
   <div class="billing"><span class="sw k"></span>Core · Exercise 4 · block1/listening.js</div><hr class="rule">
-  <h2 class="h1 sm">Name the handler</h2>
+  <h2 class="h1 sm">Name the handler. Who calls it?</h2>
   <div class="cols ex">
     <div class="stack" style="gap:10px">
       <div class="rows lab steps">
-        <div><span class="num">4a</span><span class="tx">Move the function out of <code>addEventListener</code> and give it a name: <code>function handleKeyDown(event) { … }</code>. Then hand it over: <code>document.addEventListener("keydown", handleKeyDown);</code></span></div>
-        <div><span class="num">4b</span><span class="tx">Now add brackets: <code>handleKeyDown()</code>. Save, read the console, and answer on the right.</span></div>
-        <div><span class="num">4c</span><span class="tx">Write why in a comment, then take the brackets off again.</span></div>
+        <div><span class="num">4a</span><span class="tx">Move the function out of <code>addEventListener</code> and name it <code>handleKeyDown</code>. Then hand it over, with no brackets: <code>document.addEventListener("keydown", handleKeyDown);</code></span></div>
+        <div><span class="num">4b</span><span class="tx">Make the first line inside it say so: <code>console.log("handleKeyDown was called");</code> Save, and don't press anything yet. Then press keys.</span></div>
+        <div><span class="num">4c</span><span class="tx">Look for a line in your file that calls <code>handleKeyDown()</code>. In a comment: who calls it, and when?</span></div>
       </div>
+      <div class="named" style="margin:0;padding:10px 14px"><div class="nm" style="font-size:20px">If you ever see this as the page loads</div><div class="rl" style="font-size:16px"><code>TypeError: Cannot read properties of undefined (reading 'key')</code><br>look for brackets after the name: <code>addEventListener("keydown", handleKeyDown())</code>. Take them off.</div></div>
     </div>
     <div class="stack" style="gap:10px">
-      <div class="small-h">With the brackets</div>
-      <div class="rows quiz tight" id="ni-q"></div>
-      <div class="fb" id="ni-fb"></div>
+      <div class="panel"><div class="bar"><span>listening.js</span><span>after 4b</span></div><pre class="code xxs" id="ni-code"></pre></div>
+      <div class="pad slim" id="ni-pad" tabindex="0" aria-label="Keyboard pad"></div>
+      <div class="panel"><div class="bar y"><span>console</span></div><div class="console con-sm" id="ni-con" style="height:72px;font-size:14px;padding:6px 12px"></div></div>
     </div>
   </div>
-  <div class="foot"><p><b>Done when</b><code>handleKeyDown</code> is handed over without brackets, your instrument plays as before, and your comment says what the brackets did.</p><button class="btn ghost mark" data-done="name-it">Mark as done</button></div>
-  <aside class="nt">The most common event bug, and last Tuesday's functions again: here the browser does the calling, not us. With brackets, handleKeyDown() runs once while the page loads. There's no event yet, so event is undefined and the console shows TypeError: Cannot read properties of undefined (reading 'key'). The script stops on that line, so addEventListener never gets a function. Same idea as the morning's "Hand over the name, not the result".</aside>
+  <div class="foot"><p><b>Done when</b>your console shows one <code>handleKeyDown was called</code> per key press and none before, and your comment says who calls it.</p><button class="btn ghost mark" data-done="name-it">Mark as done</button></div>
+  <aside class="nt">The point: we never call handleKeyDown ourselves. There's no handleKeyDown() line anywhere in the file; the browser calls it, every time a key goes down, and hands it the event. addEventListener only handed the function over, without brackets, like Tone.Loop(playStep, "4n") on Friday. After a reload the console stays empty until a key is pressed: nothing calls the function until then. The pad on the slide does the same, with a line per call. The bracket mistake isn't an exercise any more; the yellow box is there so students recognise the error if they make it, and it's in the wrap-up list too.</aside>
 </section>
 
 <section class="slide" id="check-in-1" data-sec="Pair check-in" data-ex="Pair check-in">
@@ -847,12 +848,17 @@ branchDemo($("#ok-code"),$("#ok-pad"),'document.addEventListener("keydown", func
 branchDemo($("#fk-code"),$("#fk-pad"),'document.addEventListener("keydown", function (event) {\n  Tone.start();\n  console.log(event.key);\n  if (event.key === "a") {\n    synth.triggerAttackRelease("C4", "8n");\n  } else if (event.key === "s") {\n    synth.triggerAttackRelease("D4", "8n");\n  } else if (event.key === "d") {\n    synth.triggerAttackRelease("E4", "8n");\n  }\n});',
   {a:{lines:[4],note:"C4"},s:{lines:[5,6],note:"D4"},d:{lines:[7,8],note:"E4"}},[0,1,2,3,9,10]);
 
-/* ---------- 4 name the handler ---------- */
-chipQuiz($("#ni-q"),$("#ni-fb"),[
-  ['When does <code>handleKeyDown()</code> run?',["on every key","once, as the page loads","never"],1,"With brackets, it's called right there, while the page loads, before anyone pressed a key."],
-  ['What is <code>event</code> then?',["the key a","undefined","the page"],1,"Nobody pressed a key, so there's no event: <code>event</code> is <code>undefined</code>, and <code>event.key</code> is an error."],
-  ['What does <code>addEventListener</code> get?',["the function","nothing: the script stopped first"],1,"The error stops the script on that line, so nothing is ever handed over. No key plays."]
-],"Look at the console after you save. Which line is the red error on, and when did it happen?");
+/* ---------- 4 who calls it ---------- */
+(function(){
+  code($("#ni-code"),'function handleKeyDown(event) {\n  console.log("handleKeyDown was called");\n  Tone.start();\n  console.log(event.key);\n  …\n}\n\ndocument.addEventListener("keydown", handleKeyDown);',[1,7]);
+  var P=pad($("#ni-pad"),"<b>Click here</b>, then press keys.",LIVE),lines=[{c:"dim",t:"(page loaded: nothing has called it yet)"}];
+  conLines($("#ni-con"),lines);
+  capture($("#ni-pad"),function(e){
+    if(e.repeat)return;P.show(e.key);
+    lines.push("handleKeyDown was called");lines.push(e.key);lines=lines.slice(-4);
+    conLines($("#ni-con"),lines);$("#ni-con").scrollTop=1e4;
+  });
+})();
 
 /* ---------- check-ins ---------- */
 reveal($("#ci1"),$("#ci1-all"),[
