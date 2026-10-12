@@ -38,6 +38,8 @@ button{font:inherit;color:inherit}
 .dir{font-family:var(--font-display);font-style:italic;font-weight:500;color:var(--ink-500);font-size:22px;line-height:1.45;margin:0}
 .stage .dir{color:var(--paper-400)}
 code,.m{font-family:var(--font-mono);font-size:.88em}
+/* JetBrains Mono draws === and => as joined glyphs; beginners need to see every character */
+pre,code,kbd,textarea,.m,.console,.btn,.chip,.bar,.cb,.turn{font-variant-ligatures:none;font-feature-settings:"calt" 0,"liga" 0}
 p code,li code,.dir code,.lede code{background:var(--spot-200);color:var(--ink-900);padding:0 4px;border-radius:2px;font-style:normal}
 .stage p code{background:transparent;color:var(--spot-400);padding:0}
 .muted{color:var(--ink-500)}
