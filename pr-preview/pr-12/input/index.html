@@ -88,9 +88,26 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
 .state b{display:block;font-size:14px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;color:var(--ink-500)}
 .state span{font-family:var(--font-mono);font-weight:700;font-size:30px;color:var(--ink-900)}
 .state span.flash{animation:flashpk .6s ease}
+/* flow strip */
+.flow{display:grid;grid-template-columns:1fr 84px 1fr 84px 1.2fr;align-items:stretch}
+#fa-flow{grid-template-columns:1fr 84px 1fr 92px 1fr}
+#fa-flow .fnode{min-height:0;padding:6px 10px}
+#fa-flow .fnode .v{font-size:16px}
+#fa-flow .fnode .s{font-size:13px}
+.fnode{border:2px solid var(--ink-900);background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900);border-radius:2px;padding:8px 12px;display:flex;flex-direction:column;gap:2px;min-height:86px;transition:background .2s,border-color .2s}
+.fnode .t{font-size:13px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;color:var(--ink-500)}
+.fnode .v{font-family:var(--font-mono);font-weight:700;font-size:18px;color:var(--ink-900);white-space:pre-wrap}
+.fnode .v.bad{color:var(--error-ink)}
+.fnode .s{font-size:14px;color:var(--ink-500);font-family:var(--font-mono)}
+.fnode.on{background:var(--spot-200);border-color:var(--curtain-600);box-shadow:3px 3px 0 var(--curtain-600)}
+.farr{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--paper-400);text-align:center;transition:color .2s}
+.farr .ar{font-size:34px;line-height:1;font-weight:700}
+.farr .lb{font-family:var(--font-mono);font-size:12px;line-height:1.2;font-weight:700}
+.farr.on{color:var(--curtain-600)}
 /* passing functions */
 .tries{border-top:0}
-.tries>div{grid-template-columns:250px 1fr auto;gap:12px;padding:6px 0;align-items:center}
+.tries>div{grid-template-columns:210px 1fr auto;gap:10px;padding:4px 0;align-items:center}
+.tries .small{font-size:14px;line-height:1.3}
 .tries code{font-size:16px;color:var(--ink-900)}
 .tries .btn{padding:6px 12px;font-size:13px}
 .nc>div{grid-template-columns:90px 1fr;gap:14px;padding:9px 0;font-size:19px}
@@ -364,9 +381,15 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
   <h2 class="h1" style="margin-bottom:16px">A function is a value too</h2>
   <div class="cols wide-l">
     <div class="stack" style="gap:12px">
-      <div class="panel"><div class="bar"><span>clap.js</span><span>run one line at a time</span></div><pre class="code sm" id="fa-def"></pre></div>
+      <div class="panel"><div class="bar"><span>clap.js</span><span>run one line at a time</span></div><pre class="code sm" id="fa-def" style="padding:8px 18px"></pre></div>
       <div class="rows tries" id="fa-rows"></div>
-      <div class="panel"><div class="bar y"><span>console</span></div><div class="console" id="fa-con" style="min-height:84px;font-size:16px"><span class="dim">Press Run on a line.</span></div></div>
+      <div class="flow" id="fa-flow">
+        <div class="fnode" data-f="name"><span class="t">the name</span><span class="v" id="fa-name">clap</span><span class="s" id="fa-name-s">&nbsp;</span></div>
+        <div class="farr" data-f="a1"><span class="ar">→</span><span class="lb">leads to</span></div>
+        <div class="fnode" data-f="fn"><span class="t">the function</span><span class="v">clap</span><span class="s" id="fa-fn-s">waiting</span></div>
+        <div class="farr" data-f="a2"><span class="ar">→</span><span class="lb" id="fa-a2">&nbsp;</span></div>
+        <div class="fnode" data-f="out"><span class="t">the console shows</span><span class="v" id="fa-out" style="font-size:15px">&nbsp;</span></div>
+      </div>
     </div>
     <div class="stack" style="gap:12px">
       <p style="margin:0;font-size:19px">A number or a string is a value: you can store it and hand it to a function. A function is a value in the same way.</p>
@@ -379,27 +402,30 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
       <div class="fb" id="fa-fb"></div>
     </div>
   </div>
-  <aside class="nt">The groundwork for everything after this. Students know values (numbers, strings, booleans) can be stored and passed. A function is one more kind of value. Run the lines in order. console.log(clap) shows the function itself: nothing is clapped. console.log(clap()) claps, then shows undefined, because clap gives nothing back. const action = clap puts the function into a second name; action() then claps, because action and clap are the same function. Ask: what's the difference between a recipe and a cake? The name is the recipe; the brackets bake it.</aside>
+  <aside class="nt">The groundwork for everything after this. Students know values (numbers, strings, booleans) can be stored and passed. A function is one more kind of value. Run the lines in order and watch the flow strip: which name, whether the function runs, and what comes out. console.log(clap) shows the function itself: nothing is clapped. console.log(clap()) claps, then shows undefined, because clap gives nothing back. const action = clap puts the function into a second name; action() then claps, because action and clap are the same function. Ask: what's the difference between a recipe and a cake? The name is the recipe; the brackets bake it.</aside>
 </section>
 
 <!-- 14b TWICE STEPPER -->
 <section class="slide" id="fn-as-value" data-sec="Events and listeners" data-demo="Step through twice">
   <span class="turn try">Try it</span>
   <div class="billing">Events and listeners · Passing functions</div><hr class="rule">
-  <h2 class="h1" style="margin-bottom:16px">Hand over the name, not the result</h2>
+  <h2 class="h1" style="margin-bottom:14px">Hand over the name, not the result</h2>
   <div class="cols wide-l">
+    <div class="panel"><div class="bar"><span>twice.js</span><span id="tw-n">step 1 of 6</span></div><pre class="code sm" id="tw-code" style="font-size:15px;line-height:1.45;padding:10px 18px"></pre></div>
     <div class="stack" style="gap:12px">
       <div class="seg" role="group" aria-label="Last line"><button class="btn ghost code-lbl sel" data-tw="name">twice(clap);</button><button class="btn ghost code-lbl" data-tw="call">twice(clap());</button></div>
-      <div class="panel"><div class="bar"><span>twice.js</span><span id="tw-n">step 1 of 6</span></div><pre class="code sm" id="tw-code"></pre></div>
-    </div>
-    <div class="stack" style="gap:12px">
-      <p class="dir" id="tw-dir" style="min-height:120px;font-size:21px"></p>
-      <div class="state"><div><b>action holds</b><span id="tw-mem" style="font-size:22px">nothing yet</span></div><div><b>clap has run</b><span id="tw-ran" style="font-size:22px">0 times</span></div></div>
-      <div class="panel"><div class="bar y"><span>console</span></div><div class="console" id="tw-con" style="min-height:78px;font-size:16px"></div></div>
+      <p class="dir" id="tw-dir" style="min-height:112px;font-size:20px"></p>
       <div class="row"><button class="btn ghost" id="tw-back">Back</button><button class="btn" id="tw-next">Next</button><button class="btn ghost" id="tw-reset">Start again</button></div>
     </div>
   </div>
-  <aside class="nt">Step through both versions; this is the slide to slow down on. With twice(clap), the parameter action holds the function, and twice decides when to call it: twice. twice doesn't know or care that it's clapping; hand it stomp and it stomps. With twice(clap()), JavaScript works out the brackets first: clap runs once, immediately, before twice starts, and what twice receives is clap's return value, undefined. Calling undefined is the TypeError. Same as yesterday's robot: the parameter is a slot on the memory sheet; this time what goes in it is a function.</aside>
+  <div class="flow" id="tw-flow" style="margin-top:14px">
+    <div class="fnode" data-f="A"><span class="t">the last line</span><span class="v" id="tw-a">clap</span><span class="s" id="tw-a-s">&nbsp;</span></div>
+    <div class="farr" data-f="1"><span class="ar">→</span><span class="lb" id="tw-1">handed to twice</span></div>
+    <div class="fnode" data-f="B"><span class="t">inside twice, action holds</span><span class="v" id="tw-mem">nothing yet</span></div>
+    <div class="farr" data-f="2"><span class="ar">→</span><span class="lb">action()</span></div>
+    <div class="fnode" data-f="C"><span class="t">the console</span><span class="v" id="tw-out" style="font-size:15px">&nbsp;</span></div>
+  </div>
+  <aside class="nt">Step through both versions; this is the slide to slow down on. The strip at the bottom follows the value: what the last line hands to twice, what the parameter action holds, and what happens each time twice calls action(). With twice(clap), action holds the function, and twice decides when to call it: twice. twice doesn't know or care that it's clapping; hand it stomp and it stomps. With twice(clap()), JavaScript works out the brackets first: clap runs once, on the last line, before twice starts. What travels along the first arrow is clap's return value, undefined, and calling undefined is the TypeError. Same as yesterday's robot: the parameter is a slot on the memory sheet; this time what goes in it is a function.</aside>
 </section>
 
 <!-- 14c WHO CALLS IT -->
@@ -536,23 +562,21 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
 </section>
 
 <!-- 19 BUG -->
-<section class="slide" id="bug" data-sec="Events and listeners" data-ex="Spot the bug">
+<section class="slide" id="bug" data-sec="Events and listeners" data-ex="Fix the bugs">
   <span class="turn">Your turn</span>
   <div class="billing">Events and listeners · Check</div><hr class="rule">
-  <h2 class="h1">Spot the bug</h2>
-  <div class="cols">
-    <div class="stack">
-      <div class="panel"><div class="bar"><span id="bg-file">bug1.js</span></div><pre class="code" id="bg-code"></pre></div>
-      <p class="dir" style="font-size:19px" id="bg-dir">The page loads. Then you press keys.</p>
-    </div>
-    <div class="stack">
-      <div class="small muted" id="bg-step">1 of 2</div>
-      <div class="prompt" id="bg-q" style="font-size:28px"></div>
-      <div class="stack" id="bg-opts" style="gap:8px"></div>
+  <h2 class="h1" style="margin-bottom:12px">Three bugs. Find them, fix them.</h2>
+  <div class="row" style="margin-bottom:12px"><div class="tabs" id="bg-tabs"></div><p class="small" style="margin:0 0 0 8px">Each one should play C4 when you press <b>a</b>, and nothing for other keys.</p></div>
+  <div class="cols wide-l pg" style="flex:1;min-height:0">
+    <div class="panel"><div class="bar"><span id="bg-file">bug1.js</span><span>Ctrl / ⌘ + Enter runs</span></div><textarea class="code-ed pg-ed" id="bg-ed" spellcheck="false" aria-label="Code editor"></textarea></div>
+    <div class="stack" style="gap:10px">
+      <div class="row"><button class="btn" id="bg-run">Run</button><button class="btn ghost" id="bg-reset">Reset</button></div>
+      <div class="pad" id="bg-pad" tabindex="0" aria-label="Keyboard pad"></div>
+      <div class="panel"><div class="bar y"><span>console</span></div><div class="console con-s" id="bg-con" style="max-height:110px;min-height:70px"></div></div>
       <div class="fb" id="bg-fb"></div>
     </div>
   </div>
-  <aside class="nt">Two bugs everyone writes at least once. One: brackets after the function name. playC runs once while the page loads (one note, before anyone pressed anything), and addEventListener is handed undefined, so nothing listens. Two: "keyDown". Event names are all lowercase. A wrong name isn't an error: the browser waits for an event that never comes. Both fail without a red error, which is what makes them hard to find.</aside>
+  <aside class="nt">Three bugs everyone writes at least once, and none of them shows a red error. The task is the same for each: run it, press a and then s, work out what's wrong from what happens, and fix it. Bug 1: brackets after the function name. playC runs once, as the code runs (one note before anyone pressed anything), and addEventListener is handed undefined, so nothing listens. Bug 2: "keyDown". Event names are all lowercase; the browser waits for an event called keyDown, and it never comes. Bug 3: = instead of ===. event.key = "a" doesn't compare, it puts "a" into event.key, and the if treats that as true, so every key plays C4. Pairs can race: first to fix all three. The tab turns green when the fix works.</aside>
 </section>
 
 <!-- 20 BREAK -->
@@ -572,11 +596,11 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
   <div class="billing">Building the instrument · Many keys</div><hr class="rule">
   <h2 class="h1" style="margin-bottom:14px">Let the key choose the note</h2>
   <div class="cols" style="gap:28px">
-    <div class="panel"><div class="bar m"><span>a listener for every key</span><span>edits for 8 keys: <b id="lk-ca">0</b></span></div><pre class="code sm" id="lk-a" style="font-size:16px;line-height:1.5"></pre></div>
-    <div class="panel"><div class="bar"><span>one listener, one lookup</span><span>edits for 8 keys: <b id="lk-cb">0</b></span></div><pre class="code sm" id="lk-b" style="font-size:16px;line-height:1.5"></pre></div>
+    <div class="panel"><div class="bar m"><span>a listener for every key</span><span>edits for 8 keys: <b id="lk-ca">0</b></span></div><pre class="code sm" id="lk-a" style="font-size:15px;line-height:1.45;padding:10px 18px"></pre></div>
+    <div class="panel"><div class="bar"><span>one listener, one lookup</span><span>edits for 8 keys: <b id="lk-cb">0</b></span></div><pre class="code sm" id="lk-b" style="font-size:15px;line-height:1.45;padding:10px 18px"></pre></div>
   </div>
-  <div class="row" style="margin-top:auto"><button class="btn" id="lk-go">Make the notes longer</button><button class="btn ghost" id="lk-reset">Start over</button><p class="dir" style="margin-left:8px;font-size:19px;flex:1"><code>noteFor</code> asks one question: which note is this key?</p></div>
-  <aside class="nt">11:10. Back to Tuesday's "write it once" idea. Left: one listener per key, each a near-copy (the slide shows two; a full octave is eight). Right: one listener that asks noteFor which note the key plays. noteFor is an if / else if chain from Thursday that returns a note. Press the button: for a full octave, changing the length is eight edits on the left and one on the right. Adding a key is one new function and one new line on the left; one else if on the right. Keys that aren't notes get "", and the if in playKey skips them.</aside>
+  <div class="row" style="margin-top:auto"><button class="btn" id="lk-go">Switch to the buzzy sound</button><button class="btn ghost" id="lk-reset">Start over</button><p class="dir" style="margin-left:8px;font-size:19px;flex:1">Later, the space bar switches the sound. Which would you rather change?</p></div>
+  <aside class="nt">11:10. Back to Tuesday's "write it once" idea. Left: one listener per key, each a near-copy (the slide shows two; a full octave is eight). Right: one listener that asks noteFor which note the key plays. noteFor is an if / else if chain from Thursday that returns a note. Press the button: switching every key to the buzzy instrument is eight edits on the left (one per function) and one on the right, because only playKey makes a sound. That's exactly what the space bar will do later, while the instrument plays: with one listener, it's one if in one place. Adding a key is one new function and one new line on the left; one else if on the right. Keys that aren't notes get "", and the if in playKey skips them.</aside>
 </section>
 
 <!-- 22 KEYUP -->
@@ -781,7 +805,7 @@ var CTORS=["Synth","PolySynth","FMSynth","AMSynth","MonoSynth","DuoSynth","Membr
 function playground(id,start,opt){
   opt=opt||{};
   var ed=$("#"+id+"-ed"),con=$("#"+id+"-con"),padEl=$("#"+id+"-pad");
-  var P=pad(padEl,IDLE,LIVE),listeners=[],made=[],ran=false,KEY="pg:"+id;
+  var P=pad(padEl,IDLE,LIVE),listeners=[],made=[],ran=false,KEY=opt.key||"pg:"+id;
   ed.value=sget(KEY)||start;
   ed.addEventListener("input",function(){sset(KEY,ed.value)});
   function out(cls,t){
@@ -821,6 +845,7 @@ function playground(id,start,opt){
     if(r.error){out(r.blocked?"dim":"bad",r.blocked?r.error.message:(r.error.name||"Error")+": "+r.error.message);return}
     if(!listeners.length)out("dim","(ran, but nothing is listening. Did addEventListener get a function?)");
     else{var ty=[];listeners.forEach(function(l){if(ty.indexOf(l.type)<0)ty.push(l.type)});out("in","listening for "+ty.join(" and ")+". Click the pad and play.")}
+    if(opt.onRun)opt.onRun(listeners,ed.value);
   }
   function fire(e){
     P.show(e.key);
@@ -838,9 +863,11 @@ function playground(id,start,opt){
     var b=this,label=b.textContent;
     if(opt.confirm&&!armed){armed=true;b.textContent="Sure? Click again";setTimeout(function(){if(armed){armed=false;b.textContent=label}},2500);return}
     armed=false;if(opt.confirm)b.textContent=opt.confirm;
-    ed.value=start;sset(KEY,start);cleanup();listeners=[];ran=false;con.innerHTML="";out("dim","Back to the start. Press Run.");con.dataset.fresh="1";
+    ed.value=start;sset(KEY,start);if(opt.onReset)opt.onReset();cleanup();listeners=[];ran=false;con.innerHTML="";out("dim","Back to the start. Press Run.");con.dataset.fresh="1";
   });
   out("dim","Press Run, then click the pad and press keys.");con.dataset.fresh="1";
+  return {load:function(src,key){cleanup();listeners=[];ran=false;start=src;KEY=key;ed.value=sget(KEY)||src;con.innerHTML="";out("dim","Press Run, then click the pad and press keys.");con.dataset.fresh="1"},
+          run:runIt};
 }
 
 /* ============ keyboard diagram ============ */
@@ -1008,24 +1035,36 @@ $("#tr-show").addEventListener("click",function(){var h=$("#tr-hints");h.hidden=
   render();log("dim","Click the pad and press keys, or press Click.");
 })();
 
+/* ---------- flow strip helper ---------- */
+function flowLight(box,order,done){
+  $$("[data-f]",box).forEach(function(n){n.classList.remove("on")});
+  var t=[];order.forEach(function(k,i){t.push(setTimeout(function(){var n=box.querySelector('[data-f="'+k+'"]');if(n)n.classList.add("on");if(i===order.length-1&&done)done()},i*320))});
+  return t;
+}
+
 /* ---------- 14a a function is a value ---------- */
 (function(){
-  code($("#fa-def"),'function clap() {\n  console.log("clap!");\n}');
+  code($("#fa-def"),'function clap() { console.log("clap!"); }');
+  var box=$("#fa-flow"),stored=false,timers=[];
   var L=[
-    ["console.log(clap);",["function clap() { … }"],"the function itself: nothing was clapped"],
-    ["console.log(clap());",["clap!","undefined"],"clap ran, then its result was logged: undefined"],
-    ["const action = clap;",[],"nothing runs: action now holds the same function"],
-    ["action();",["clap!"],"action is clap, so this claps"]
-  ],stored=false;
+    {c:"console.log(clap);",name:"clap",fn:"not run",a2:"handed over",out:"function clap() {…}",path:["name","a1","fn","a2","out"],why:"no brackets: the function itself is logged"},
+    {c:"console.log(clap());",name:"clap",fn:"runs: logs clap!",a2:"gives back",out:"clap!\nundefined",path:["name","a1","fn","a2","out"],why:"brackets: it runs, and its result is logged"},
+    {c:"const action = clap;",name:"clap  action",fn:"not run",a2:"",out:"(nothing)",path:["name","a1","fn"],why:"no brackets: action now leads to the same function"},
+    {c:"action();",name:"action",fn:"runs: logs clap!",a2:"",out:"clap!",path:["name","a1","fn","a2","out"],why:"action leads to clap, so this claps"}
+  ];
+  function show(l){
+    timers.forEach(clearTimeout);
+    $("#fa-name").textContent=l.name;$("#fa-name-s").textContent=l.c;
+    $("#fa-fn-s").textContent=l.fn;$("#fa-a2").textContent=l.a2||" ";$("#fa-out").textContent="";
+    timers=flowLight(box,l.path,function(){$("#fa-out").textContent=l.out});
+  }
   L.forEach(function(l,i){
     var row=document.createElement("div");
-    row.innerHTML='<code>'+esc(l[0])+'</code><span class="muted small"></span><button class="btn cy">Run</button>';
+    row.innerHTML='<code>'+esc(l.c)+'</code><span class="muted small"></span><button class="btn cy">Run</button>';row.querySelector("span").dataset.why=l.why;
     row.querySelector("button").addEventListener("click",function(){
-      var out=[{c:"in",t:l[0]}];
-      if(i===3&&!stored)out.push({c:"bad",t:"ReferenceError: action is not defined"});
-      else{if(i===2)stored=true;l[1].forEach(function(t){out.push(t)});if(!l[1].length)out.push({c:"dim",t:"(nothing logged)"})}
-      conLines($("#fa-con"),out);
-      row.querySelector("span").textContent=(i===3&&!stored)?"run the line above first":l[2];
+      if(i===3&&!stored){timers.forEach(clearTimeout);$$("[data-f]",box).forEach(function(n){n.classList.remove("on")});$("#fa-name").textContent="action";$("#fa-name-s").textContent="action();";$("#fa-fn-s").textContent="?";$("#fa-a2").textContent=" ";$("#fa-out").textContent="ReferenceError: action is not defined";row.querySelector("span").textContent="run the line above first";return}
+      if(i===2)stored=true;
+      $$("#fa-rows span").forEach(function(x){x.textContent=""});row.querySelector("span").textContent=l.why;show(l);
     });
     $("#fa-rows").appendChild(row);
   });
@@ -1047,27 +1086,28 @@ $("#tr-show").addEventListener("click",function(){var h=$("#tr-hints");h.hidden=
            call:'function clap() {\n  console.log("clap!");\n}\n\nfunction twice(action) {\n  action();\n  action();\n}\n\ntwice(clap());'};
   var STEPS={
     name:[
-      {l:9,d:"The last line calls twice. No brackets after clap, so the function itself is handed over. Nothing has clapped yet.",m:"nothing yet",r:0,c:[]},
-      {l:4,d:"twice starts. Its parameter action now holds the function clap.",m:"the function clap",r:0,c:[]},
-      {l:5,d:"action() calls whatever action holds. It holds clap, so clap runs.",m:"the function clap",r:0,c:[]},
-      {l:1,d:"Inside clap: log clap!",m:"the function clap",r:1,c:["clap!"]},
-      {l:6,d:"action() again: clap runs a second time.",m:"the function clap",r:2,c:["clap!","clap!"]},
-      {l:7,d:"twice is done. twice decided when to call clap, and how often. It never needed to know it was clapping: hand it stomp and it stomps.",m:"the function clap",r:2,c:["clap!","clap!"]}
+      {l:9,f:["A"],a:"clap",as:"no brackets: not run",a1:"the function",m:"nothing yet",o:"",d:"The last line calls twice. No brackets after clap, so nothing runs yet: the function itself is about to be handed over."},
+      {l:4,f:["A","1","B"],a:"clap",as:"no brackets: not run",a1:"the function",m:"the function clap",o:"",d:"twice starts. Its parameter action now holds the function clap."},
+      {l:5,f:["B","2"],a:"clap",as:"no brackets: not run",a1:"the function",m:"the function clap",o:"",d:"action() calls whatever action holds. It holds clap, so clap runs."},
+      {l:1,f:["2","C"],a:"clap",as:"no brackets: not run",a1:"the function",m:"the function clap",o:"clap!",d:"Inside clap: log clap!"},
+      {l:6,f:["B","2","C"],a:"clap",as:"no brackets: not run",a1:"the function",m:"the function clap",o:"clap!\nclap!",d:"action() again: clap runs a second time."},
+      {l:7,f:[],a:"clap",as:"no brackets: not run",a1:"the function",m:"the function clap",o:"clap!\nclap!",d:"twice is done. twice decided when to call clap, and how often. It never needed to know it was clapping: hand it stomp and it stomps."}
     ],
     call:[
-      {l:9,d:"The last line has brackets after clap. JavaScript works out clap() first, before twice even starts.",m:"nothing yet",r:0,c:[]},
-      {l:1,d:"So clap runs now, once, and logs clap!",m:"nothing yet",r:1,c:["clap!"]},
-      {l:9,d:"clap gives nothing back: its result is undefined. That result is what twice is handed.",m:"nothing yet",r:1,c:["clap!"]},
-      {l:4,d:"twice starts. Its parameter action holds undefined, not a function.",m:"undefined",r:1,c:["clap!"]},
-      {l:5,d:"action() tries to call undefined. You can't call something that isn't a function, so the program stops here.",m:"undefined",r:1,c:["clap!",{c:"bad",t:"TypeError: action is not a function"}]}
+      {l:9,f:["A"],a:"clap()",as:"brackets: runs now",a1:"",m:"nothing yet",o:"",d:"The last line has brackets after clap. JavaScript works out clap() first, before twice even starts."},
+      {l:1,f:["A","C"],a:"clap()",as:"runs now, logs clap!",a1:"",m:"nothing yet",o:"clap!",d:"So clap runs now, once, on the last line, and logs clap!"},
+      {l:9,f:["A","1"],a:"clap()",as:"gave back undefined",a1:"undefined",m:"nothing yet",o:"clap!",d:"clap gives nothing back: its result is undefined. That result is what gets handed to twice."},
+      {l:4,f:["1","B"],a:"clap()",as:"gave back undefined",a1:"undefined",m:"undefined",o:"clap!",d:"twice starts. Its parameter action holds undefined, not a function."},
+      {l:5,f:["B","2","C"],a:"clap()",as:"gave back undefined",a1:"undefined",m:"undefined",o:"clap!\nTypeError: action is not a function",d:"action() tries to call undefined. You can't call something that isn't a function, so the program stops here."}
     ]
   },mode="name",i=0;
   function render(){
     var st=STEPS[mode][i];code($("#tw-code"),SRC[mode],[st.l]);
     $("#tw-dir").textContent=st.d;$("#tw-n").textContent="step "+(i+1)+" of "+STEPS[mode].length;
-    var mem=$("#tw-mem");if(mem.textContent!==st.m){mem.textContent=st.m;mem.classList.remove("flash");void mem.offsetWidth;mem.classList.add("flash")}
-    $("#tw-ran").textContent=st.r+(st.r===1?" time":" times");
-    if(st.c.length)conLines($("#tw-con"),st.c);else conLines($("#tw-con"),[{c:"dim",t:"(nothing logged yet)"}]);
+    $("#tw-a").textContent=st.a;$("#tw-a-s").textContent=st.as;$("#tw-1").textContent=st.a1?"hands twice "+st.a1:"handed to twice";
+    $("#tw-mem").textContent=st.m;$("#tw-out").textContent=st.o||" ";
+    $("#tw-out").classList.toggle("bad",/TypeError/.test(st.o));
+    $$("#tw-flow [data-f]").forEach(function(n){n.classList.toggle("on",st.f.indexOf(n.dataset.f)>-1)});
     $("#tw-back").disabled=i===0;$("#tw-next").disabled=i===STEPS[mode].length-1;
   }
   $$("#fn-as-value [data-tw]").forEach(function(b){b.addEventListener("click",function(){mode=b.dataset.tw;i=0;$$("#fn-as-value [data-tw]").forEach(function(x){x.classList.toggle("sel",x===b);x.setAttribute("aria-pressed",x===b)});render()})});
@@ -1210,43 +1250,46 @@ playground("fl",'function showKey(event) {\n  console.log("You pressed " + event
 /* ---------- 18 first sound ---------- */
 playground("fs",'const synth = new Tone.Synth().toDestination();\n\nfunction playNote(event) {\n  if (event.key === "a") {\n    synth.triggerAttackRelease("C4", "8n");\n  }\n}\n\ndocument.addEventListener("keydown", playNote);\n');
 
-/* ---------- 19 bug ---------- */
+/* ---------- 19 fix the bugs ---------- */
 (function(){
+  var SYN='const synth = new Tone.Synth().toDestination();\n\n';
   var B=[
-    {f:"bug1.js",src:'const synth = new Tone.Synth().toDestination();\n\nfunction playC() {\n  synth.triggerAttackRelease("C4", "8n");\n}\n\ndocument.addEventListener("keydown", playC());',bad:[6],
-     fix:'const synth = new Tone.Synth().toDestination();\n\nfunction playC() {\n  synth.triggerAttackRelease("C4", "8n");\n}\n\ndocument.addEventListener("keydown", playC);',
-     q:"What happens?",o:[["A C on every key press",0],["One C as the page loads, then nothing",1],["A red error in the console",0]],
-     ok:"Right. <code>playC()</code> runs straight away, while the page loads, and hands over what it gives back: <code>undefined</code>. So nothing listens. Take the brackets off."},
-    {f:"bug2.js",src:'const synth = new Tone.Synth().toDestination();\n\nfunction playC() {\n  synth.triggerAttackRelease("C4", "8n");\n}\n\ndocument.addEventListener("keyDown", playC);',bad:[6],
-     fix:'const synth = new Tone.Synth().toDestination();\n\nfunction playC() {\n  synth.triggerAttackRelease("C4", "8n");\n}\n\ndocument.addEventListener("keydown", playC);',
-     q:"And this one?",o:[["A C on every key press",0],["One C as the page loads, then nothing",0],["Nothing at all, and no error",1]],
-     ok:"Right. Event names are all lowercase. <code>\"keyDown\"</code> isn't an error: the browser waits for an event called that, and it never comes."}
-  ],i=0;
-  function ask(){
-    var b=B[i],box=$("#bg-opts"),answered=false;
-    code($("#bg-code"),b.src);$("#bg-file").textContent=b.f;$("#bg-q").textContent=b.q;$("#bg-step").textContent=(i+1)+" of "+B.length;box.innerHTML="";
-    b.o.forEach(function(o){var bt=document.createElement("button");bt.className="opt";bt.textContent=o[0];
-      bt.addEventListener("click",function(){if(answered)return;
-        if(o[1]){bt.classList.add("right");answered=true;fb($("#bg-fb"),"pass",b.ok);code($("#bg-code"),b.fix,b.bad);flash($("#bg-code"),b.bad);if(i<B.length-1)setTimeout(function(){i++;fb($("#bg-fb"));ask()},3200)}
-        else{bt.classList.add("wrong");fb($("#bg-fb"),"note","Read the last line aloud, character by character. What does the browser get handed?")}
-      });box.appendChild(bt)});
+    {f:"bug1.js",src:SYN+'function playC() {\n  synth.triggerAttackRelease("C4", "8n");\n}\n\ndocument.addEventListener("keydown", playC());\n',
+     ok:function(ls){return ls.some(function(l){return l.type==="keydown"})},
+     fixed:"Fixed. Without the brackets, <code>playC</code> is handed over instead of run once as the code runs. (It plays on every key now. Want only a? Give it an <code>event</code> parameter and an <code>if</code>.)"},
+    {f:"bug2.js",src:SYN+'function playNote(event) {\n  if (event.key === "a") {\n    synth.triggerAttackRelease("C4", "8n");\n  }\n}\n\ndocument.addEventListener("keyDown", playNote);\n',
+     ok:function(ls){return ls.some(function(l){return l.type==="keydown"})},
+     fixed:"Fixed. Event names are all lowercase: <code>\"keydown\"</code>. A wrong name isn't an error; the browser waits for an event that never comes."},
+    {f:"bug3.js",src:SYN+'function playNote(event) {\n  if (event.key = "a") {\n    synth.triggerAttackRelease("C4", "8n");\n  }\n}\n\ndocument.addEventListener("keydown", playNote);\n',
+     ok:function(ls,src){return ls.some(function(l){return l.type==="keydown"})&&/event\.key\s*===\s*"a"/.test(src)&&!/event\.key\s*=\s*"a"/.test(src)},
+     fixed:"Fixed. <code>=</code> puts a value in; <code>===</code> asks a question. With <code>=</code>, every key became \"a\" and played."}
+  ],cur=0,done={};
+  try{done=JSON.parse(sget("bugs-fixed")||"{}")}catch(e){done={}}
+  function tabs(){
+    var t=$("#bg-tabs");t.innerHTML="";
+    B.forEach(function(b,i){var x=document.createElement("button");x.className="btn ghost"+(i===cur?" sel":"")+(done[i]&&i!==cur?" done":"");x.textContent=(done[i]?"✓ ":"")+"Bug "+(i+1);x.addEventListener("click",function(){cur=i;load()});t.appendChild(x)});
   }
-  ask();
+  var pg=playground("bg",B[0].src,{key:"bug:0",
+    onRun:function(ls,src){if(B[cur].ok(ls,src)){done[cur]=1;sset("bugs-fixed",JSON.stringify(done));tabs();fb($("#bg-fb"),"pass",B[cur].fixed)}else fb($("#bg-fb"))},
+    onReset:function(){fb($("#bg-fb"))}});
+  function load(){$("#bg-file").textContent=B[cur].f;fb($("#bg-fb"));pg.load(B[cur].src,"bug:"+cur);tabs()}
+  tabs();
 })();
 
 /* ---------- 21 lookup ---------- */
 (function(){
-  var durs=['"8n"','"4n"','"2n"','"16n"'],di=0,ca=0,cb=0;
-  function A(d){return 'function playA(event) {\n  if (event.key === "a") {\n    synth.triggerAttackRelease("C4", '+d+');\n  }\n}\nfunction playS(event) {\n  if (event.key === "s") {\n    synth.triggerAttackRelease("D4", '+d+');\n  }\n}\n// …six more functions like these\n\ndocument.addEventListener("keydown", playA);\ndocument.addEventListener("keydown", playS);\n// …six more lines like these'}
-  function Bsrc(d){return 'function noteFor(key) {\n  if (key === "a") {\n    return "C4";\n  } else if (key === "s") {\n    return "D4";\n  }\n  // …six more else ifs\n  return "";\n}\nfunction playKey(event) {\n  const note = noteFor(event.key);\n  if (note !== "") {\n    synth.triggerAttackRelease(note, '+d+');\n  }\n}\ndocument.addEventListener("keydown", playKey);'}
+  var inst="synth",ca=0,cb=0;
+  function A(x){return 'function playA(event) {\n  if (event.key === "a") {\n    '+x+'.triggerAttackRelease("C4", "8n");\n  }\n}\nfunction playS(event) {\n  if (event.key === "s") {\n    '+x+'.triggerAttackRelease("D4", "8n");\n  }\n}\n// …six more functions like these\n\ndocument.addEventListener("keydown", playA);\ndocument.addEventListener("keydown", playS);\n// …six more lines like these'}
+  function Bsrc(x){return 'function noteFor(key) {\n  if (key === "a") {\n    return "C4";\n  } else if (key === "s") {\n    return "D4";\n  }\n  // …six more else ifs\n  return "";\n}\nfunction playKey(event) {\n  const note = noteFor(event.key);\n  if (note !== "") {\n    '+x+'.triggerAttackRelease(note, "8n");\n  }\n}\ndocument.addEventListener("keydown", playKey);'}
   function render(fl){
-    var d=durs[di];code($("#lk-a"),A(d),fl?[2,7]:null);code($("#lk-b"),Bsrc(d),fl?[12]:null);
+    code($("#lk-a"),A(inst),fl?[2,7]:null);code($("#lk-b"),Bsrc(inst),fl?[12]:null);
     if(fl){flash($("#lk-a"),[2,7]);flash($("#lk-b"),[12])}
     $("#lk-ca").textContent=ca;$("#lk-cb").textContent=cb;
+    $("#lk-go").textContent=inst==="synth"?"Switch to the buzzy sound":"Switch back to the clean sound";
   }
   render();
-  $("#lk-go").addEventListener("click",function(){di=(di+1)%durs.length;ca+=8;cb+=1;this.textContent=["Make the notes longer","Make them longer still","Make them very short","Back to the start"][di];render(true)});
-  $("#lk-reset").addEventListener("click",function(){di=0;ca=0;cb=0;$("#lk-go").textContent="Make the notes longer";render()});
+  $("#lk-go").addEventListener("click",function(){inst=inst==="synth"?"buzzy":"synth";ca+=8;cb+=1;render(true)});
+  $("#lk-reset").addEventListener("click",function(){inst="synth";ca=0;cb=0;render()});
 })();
 
 /* ---------- 22 keyup ---------- */
