@@ -10,7 +10,7 @@
   <style>
     /* styles used only by this lecture */
     .order>div {
-      grid-template-columns: 72px 120px 1fr;
+      grid-template-columns: 72px 1fr;
       align-items: center
     }
 
@@ -410,14 +410,14 @@
         <div class="beam m"></div>
         <div class="scan"></div>
         <div class="inner">
-          <div class="billing">Act I · Functions · Week 41</div>
+          <div class="billing">KD402D Programming · Week 41</div>
           <h1 class="hero">Give it a name. Call it again.</h1>
           <p class="lede">The first functions lecture: what functions are for, playing one out loud, and writing your
             own.</p>
         </div>
         <div
           style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
-          <div class="m" style="font-size:17px;color:var(--ink-200)">KD402D Programming · Tue 6 Oct · 10:15–12:00</div>
+          <div class="m" style="font-size:17px;color:var(--ink-200)">KD402D Programming · Functions · Tue 6 Oct</div>
         </div>
         <aside class="nt">Welcome back after the introduction. Keys: arrows to move, I for the slide index, N for these
           notes, E to jump to the next exercise, W for the coding workspace (after the break). Students can open the
@@ -427,21 +427,21 @@
 
       <!-- 02 RUNNING ORDER -->
       <section class="slide" id="running-order" data-sec="Opening">
-        <div class="billing">Running order · Today</div>
+        <div class="billing">Today</div>
         <hr class="rule">
-        <h2 class="h1">Five scenes before lunch</h2>
+        <h2 class="h1">Five parts before lunch</h2>
         <div class="rows order">
-          <div><span class="num">01</span><span class="tm">10:15</span><span class="nm">Why functions?</span></div>
-          <div><span class="num">02</span><span class="tm">10:25</span><span class="nm">What functions are
+          <div><span class="num">01</span><span class="nm">Why functions?</span></div>
+          <div><span class="num">02</span><span class="nm">What functions are
               for<small>Five jobs, five analogies, two machines to play with</small></span></div>
-          <div class="act"><span class="num">03</span><span class="tm">10:50</span><span class="nm">Be a
+          <div class="act"><span class="num">03</span><span class="nm">Be a
               function<small>Everyone gets a name, an input and a return value</small></span></div>
-          <div><span class="num">04</span><span class="tm">11:20</span><span class="nm">Declaring and
+          <div><span class="num">04</span><span class="nm">Declaring and
               calling<small>Follow along in the browser, one small step at a time</small></span></div>
-          <div><span class="num">05</span><span class="tm">11:45</span><span class="nm">Your first functions</span>
+          <div><span class="num">05</span><span class="nm">Your first functions</span>
           </div>
         </div>
-        <p class="dir" style="margin-top:16px">Intermission at 11:05.</p>
+        <p class="dir" style="margin-top:16px">A break halfway, after we act it out.</p>
         <aside class="nt">Set expectations: the first half is conceptual, no code at all. After the break, laptops open
           on this deck: everything happens in the browser, no installs. The "Your turn" slides are on the course link if
           they want to try them on their own screen.</aside>
@@ -459,14 +459,13 @@
           <div><span class="num">03</span><span class="tx">Use parameters and return values so one function works for
               many inputs.</span></div>
         </div>
-        <aside class="nt">These are the session's learning objectives from the course plan. Come back to them at the
-          curtain call.</aside>
+        <aside class="nt">These are the session's learning objectives from the course plan. Come back to them in the recap.</aside>
       </section>
 
       <!-- 04 REPEAT -->
       <section class="slide" id="repeat" data-sec="Why functions?" data-demo="Four greetings">
         <span class="turn try">Try it</span>
-        <div class="billing">Scene 01 · Why functions? · 10:15</div>
+        <div class="billing">Why functions?</div>
         <hr class="rule">
         <h2 class="h1">Four greetings, one change</h2>
         <div class="cols">
@@ -498,16 +497,14 @@
         <div class="inner">
           <div class="billing">Why functions?</div>
           <h2 class="hero md">A function names a piece of behaviour.</h2>
-          <p class="lede">Write the steps once, give them a name, and cue them whenever you need them. Writing it down
-            is <em>defining</em>. Cueing it is <em>calling</em>.</p>
+          <p class="lede">Write the steps once, give them a name, and use that name whenever you need them. Writing it down is <em>defining</em>. Using it is <em>calling</em>.</p>
         </div>
-        <aside class="nt">The one-line definition. Theatre gloss: a function is a scene you've blocked and named;
-          calling it is giving the cue. Define once, call many times.</aside>
+        <aside class="nt">The one-line definition. A function is a set of steps with a name; calling it is asking for those steps by name. Define once, call many times.</aside>
       </section>
 
       <!-- 06 ROLES -->
       <section class="slide" id="roles" data-sec="What functions are for">
-        <div class="billing">Scene 02 · What functions are for · 10:25</div>
+        <div class="billing">What functions are for</div>
         <hr class="rule">
         <h2 class="h1">Five jobs a function does</h2>
         <div class="rows roles">
@@ -695,8 +692,7 @@
           </div>
         </div>
         <aside class="nt">Like asking someone by name to take a task: "Sam, can you do the deadlines?" Each named piece
-          is small enough to write, test and fix on its own. Blocking (a.k.a. planning your program) often starts
-          exactly like this: name the pieces first, work out each one later.</aside>
+          is small enough to write, test and fix on its own. Planning a program often starts exactly like this: name the pieces first, work out each one later.</aside>
       </section>
 
       <!-- 12 ROLES QUIZ -->
@@ -720,20 +716,19 @@
         <div class="beam m"></div>
         <div class="scan"></div>
         <div class="inner">
-          <div class="billing">Scene 03 · Be a function · 10:50</div>
+          <div class="billing">Be a function</div>
           <h2 class="hero md">Everyone is a function now.</h2>
           <p class="lede">Pick a name. Decide what you take in. Decide what you give back. Then wait to be called.</p>
         </div>
-        <aside class="nt">Embodied activity, 15 minutes. Everyone stands. Next slide helps anyone who's stuck write a
-          cast card. Then people call each other by name, pass arguments out loud and say return values back.</aside>
+        <aside class="nt">Embodied activity, 15 minutes. Everyone stands. Next slide helps anyone who's stuck write a role card. Then people call each other by name, pass arguments out loud and say return values back.</aside>
       </section>
 
-      <!-- 14 CAST CARD -->
-      <section class="slide" id="cast-card" data-sec="Be a function" data-ex="Cast card">
+      <!-- 14 ROLE CARD -->
+      <section class="slide" id="role-card" data-sec="Be a function" data-ex="Role card">
         <span class="turn">Your turn</span>
-        <div class="billing">Be a function · Cast card</div>
+        <div class="billing">Be a function · Role card</div>
         <hr class="rule">
-        <h2 class="h1">Write your cast card</h2>
+        <h2 class="h1">Write your role card</h2>
         <div class="cols wide-r">
           <div class="stack">
             <label class="f">Your name, as a function<input class="t" id="cc-name" placeholder="Greeter"
@@ -762,7 +757,7 @@
           </div>
         </div>
         <aside class="nt">Students who can't decide press "Suggest one". The card is saved in their browser and comes
-          back at 11:45, when they code it up. Plain words only here; no syntax yet.</aside>
+          back after the break, when they code it up. Plain words only here; no syntax yet.</aside>
       </section>
 
 
@@ -772,18 +767,18 @@
         <hr class="rule">
         <h2 class="h1">How a call sounds out loud</h2>
         <div class="rows script" style="margin-bottom:18px">
-          <div><span class="cue a">Director:</span><span class="line">I need a greeting for Ana, shouted. Greeter first.
+          <div><span class="cue a">Caller:</span><span class="line">I need a greeting for Ana, shouted. Greeter first.
               Greeter, with "Ana".</span></div>
           <div><span class="cue b">Greeter:</span><span class="line">"Hello, Ana." <span class="muted">(steps
                 back)</span></span></div>
-          <div><span class="cue a">Director:</span><span class="line">Shouter, with "Hello, Ana".</span></div>
+          <div><span class="cue a">Caller:</span><span class="line">Shouter, with "Hello, Ana".</span></div>
           <div><span class="cue b">Shouter:</span><span class="line">"HELLO, ANA!" <span class="muted">(steps
                 back)</span></span></div>
         </div>
         <div class="cols"
           style="grid-template-columns:repeat(3,1fr);gap:24px;border-top:1px solid var(--ink-900);padding-top:14px">
           <p style="margin:0;font-size:18px"><b>Speak only when called.</b> Having a card does nothing on its own.</p>
-          <p style="margin:0;font-size:18px"><b>Say what you give back, then step back.</b> Your scene is over.</p>
+          <p style="margin:0;font-size:18px"><b>Say what you give back, then step back.</b> Your turn is over.</p>
           <p style="margin:0;font-size:18px"><b>If what you take in is someone else's answer,</b> wait for it.</p>
         </div>
         <aside class="nt">Model one nested call with two volunteers before letting everyone loose. Then run a few nested
@@ -792,22 +787,22 @@
       </section>
 
       <!-- 16 STACK -->
-      <section class="slide" id="stack" data-sec="Be a function" data-demo="Who is on stage">
+      <section class="slide" id="stack" data-sec="Be a function" data-demo="Who is working now">
         <span class="turn try">Try it</span>
         <div class="billing">Be a function · Replay</div>
         <hr class="rule">
-        <h2 class="h1">Who is on stage now?</h2>
+        <h2 class="h1">Who is working now?</h2>
         <div class="cols wide-l">
           <div class="stack">
             <div class="panel">
-              <div class="bar p"><span>the director's request</span><span id="st-n">step 0 of 5</span></div>
+              <div class="bar p"><span>the caller's request</span><span id="st-n">step 0 of 5</span></div>
               <div class="pbody" id="st-code" style="min-height:250px"></div>
             </div>
             <p class="dir" id="st-dir" style="min-height:64px"></p>
           </div>
           <div class="stack">
             <div class="panel">
-              <div class="bar y"><span>on stage</span><span>who is working</span></div>
+              <div class="bar y"><span>running now</span><span>who is working</span></div>
               <div class="stagebox" id="st-box"></div>
               <div class="pbody" style="border-top:1px solid var(--paper-300);padding:10px 16px"><span
                   class="small muted">Value in hand: </span><span id="st-hand"
@@ -818,8 +813,7 @@
           </div>
         </div>
         <aside class="nt">Replay what the room just acted out. The request is nested: Shouter's input is whatever
-          Greeter gives back, so Greeter has to finish before Shouter can even start. Who's on stage is what programmers
-          call the call stack; no need to name it yet.</aside>
+          Greeter gives back, so Greeter has to finish before Shouter can even start. Who is working right now is what programmers call the call stack; no need to name it yet.</aside>
       </section>
 
       <!-- 17 DEBRIEF -->
@@ -834,12 +828,12 @@
       </section>
 
       <!-- 18 BREAK -->
-      <section class="slide stage" id="break" data-sec="Intermission">
+      <section class="slide stage" id="break" data-sec="Break">
         <div class="beam y"></div>
         <div class="beam m"></div>
         <div class="scan"></div>
         <div class="inner">
-          <div class="billing">Intermission · 11:05–11:20</div>
+          <div class="billing">Break</div>
           <div class="timer" id="tm" aria-live="off">15:00</div>
           <p class="lede" id="tm-msg" style="margin-top:22px">Stretch, refill, and open this deck on your laptop. After
             the break, you code along in the browser.</p>
@@ -852,9 +846,9 @@
 
       <!-- 19a TO CODE -->
       <section class="slide" id="to-code" data-sec="Declaring and calling">
-        <div class="billing">Scene 04 · Declaring and calling · 11:20</div>
+        <div class="billing">Declaring and calling</div>
         <hr class="rule">
-        <h2 class="h1">From the stage to the page</h2>
+        <h2 class="h1">From acting it out to code</h2>
         <div class="cols" style="align-items:stretch">
           <div class="card" style="box-shadow:5px 5px 0 var(--curtain-500)">
             <div class="sig" style="font-family:var(--font-display);letter-spacing:-.03em;font-size:40px">Greeter</div>
@@ -878,7 +872,7 @@
           <div><b>Being called</b>is a call: <code>greet("Ana")</code></div>
         </div>
         <aside class="nt">First code of the day. Everything on the right is something they already did on their feet;
-          the code is just a precise way of writing the cast card down. Go slowly: read the four lines aloud.</aside>
+          the code is just a precise way of writing the role card down. Go slowly: read the four lines aloud.</aside>
       </section>
 
       <!-- 19 ANATOMY -->
@@ -945,7 +939,7 @@
           </div>
         </div>
         <aside class="nt">Students type the three lines into the workspace (W) and run them: nothing happens. Then add
-          the two calls. Defining is writing the scene; calling is the cue. Mention the parentheses:
+          the two calls. Defining writes the steps down; calling runs them. Mention the parentheses:
           <code>sayHello</code> without () refers to the function, it doesn't call it.</aside>
       </section>
 
@@ -1092,14 +1086,13 @@
       </section>
 
       <!-- 26 FIRST FUNCTIONS BRIEF -->
-      <section class="slide" id="first-functions" data-sec="Your first functions" data-ex="Code your cast card">
+      <section class="slide" id="first-functions" data-sec="Your first functions" data-ex="Code your role card">
         <span class="turn">Your turn</span>
-        <div class="billing">Scene 05 · Your first functions · 11:45 · 15 min</div>
+        <div class="billing">Your first functions</div>
         <hr class="rule">
         <h2 class="h1" style="margin-bottom:14px">Code the function you played</h2>
         <div class="rows lab" style="font-size:20px">
-          <div style="padding:10px 0"><span class="num">01</span><span class="tx">Open the workspace and load your cast
-              card as a starting point.</span></div>
+          <div style="padding:10px 0"><span class="num">01</span><span class="tx">Open the workspace and load your role card as a starting point.</span></div>
           <div style="padding:10px 0"><span class="num">02</span><span class="tx">Make it work: it should
               <code>return</code> what your card gives back.</span></div>
           <div style="padding:10px 0"><span class="num">03</span><span class="tx">Call it three times with different
@@ -1109,11 +1102,10 @@
           <div style="padding:10px 0"><span class="num">05</span><span class="tx">Pair-share: what does your function
               do, and which job is it doing?</span></div>
         </div>
-        <div class="ws-cta" style="border:0;margin-top:14px"><button class="btn" id="ff-load">Load my cast card into the
-            workspace</button>
+        <div class="ws-cta" style="border:0;margin-top:14px"><button class="btn" id="ff-load">Load my role card into the workspace</button>
           <p class="dir" style="font-size:18px">No card yet? You'll get the Greeter.</p>
         </div>
-        <aside class="nt">The load button turns their saved cast card into a first draft: suggested cards come out
+        <aside class="nt">The load button turns their saved role card into a first draft: suggested cards come out
           complete, custom cards as a skeleton with a name and parameters guessed from their words. Walk the room.
           Expect: no return, a missing call, missing quotes around words.</aside>
       </section>
@@ -1144,23 +1136,23 @@
           they also reinforce "return, don't log".</aside>
       </section>
 
-      <!-- 28 CURTAIN CALL -->
-      <section class="slide stage" id="curtain-call" data-sec="Curtain call">
+      <!-- 28 RECAP -->
+      <section class="slide stage" id="recap" data-sec="Recap">
         <div class="beam y"></div>
         <div class="beam m"></div>
         <div class="scan"></div>
         <div class="inner">
-          <div class="billing">Curtain call</div>
+          <div class="billing">Recap</div>
           <h2 class="hero md">Name it, call it, use what it returns.</h2>
           <div class="terms">
             <span>function</span><span>parameter</span><span>argument</span><span>return</span><span>call</span></div>
         </div>
-        <aside class="nt">Curtain call (a.k.a. the recap). Go back to the three objectives: can they explain the five
+        <aside class="nt">Go back to the three objectives: can they explain the five
           jobs, write and call a function, and use parameters and return values? Quick hands-up on each.</aside>
       </section>
 
       <!-- 29 NEXT -->
-      <section class="slide" id="next" data-sec="Curtain call">
+      <section class="slide" id="next" data-sec="Recap">
         <div class="billing">After lunch · Group learning and exercises</div>
         <hr class="rule">
         <h2 class="h1">This afternoon, you write lots</h2>
@@ -1168,8 +1160,7 @@
           <div class="stack">
             <p class="lede" style="margin:0">Extended practice in groups: the exercises on the Functions module, with
               teachers in the room.</p>
-            <p class="lede" style="margin:0">Your workspace is saved in this browser, so your cast-card function will
-              still be there.</p>
+            <p class="lede" style="margin:0">Your workspace is saved in this browser, so your role-card function will still be there.</p>
           </div>
           <div class="rows lab" style="border-top:1px solid var(--ink-900)">
             <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a
@@ -1202,7 +1193,7 @@
         function render(fl) {
           var w = esc(words[i]);
           $("#rep-a").innerHTML = names.map(function (n) { return '<li' + (fl ? ' class="flash"' : '') + '>Say "' + w + ', ' + n + '!"</li>' }).join("");
-          $("#rep-b").innerHTML = '<div class="named' + (fl ? ' flashbg' : '') + '"><div class="nm">Greeting</div><div class="rl">Say "' + w + ', " and then the person\'s name.</div></div><ol class="plain">' + names.map(function (n) { return '<li><span class="who">Cue:</span> Greeting, for ' + n + '</li>' }).join("") + '</ol>';
+          $("#rep-b").innerHTML = '<div class="named' + (fl ? ' flashbg' : '') + '"><div class="nm">Greeting</div><div class="rl">Say "' + w + ', " and then the person\'s name.</div></div><ol class="plain">' + names.map(function (n) { return '<li><span class="who">Call:</span> Greeting, for ' + n + '</li>' }).join("") + '</ol>';
         }
         render();
         $("#rep-go").addEventListener("click", function () { i = (i + 1) % words.length; ca += 4; cb += 1; $("#rep-ca").textContent = ca; $("#rep-cb").textContent = cb; render(true) });
@@ -1280,7 +1271,7 @@
             b.addEventListener("click", function () {
               if (solved) return;
               if (tries.length < 2) { fb($("#mm-fb"), "warn", "Try at least two numbers first. One result fits lots of rules."); return }
-              if (i === pick) { b.classList.add("right"); solved = true; fb($("#mm-fb"), "pass", "Applause. It " + m.w.toLowerCase() + ". You worked that out without seeing inside, which is how you use most functions.") }
+              if (i === pick) { b.classList.add("right"); solved = true; fb($("#mm-fb"), "pass", "Correct. It " + m.w.toLowerCase() + ". You worked that out without seeing inside, which is how you use most functions.") }
               else { b.classList.add("wrong"); var bad = tries.filter(function (c) { return m.f(c[0]) !== c[1] })[0]; fb($("#mm-fb"), "err", bad ? "Not that one. A machine that " + m.w.toLowerCase() + " would give back " + m.f(bad[0]) + " for " + bad[0] + ", but this one gave " + bad[1] + "." : "That fits so far, but it's not the one. Try a different number to tell them apart.") }
             });
             box.appendChild(b);
@@ -1344,17 +1335,17 @@
         });
       })();
 
-      /* ---------- 14 cast card ---------- */
+      /* ---------- 14 role card ---------- */
       var CARDS = [
         { n: "Greeter", i: "a name", o: "a greeting", e: 'Ana → "Hello, Ana!"', code: 'function greet(name) {\n  return "Hello, " + name + "!";\n}\n\nconsole.log(greet("Ana"));\nconsole.log(greet("Noor"));' },
         { n: "Adder", i: "two numbers", o: "their sum", e: "2 and 3 → 5", code: "function add(a, b) {\n  return a + b;\n}\n\nconsole.log(add(2, 3));\nconsole.log(add(10, 32));" },
         { n: "Doubler", i: "a number", o: "twice that number", e: "7 → 14", code: "function double(n) {\n  return n * 2;\n}\n\nconsole.log(double(7));\nconsole.log(double(21));" },
-        { n: "Shouter", i: "some words", o: "the same words, in capitals", e: 'hi → "HI!"', code: 'function shout(text) {\n  return text.toUpperCase() + "!";\n}\n\nconsole.log(shout("hi"));\nconsole.log(shout("places, please"));' },
-        { n: "Letter counter", i: "a word", o: "how many letters it has", e: "stage → 5", code: 'function countLetters(word) {\n  return word.length;\n}\n\nconsole.log(countLetters("stage"));\nconsole.log(countLetters("rehearsal"));' },
+        { n: "Shouter", i: "some words", o: "the same words, in capitals", e: 'hi → "HI!"', code: 'function shout(text) {\n  return text.toUpperCase() + "!";\n}\n\nconsole.log(shout("hi"));\nconsole.log(shout("good morning"));' },
+        { n: "Letter counter", i: "a word", o: "how many letters it has", e: "hello → 5", code: 'function countLetters(word) {\n  return word.length;\n}\n\nconsole.log(countLetters("hello"));\nconsole.log(countLetters("keyboard"));' },
         { n: "Initials maker", i: "a first name and a last name", o: "their initials", e: "Ada, Lovelace → AL", code: 'function initials(first, last) {\n  return first[0] + last[0];\n}\n\nconsole.log(initials("Ada", "Lovelace"));\nconsole.log(initials("Alan", "Turing"));' },
         { n: "Temperature converter", i: "degrees Celsius", o: "degrees Fahrenheit", e: "20 → 68", code: "function toFahrenheit(celsius) {\n  return celsius * 9 / 5 + 32;\n}\n\nconsole.log(toFahrenheit(20));\nconsole.log(toFahrenheit(100));" },
         { n: "Hours-to-minutes", i: "a number of hours", o: "the same time in minutes", e: "2 → 120", code: "function hoursToMinutes(hours) {\n  return hours * 60;\n}\n\nconsole.log(hoursToMinutes(2));\nconsole.log(hoursToMinutes(1.5));" },
-        { n: "Echo", i: "a word", o: "the word, said twice", e: 'bravo → "bravo bravo"', code: 'function echo(word) {\n  return word + " " + word;\n}\n\nconsole.log(echo("bravo"));\nconsole.log(echo("encore"));' }
+        { n: "Echo", i: "a word", o: "the word, said twice", e: 'hey → "hey hey"', code: 'function echo(word) {\n  return word + " " + word;\n}\n\nconsole.log(echo("hey"));\nconsole.log(echo("again"));' }
       ];
       (function () {
         var si = -1, picked = null;
@@ -1382,18 +1373,18 @@
           return '<div class="nest' + (st.s === "on" ? " on" : "") + '" style="margin-top:0"><span class="lbl">Shouter, with…</span>' + (st.g === "done" ? '<div style="margin-top:10px">' + inner + '</div>' : inner) + '</div>';
         }
         var steps = [
-          { g: "", s: "", a: [], h: "nothing yet", d: "The director wants Ana greeted, then shouted. Shouter can't start yet: they need what Greeter gives back." },
+          { g: "", s: "", a: [], h: "nothing yet", d: "The caller wants Ana greeted, then shouted. Shouter can't start yet: they need what Greeter gives back." },
           { g: "on", s: "", a: [{ f: "Greeter", x: "took in: Ana" }], h: "nothing yet", d: "Greeter is called with \"Ana\" and steps forward." },
-          { g: "done", s: "", a: [], h: '"Hello, Ana"', d: "Greeter gives back \"Hello, Ana\" and steps back. Their scene is over." },
+          { g: "done", s: "", a: [], h: '"Hello, Ana"', d: "Greeter gives back \"Hello, Ana\" and steps back. Their part is done." },
           { g: "done", s: "on", a: [{ f: "Shouter", x: 'took in: "Hello, Ana"' }], h: "nothing yet", d: "Now Shouter can be called, with Greeter's answer as what they take in." },
           { g: "done", s: "done", a: [], h: '"HELLO, ANA!"', d: "Shouter gives back \"HELLO, ANA!\" and steps back." },
-          { g: "done", s: "done", a: [{ f: "Director", x: 'says to the audience: "HELLO, ANA!"' }], h: "delivered", d: "The director delivers the answer to the audience. Curtain." }
+          { g: "done", s: "done", a: [{ f: "Caller", x: 'says to the room: "HELLO, ANA!"' }], h: "delivered", d: "The caller says the answer to the room. Done." }
         ], i = 0;
         function render() {
           var st = steps[i]; $("#st-code").innerHTML = req(st);
           $("#st-dir").textContent = st.d; $("#st-n").textContent = "step " + i + " of " + (steps.length - 1);
           var box = $("#st-box"); box.innerHTML = "";
-          if (!st.a.length) box.innerHTML = '<span class="empty-stage">Nobody on stage. The director is waiting.</span>';
+          if (!st.a.length) box.innerHTML = '<span class="empty-stage">Nobody is working. The caller is waiting.</span>';
           st.a.forEach(function (a) { var d = document.createElement("div"); d.className = "actor"; d.style.fontFamily = "var(--font-ui)"; d.innerHTML = "<b>" + esc(a.f) + "</b><small>" + esc(a.x) + "</small>"; box.appendChild(d) });
           $("#st-hand").textContent = st.h;
           $("#st-back").disabled = i === 0; $("#st-next").disabled = i === steps.length - 1;
@@ -1415,7 +1406,7 @@
       /* ---------- 18 timer ---------- */
       (function () {
         var total = 15 * 60, left = total, t = null, BRK = "Stretch, refill, and open this deck on your laptop. After the break, you code along in the browser.";
-        function show() { var m = Math.floor(left / 60), s = left % 60; $("#tm").textContent = m + ":" + (s < 10 ? "0" : "") + s; if (left === 0) { $("#tm-msg").textContent = "Places, please. We start again now."; stop() } }
+        function show() { var m = Math.floor(left / 60), s = left % 60; $("#tm").textContent = m + ":" + (s < 10 ? "0" : "") + s; if (left === 0) { $("#tm-msg").textContent = "Time's up. Back to your seats."; stop() } }
         function stop() { clearInterval(t); t = null; $("#tm-go").textContent = left === 0 ? "Start" : "Resume" }
         $("#tm-go").addEventListener("click", function () {
           if (t) { stop(); return }
@@ -1433,7 +1424,7 @@
       (function () {
         var P = [
           { p: "keyword", q: "Click the keyword that starts a function declaration.", e: "<code>function</code> tells JavaScript a definition starts here." },
-          { p: "name", q: "Click the function's name.", e: "<code>greet</code> is how everyone else will cue this function." },
+          { p: "name", q: "Click the function's name.", e: "<code>greet</code> is how everyone else will call this function." },
           { p: "param", q: "Click the parameter.", e: "<code>name</code> is a placeholder. It only gets a real value when the function is called." },
           { p: "ret", q: "Click the line that hands a value back.", e: "<code>return</code> ends the function and gives the value to whoever called it." },
           { p: "call", q: "Click the call.", e: "<code>greet(\"Ana\")</code> runs the function. Without it, lines 1–3 do nothing." },
@@ -1443,7 +1434,7 @@
         ask();
         $("#an-code").addEventListener("click", function (e) {
           var part = e.target.closest(".part"); if (!part || done) return;
-          if (part.dataset.part === P[i].p) { part.classList.add("hit"); done = true; fb($("#an-fb"), "pass", P[i].e); if (i < P.length - 1) $("#an-next").hidden = false; else fb($("#an-fb"), "pass", P[i].e + " That's every part. Applause.") }
+          if (part.dataset.part === P[i].p) { part.classList.add("hit"); done = true; fb($("#an-fb"), "pass", P[i].e); if (i < P.length - 1) $("#an-next").hidden = false; else fb($("#an-fb"), "pass", P[i].e + " That's every part.") }
           else { part.classList.add("miss"); setTimeout(function () { part.classList.remove("miss") }, 600); fb($("#an-fb"), "note", "That's the " + ({ keyword: "keyword", name: "name", param: "parameter", ret: "return statement", call: "call", arg: "argument" })[part.dataset.part] + ". Try again.") }
         });
         $("#an-next").addEventListener("click", function () { i++; ask() });
@@ -1459,11 +1450,11 @@
           var b = document.createElement("button"); b.className = "opt"; b.textContent = o[0];
           b.addEventListener("click", function () {
             if (answered) return;
-            if (o[1]) { b.classList.add("right"); answered = true; conLines($("#dc-con"), [{ c: "dim", t: "(nothing)" }]); fb($("#dc-fb"), "pass", "Right. The function is defined, but nobody called it. Writing a scene isn't performing it."); $("#dc-add").hidden = false }
+            if (o[1]) { b.classList.add("right"); answered = true; conLines($("#dc-con"), [{ c: "dim", t: "(nothing)" }]); fb($("#dc-fb"), "pass", "Right. The function is defined, but nobody called it. Writing a function down doesn't run it."); $("#dc-add").hidden = false }
             else { b.classList.add("wrong"); fb($("#dc-fb"), "note", "Look again: is there any line that actually runs <code>sayHello</code>?") }
           }); $("#dc-opts").appendChild(b)
         });
-        $("#dc-add").addEventListener("click", function () { code($("#dc-code"), def + "\n\nsayHello();\nsayHello();"); flash($("#dc-code"), [4, 5]); conLines($("#dc-con"), ["Hello!", "Hello!"]); this.hidden = true; fb($("#dc-fb"), "pass", "Two calls, two performances. Define once, call as often as you like.") });
+        $("#dc-add").addEventListener("click", function () { code($("#dc-code"), def + "\n\nsayHello();\nsayHello();"); flash($("#dc-code"), [4, 5]); conLines($("#dc-con"), ["Hello!", "Hello!"]); this.hidden = true; fb($("#dc-fb"), "pass", "Two calls, two runs. Define once, call as often as you like.") });
       })();
 
       /* ---------- 21 params ---------- */
@@ -1517,7 +1508,7 @@
           },
           {
             q: "Which fix makes it print 12?", o: [["Put return in front of width * height", 1], ["Change const to let", 0], ["Call area twice", 0], ["Rename a to result", 0]],
-            ok: "Applause. With <code>return</code>, the value travels back to line 5 and lands in <code>a</code>.",
+            ok: "Correct. With <code>return</code>, the value travels back to line 5 and lands in <code>a</code>.",
             no: "That changes something, but the value still never leaves the function.", after: function () { code($("#bg-code"), fixed, [1]); conLines($("#bg-con"), [{ c: "ok", t: "12" }]) }
           }
         ], i = 0;
@@ -1546,7 +1537,7 @@
           chain.forEach(function (f) { var nv = F[f](v); tr.push(f + "(" + v + ") returns " + nv); e = f + "(" + e + ")"; v = nv });
           $("#cp-e").textContent = e; $("#cp-t").textContent = T[ti];
           $("#cp-tr").innerHTML = tr.map(function (t) { return "<li>" + esc(t) + "</li>" }).join("");
-          if (v === T[ti] && chain.length) fb($("#cp-fb"), "pass", "Applause: <code>" + esc(e) + "</code> is " + v + ". Read it aloud, inside out.");
+          if (v === T[ti] && chain.length) fb($("#cp-fb"), "pass", "Correct: <code>" + esc(e) + "</code> is " + v + ". Read it aloud, inside out.");
           else if (v > T[ti] && chain.length) fb($("#cp-fb"), "warn", "Overshot: " + v + " is past " + T[ti] + ". These functions only grow the number, so undo a step.");
           else fb($("#cp-fb"));
         }
@@ -1557,7 +1548,7 @@
         $("#cp-new").addEventListener("click", function () { ti = (ti + 1) % T.length; chain = []; render() });
       })();
 
-      /* ---------- 26 load cast card ---------- */
+      /* ---------- 26 load role card ---------- */
       function ident(str) {
         var w = String(str || "").replace(/[^A-Za-z0-9 ]+/g, " ").trim().split(/\s+/).filter(Boolean);
         if (!w.length) return "";
@@ -1597,9 +1588,9 @@
         function test() {
           var c = C[ci], res = $("#ch-res"); res.innerHTML = "";
           var r = run(ed.value, c.f);
-          if (r.error) { if (r.blocked) { fb($("#ch-fb"), "note", esc(r.error.message)); return } fb($("#ch-fb"), "err", "The scene stopped: <code>" + esc((r.error.name || "Error") + ": " + r.error.message) + "</code>"); return }
+          if (r.error) { if (r.blocked) { fb($("#ch-fb"), "note", esc(r.error.message)); return } fb($("#ch-fb"), "err", "The code stopped: <code>" + esc((r.error.name || "Error") + ": " + r.error.message) + "</code>"); return }
           var fn = r.value;
-          if (typeof fn !== "function") { fb($("#ch-fb"), "err", "The scene stopped: there's no function called <code>" + c.f + "</code>. Check the spelling, capitals included."); return }
+          if (typeof fn !== "function") { fb($("#ch-fb"), "err", "The code stopped: there's no function called <code>" + c.f + "</code>. Check the spelling, capitals included."); return }
           var all = true;
           c.tests.forEach(function (t) {
             var got, err = null; try { got = fn.apply(null, t[0]) } catch (e) { err = e }
@@ -1610,7 +1601,7 @@
             res.appendChild(li);
           });
           if (all && c.check) { var m = c.check(ed.value); if (m) { fb($("#ch-fb"), "warn", m); return } }
-          if (all) { passed[c.f] = 1; sset("passed", JSON.stringify(passed)); tabsRender(); fb($("#ch-fb"), "pass", "All tests applauded." + (Object.keys(passed).length === C.length ? " That's all five." : "")) }
+          if (all) { passed[c.f] = 1; sset("passed", JSON.stringify(passed)); tabsRender(); fb($("#ch-fb"), "pass", "All tests pass." + (Object.keys(passed).length === C.length ? " That's all five." : "")) }
           else { var undef = c.tests.some(function (t) { try { return fn.apply(null, t[0]) === undefined } catch (e) { return false } }); fb($("#ch-fb"), undef ? "warn" : "err", undef ? "Your function gave back <code>undefined</code>. Did you <code>return</code> the answer, or only log it?" : "Not yet. Compare what came back with what was expected.") }
         }
         $("#ch-run").addEventListener("click", test); edKeys(ed, test);
