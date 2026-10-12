@@ -88,6 +88,22 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
 .state b{display:block;font-size:14px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;color:var(--ink-500)}
 .state span{font-family:var(--font-mono);font-weight:700;font-size:30px;color:var(--ink-900)}
 .state span.flash{animation:flashpk .6s ease}
+/* passing functions */
+.tries{border-top:0}
+.tries>div{grid-template-columns:250px 1fr auto;gap:12px;padding:6px 0;align-items:center}
+.tries code{font-size:16px;color:var(--ink-900)}
+.tries .btn{padding:6px 12px;font-size:13px}
+.nc>div{grid-template-columns:90px 1fr;gap:14px;padding:9px 0;font-size:19px}
+.nc code{font-size:19px;color:var(--ink-900);font-weight:700}
+.lanes>div{grid-template-columns:300px 250px 1fr 140px;gap:16px;padding:12px 0;align-items:center}
+.lanes>div.hd{padding:6px 0}
+.lanes .hd span{font-size:14px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;color:var(--ink-500)}
+.lanes code{font-size:15px;color:var(--ink-900);white-space:pre}
+.lanes .btn{white-space:nowrap}
+.lanes>div>span:nth-child(2){font-size:17px;line-height:1.35}
+.lane{display:flex;flex-wrap:wrap;gap:6px;min-height:34px;align-content:flex-start}
+.lane .call{font-family:var(--font-mono);font-size:13px;font-weight:700;background:var(--cyan-400);border:2px solid var(--ink-900);border-radius:2px;padding:2px 7px;color:var(--ink-900);animation:flashpk .6s ease}
+.pad.mini{display:flex;min-height:44px;padding:6px 10px;font-size:14px;text-align:center;align-items:center;justify-content:center;grid-template-columns:none}
 /* event board */
 .btn.code-lbl{text-transform:none;letter-spacing:0;font-size:15px;padding:8px 12px}
 .board{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border:2px solid var(--ink-900);background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900)}
@@ -341,24 +357,97 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
   <aside class="nt">Replay the four rounds. Start with an empty board and press keys on the pad: every event shows up in the log, and nobody is listening. Connect keydown → playNote: now a key press plays. Hold a key: the note never stops, because nothing listens for keyup. Connect keyup → stopNote. Then connect keyDown → showKey: a new column appears and stays empty of events forever. Connect showKey to click and press Click: "You pressed undefined", because a click has no key. Connecting the same function to the same event twice does nothing; the browser ignores the copy. The code panel shows the addEventListener line for every connection on the board.</aside>
 </section>
 
-<!-- 14 FUNCTION AS VALUE -->
-<section class="slide" id="fn-as-value" data-sec="Events and listeners" data-ex="Name or call?">
+<!-- 14a A FUNCTION IS A VALUE -->
+<section class="slide" id="fn-is-value" data-sec="Events and listeners" data-ex="A function is a value">
   <span class="turn">Your turn</span>
-  <div class="billing">Events and listeners · Passing a function</div><hr class="rule">
-  <h2 class="h1" style="margin-bottom:16px">Hand over the name, not the result</h2>
-  <div class="cols">
+  <div class="billing">Events and listeners · Passing functions</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:16px">A function is a value too</h2>
+  <div class="cols wide-l">
     <div class="stack" style="gap:12px">
-      <div class="panel"><div class="bar"><span>twice.js</span></div><pre class="code sm" id="fv-code"></pre></div>
-      <div class="row"><button class="btn cy" id="fv-a">twice(clap)</button><button class="btn cy" id="fv-b">twice(clap())</button></div>
-      <div class="panel"><div class="bar y"><span>console</span></div><div class="console" id="fv-con" style="min-height:96px;font-size:16px"><span class="dim">Press one of the two buttons.</span></div></div>
+      <div class="panel"><div class="bar"><span>clap.js</span><span>run one line at a time</span></div><pre class="code sm" id="fa-def"></pre></div>
+      <div class="rows tries" id="fa-rows"></div>
+      <div class="panel"><div class="bar y"><span>console</span></div><div class="console" id="fa-con" style="min-height:84px;font-size:16px"><span class="dim">Press Run on a line.</span></div></div>
     </div>
-    <div class="stack" style="gap:10px">
-      <p style="margin:0;font-size:19px"><code>clap</code> is the function itself. <code>clap()</code> runs it now, and hands over what it gives back. Which of these hand over a function, to be called later?</p>
-      <div class="rows fnq stk" id="fv-q"></div>
-      <div class="fb" id="fv-fb"></div>
+    <div class="stack" style="gap:12px">
+      <p style="margin:0;font-size:19px">A number or a string is a value: you can store it and hand it to a function. A function is a value in the same way.</p>
+      <div class="rows nc">
+        <div><code>clap</code><span>the function itself. Nothing runs.</span></div>
+        <div><code>clap()</code><span>runs it, now. What you get is what it gives back.</span></div>
+      </div>
+      <p class="prompt" style="font-size:24px;margin:6px 0 0">After <code>const action = clap;</code> what is in <code>action</code>?</p>
+      <div class="stack" id="fa-opts" style="gap:8px"></div>
+      <div class="fb" id="fa-fb"></div>
     </div>
   </div>
-  <aside class="nt">The key idea before addEventListener. A function's name, without brackets, is a value you can hand to someone else, and they call it when they're ready. With brackets, it runs right now. Press both buttons: twice(clap) claps twice; twice(clap()) claps once immediately, then crashes because twice was given undefined, not a function. They've done this already: new Tone.Loop(playStep, "4n") hands playStep to Tone, which calls it every beat. And the setup.js files have had addEventListener("click", …) since Tuesday: that's how the buttons work.</aside>
+  <aside class="nt">The groundwork for everything after this. Students know values (numbers, strings, booleans) can be stored and passed. A function is one more kind of value. Run the lines in order. console.log(clap) shows the function itself: nothing is clapped. console.log(clap()) claps, then shows undefined, because clap gives nothing back. const action = clap puts the function into a second name; action() then claps, because action and clap are the same function. Ask: what's the difference between a recipe and a cake? The name is the recipe; the brackets bake it.</aside>
+</section>
+
+<!-- 14b TWICE STEPPER -->
+<section class="slide" id="fn-as-value" data-sec="Events and listeners" data-demo="Step through twice">
+  <span class="turn try">Try it</span>
+  <div class="billing">Events and listeners · Passing functions</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:16px">Hand over the name, not the result</h2>
+  <div class="cols wide-l">
+    <div class="stack" style="gap:12px">
+      <div class="seg" role="group" aria-label="Last line"><button class="btn ghost code-lbl sel" data-tw="name">twice(clap);</button><button class="btn ghost code-lbl" data-tw="call">twice(clap());</button></div>
+      <div class="panel"><div class="bar"><span>twice.js</span><span id="tw-n">step 1 of 6</span></div><pre class="code sm" id="tw-code"></pre></div>
+    </div>
+    <div class="stack" style="gap:12px">
+      <p class="dir" id="tw-dir" style="min-height:120px;font-size:21px"></p>
+      <div class="state"><div><b>action holds</b><span id="tw-mem" style="font-size:22px">nothing yet</span></div><div><b>clap has run</b><span id="tw-ran" style="font-size:22px">0 times</span></div></div>
+      <div class="panel"><div class="bar y"><span>console</span></div><div class="console" id="tw-con" style="min-height:78px;font-size:16px"></div></div>
+      <div class="row"><button class="btn ghost" id="tw-back">Back</button><button class="btn" id="tw-next">Next</button><button class="btn ghost" id="tw-reset">Start again</button></div>
+    </div>
+  </div>
+  <aside class="nt">Step through both versions; this is the slide to slow down on. With twice(clap), the parameter action holds the function, and twice decides when to call it: twice. twice doesn't know or care that it's clapping; hand it stomp and it stomps. With twice(clap()), JavaScript works out the brackets first: clap runs once, immediately, before twice starts, and what twice receives is clap's return value, undefined. Calling undefined is the TypeError. Same as yesterday's robot: the parameter is a slot on the memory sheet; this time what goes in it is a function.</aside>
+</section>
+
+<!-- 14c WHO CALLS IT -->
+<section class="slide" id="who-calls" data-sec="Events and listeners" data-demo="Who calls it">
+  <span class="turn try">Try it</span>
+  <div class="billing">Events and listeners · Passing functions</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:12px">Who calls it, and when?</h2>
+  <div class="rows lanes">
+    <div class="hd"><span>the line of code</span><span>who calls the function, and when</span><span>calls so far</span><span></span></div>
+    <div><code>clap();</code><span>You do, right now. Once.</span><span class="lane" id="wc-you"></span><span><button class="btn cy" id="wc-you-go">Run it</button></span></div>
+    <div><code>new Tone.Loop(playStep, "4n");</code><span>Tone does, every beat. It hands over <code>time</code>.</span><span class="lane" id="wc-tone"></span><span><button class="btn cy" id="wc-tone-go">Start</button></span></div>
+    <div><code>document.addEventListener(
+  "keydown", playNote);</code><span>The browser does, every time a key goes down. It hands over <code>event</code>.</span><span class="lane" id="wc-key"></span><span><span class="pad mini" id="wc-pad" tabindex="0" aria-label="Keyboard pad">press keys here</span></span></div>
+  </div>
+  <p class="lede" style="margin-top:20px;max-width:64ch">When you hand a function over, whoever holds it decides when to call it, and what to give it. That's why <code>playNote</code> has an <code>event</code> parameter: the browser fills it in.</p>
+  <aside class="nt">The payoff. Three ways the same kind of function gets called. Run the line: one call, now, and you chose when. Start Tone: calls every beat until you stop it, and you didn't write any of those calls. Press keys in the pad: a call for each key, and the person at the keyboard chose when. Discuss: why hand a function over instead of calling it? Because you don't know when it should run (the person decides, or the beat, or a timer), and because the caller has information you don't have yet: the time of the beat, which key was pressed. That's what the parameters are for.</aside>
+</section>
+
+<!-- 14d FIX THE CALL -->
+<section class="slide" id="fix-call" data-sec="Events and listeners" data-ex="Fix the call">
+  <span class="turn">Your turn</span>
+  <div class="billing">Events and listeners · Passing functions</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:16px">Fix the call</h2>
+  <div class="cols wide-l pg" style="flex:1;min-height:0">
+    <div class="panel"><div class="bar"><span>stomp-clap.js</span><span>Ctrl / ⌘ + Enter tests</span></div><textarea class="code-ed pg-ed" id="fc-ed" spellcheck="false" aria-label="Code editor"></textarea></div>
+    <div class="stack" style="gap:12px">
+      <ol class="plain" style="padding:0">
+        <li style="font-size:18px">The last line crashes. Fix it so the console shows <code>clap!</code> twice.</li>
+        <li style="font-size:18px">Then make it show <code>stomp!</code> twice before the claps.</li>
+        <li style="font-size:18px">Done early? Write <code>thrice(action)</code> and use it.</li>
+      </ol>
+      <div class="row"><button class="btn" id="fc-run">Run the tests</button><button class="btn ghost" id="fc-reset">Reset</button></div>
+      <div class="panel"><div class="bar y"><span>console</span></div><div class="console con-s" id="fc-con"></div></div>
+      <div class="fb" id="fc-fb"></div>
+    </div>
+  </div>
+  <aside class="nt">Everyone, on their own laptop. The fix is to take the brackets off: twice(clap). Then add twice(stomp) above it. No new syntax: the point is to feel the difference between handing over and calling. Fast finishers: thrice is twice with one more line. Common wrong turn: twice(stomp, clap). twice only uses its first parameter, so that stomps twice and never claps.</aside>
+</section>
+
+<!-- 14e NAME OR CALL -->
+<section class="slide" id="name-or-call" data-sec="Events and listeners" data-ex="Hand it over or call it">
+  <span class="turn">Your turn</span>
+  <div class="billing">Events and listeners · Check</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:12px">Hand it over, or call it now?</h2>
+  <p style="margin:0 0 10px;font-size:19px">For each line: is a function handed over, to be called later, or is it called right now?</p>
+  <div class="rows fnq" id="fv-q"></div>
+  <div class="fb" id="fv-fb" style="margin-top:12px"></div>
+  <aside class="nt">Quick check before the syntax of addEventListener. Look for brackets straight after the name. setTimeout is new: it hands ring to the browser, which calls it once, a second from now. That's an event that comes from a timer, not a person. Both addEventListener lines look almost the same; one of them is the bug on the "Spot the bug" slide later.</aside>
 </section>
 
 <!-- 15 ANATOMY -->
@@ -919,15 +1008,133 @@ $("#tr-show").addEventListener("click",function(){var h=$("#tr-hints");h.hidden=
   render();log("dim","Click the pad and press keys, or press Click.");
 })();
 
-/* ---------- 14 function as value ---------- */
+/* ---------- 14a a function is a value ---------- */
 (function(){
-  code($("#fv-code"),'function clap() {\n  console.log("clap!");\n}\n\nfunction twice(action) {\n  action();\n  action();\n}');
-  $("#fv-a").addEventListener("click",function(){conLines($("#fv-con"),[{c:"in",t:"twice(clap)"},"clap!","clap!"])});
-  $("#fv-b").addEventListener("click",function(){conLines($("#fv-con"),[{c:"in",t:"twice(clap())"},"clap!",{c:"bad",t:"TypeError: action is not a function"}])});
+  code($("#fa-def"),'function clap() {\n  console.log("clap!");\n}');
+  var L=[
+    ["console.log(clap);",["function clap() { … }"],"the function itself: nothing was clapped"],
+    ["console.log(clap());",["clap!","undefined"],"clap ran, then its result was logged: undefined"],
+    ["const action = clap;",[],"nothing runs: action now holds the same function"],
+    ["action();",["clap!"],"action is clap, so this claps"]
+  ],stored=false;
+  L.forEach(function(l,i){
+    var row=document.createElement("div");
+    row.innerHTML='<code>'+esc(l[0])+'</code><span class="muted small"></span><button class="btn cy">Run</button>';
+    row.querySelector("button").addEventListener("click",function(){
+      var out=[{c:"in",t:l[0]}];
+      if(i===3&&!stored)out.push({c:"bad",t:"ReferenceError: action is not defined"});
+      else{if(i===2)stored=true;l[1].forEach(function(t){out.push(t)});if(!l[1].length)out.push({c:"dim",t:"(nothing logged)"})}
+      conLines($("#fa-con"),out);
+      row.querySelector("span").textContent=(i===3&&!stored)?"run the line above first":l[2];
+    });
+    $("#fa-rows").appendChild(row);
+  });
+  var answered=false;
+  [["The function clap, under a second name",1],['The text "clap"',0],["undefined: clap gives nothing back",0]].forEach(function(o){
+    var b=document.createElement("button");b.className="opt";b.textContent=o[0];
+    b.addEventListener("click",function(){
+      if(answered)return;
+      if(o[1]){b.classList.add("right");answered=true;fb($("#fa-fb"),"pass","Correct. No brackets, so nothing runs: <code>action</code> and <code>clap</code> are now two names for one function.")}
+      else{b.classList.add("wrong");fb($("#fa-fb"),"note","Look for brackets after <code>clap</code>. Without them, does anything run?")}
+    });
+    $("#fa-opts").appendChild(b);
+  });
+})();
+
+/* ---------- 14b twice stepper ---------- */
+(function(){
+  var SRC={name:'function clap() {\n  console.log("clap!");\n}\n\nfunction twice(action) {\n  action();\n  action();\n}\n\ntwice(clap);',
+           call:'function clap() {\n  console.log("clap!");\n}\n\nfunction twice(action) {\n  action();\n  action();\n}\n\ntwice(clap());'};
+  var STEPS={
+    name:[
+      {l:9,d:"The last line calls twice. No brackets after clap, so the function itself is handed over. Nothing has clapped yet.",m:"nothing yet",r:0,c:[]},
+      {l:4,d:"twice starts. Its parameter action now holds the function clap.",m:"the function clap",r:0,c:[]},
+      {l:5,d:"action() calls whatever action holds. It holds clap, so clap runs.",m:"the function clap",r:0,c:[]},
+      {l:1,d:"Inside clap: log clap!",m:"the function clap",r:1,c:["clap!"]},
+      {l:6,d:"action() again: clap runs a second time.",m:"the function clap",r:2,c:["clap!","clap!"]},
+      {l:7,d:"twice is done. twice decided when to call clap, and how often. It never needed to know it was clapping: hand it stomp and it stomps.",m:"the function clap",r:2,c:["clap!","clap!"]}
+    ],
+    call:[
+      {l:9,d:"The last line has brackets after clap. JavaScript works out clap() first, before twice even starts.",m:"nothing yet",r:0,c:[]},
+      {l:1,d:"So clap runs now, once, and logs clap!",m:"nothing yet",r:1,c:["clap!"]},
+      {l:9,d:"clap gives nothing back: its result is undefined. That result is what twice is handed.",m:"nothing yet",r:1,c:["clap!"]},
+      {l:4,d:"twice starts. Its parameter action holds undefined, not a function.",m:"undefined",r:1,c:["clap!"]},
+      {l:5,d:"action() tries to call undefined. You can't call something that isn't a function, so the program stops here.",m:"undefined",r:1,c:["clap!",{c:"bad",t:"TypeError: action is not a function"}]}
+    ]
+  },mode="name",i=0;
+  function render(){
+    var st=STEPS[mode][i];code($("#tw-code"),SRC[mode],[st.l]);
+    $("#tw-dir").textContent=st.d;$("#tw-n").textContent="step "+(i+1)+" of "+STEPS[mode].length;
+    var mem=$("#tw-mem");if(mem.textContent!==st.m){mem.textContent=st.m;mem.classList.remove("flash");void mem.offsetWidth;mem.classList.add("flash")}
+    $("#tw-ran").textContent=st.r+(st.r===1?" time":" times");
+    if(st.c.length)conLines($("#tw-con"),st.c);else conLines($("#tw-con"),[{c:"dim",t:"(nothing logged yet)"}]);
+    $("#tw-back").disabled=i===0;$("#tw-next").disabled=i===STEPS[mode].length-1;
+  }
+  $$("#fn-as-value [data-tw]").forEach(function(b){b.addEventListener("click",function(){mode=b.dataset.tw;i=0;$$("#fn-as-value [data-tw]").forEach(function(x){x.classList.toggle("sel",x===b);x.setAttribute("aria-pressed",x===b)});render()})});
+  $("#tw-next").addEventListener("click",function(){if(i<STEPS[mode].length-1){i++;render()}});
+  $("#tw-back").addEventListener("click",function(){if(i>0){i--;render()}});
+  $("#tw-reset").addEventListener("click",function(){i=0;render()});
+  render();
+})();
+
+/* ---------- 14c who calls it ---------- */
+(function(){
+  var syn=lazySynth(),beat=0,timer=null,held={};
+  function add(lane,txt){
+    var el=$(lane),c=document.createElement("span");c.className="call";c.textContent=txt;el.appendChild(c);
+    while(el.children.length>3)el.removeChild(el.firstChild);
+  }
+  $("#wc-you-go").addEventListener("click",function(){add("#wc-you","clap()")});
+  function stop(){clearInterval(timer);timer=null;$("#wc-tone-go").textContent="Start"}
+  $("#wc-tone-go").addEventListener("click",function(){
+    if(timer){stop();return}
+    audioOn();this.textContent="Stop";
+    timer=setInterval(function(){
+      if($("#who-calls").hidden){stop();return}
+      beat++;add("#wc-tone","playStep(time) · beat "+beat);
+      var s=syn();if(s)s.triggerAttackRelease(beat%4===1?"C3":"G3","16n");
+    },600);
+  });
+  capture($("#wc-pad"),function(e){
+    if(e.repeat)return;
+    add("#wc-key",'playNote(event) · "'+(e.key===" "?" ":e.key)+'"');
+    var n=lookup(PIANO,e.key.toLowerCase(),4),s=syn();if(n&&s&&!held[e.key]){s.triggerAttack(n);held[e.key]=n}
+  },function(e){var n=held[e.key];if(n){delete held[e.key];var s=syn();if(s)s.triggerRelease(n)}},function(){var s=syn();if(s)s.releaseAll();held={}});
+  $("#wc-pad").addEventListener("focus",function(){this.textContent="listening: press keys"});
+  $("#wc-pad").addEventListener("blur",function(){this.textContent="press keys here"});
+})();
+
+/* ---------- 14d fix the call ---------- */
+(function(){
+  var START='function clap() {\n  console.log("clap!");\n}\n\nfunction stomp() {\n  console.log("stomp!");\n}\n\nfunction twice(action) {\n  action();\n  action();\n}\n\ntwice(clap());\n';
+  var ed=$("#fc-ed"),KEY="fc";ed.value=sget(KEY)||START;
+  ed.addEventListener("input",function(){sset(KEY,ed.value)});
+  conLines($("#fc-con"),[{c:"dim",t:"Press Run the tests."}]);
+  function test(){
+    var r=D.run(ed.value),lines=[{c:"in",t:"run stomp-clap.js"}].concat(r.logs);
+    if(r.error)lines.push({c:"bad",t:r.blocked?r.error.message:(r.error.name||"Error")+": "+r.error.message});
+    conLines($("#fc-con"),lines);
+    if(r.blocked){fb($("#fc-fb"),"note",esc(r.error.message));return}
+    var got=r.logs.join(" "),want="stomp! stomp! clap! clap!";
+    if(r.error&&/not a function/.test(r.error.message)){fb($("#fc-fb"),"err","The code stopped: <code>"+esc(r.error.message)+"</code>. Something with brackets after it was handed to <code>twice</code>, so it got what that call gave back. Hand over the name.");return}
+    if(r.error){fb($("#fc-fb"),"err","The code stopped: <code>"+esc((r.error.name||"Error")+": "+r.error.message)+"</code>. Check the spelling, capitals included.");return}
+    if(got===want){fb($("#fc-fb"),"pass","Correct: <code>"+want+"</code>. Both functions were handed over, and <code>twice</code> called each one twice."+(/function\s+thrice/.test(ed.value)?" And you wrote thrice.":" Done early? Write thrice."));return}
+    if(got==="clap! clap!"){fb($("#fc-fb"),"warn","Fixed: two claps. Now make it stomp twice first.");return}
+    if(got==="stomp! stomp!"&&/twice\s*\(\s*stomp\s*,/.test(ed.value)){fb($("#fc-fb"),"warn","<code>twice</code> only uses its first parameter, so the clap was ignored. Call <code>twice</code> once for each function.");return}
+    fb($("#fc-fb"),"warn","The console shows <code>"+esc(got||"nothing")+"</code>. The goal is <code>"+want+"</code>. Which call is missing, or in the wrong order?");
+  }
+  $("#fc-run").addEventListener("click",test);D.edKeys(ed,test);
+  $("#fc-reset").addEventListener("click",function(){ed.value=START;sset(KEY,START);fb($("#fc-fb"));conLines($("#fc-con"),[{c:"dim",t:"Press Run the tests."}])});
+})();
+
+/* ---------- 14e hand it over or call it ---------- */
+(function(){
   var Q=[
+    ['twice(clap)',1,"<code>twice</code> gets the function and calls it twice."],
+    ['twice(clap())',0,"<code>clap</code> runs first, and <code>twice</code> gets <code>undefined</code>."],
     ['new Tone.Loop(playStep, "4n")',1,"Tone calls <code>playStep</code> every beat. You've done this since Thursday."],
-    ['addEventListener("click", play())',0,"With brackets, <code>play</code> runs right now, and what it gives back is handed over instead."],
-    ['addEventListener("keydown", play)',1,"The browser calls <code>play</code> every time a key goes down."]
+    ['document.addEventListener("keydown", playNote())',0,"<code>playNote</code> runs once, right now, and the browser is handed what it gives back."],
+    ['setTimeout(ring, 1000)',1,"The browser calls <code>ring</code> once, a second from now. An event that comes from a timer, not a person."]
   ],done=0;
   Q.forEach(function(q){
     var row=document.createElement("div");
@@ -937,7 +1144,7 @@ $("#tr-show").addEventListener("click",function(){var h=$("#tr-hints");h.hidden=
       var b=document.createElement("button");b.className="chip";b.textContent=c[0];
       b.addEventListener("click",function(){
         if(answered)return;
-        if(c[1]===q[1]){b.classList.add("right");answered=true;done++;fb($("#fv-fb"),"pass","Correct. "+q[2]+(done===Q.length?" That's all three.":""))}
+        if(c[1]===q[1]){b.classList.add("right");answered=true;done++;fb($("#fv-fb"),"pass","Correct. "+q[2]+(done===Q.length?" That's all five.":""))}
         else{b.classList.add("wrong");fb($("#fv-fb"),"note","Look for the brackets straight after the name. Are they there?")}
       });
       box.appendChild(b);
