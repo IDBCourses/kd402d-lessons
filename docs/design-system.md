@@ -40,9 +40,10 @@ Two page grounds only: paper and band blue.
 - **Italic Radio Canada 500** (`.dir`): a short narration of what the computer is doing, e.g.
   *JavaScript works out the right-hand side first, then puts the result in the box.*
 - **Kicker line** (`.billing`): the small uppercase dot-separated line above a slide title, with a rule
-  under it. Format: `Section name · 10:35` on the first slide of a section (the Session Plan's own
-  section name and start time), `Section name · Detail` elsewhere, `KD402D Programming · Week 41` on the
-  cover. No numbering like "Scene 02" or "Act I". This and role-play speaker labels are the only
+  under it. Format: `Section name` on the first slide of a section (the Session Plan's own section name),
+  `Section name · Detail` elsewhere, `KD402D Programming · Week 41` on the cover. No numbering like
+  "Scene 02" or "Act I", and no clock times or durations anywhere on a slide: they make the session feel
+  rigid for students. Times go in the outline and the speaker notes. This and role-play speaker labels are the only
   all-caps text.
 - Fixed scale on slides: hero 96 / 72, title 54, lede 22, body 20, small 16.
 

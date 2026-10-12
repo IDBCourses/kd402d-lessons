@@ -63,13 +63,14 @@ Every slide ends with `<aside class="nt">speaker notes</aside>`.
 
 ```html
 <section class="slide" id="roles" data-sec="What functions are for">
-  <div class="billing">What functions are for · 10:25</div><hr class="rule">
+  <div class="billing">What functions are for</div><hr class="rule">
   <h2 class="h1">Five jobs a function does</h2>
   … content …
 </section>
 ```
 
-Put the section name and start time in the kicker line (`.billing`) of the first slide of each section.
+Put the section name in the kicker line (`.billing`) of the first slide of each section. No clock times or
+durations on slides: they make the session feel rigid. Times go in the outline and the speaker notes.
 Don't number sections ("Scene 02"); write "Part 2" only where the Session Plan itself does.
 
 ## Layout helpers
