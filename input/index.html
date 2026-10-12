@@ -88,6 +88,15 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
 .state b{display:block;font-size:14px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;color:var(--ink-500)}
 .state span{font-family:var(--font-mono);font-weight:700;font-size:30px;color:var(--ink-900)}
 .state span.flash{animation:flashpk .6s ease}
+/* event board */
+.btn.code-lbl{text-transform:none;letter-spacing:0;font-size:15px;padding:8px 12px}
+.board{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border:2px solid var(--ink-900);background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900)}
+.board>div{padding:10px 12px;min-height:104px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.board>div+div{border-left:1px solid var(--paper-300)}
+.board b{font-family:var(--font-mono);font-size:15px;color:var(--ink-900);border-bottom:2px solid var(--ink-900);align-self:stretch;padding-bottom:4px}
+.board .fnn{font-family:var(--font-mono);font-weight:700;font-size:15px;background:var(--cyan-400);border:2px solid var(--ink-900);border-radius:2px;padding:1px 8px;color:var(--ink-900)}
+.board .none{font-family:var(--font-display);font-style:italic;font-size:15px;color:var(--ink-500)}
+.board>div.fire{animation:flashpk .6s ease}
 </style>
 </head>
 <body data-lecture="input" data-home="../">
@@ -99,7 +108,7 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
   <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
   <div class="inner">
     <div class="billing">KD402D Programming · Week 42</div>
-    <h1 class="hero">Wait for it. Then answer.</h1>
+    <h1 class="hero">Wait for it. Then respond.</h1>
     <p class="lede">User input: programs that wait for a person to act, and respond the moment they do. By lunch, your keyboard is an instrument.</p>
   </div>
   <div style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
@@ -114,7 +123,7 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
   <h2 class="h1">What we'll do today</h2>
   <div class="rows order">
     <div><span class="num">01</span><span class="nm">Putting last week together<small>Functions, data and decisions in one program</small></span></div>
-    <div><span class="num">02</span><span class="nm">Things that answer you<small>Where input and response show up in the world, and why designers care</small></span></div>
+    <div><span class="num">02</span><span class="nm">Input and response<small>Where events and responses show up in the world, and why designers care</small></span></div>
     <div class="act"><span class="num">03</span><span class="nm">Events and listeners<small>Tell the browser which function to call when a key goes down</small></span></div>
     <div><span class="num">04</span><span class="nm">Building the instrument<small>Many keys, one listener, and a program that remembers</small></span></div>
     <div><span class="num">05</span><span class="nm">Play your keyboard<small>Make it your own, then play it for your neighbour</small></span></div>
@@ -181,28 +190,28 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
   <div class="inner">
     <div class="billing">Putting last week together</div>
     <h2 class="hero md">So far, the code decides when.</h2>
-    <p class="lede">Every program we've written runs from top to bottom and stops, even yesterday's robot. Today the person decides when something happens.</p>
+    <p class="lede">Every program we've written runs from top to bottom and stops, even yesterday's robot. Today the program waits for something to happen, and responds when it does.</p>
   </div>
   <aside class="nt">The missing fourth row from slide 04: when does it act? Up to now, the answer was "when the code gets to that line" (or, with Tone.Loop, "every beat"). Callback to yesterday: what if the robot had to wait for something to happen to it, instead of running top to bottom? Ask: what would it be waiting for? (A door opening, someone saying "go", a button being pressed.)</aside>
 </section>
 
 <!-- 07 DISCUSS TRIGGERS -->
-<section class="slide" id="discuss-triggers" data-sec="Things that answer you">
-  <div class="billing">Things that answer you</div><hr class="rule">
-  <div class="ask">What did you set off on your way here this morning?</div>
+<section class="slide" id="discuss-triggers" data-sec="Input and response">
+  <div class="billing">Input and response</div><hr class="rule">
+  <div class="ask">What did you set in motion today?</div>
   <ul class="asks">
     <li>What did you do, and what happened because of it?</li>
-    <li>Did it answer straight away? How did you know it had?</li>
+    <li>Did it respond straight away? How did you know it had?</li>
   </ul>
   <div class="hints" id="tr-hints" hidden><span>The door that opened as you walked up</span><span>Tapping your travel card</span><span>The crossing button</span><span>Unlocking your phone</span><span>Calling the lift</span><span>The light switch</span><span>The kettle</span></div>
   <div class="row" style="margin-top:auto"><button class="btn ghost" id="tr-show">Show some</button></div>
-  <aside class="nt">10:20. Open discussion, two minutes in pairs, then collect a few. Don't show the examples until the room has offered its own. Push on the second question: what told them it worked? (A beep, a light, a sound, the door moving.) Draw out the pattern: a person acts, and something happens because of it, right then. The thing was waiting the whole time.</aside>
+  <aside class="nt">10:20. Open discussion, two minutes in pairs, then collect a few. Don't show the examples until the room has offered its own. Push on the second question: what told them it had reacted? (A beep, a light, a sound, the door moving.) Draw out the pattern: a person acts, and something happens because of it, right then. The thing was waiting the whole time.</aside>
 </section>
 
 <!-- 08 DISCUSS SILENCE -->
-<section class="slide" id="discuss-silence" data-sec="Things that answer you">
-  <div class="billing">Things that answer you</div><hr class="rule">
-  <div class="ask">What happens when nothing answers?</div>
+<section class="slide" id="discuss-silence" data-sec="Input and response">
+  <div class="billing">Input and response</div><hr class="rule">
+  <div class="ask">What happens when nothing responds?</div>
   <ul class="asks">
     <li>Why do people press the lift button twice?</li>
     <li>What do you do when a page freezes after you click?</li>
@@ -212,11 +221,11 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
 </section>
 
 <!-- 09 INSTRUMENTS -->
-<section class="slide" id="instruments" data-sec="Things that answer you">
-  <div class="billing">Things that answer you · Instruments</div><hr class="rule">
+<section class="slide" id="instruments" data-sec="Input and response">
+  <div class="billing">Input and response · Instruments</div><hr class="rule">
   <h2 class="h1">The keyboard as an instrument</h2>
   <div class="rows inst">
-    <div style="padding:6px 0"><span class="hd">Instrument</span><span class="hd">The person does</span><span class="hd">It answers with</span></div>
+    <div style="padding:6px 0"><span class="hd">Instrument</span><span class="hd">Input</span><span class="hd">Response</span></div>
     <div><span class="rn">Piano</span><span>Strikes a key</span><span class="io">that note, instantly, as loud as you hit it</span></div>
     <div><span class="rn">Drum machine</span><span>Taps a pad</span><span class="io">the sound wired to that pad</span></div>
     <div><span class="rn">DJ controller</span><span>Turns a knob, slides a fader</span><span class="io">the music bends while it plays</span></div>
@@ -227,23 +236,23 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
 </section>
 
 <!-- 10 WHY ID -->
-<section class="slide" id="why-design" data-sec="Things that answer you">
-  <div class="billing">Things that answer you · Why it matters</div><hr class="rule">
+<section class="slide" id="why-design" data-sec="Input and response">
+  <div class="billing">Input and response · Why it matters</div><hr class="rule">
   <h2 class="h1">This is what we design</h2>
-  <p class="lede" style="max-width:62ch">Most of interaction design is deciding what happens when a person does something. Three questions to argue about:</p>
+  <p class="lede" style="max-width:62ch">An event is anything that happens: a person presses a key, a timer runs out, a message arrives. Interaction design decides how a system responds. Three questions to argue about:</p>
   <div class="three" style="margin-top:12px">
-    <div><h3>Mapping</h3><p>Which action should cause which response? Why that one?</p></div>
-    <div><h3>Feedback</h3><p>How does the person know it heard them?</p></div>
+    <div><h3>Mapping</h3><p>Which event should cause which response? Why that one?</p></div>
+    <div><h3>Feedback</h3><p>How does the person know something happened?</p></div>
     <div><h3>Timing</h3><p>How fast is fast enough? When does slow feel broken?</p></div>
   </div>
-  <p class="dir" style="margin-top:auto">Pick one thing you set off this morning. Answer all three for it.</p>
-  <aside class="nt">Open these up rather than answering them. Mapping: why is the volume knob turned clockwise for louder? Which key should play the lowest note? Feedback: the click of a key, the light on a button, the sound itself. Timing: around a tenth of a second feels instant; for an instrument even less. Come back to all three in the last part of the lecture, when they choose their own key mappings.</aside>
+  <p class="dir" style="margin-top:auto">Pick one thing you set in motion today. Ask all three questions about it.</p>
+  <aside class="nt">Open these up rather than settling them. Events don't only come from people: a phone buzzes because a message arrived, a screen dims because a timer ran out. Today's events come from the keyboard, but the same idea covers all of them. Mapping: why is the volume knob turned clockwise for louder? Which key should play the lowest note? Feedback: the click of a key, the light on a button, the sound itself. Timing: around a tenth of a second feels instant; for an instrument even less. Come back to all three in the last part of the lecture, when they choose their own key mappings.</aside>
 </section>
 
 <!-- 11 RUNS AND STOPS -->
-<section class="slide" id="runs-and-stops" data-sec="Things that answer you" data-demo="Two programs">
+<section class="slide" id="runs-and-stops" data-sec="Input and response" data-demo="Two programs">
   <span class="turn try">Try it</span>
-  <div class="billing">Things that answer you · Two programs</div><hr class="rule">
+  <div class="billing">Input and response · Two programs</div><hr class="rule">
   <h2 class="h1">A program that stops listening</h2>
   <div class="cols">
     <div class="stack">
@@ -256,19 +265,19 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
       <div class="pad dead" id="rs-padA" tabindex="0" aria-label="Keyboard pad for the program that stops"></div>
     </div>
     <div class="stack">
-      <div class="panel"><div class="bar"><span>waits and answers</span><span>today</span></div>
+      <div class="panel"><div class="bar"><span>waits and responds</span><span>today</span></div>
         <div class="pbody"><div class="console con-s" id="rs-conB"><span class="dim">Click the pad below and press a, s, d, f…</span></div></div>
       </div>
       <div class="pad" id="rs-padB" tabindex="0" aria-label="Keyboard pad for the program that waits"></div>
     </div>
   </div>
-  <aside class="nt">Left: a program like last week's. It plays its tune, then it's over; pressing keys does nothing because nothing is listening. Right: a program that waits. Each time a key goes down, it answers. Let someone in the room press keys on the projector laptop. Ask: what has to be different inside the right-hand one? (It has to be told which function to run, and when.)</aside>
+  <aside class="nt">Left: a program like last week's. It plays its tune, then it's over; pressing keys does nothing because nothing is listening. Right: a program that waits. Each time a key goes down, it responds. Let someone in the room press keys on the projector laptop. Ask: what has to be different inside the right-hand one? (It has to be told which function to run, and when.)</aside>
 </section>
 
 <!-- 12 FINISHED -->
-<section class="slide" id="finished" data-sec="Things that answer you" data-demo="The finished instrument">
+<section class="slide" id="finished" data-sec="Input and response" data-demo="The finished instrument">
   <span class="turn try">Try it</span>
-  <div class="billing">Things that answer you · Where we're heading</div><hr class="rule">
+  <div class="billing">Input and response · Where we're heading</div><hr class="rule">
   <h2 class="h1">Where we're heading</h2>
   <div class="cols wide-r">
     <div class="stack">
@@ -281,28 +290,55 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
   <aside class="nt">Demo the finished version first so they hear where we're heading. Play a few notes on the projector, then let everyone open the link and play. (Headphones.) Note what it does: press and hold for a long note, release to stop; z/x change the octave; space toggles the sound. Every one of those is one small function the browser calls for us. The same instrument is in VS Code: <code>user-input/reference/</code>.</aside>
 </section>
 
-<!-- 13 HUMAN KEYBOARD -->
-<section class="slide" id="human-keyboard" data-sec="Events and listeners">
-  <div class="billing">Events and listeners · Be the keyboard</div><hr class="rule">
-  <h2 class="h1">Be the keyboard</h2>
+<!-- 13 CONNECT ACTIVITY -->
+<section class="slide" id="connect-events" data-sec="Events and listeners">
+  <div class="billing">Events and listeners</div><hr class="rule">
+  <h2 class="h1">Events happen. Who is listening?</h2>
   <div class="cols wide-l">
     <div class="rows lab">
-      <div><span class="num">01</span><span class="tx" style="font-size:21px">Seven people stand in a row. Each one picks a key, <b>a</b> to <b>j</b>, and waits for it.</span></div>
-      <div><span class="num">02</span><span class="tx" style="font-size:21px">One person is the keyboard. They call out keys, one at a time: "a… d… d… g…"</span></div>
-      <div><span class="num">03</span><span class="tx" style="font-size:21px">When you hear your key, sing your note (do, re, mi…). Otherwise, stay silent.</span></div>
-      <div><span class="num">04</span><span class="tx" style="font-size:21px">Everyone else checks: did the right person answer, and straight away?</span></div>
+      <div style="padding:10px 0"><span class="num">01</span><span class="tx" style="font-size:20px"><b>The browser</b> calls out every event as it happens: "keydown, a!" "keyup, a!" "click!" It never stops, and it doesn't check who is listening.</span></div>
+      <div style="padding:10px 0"><span class="num">02</span><span class="tx" style="font-size:20px"><b>Three functions</b> each know one job. <code>playNote</code> sings the note for the key, <code>stopNote</code> stops singing, <code>showKey</code> says the key out loud. They only act when called.</span></div>
+      <div style="padding:10px 0"><span class="num">03</span><span class="tx" style="font-size:20px"><b>The programmer</b> connects an event to a function by writing it on the board: <code>keydown → playNote</code>. That line is a listener.</span></div>
+      <div style="padding:10px 0"><span class="num">04</span><span class="tx" style="font-size:20px">When an event fires, the browser hands an <b>event card</b> (its type and key) to every function connected to it.</span></div>
     </div>
     <div class="stack">
-      <div class="panel"><div class="bar p"><span>afterwards</span></div>
+      <div class="panel"><div class="bar p"><span>four rounds</span></div>
         <ol class="plain">
-          <li>Who decided <em>when</em> you sang?</li>
-          <li>Who decided <em>what</em> you sang?</li>
-          <li>What were you doing while you waited?</li>
+          <li>Nothing connected. The browser fires events.</li>
+          <li>Connect <code>keydown → playNote</code>.</li>
+          <li>Hold a note, fire keyup. Then connect <code>keyup → stopNote</code>.</li>
+          <li>Connect <code>keyDown → showKey</code>. Fire away.</li>
         </ol>
       </div>
+      <p class="dir" style="font-size:19px">Afterwards: who fires the events, who connects them, and who calls the function?</p>
     </div>
   </div>
-  <aside class="nt">About five minutes, before any syntax. Seven volunteers at the front, one keyboard caller. Hand each a letter: a=do, s=re, d=mi, f=fa, g=sol, h=la, j=ti. Let the caller play "Twinkle" (a a g g h h g) or improvise. Variations if it's going well: one person listens for two keys; someone listens for "any key" and just says the letter out loud (that's console.log). Debrief: the caller decides when, each singer decides what. A singer who is waiting is doing nothing at all, until their key comes. That's a listener; the call-out is an event.</aside>
+  <aside class="nt">About seven minutes, before any syntax. Before class: write keydown, keyup and click as three column headings on the whiteboard, and have some blank cards for event cards. Volunteers: one browser, three functions (give each a card with their name and job), one programmer at the board. Round 1: the board is empty; the browser fires a stream of events ("keydown, a!" "keyup, a!" "click!"). Nothing happens. Ask: did the events happen? (Yes. Every one. Nobody was connected to them.) Round 2: the programmer writes playNote under keydown. Now each keydown means the browser writes the key on a card and hands it to playNote, who sings. keyup and click still go nowhere. Round 3: playNote starts a note on keydown and keeps singing; nothing stops it until stopNote is connected to keyup. Round 4: the programmer writes showKey under a new heading, keyDown. The browser never fires an event called that, so showKey never gets called, and nobody gets an error. Optional: connect showKey to click too. The browser hands it a card with no key on it, so it says "undefined". Debrief: the browser fires events all the time, whether anyone listens or not. addEventListener is the programmer writing a line on the board. The browser calls the function, and hands it the event.</aside>
+</section>
+
+<!-- 13b EVENT BOARD -->
+<section class="slide" id="event-board" data-sec="Events and listeners" data-demo="Connect events to functions">
+  <span class="turn try">Try it</span>
+  <div class="billing">Events and listeners · Replay</div><hr class="rule">
+  <h2 class="h1" style="margin-bottom:16px">Events fire. Listeners connect them.</h2>
+  <div class="cols" style="gap:28px">
+    <div class="stack" style="gap:14px">
+      <div class="panel"><div class="bar p"><span>connect a function to an event</span></div>
+        <div class="pbody stack" style="gap:12px">
+          <div class="row"><span class="small muted" style="width:80px">event</span><div class="seg" id="eb-ev" role="group" aria-label="Event type"></div></div>
+          <div class="row"><span class="small muted" style="width:80px">function</span><div class="seg" id="eb-fn" role="group" aria-label="Function"></div></div>
+          <div class="row"><button class="btn" id="eb-add">Connect them</button><button class="btn ghost" id="eb-clear">Clear the board</button></div>
+        </div>
+      </div>
+      <div class="panel"><div class="bar"><span>listeners.js</span><span>the board, in code</span></div><pre class="code sm" id="eb-code" style="min-height:118px;font-size:15px"></pre></div>
+    </div>
+    <div class="stack" style="gap:12px">
+      <div class="row" style="align-items:stretch;flex-wrap:nowrap"><div class="pad grow" id="eb-pad" tabindex="0" aria-label="Keyboard pad"></div><button class="btn alt" id="eb-click">Click</button></div>
+      <div class="board" id="eb-board"></div>
+      <div class="panel"><div class="bar y"><span>what happened</span></div><div class="console con-s" id="eb-con" style="min-height:120px;max-height:136px"></div></div>
+    </div>
+  </div>
+  <aside class="nt">Replay the four rounds. Start with an empty board and press keys on the pad: every event shows up in the log, and nobody is listening. Connect keydown → playNote: now a key press plays. Hold a key: the note never stops, because nothing listens for keyup. Connect keyup → stopNote. Then connect keyDown → showKey: a new column appears and stays empty of events forever. Connect showKey to click and press Click: "You pressed undefined", because a click has no key. Connecting the same function to the same event twice does nothing; the browser ignores the copy. The code panel shows the addEventListener line for every connection on the board.</aside>
 </section>
 
 <!-- 14 FUNCTION AS VALUE -->
@@ -435,11 +471,10 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
   <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
   <div class="inner">
     <div class="billing">Break</div>
-    <div class="timer" id="tm" aria-live="off">15:00</div>
-    <p class="lede" id="tm-msg" style="margin-top:22px">Stretch, refill, and find your headphones. After the break we turn one note into an instrument.</p>
-    <div class="row" style="margin-top:20px"><button class="btn alt" id="tm-go">Start</button><button class="btn ghost" id="tm-reset">Reset</button></div>
+    <h2 class="hero">Break.</h2>
+    <p class="lede">Stretch, refill, and find your headphones. After the break we turn one note into an instrument.</p>
   </div>
-  <aside class="nt">10:55–11:10. Fifteen-minute break. The countdown is on the slide; the clock times aren't.</aside>
+  <aside class="nt">10:55–11:10, fifteen minutes. The slide doesn't show the length or the time; tell the room when to be back if you want to.</aside>
 </section>
 
 <!-- 21 LOOKUP -->
@@ -451,7 +486,7 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
     <div class="panel"><div class="bar m"><span>a listener for every key</span><span>edits for 8 keys: <b id="lk-ca">0</b></span></div><pre class="code sm" id="lk-a" style="font-size:16px;line-height:1.5"></pre></div>
     <div class="panel"><div class="bar"><span>one listener, one lookup</span><span>edits for 8 keys: <b id="lk-cb">0</b></span></div><pre class="code sm" id="lk-b" style="font-size:16px;line-height:1.5"></pre></div>
   </div>
-  <div class="row" style="margin-top:auto"><button class="btn" id="lk-go">Make the notes longer</button><button class="btn ghost" id="lk-reset">Start over</button><p class="dir" style="margin-left:8px;font-size:19px;flex:1"><code>noteFor</code> answers one question: which note is this key?</p></div>
+  <div class="row" style="margin-top:auto"><button class="btn" id="lk-go">Make the notes longer</button><button class="btn ghost" id="lk-reset">Start over</button><p class="dir" style="margin-left:8px;font-size:19px;flex:1"><code>noteFor</code> asks one question: which note is this key?</p></div>
   <aside class="nt">11:10. Back to Tuesday's "write it once" idea. Left: one listener per key, each a near-copy (the slide shows two; a full octave is eight). Right: one listener that asks noteFor which note the key plays. noteFor is an if / else if chain from Thursday that returns a note. Press the button: for a full octave, changing the length is eight edits on the left and one on the right. Adding a key is one new function and one new line on the left; one else if on the right. Keys that aren't notes get "", and the if in playKey skips them.</aside>
 </section>
 
@@ -496,9 +531,9 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
   <h2 class="h1">Input → data → response</h2>
   <div class="map">
     <div><b>Input</b><span class="big">A key goes down</span>The person decides when.</div>
-    <div><b>Event</b><span class="big">The browser calls you</span>Your listener runs, with the event's details.</div>
+    <div><b>Event</b><span class="big">The browser calls your function</span>The listener connects the event to it, with the event's details.</div>
     <div><b>Data</b><span class="big">Work out what it means</span><code>event.key</code> → <code>noteFor</code> → <code>"E4"</code>, using what the program remembers.</div>
-    <div><b>Response</b><span class="big">Something happens</span>A sound, right away. Feedback that it heard you.</div>
+    <div><b>Response</b><span class="big">Something happens</span>A sound, right away: feedback that the key was pressed.</div>
   </div>
   <p class="lede" style="margin-top:30px;max-width:60ch">The same loop runs inside every instrument from the start of today, and every interface you'll design: a tap, a swipe, a click.</p>
   <aside class="nt">Pull it together. The first column is new today; the other three are last week's tools. Go back to mapping, feedback, timing: mapping lives in the Data column (noteFor), feedback and timing in Response. Ask: in a music app on your phone, what's the input, what's the data, what's the response?</aside>
@@ -568,10 +603,10 @@ textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
   <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
   <div class="inner">
     <div class="billing">Wrap-up</div>
-    <h2 class="hero md">The person acts. Your function answers.</h2>
+    <h2 class="hero md">Something happens. Your function responds.</h2>
     <div class="terms"><span>event</span><span>addEventListener</span><span>keydown</span><span>keyup</span><span>event.key</span></div>
   </div>
-  <aside class="nt">11:55. Summarise event-driven programming: you don't call the function; you hand it to the browser, and the browser calls it when the person acts. Back to the four objectives: what an event is; addEventListener with keydown and keyup; reading event.key; wiring it to Tone.js. We now have functions, data, conditionals and user input: enough to build real interactions.</aside>
+  <aside class="nt">11:55. Summarise event-driven programming: you don't call the function; you hand it to the browser, and the browser calls it when the event happens. Events fire all the time; a listener is what connects one to your function. Back to the four objectives: what an event is; addEventListener with keydown and keyup; reading event.key; wiring it to Tone.js. We now have functions, data, conditionals and user input: enough to build real interactions.</aside>
 </section>
 
 <!-- 29 NEXT -->
@@ -830,6 +865,60 @@ $("#tr-show").addEventListener("click",function(){var h=$("#tr-hints");h.hidden=
   });
 })();
 
+/* ---------- 13b event board ---------- */
+(function(){
+  var EV=["keydown","keyup","click","keyDown"],FN=["playNote","stopNote","showKey"],ev="keydown",fn="playNote",L=[],held={},lines=[],syn=lazySynth();
+  function seg(box,items,get,set){
+    items.forEach(function(x){
+      var b=document.createElement("button");b.className="btn ghost code-lbl";b.textContent=x;
+      b.addEventListener("click",function(){set(x);paint()});box.appendChild(b);
+    });
+    function paint(){$$("button",box).forEach(function(b){var on=b.textContent===get();b.classList.toggle("sel",on);b.setAttribute("aria-pressed",on)})}
+    paint();
+  }
+  seg($("#eb-ev"),EV,function(){return ev},function(x){ev=x});
+  seg($("#eb-fn"),FN,function(){return fn},function(x){fn=x});
+  function log(c,t){lines.push(c?{c:c,t:t}:t);lines=lines.slice(-6);conLines($("#eb-con"),lines);$("#eb-con").scrollTop=1e4}
+  function render(){
+    var cols=["keydown","keyup","click"];if(L.some(function(l){return l.ev==="keyDown"}))cols.push("keyDown");
+    $("#eb-board").innerHTML=cols.map(function(c){
+      var fs=L.filter(function(l){return l.ev===c}).map(function(l){return '<span class="fnn">'+l.fn+'</span>'}).join("");
+      return '<div data-ev="'+c+'"><b>'+c+'</b>'+(fs||'<span class="none">nobody listening</span>')+(c==="keyDown"?'<span class="none">never fires</span>':"")+'</div>';
+    }).join("");
+    code($("#eb-code"),L.length?L.map(function(l){return 'document.addEventListener("'+l.ev+'", '+l.fn+');'}).join("\n"):"// Nothing is connected yet.\n// Events still fire. Nobody hears them.");
+  }
+  function call(f,type,key){
+    var shown=key===undefined?"undefined":'"'+key+'"';
+    if(f==="showKey"){log("ok","showKey says: You pressed "+(key===undefined?"undefined":key));return}
+    if(f==="playNote"){
+      var n=key===undefined?"":lookup(PIANO,String(key).toLowerCase(),4);
+      if(!n){log("dim","playNote: "+(key===undefined?"this event has no key":shown+" is not a note"));return}
+      if(held[key])return;var s=syn();if(s)s.triggerAttack(n);held[key]=n;log("ok","playNote starts "+n);return;
+    }
+    if(f==="stopNote"){
+      var m=held[key];if(!m){log("dim","stopNote: nothing to stop");return}
+      var s2=syn();if(s2)s2.triggerRelease(m);delete held[key];log("ok","stopNote stops "+m);
+    }
+  }
+  function fire(type,key){
+    var col=$('#eb-board [data-ev="'+type+'"]');if(col){col.classList.remove("fire");void col.offsetWidth;col.classList.add("fire")}
+    var head=type+" fired"+(key===undefined?"":' (key "'+(key===" "?" ":key)+'")');
+    var ls=L.filter(function(l){return l.ev===type});
+    if(!ls.length){log("dim",head+": nobody is listening");return}
+    ls.forEach(function(l){log("in",head+": the browser calls "+l.fn+"(event)");call(l.fn,type,key)});
+  }
+  var P=pad($("#eb-pad"),IDLE,LIVE);
+  function allUp(){var s=syn();if(s)s.releaseAll();held={}}
+  capture($("#eb-pad"),function(e){P.show(e.key);if(!e.repeat)fire("keydown",e.key)},function(e){fire("keyup",e.key)},allUp);
+  $("#eb-click").addEventListener("click",function(){audioOn();fire("click")});
+  $("#eb-add").addEventListener("click",function(){
+    if(L.some(function(l){return l.ev===ev&&l.fn===fn})){log("dim",fn+" is already connected to "+ev+". The browser ignores the same function twice.");return}
+    L.push({ev:ev,fn:fn});render();log("in",'addEventListener("'+ev+'", '+fn+")");
+  });
+  $("#eb-clear").addEventListener("click",function(){allUp();L=[];render();lines=[];log("dim","Board cleared. Events still fire.")});
+  render();log("dim","Click the pad and press keys, or press Click.");
+})();
+
 /* ---------- 14 function as value ---------- */
 (function(){
   code($("#fv-code"),'function clap() {\n  console.log("clap!");\n}\n\nfunction twice(action) {\n  action();\n  action();\n}');
@@ -936,20 +1025,6 @@ playground("fs",'const synth = new Tone.Synth().toDestination();\n\nfunction pla
       });box.appendChild(bt)});
   }
   ask();
-})();
-
-/* ---------- 20 break timer ---------- */
-(function(){
-  var total=15*60,left=total,t=null,BRK="Stretch, refill, and find your headphones. After the break we turn one note into an instrument.";
-  function show(){var m=Math.floor(left/60),s=left%60;$("#tm").textContent=m+":"+(s<10?"0":"")+s;if(left===0){$("#tm-msg").textContent="Time's up. Back to your seats.";stop()}}
-  function stop(){clearInterval(t);t=null;$("#tm-go").textContent=left===0?"Start":"Resume"}
-  $("#tm-go").addEventListener("click",function(){
-    if(t){stop();return}
-    if(left===0)left=total;
-    $("#tm-msg").textContent=BRK;
-    t=setInterval(function(){left=Math.max(0,left-1);show()},1000);this.textContent="Pause";
-  });
-  $("#tm-reset").addEventListener("click",function(){stop();left=total;show();$("#tm-go").textContent="Start";$("#tm-msg").textContent=BRK});
 })();
 
 /* ---------- 21 lookup ---------- */
