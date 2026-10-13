@@ -429,8 +429,8 @@ table.io.tasks code{font-size:14px}
     <div class="stack" style="gap:14px">
       <div><h3 class="small-h" style="margin-bottom:6px">One task each</h3>
       <div class="rows tasks2">
-        <div><code>page-title</code><span><b>index.html</b> · give the instrument a name in the <code>&lt;h1&gt;</code></span></div>
-        <div><code>background-colour</code><span><b>style.css</b> · add <code>background: lightyellow;</code> to <code>body</code></span></div>
+        <div><code>group-names</code><span><b>README.md</b> · fill in the <b>Group:</b> line with your names</span></div>
+        <div><code>clearer-log</code><span><b>keyboard.js</b> · <code>"Key down:"</code> → <code>"You pressed"</code> in the <code>console.log</code></span></div>
         <div><code>fm-sound</code><span><b>instrument.js</b> · <code>Tone.Synth</code> → <code>Tone.FMSynth</code></span></div>
         <div><code>play-key</code><span><b>script.js</b> · <code>exampleKey</code> from <code>"a"</code> to <code>"s"</code></span></div>
       </div>
@@ -439,7 +439,7 @@ table.io.tasks code{font-size:14px}
     </div>
   </div>
   <div class="foot"><p><b>Done when</b><code>main</code> has every change and still plays, and everyone has reviewed one PR.</p><button class="btn ghost mark" data-done="round-1">Mark as done</button></div>
-  <aside class="nt">About 20 minutes. Everyone authors one PR and reviews one; with three in a group, skip a row. Every task changes something you can see or hear, so the reviewer has something to run: the title, the colour, the sound (FMSynth sounds brighter and buzzier), the key (S plays the note, A doesn't any more; the hint on the page still says A, which a good reviewer mentions). Snags: the reviewer can't find the branch (Sync Changes or ··· → Fetch first); the reviewer has uncommitted work and can't switch branch (commit it first: README, "Reviewing a pull request" step 1); "Publish Branch" missed, so github.com shows no banner; someone committed straight to main (see T: Undo Last Commit). After all four merge, everyone pulls main and checks that all four changes are there together.</aside>
+  <aside class="nt">About 20 minutes. Everyone authors one PR and reviews one; with three in a group, skip a row. Only .js and .md files. Every task changes something the reviewer can check: the README (open it on the branch with Ctrl+Shift+V / Cmd+Shift+V for the preview, or look at it on github.com), the console message (hold a key with the console open), the sound (FMSynth sounds brighter and buzzier), the key (S plays the note, A doesn't any more; the hint on the page still says A, which a good reviewer mentions). Snags: the reviewer can't find the branch (Sync Changes or ··· → Fetch first); the reviewer has uncommitted work and can't switch branch (commit it first: README, "Reviewing a pull request" step 1); "Publish Branch" missed, so github.com shows no banner; someone committed straight to main (see T: Undo Last Commit). After all four merge, everyone pulls main and checks that all four changes are there together.</aside>
 </section>
 
 <section class="slide" id="round-2" data-sec="Hands-on in practice groups" data-ex="Round 2: a conflict on purpose">
@@ -470,14 +470,14 @@ table.io.tasks code{font-size:14px}
   <h2 class="h1 sm">Stretch: ask for changes</h2>
   <div class="cols wide-l ex">
     <div class="rows lab steps">
-      <div><span class="num">1</span><span class="tx"><b>Author:</b> open a PR with a small mistake in it on purpose, like a typo in the page title.</span></div>
+      <div><span class="num">1</span><span class="tx"><b>Author:</b> open a PR with a small mistake in it on purpose, like a typo in the console message.</span></div>
       <div><span class="num">2</span><span class="tx"><b>Reviewer:</b> in <b>Files changed</b>, click the <b>+</b> next to the line and write a comment. Then <b>Review changes → Request changes</b>.</span></div>
       <div><span class="num">3</span><span class="tx"><b>Author:</b> fix it on the same branch in VS Code. Commit and <b>Sync Changes</b>.</span></div>
       <div><span class="num">4</span><span class="tx"><b>Reviewer:</b> look again, run it, approve. The author merges.</span></div>
     </div>
     <div class="stack" style="gap:14px">
       <div class="named" style="margin:0"><div class="nm">No new PR</div><div class="rl">A pull request follows its branch. Push more commits to the branch and the PR updates.</div></div>
-      <div class="named" style="margin:0"><div class="nm">Be kind, be specific</div><div class="rl">"The title says <i>Instrumnet</i>, I think you meant <i>Instrument</i>" helps. "This is wrong" doesn't.</div></div>
+      <div class="named" style="margin:0"><div class="nm">Be kind, be specific</div><div class="rl">"The console says <i>Kye down</i>, I think you meant <i>Key down</i>" helps. "This is wrong" doesn't.</div></div>
     </div>
   </div>
   <div class="foot"><p><b>Done when</b>a PR has gone from <i>Changes requested</i> to <i>Approved</i> to merged.</p><button class="btn ghost mark" data-done="stretch">Mark as done</button></div>
