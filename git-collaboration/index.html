@@ -71,7 +71,7 @@ kbd{font-family:var(--font-mono);font-size:.78em;font-weight:700;background:var(
 .gg-cap{font-size:20px;line-height:1.42;color:var(--ink-900);min-height:58px;margin:16px 0 12px;max-width:none}
 .gg-cap b{font-family:var(--font-mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-500);margin-right:8px}
 /* conflict in a file */
-.mfile{font-family:var(--font-mono);font-size:16px;line-height:1.55;background:var(--ink-900);color:var(--paper-100);padding:12px 0;margin:0;white-space:pre;min-height:182px}
+.mfile{font-family:var(--font-mono);font-size:16px;overflow:hidden;line-height:1.55;background:var(--ink-900);color:var(--paper-100);padding:12px 0;margin:0;white-space:pre;min-height:182px}
 .mfile span{display:block;padding:0 16px}
 .mfile .mk{color:var(--ink-300)}
 .mfile .cur{background:rgba(64,200,140,.22)}
@@ -108,6 +108,16 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
 .quiz.grid2{display:grid;grid-template-columns:1fr 1fr;column-gap:32px}
 .quiz.grid2>div{grid-template-columns:1fr auto;gap:12px;padding:8px 0}
 .quiz .sc code{font-size:18px}
+/* round 1 tasks */
+.tasks2>div{grid-template-columns:1fr;gap:2px;padding:6px 0}
+.tasks2 code{font-size:15px;justify-self:start}
+.tasks2 span{font-size:15px;line-height:1.35;color:var(--ink-700)}
+.tasks2 span code{font-size:13px}
+table.io.tasks{font-size:15px}
+table.io.tasks th{padding:3px 8px;font-size:12px}
+table.io.tasks td{padding:3px 8px}
+table.io.tasks td:last-child{font-family:var(--font-ui);font-size:15px}
+table.io.tasks code{font-size:14px}
 /* three snags */
 .three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;align-items:stretch}
 .three .named{margin:0}
@@ -141,7 +151,7 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
   <div style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
     <div class="m" style="font-size:17px;color:var(--ink-200)">Git collaboration · TA session · Wed 14 Oct</div>
   </div>
-  <aside class="nt">TA session, 10:15–12:00, run by the TAs. Students need VS Code signed in to GitHub (done in last week's TA session) and should already be members of the IDBCourses organisation. The A1 groups don't exist yet: they're formed at the A1 Project Kickoff this afternoon. So this morning everyone works in temporary practice groups, by table, each with a throwaway practice repo. Everything practised here carries straight over to the A1 group repo this afternoon. Before the session: have one practice repo per table ready, plus one for your own demo, and the links to hand out. Press T at any time for the troubleshooting sheet.</aside>
+  <aside class="nt">TA session, 10:15–12:00, run by the TAs. Students need VS Code signed in to GitHub (done in last week's TA session) and should already be members of the IDBCourses organisation. The A1 groups don't exist yet: they're formed at the A1 Project Kickoff this afternoon. So this morning everyone works in temporary practice groups, by table, each with a throwaway practice repo. Everything practised here carries straight over to the A1 group repo this afternoon. Before the session: make one practice repo of your own from the A1 template (github.com/IDBCourses/kd402d-a1-template) for the demo. Students make their group's practice repo themselves in the hands-on part. Press T at any time for the troubleshooting sheet.</aside>
 </section>
 
 <section class="slide" id="running-order" data-sec="Introduction">
@@ -174,11 +184,11 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
   <h2 class="h1">Practice groups, practice repos</h2>
   <div class="rows kv">
     <div><span class="k">Your group</span><span class="v">The 3–4 people at your table. Only for this morning: your A1 group is chosen this afternoon.</span></div>
-    <div><span class="k">Your repo</span><span class="v">One <b>practice repo</b> per group, on GitHub. Your TA gives you the link. It's deleted after this week, so go ahead and break things.</span></div>
+    <div><span class="k">Your repo</span><span class="v">One <b>practice repo</b> per group, made from the A1 template: the same starter code you get this afternoon. Nothing in it needs saving, so go ahead and break things.</span></div>
     <div><span class="k">Your tools</span><span class="v">VS Code's <b>Source Control</b> panel and <b>github.com</b>. No terminal needed.</span></div>
     <div><span class="k">When stuck</span><span class="v">Press <kbd>T</kbd> for common problems. Ask your group first, then a TA.</span></div>
   </div>
-  <aside class="nt">Get people sitting in groups of 3–4 now, before the demo, so nobody moves in the middle of the hands-on part. Write each table's practice repo name on the board (or say it) as soon as groups are settled. The practice repo is a separate repo from their exercises fork: they don't touch the fork today.</aside>
+  <aside class="nt">Get people sitting in groups of 3–4 now, before the demo, so nobody moves in the middle of the hands-on part. The practice repo is a separate repo from their exercises fork: they don't touch the fork today.</aside>
 </section>
 
 <!-- ======================= Why a shared workflow ======================= -->
@@ -196,10 +206,10 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
 <section class="slide" id="same-line" data-sec="Why a shared workflow" data-ex="Two people, one line">
   <span class="turn">Your turn</span>
   <div class="billing">Why a shared workflow · Two people, one line</div><hr class="rule">
-  <h2 class="h1 sm">Both change line 1. Then what?</h2>
+  <h2 class="h1 sm">Both change one line. Then what?</h2>
   <div class="who">
-    <div class="panel"><div class="bar b"><span>Ana's laptop · README.md</span><span>pushes first</span></div><div class="pbody">1  # Team Rain<small>Ana changed the title and pushed to GitHub.</small></div></div>
-    <div class="panel"><div class="bar m"><span>Ben's laptop · README.md</span><span>pushes second</span></div><div class="pbody">1  # Sounds we like<small>Ben changed the same line, before he had Ana's change.</small></div></div>
+    <div class="panel"><div class="bar b"><span>Ana's laptop · script.js</span><span>pushes first</span></div><div class="pbody">const exampleNote = "E4";<small>Ana changed the note and pushed to GitHub.</small></div></div>
+    <div class="panel"><div class="bar m"><span>Ben's laptop · script.js</span><span>pushes second</span></div><div class="pbody">const exampleNote = "G4";<small>Ben changed the same line, before he had Ana's change.</small></div></div>
   </div>
   <div class="stack" style="gap:8px" id="sl-opts"></div>
   <div class="fb" id="sl-fb" style="margin-top:10px"></div>
@@ -229,7 +239,7 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
   <svg class="gg" id="g1" viewBox="0 0 1120 270" role="img" aria-label="Two feature branches come off main and are merged back one after the other"></svg>
   <p class="gg-cap" id="g1-cap"></p>
   <div class="row"><button class="btn ghost" id="g1-back">Back</button><button class="btn" id="g1-next">Next</button><button class="btn ghost" id="g1-reset">Start again</button></div>
-  <aside class="nt">The demo section runs 10:25–10:45, and it's a demo on the projector, not something the students act out. Step through this picture first (Next), then do the same thing live in VS Code. Two people, two features, two branches. They touch different files, so both merge without trouble. Things to land: a branch is named after the feature (score-display), not the person; each branch is merged through a pull request; after every merge, main still runs. Students can step through it on their own laptops too.</aside>
+  <aside class="nt">The demo section runs 10:25–10:45, and it's a demo on the projector, not something the students act out. Step through this picture first (Next), then do the same thing live in VS Code. Two people, two features, two branches. They touch different files, so both merge without trouble. Things to land: a branch is named after the feature (drone), not the person; each branch is merged through a pull request; after every merge, main still runs. Students can step through it on their own laptops too.</aside>
 </section>
 
 <section class="slide" id="conflict" data-sec="Live demo" data-demo="Two branches, one line">
@@ -239,7 +249,7 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
   <svg class="gg" id="g2" viewBox="0 0 1120 270" role="img" aria-label="Two branches change the same line; the second merge conflicts until the second author pulls main and chooses"></svg>
   <p class="gg-cap" id="g2-cap"></p>
   <div class="row"><button class="btn ghost" id="g2-back">Back</button><button class="btn" id="g2-next">Next</button><button class="btn ghost" id="g2-reset">Start again</button></div>
-  <aside class="nt">The same shape as before, but both branches change line 1 of README.md. The first merge is fine. The second can't merge because main's line 1 has changed since that branch started: GitHub shows "This branch has conflicts that must be resolved". The fix happens on the second author's branch, not on main: they pull main into their branch, choose what line 1 should say, commit and push. Then the pull request merges cleanly. This is exactly what students do in round 2.</aside>
+  <aside class="nt">The same shape as before, but both branches change the same line: const exampleNote in script.js. The first merge is fine. The second can't merge because that line on main has changed since that branch started: GitHub shows "This branch has conflicts that must be resolved". The fix happens on the second author's branch, not on main: they merge main into their branch, choose which note to keep, commit and push. Then the pull request merges cleanly. This is exactly what students do in round 2.</aside>
 </section>
 
 <section class="slide" id="demo" data-sec="Live demo">
@@ -251,7 +261,7 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
       <div><span class="num">2</span><span class="tx"><b>Commit, then publish.</b> A new branch's first push is the <b>Publish Branch</b> button.</span></div>
       <div><span class="num">3</span><span class="tx"><b>Open a pull request</b> on github.com: <b>Compare &amp; pull request</b>.</span></div>
       <div><span class="num">4</span><span class="tx"><b>The second PR conflicts:</b> <i>This branch has conflicts that must be resolved.</i></span></div>
-      <div><span class="num">5</span><span class="tx"><b>Pull main into the branch</b>, choose a change, commit, push.</span></div>
+      <div><span class="num">5</span><span class="tx"><b>Bring <code>main</code> into the branch</b>, choose a change, commit, push.</span></div>
       <div><span class="num">6</span><span class="tx"><b>Review it:</b> check out the branch, run it, approve. Then merge.</span></div>
     </div>
     <div class="stack" style="gap:14px">
@@ -260,7 +270,7 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
       <div class="named" style="margin:0"><div class="nm">github.com</div><div class="rl">Pull requests, reviews and merging all happen on the website.</div></div>
     </div>
   </div>
-  <aside class="nt">Do the whole thing live in your demo repo. You need two "people": the easiest way is to make the first change in VS Code on one branch, and the second in github.com's web editor (press . on the repo page, or the pencil icon on README.md) on another branch, so both edit line 1. Merge the first PR on github.com. Then show the second PR's conflict message, go back to VS Code on that branch, and run Git: Fetch, then Git: Merge… (Command Palette) → origin/main. Don't use Git: Pull from… here: on a branch that has moved on since main, Git refuses with "Need to specify how to reconcile divergent branches". README.md appears under Merge Changes; resolve it with Accept Current / Accept Incoming above the markers, save, press + to stage, commit, Sync Changes. Back on github.com the PR now says it can merge. Finally review it: in VS Code click the branch name and pick the branch, run or open it, then on github.com Files changed → Review changes → Approve. (You can't approve your own PR; for the demo, say this out loud and merge without approval.) Narrate where you click; students copy this in a few minutes.</aside>
+  <aside class="nt">Do the whole thing live in your own practice repo, made from the A1 template. You need two "people": the easiest way is to make the first change in VS Code on one branch, and the second in github.com's web editor (the pencil icon on script.js) on another branch, so both change the exampleNote line to different notes. Merge the first PR on github.com. Show the second PR's conflict message. Then in VS Code, do step 4 of the README exactly: switch to main and Sync Changes, switch back to the branch, Command Palette → Git: Merge Branch… → main. script.js appears under Merge Changes; resolve it with Accept Current / Accept Incoming above the markers, save, press + to stage, commit, Sync Changes. Run it with Live Preview and hold A: you hear the note you kept. Back on github.com the PR now says it can merge. Finally review it: on github.com Files changed → Review changes → Approve. (You can't approve your own PR; for the demo, say this out loud and merge without approval.) Don't use Git: Pull from… to bring main in: on a branch that has moved on, Git refuses with "Need to specify how to reconcile divergent branches". Narrate where you click; students copy this in a few minutes.</aside>
 </section>
 
 <section class="slide" id="markers" data-sec="Live demo" data-ex="Resolve a conflict">
@@ -269,7 +279,7 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
   <h2 class="h1 sm">Pick a change, lose the markers</h2>
   <div class="cols">
     <div class="stack" style="gap:10px">
-      <div class="panel"><div class="bar"><span>README.md</span><span>merge changes</span></div>
+      <div class="panel"><div class="bar"><span>script.js</span><span>merge changes</span></div>
         <pre class="mfile" id="mx-file"></pre></div>
       <div class="choices" id="mx-btns">
         <button class="btn ghost" data-c="cur">Accept current</button><button class="btn ghost" data-c="inc">Accept incoming</button><button class="btn ghost" data-c="both">Accept both</button><button class="btn ghost" data-c="hand">Edit by hand</button>
@@ -284,7 +294,7 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
       <div class="fb" id="mx-fb"></div>
     </div>
   </div>
-  <aside class="nt">This is what Ben sees after pulling main into his branch. In VS Code the buttons appear as small links above the markers (Accept Current Change | Accept Incoming Change | Accept Both Changes). Current = the branch you're on; incoming = what you pulled in. Let students try all four. "Accept both" is the instructive one: Git is happy because the markers are gone, but the README now has two titles. Git only checks for markers; whether the result makes sense is the person's job. "Edit by hand" is what you do when the right answer is a mix of the two.</aside>
+  <aside class="nt">This is what Ben sees in script.js after merging main into his branch. In VS Code the buttons appear as small links above the markers (Accept Current Change | Accept Incoming Change | Accept Both Changes). Current = the branch you're on; incoming = what you pulled in. Let students try all four. "Accept both" is the instructive one: Git is happy because the markers are gone, but now exampleNote is declared twice and the page won't run. Git only checks for markers; whether the code runs is the person's job, which is why you run it after every conflict (the README says so too). "Edit by hand" is what you do when the right answer is a mix of the two.</aside>
 </section>
 
 <section class="slide" id="review-run" data-sec="Live demo" data-ex="Read it, or run it?">
@@ -293,20 +303,20 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
   <h2 class="h1 sm">Read it, or run it?</h2>
   <div class="cols">
     <div class="stack" style="gap:12px">
-      <div class="panel pr"><div class="bar p"><span>Pull request · rename-intro → main</span></div>
-        <div class="pbody"><p><b>What changed</b>Renamed <code>playIntro</code> to <code>playOpening</code>. It reads better.</p><p><b>How to test</b>Open the page and press Start.</p><p><b>Unsure about</b>Nothing.</p></div></div>
+      <div class="panel pr"><div class="bar p"><span>Pull request · rename-start-note → main</span></div>
+        <div class="pbody"><p><b>What changed</b>Renamed <code>startNote</code> to <code>playNote</code>. It reads better.</p><p><b>How to test it</b>Hold down A. You hear a C4.</p><p><b>Unsure about</b>Nothing.</p></div></div>
       <div class="panel"><div class="bar"><span>Files changed · 1</span></div>
-        <pre class="diff"><span class="f">sound.js</span><span class="del">- function playIntro() {</span><span class="add">+ function playOpening() {</span><span>    synth.triggerAttackRelease("C4", "8n");</span><span>  }</span></pre></div>
+        <pre class="diff"><span class="f">instrument.js</span><span class="del">- function startNote(note) {</span><span class="add">+ function playNote(note) {</span><span>    synth.triggerAttack(note, Tone.now());</span><span>  }</span></pre></div>
     </div>
     <div class="stack" style="gap:12px">
       <p class="lede" style="margin:0;font-size:20px">The diff looks fine. What do you do?</p>
       <div class="row"><button class="btn" id="rv-ok">Approve</button><button class="btn ghost" id="rv-chg">Request changes</button></div>
       <div class="row" id="rv-runrow" hidden><button class="btn alt" id="rv-run">Run it</button></div>
-      <div class="panel" id="rv-conp" hidden><div class="bar y"><span>console · rename-intro</span></div><div class="console rv" id="rv-con"></div></div>
+      <div class="panel" id="rv-conp" hidden><div class="bar y"><span>console · rename-start-note</span></div><div class="console rv" id="rv-con"></div></div>
       <div class="fb" id="rv-fb"></div>
     </div>
   </div>
-  <aside class="nt">The second idea to land in the demo: a reviewer runs the code. The diff only shows lines that changed. main.js wasn't changed, so its call to playIntro() isn't in the diff, but it's now broken. Reading would never have caught it; running catches it in two seconds. Ask: who approved? No shame: most people do. In A1, main is what gets shown at the showcase, so an approved PR that breaks main breaks the group's project.</aside>
+  <aside class="nt">The second idea to land in the demo: a reviewer runs the code. This is the A1 template's own code. The diff only shows lines that changed. keyboard.js wasn't changed, so its call to startNote() isn't in the diff, but it's now broken: holding A plays nothing, and the console says startNote is not defined. Reading would never have caught it; running catches it in two seconds. Ask: who approved? No shame: most people do. In A1, main is what gets handed in and shown at the showcase, so an approved PR that breaks main breaks the group's instrument.</aside>
 </section>
 
 <!-- ======================= The group workflow ======================= -->
@@ -315,15 +325,15 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
   <div class="billing">The group workflow</div><hr class="rule">
   <h2 class="h1 sm">Seven steps, every time</h2>
   <div class="rows lab steps tight">
-    <div><span class="num">1</span><span class="tx"><b>Pull <code>main</code></b> before you start anything.<small>Click the branch name at the bottom left → <b>main</b>, then <b>Sync Changes</b>.</small></span></div>
-    <div><span class="num">2</span><span class="tx"><b>Make a branch</b> named after the feature: <code>score-display</code>, not <code>anna</code>.<small>Branch name at the bottom left → <b>Create new branch…</b></small></span></div>
-    <div><span class="num">3</span><span class="tx"><b>Commit and push</b> to your branch. Keep it short-lived: a day or two at most.<small>The first push is <b>Publish Branch</b>; after that, <b>Sync Changes</b>.</small></span></div>
-    <div><span class="num">4</span><span class="tx"><b>Pull <code>main</code> into your branch</b> and resolve any conflicts before you open the PR.<small>Command Palette → <b>Git: Fetch</b>, then <b>Git: Merge…</b> → <b>origin/main</b>.</small></span></div>
+    <div><span class="num">1</span><span class="tx"><b>Pull <code>main</code>.</b> Switch to <code>main</code>, then <b>Sync Changes</b>.<small>Switch branches by clicking the branch name at the bottom left.</small></span></div>
+    <div><span class="num">2</span><span class="tx"><b>Make a branch</b> for one task, named after the feature: <code>drone</code>, not <code>anna</code>.<small>Branch name at the bottom left → <b>Create new branch…</b></small></span></div>
+    <div><span class="num">3</span><span class="tx"><b>Commit and push</b> to your branch. Keep it short: a day or two at most.<small>The first push is <b>Publish Branch</b>; after that, <b>Sync Changes</b>.</small></span></div>
+    <div><span class="num">4</span><span class="tx"><b>Bring in the latest <code>main</code></b> before you open the PR. Run it, then push.<small>Switch to <code>main</code> and Sync. Switch back, then Command Palette → <b>Git: Merge Branch…</b> → <code>main</code>.</small></span></div>
     <div><span class="num">5</span><span class="tx"><b>Open a pull request</b> on github.com: what changed · how to test it · anything you're unsure about.</span></div>
     <div><span class="num">6</span><span class="tx"><b>A groupmate reviews:</b> checks out your branch, runs it, then approves or requests changes.</span></div>
-    <div><span class="num">7</span><span class="tx"><b>You merge</b>, then delete the branch. <code>main</code> must always run.</span></div>
+    <div><span class="num">7</span><span class="tx"><b>The author merges</b>, then deletes the branch. <code>main</code> must always run.</span></div>
   </div>
-  <aside class="nt">10:45–11:00. This is the loop students use in A1, the same steps as the GitHub Workflow page and the group repo's README. Walk it once, pointing back at what they saw in the demo. Why step 4: conflicts get fixed on your own branch, by the person who knows the change best, before anyone reviews it. Why short-lived: the longer a branch lives, the more main moves under it and the bigger the conflicts. A1 only runs a week. Why the author merges: they know when it's ready. The Command Palette is Ctrl+Shift+P (Cmd+Shift+P on a Mac).</aside>
+  <aside class="nt">10:45–11:00. This is the loop students use in A1, word for word the "Working together" section of the A1 template's README, which they'll have in their group repo this afternoon. Walk it once, pointing back at what they saw in the demo. Why step 4: conflicts get fixed on your own branch, by the person who knows the change best, before anyone reviews it. Why short: the longer a branch lives, the more main moves under it and the bigger the conflicts. A1 only runs a week. Why the author merges: they know when it's ready. The Command Palette is Ctrl+Shift+P (Cmd+Shift+P on a Mac).</aside>
 </section>
 
 <section class="slide" id="order" data-sec="The group workflow" data-ex="Put the loop in order">
@@ -358,27 +368,48 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
     <h2 class="hero md">Now for real, in your group.</h2>
     <p class="lede">One practice repo per group. Everyone goes through the loop at least twice: once as the author, once as the reviewer.</p>
   </div>
-  <aside class="nt">11:00–11:50. Hand out the practice repo links now if you haven't. Round 1 (clean pull requests) should take about 20 minutes, round 2 (the conflict) about 20, and the stretch is for groups that finish. TAs circulate. Watch for the three common snags: forgetting to pull main first, committing straight to main, and reviewers approving without running anything.</aside>
+  <aside class="nt">11:00–11:50. First, each group makes its practice repo (5 minutes) and everyone clones it (5 minutes). Round 1 (clean pull requests) should take about 20 minutes, round 2 (the conflict) about 20, and the stretch is for groups that finish. TAs circulate. Watch for the three common snags: forgetting to pull main first, committing straight to main, and reviewers approving without running anything.</aside>
+</section>
+
+<section class="slide" id="make-repo" data-sec="Hands-on in practice groups" data-ex="Make the practice repo">
+  <span class="turn">Your turn</span>
+  <div class="billing">Hands-on · One of you</div><hr class="rule">
+  <h2 class="h1 sm">Make your group's practice repo</h2>
+  <div class="cols wide-l ex">
+    <div class="rows lab steps">
+      <div><span class="num">1</span><span class="tx"><b>One person per group</b> opens <a href="https://github.com/IDBCourses/kd402d-a1-template" target="_blank" rel="noopener">github.com/IDBCourses/kd402d-a1-template</a>.</span></div>
+      <div><span class="num">2</span><span class="tx">Click <b>Use this template → Create a new repository</b>.</span></div>
+      <div><span class="num">3</span><span class="tx">Name it <code>git-practice</code>. Choose <b>Public</b>. Click <b>Create repository</b>.</span></div>
+      <div><span class="num">4</span><span class="tx">In the new repo: <b>Settings → Collaborators → Add people</b>. Add everyone in your group by their GitHub username.</span></div>
+      <div><span class="num">5</span><span class="tx"><b>Everyone else:</b> accept the invitation. It's in your email, or open the repo's link and click <b>Accept invitation</b>.</span></div>
+    </div>
+    <div class="stack" style="gap:14px">
+      <div class="named" style="margin:0"><div class="nm">The A1 starter code</div><div class="rl">The same files your A1 group repo starts from this afternoon: <code>script.js</code>, <code>instrument.js</code>, <code>keyboard.js</code>.</div></div>
+      <div class="named" style="margin:0"><div class="nm">Template, not fork</div><div class="rl">A copy with its own history, owned by one of you. Your exercises fork stays as it is.</div></div>
+    </div>
+  </div>
+  <div class="foot"><p><b>Done when</b>everyone in the group can open the repo on github.com and has accepted the invitation.</p><button class="btn ghost mark" data-done="make-repo">Mark as done</button></div>
+  <aside class="nt">Five minutes, and the same steps as in the video walkthrough. One person per group does steps 1–4; the rest wait for the invitation. Snags: the invitation email goes to whatever address the GitHub account uses, so it's quicker to send groupmates the repo link and have them click Accept invitation on the page; a typo in a username (check the avatar that comes up before clicking Add); a Private repo still works for collaborators, so don't spend time on it. Template copies don't carry the A1 group repos' protection rules, so GitHub won't force an approval here: the group has to stick to the workflow by itself.</aside>
 </section>
 
 <section class="slide" id="clone" data-sec="Hands-on in practice groups" data-ex="Clone the practice repo">
   <span class="turn">Your turn</span>
-  <div class="billing">Hands-on · Get the repo</div><hr class="rule">
-  <h2 class="h1 sm">Clone your practice repo</h2>
+  <div class="billing">Hands-on · Everyone</div><hr class="rule">
+  <h2 class="h1 sm">Clone it and run it</h2>
   <div class="cols wide-l ex">
     <div class="rows lab steps">
-      <div><span class="num">1</span><span class="tx">Open the practice repo your TA gave your group on <b>github.com</b>. Click the green <b>Code</b> button and copy the HTTPS link.</span></div>
+      <div><span class="num">1</span><span class="tx">On github.com, open your group's <code>git-practice</code> repo. Click the green <b>Code</b> button and copy the HTTPS link.</span></div>
       <div><span class="num">2</span><span class="tx">In VS Code: <b>File → Close Folder</b>. Then Command Palette → <b>Git: Clone</b>, paste the link, and pick a folder.<small>Not inside OneDrive, iCloud or Dropbox.</small></span></div>
-      <div><span class="num">3</span><span class="tx">Click <b>Open</b> when VS Code asks.</span></div>
-      <div><span class="num">4</span><span class="tx">Check the bottom left: it says <b>main</b>.</span></div>
+      <div><span class="num">3</span><span class="tx">Click <b>Open</b> when VS Code asks. Check the bottom left: it says <b>main</b>.</span></div>
+      <div><span class="num">4</span><span class="tx">Open <code>index.html</code> → Command Palette → <b>Live Preview: Show Preview (External Browser)</b>. Click the page and hold down <b>A</b>.</span></div>
     </div>
     <div class="stack" style="gap:14px">
-      <div class="named" style="margin:0"><div class="nm">A new repo</div><div class="rl">This is not your exercises fork. It belongs to your group, in the course organisation, and everyone in the group can push to it.</div></div>
+      <div class="named" style="margin:0"><div class="nm">You hear a C4</div><div class="rl">And the console (<code>F12</code>) shows <code>Key down: a</code>. That's the starting point every reviewer checks against.</div></div>
       <div class="named" style="margin:0"><div class="nm">Same steps this afternoon</div><div class="rl">Your A1 group repo is cloned exactly like this.</div></div>
     </div>
   </div>
-  <div class="foot"><p><b>Done when</b>everyone in the group has the repo open in VS Code and the bottom left says <code>main</code>.</p><button class="btn ghost mark" data-done="clone">Mark as done</button></div>
-  <aside class="nt">Five minutes. Snags: VS Code still has the exercises fork open (Close Folder first, or the clone lands in the wrong window); a repo cloned into a OneDrive folder; a 404 on the repo page, which means the student isn't in the organisation or the repo's team yet (check their GitHub username against the list and add them). Command Palette: Ctrl+Shift+P / Cmd+Shift+P.</aside>
+  <div class="foot"><p><b>Done when</b>everyone has the repo open in VS Code, the bottom left says <code>main</code>, and holding <b>A</b> plays a note.</p><button class="btn ghost mark" data-done="clone">Mark as done</button></div>
+  <aside class="nt">Five minutes. Snags: VS Code still has the exercises fork open (Close Folder first, or the clone lands in the wrong window); a repo cloned into a OneDrive folder; a 404 on the repo page, which means the invitation hasn't been accepted yet. No sound: click the page first, and check the laptop's volume. Tone.js loads from the internet, so the page needs a connection. Command Palette: Ctrl+Shift+P / Cmd+Shift+P.</aside>
 </section>
 
 <section class="slide" id="round-1" data-sec="Hands-on in practice groups" data-ex="Round 1: a clean pull request">
@@ -386,21 +417,29 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
   <div class="billing">Hands-on · Round 1</div><hr class="rule">
   <h2 class="h1 sm">Round 1: a clean pull request</h2>
   <div class="cols wide-l ex">
-    <div class="rows lab steps tight">
-      <div><span class="num">1</span><span class="tx"><b>Everyone:</b> pull <code>main</code>, then make a branch named after a sound you like: <code>add-rain-sound</code>.</span></div>
-      <div><span class="num">2</span><span class="tx">Make a new file, <code>sounds/rain.md</code>. Write one line: the sound and why you like it. Save.</span></div>
-      <div><span class="num">3</span><span class="tx">Commit (<i>Add rain sound</i>), then <b>Publish Branch</b>.</span></div>
-      <div><span class="num">4</span><span class="tx">On github.com: <b>Compare &amp; pull request</b>. Fill in what changed · how to test it · anything you're unsure about. <b>Create pull request</b>.</span></div>
-      <div><span class="num">5</span><span class="tx"><b>Reviewer:</b> <b>Sync Changes</b>, click the branch name, pick <code>origin/add-rain-sound</code>. Open the file and look at it.<small>Then on github.com: <b>Files changed → Review changes → Approve → Submit review</b>.</small></span></div>
-      <div><span class="num">6</span><span class="tx"><b>Author:</b> <b>Merge pull request → Confirm merge → Delete branch</b>. In VS Code, switch back to <code>main</code> and <b>Sync Changes</b>.</span></div>
+    <div class="stack" style="gap:10px">
+      <div class="rows lab steps tight">
+        <div><span class="num">1</span><span class="tx"><b>Everyone:</b> pull <code>main</code>, then make a branch for <b>your</b> task from the list.</span></div>
+        <div><span class="num">2</span><span class="tx">Make the change. Run it. Commit, then <b>Publish Branch</b>.</span></div>
+        <div><span class="num">3</span><span class="tx">On github.com: <b>Compare &amp; pull request</b>. Fill in the three sections. <b>Create pull request</b>.</span></div>
+        <div><span class="num">4</span><span class="tx"><b>Reviewer:</b> click the branch name, pick <code>origin/<i>branch</i></code>, run it and follow <i>How to test it</i>. Then <b>Files changed → Review changes → Approve</b>.</span></div>
+        <div><span class="num">5</span><span class="tx"><b>Author:</b> <b>Merge pull request → Confirm merge → Delete branch</b>. Switch back to <code>main</code> and Sync.</span></div>
+      </div>
     </div>
     <div class="stack" style="gap:14px">
-      <div class="named" style="margin:0"><div class="nm">Who reviews whom</div><div class="rl">The person on your left reviews your PR. GitHub won't let you approve your own.</div></div>
-      <div class="named" style="margin:0"><div class="nm">Why separate files</div><div class="rl">Everyone makes a different file, so nothing conflicts in this round. Round 2 is the conflict.</div></div>
+      <div><h3 class="small-h" style="margin-bottom:6px">One task each</h3>
+      <div class="rows tasks2">
+        <div><code>page-title</code><span><b>index.html</b> · give the instrument a name in the <code>&lt;h1&gt;</code></span></div>
+        <div><code>background-colour</code><span><b>style.css</b> · add <code>background: lightyellow;</code> to <code>body</code></span></div>
+        <div><code>fm-sound</code><span><b>instrument.js</b> · <code>Tone.Synth</code> → <code>Tone.FMSynth</code></span></div>
+        <div><code>play-key</code><span><b>script.js</b> · <code>exampleKey</code> from <code>"a"</code> to <code>"s"</code></span></div>
+      </div>
+      <p class="small muted" style="margin:6px 0 0">Different files, so nothing conflicts in this round.</p></div>
+      <div class="named" style="margin:0"><div class="nm">Who reviews whom</div><div class="rl">The person on your left. GitHub won't let you approve your own PR.</div></div>
     </div>
   </div>
-  <div class="foot"><p><b>Done when</b>everyone's sound is in <code>sounds/</code> on <code>main</code>, and everyone has reviewed one PR.</p><button class="btn ghost mark" data-done="round-1">Mark as done</button></div>
-  <aside class="nt">About 20 minutes. Everyone authors one PR and reviews one. The "run it" here is opening the file (Ctrl+Shift+V / Cmd+Shift+V shows the Markdown preview): there's no code to run yet, but the habit is the same, which is to check out the branch on your own laptop rather than only reading the diff on github.com. Snags: the reviewer can't find the branch (Sync Changes or ··· → Fetch first); "Publish Branch" missed, so github.com shows no banner; someone committed straight to main (see T: Undo Last Commit); the folder: in the New File box, type sounds/rain.md and VS Code makes the folder.</aside>
+  <div class="foot"><p><b>Done when</b><code>main</code> has every change and still plays, and everyone has reviewed one PR.</p><button class="btn ghost mark" data-done="round-1">Mark as done</button></div>
+  <aside class="nt">About 20 minutes. Everyone authors one PR and reviews one; with three in a group, skip a row. Every task changes something you can see or hear, so the reviewer has something to run: the title, the colour, the sound (FMSynth sounds brighter and buzzier), the key (S plays the note, A doesn't any more; the hint on the page still says A, which a good reviewer mentions). Snags: the reviewer can't find the branch (Sync Changes or ··· → Fetch first); the reviewer has uncommitted work and can't switch branch (commit it first: README, "Reviewing a pull request" step 1); "Publish Branch" missed, so github.com shows no banner; someone committed straight to main (see T: Undo Last Commit). After all four merge, everyone pulls main and checks that all four changes are there together.</aside>
 </section>
 
 <section class="slide" id="round-2" data-sec="Hands-on in practice groups" data-ex="Round 2: a conflict on purpose">
@@ -409,20 +448,20 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
   <h2 class="h1 sm">Round 2: a conflict on purpose</h2>
   <div class="cols wide-l ex">
     <div class="rows lab steps tight">
-      <div><span class="num">1</span><span class="tx"><b>In pairs:</b> both pull <code>main</code> and make a branch named after your idea for the title, e.g. <code>title-team-rain</code>.</span></div>
-      <div><span class="num">2</span><span class="tx"><b>Both</b> change <b>line 1 of <code>README.md</code></b> to a different title. Commit, publish, open a PR.</span></div>
+      <div><span class="num">1</span><span class="tx"><b>In pairs:</b> both pull <code>main</code>. One makes <code>higher-note</code>, the other <code>lower-note</code>.</span></div>
+      <div><span class="num">2</span><span class="tx"><b>Both</b> change <code>exampleNote</code> in <code>script.js</code>, e.g. to <code>"E4"</code> and <code>"A3"</code>. Commit, publish, open a PR.</span></div>
       <div><span class="num">3</span><span class="tx">Review and merge the <b>first</b> PR. The second now says <i>This branch has conflicts that must be resolved</i>.</span></div>
-      <div><span class="num">4</span><span class="tx"><b>Second author:</b> Command Palette → <b>Git: Fetch</b>, then <b>Git: Merge…</b> → <b>origin/main</b>. <code>README.md</code> shows under <b>Merge Changes</b>.</span></div>
-      <div><span class="num">5</span><span class="tx">Choose: <b>Accept Current</b>, <b>Incoming</b>, <b>Both</b>, or edit by hand. No markers left. Save, <b>+</b> to stage, <b>Commit</b>, <b>Sync Changes</b>.</span></div>
-      <div><span class="num">6</span><span class="tx">The PR updates by itself. Review it, run it, merge it.</span></div>
+      <div><span class="num">4</span><span class="tx"><b>Second author:</b> switch to <code>main</code> and Sync. Switch back, then Command Palette → <b>Git: Merge Branch…</b> → <code>main</code>.</span></div>
+      <div><span class="num">5</span><span class="tx"><code>script.js</code> is under <b>Merge Changes</b>. Choose <b>Accept Current</b> or <b>Incoming</b>, or edit by hand. No markers left. Save, <b>+</b> to stage, <b>Commit</b>.</span></div>
+      <div><span class="num">6</span><span class="tx"><b>Run it</b>, then <b>Sync Changes</b>. The PR updates by itself. Review it, merge it.</span></div>
     </div>
     <div class="stack" style="gap:14px">
       <div class="named" style="margin:0"><div class="nm">Three in your group?</div><div class="rl">Two of you make the conflict. The third reviews both PRs, then swaps in for the next go.</div></div>
       <div class="named" style="margin:0"><div class="nm">Then swap</div><div class="rl">Do it again with the other person merging first, so you both resolve a conflict.</div></div>
     </div>
   </div>
-  <div class="foot"><p><b>Done when</b><code>main</code> has one title, no <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> in it, and you've each resolved a conflict.</p><button class="btn ghost mark" data-done="round-2">Mark as done</button></div>
-  <aside class="nt">About 20 minutes. Make sure both branches start from the same main (step 1 at the same time), or the second person may already have the first title and get no conflict. If someone's conflict doesn't happen, ask: did you pull main after the first PR merged? Then they've seen what step 4 of the workflow is for. Snags: the conflict resolved in github.com's web editor instead (fine, but do the next one in VS Code); markers left in the file and committed (search for &lt;&lt;&lt;&lt;&lt;&lt;&lt;); merging main instead of origin/main (the local main is out of date, so there's no conflict: pick origin/main); in older VS Code the command is called Git: Merge Branch…; Commit greyed out until the file is staged with +.</aside>
+  <div class="foot"><p><b>Done when</b><code>main</code> plays one note, has no <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> in it, and you've each resolved a conflict.</p><button class="btn ghost mark" data-done="round-2">Mark as done</button></div>
+  <aside class="nt">About 20 minutes. Make sure both branches start from the same main (step 1 at the same time), or the second person may already have the first note and get no conflict. If someone's conflict doesn't happen, ask: did you pull main after the first PR merged? Then they've seen what step 4 of the workflow is for. Step 4 is word for word the template README. Snags: "Accept Both" gives two const exampleNote lines and the page stops with SyntaxError: Identifier 'exampleNote' has already been declared (good: that's why step 6 says run it); the conflict resolved in github.com's web editor instead (fine, but do the next one in VS Code); markers left in the file and committed (search for &lt;&lt;&lt;&lt;&lt;&lt;&lt;); Commit greyed out until the file is staged with +; forgetting to Sync main before merging it in, so there's no conflict yet. Don't use Git: Pull from… for step 4: on a branch that has moved on, Git refuses with "Need to specify how to reconcile divergent branches".</aside>
 </section>
 
 <section class="slide" id="stretch" data-sec="Hands-on in practice groups" data-ex="Stretch: ask for changes">
@@ -431,18 +470,18 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
   <h2 class="h1 sm">Stretch: ask for changes</h2>
   <div class="cols wide-l ex">
     <div class="rows lab steps">
-      <div><span class="num">1</span><span class="tx"><b>Author:</b> open a PR with a small mistake in it on purpose, like a typo in your sound file.</span></div>
+      <div><span class="num">1</span><span class="tx"><b>Author:</b> open a PR with a small mistake in it on purpose, like a typo in the page title.</span></div>
       <div><span class="num">2</span><span class="tx"><b>Reviewer:</b> in <b>Files changed</b>, click the <b>+</b> next to the line and write a comment. Then <b>Review changes → Request changes</b>.</span></div>
       <div><span class="num">3</span><span class="tx"><b>Author:</b> fix it on the same branch in VS Code. Commit and <b>Sync Changes</b>.</span></div>
       <div><span class="num">4</span><span class="tx"><b>Reviewer:</b> look again, run it, approve. The author merges.</span></div>
     </div>
     <div class="stack" style="gap:14px">
       <div class="named" style="margin:0"><div class="nm">No new PR</div><div class="rl">A pull request follows its branch. Push more commits to the branch and the PR updates.</div></div>
-      <div class="named" style="margin:0"><div class="nm">Be kind, be specific</div><div class="rl">"Line 1 says <i>rian</i>, I think you meant <i>rain</i>" helps. "This is wrong" doesn't.</div></div>
+      <div class="named" style="margin:0"><div class="nm">Be kind, be specific</div><div class="rl">"The title says <i>Instrumnet</i>, I think you meant <i>Instrument</i>" helps. "This is wrong" doesn't.</div></div>
     </div>
   </div>
   <div class="foot"><p><b>Done when</b>a PR has gone from <i>Changes requested</i> to <i>Approved</i> to merged.</p><button class="btn ghost mark" data-done="stretch">Mark as done</button></div>
-  <aside class="nt">For groups that finish both rounds. The new idea: a PR isn't a one-shot thing; it follows the branch, so the conversation and the fixes stay in one place. Students often close the PR and open a new one: stop them. Model the tone of a review comment; in A1 they review each other's work for a week, so this matters.</aside>
+  <aside class="nt">For groups that finish both rounds. The new idea: a PR isn't a one-shot thing; it follows the branch, so the conversation and the fixes stay in one place. Students often close the PR and open a new one: stop them. Model the tone of a review comment; in A1 they review each other's work for a week, so this matters. The template's PR form ends with the same rule: "Looks fine" is not a review.</aside>
 </section>
 
 <section class="slide" id="snags" data-sec="Hands-on in practice groups">
@@ -485,7 +524,7 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
     <div class="stack">
       <p class="lede" style="margin:0"><b>A1 Project Kickoff:</b> the project is introduced and you're put into <b>random groups</b>.</p>
       <p class="lede" style="margin:0">Each group gets its own repo in the course organisation. You clone it and use <b>exactly this workflow</b> for the whole of A1.</p>
-      <p class="lede" style="margin:0">The practice repo is deleted after this week. Nothing in it needs saving.</p>
+      <p class="lede" style="margin:0">Nothing in the practice repo needs saving. Your A1 repo starts from the same template.</p>
     </div>
     <div class="rows lab" style="border-top:1px solid var(--ink-900)">
       <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://mau.instructure.com/courses/22858/pages/a1-project-kickoff" target="_blank" rel="noopener">Canvas: A1 Project Kickoff</a></span></div>
@@ -493,7 +532,7 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
       <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://code.visualstudio.com/docs/sourcecontrol/overview" target="_blank" rel="noopener">VS Code: Source control</a></span></div>
     </div>
   </div>
-  <aside class="nt">The kickoff starts at 13:15. Groups are assigned at random, so tell students not to arrange groups among themselves over lunch. The group repos are made once groups are known, so nobody has one before the afternoon. The group repo's README has the seven workflow steps and a short "what to do when you get a conflict" section.</aside>
+  <aside class="nt">The kickoff starts at 13:15. Groups are assigned at random, so tell students not to arrange groups among themselves over lunch. The group repos are made once groups are known, so nobody has one before the afternoon. The group repo is made from the same A1 template as this morning's practice repo, so its README has the same seven workflow steps, the review checklist and "When you get a conflict". Unlike the practice repos, the A1 group repos require an approval before anything merges into main.</aside>
 </section>
 
 </div>
@@ -508,10 +547,11 @@ textarea.code-ed.mx{font-size:15px;line-height:1.55;height:206px}
     <div><b>"Can't approve your own pull request"</b>Right: a groupmate has to review it.</div>
     <div><b>Committed to main by mistake</b>Not pushed yet: <b>···</b> → <b>Commit → Undo Last Commit</b>. Your changes stay; make a branch and commit again.</div>
     <div><b>Can't switch branch: "commit your changes or stash them"</b>You have unsaved work on this branch. Commit it first, or discard it if you don't need it.</div>
-    <div><b>"Need to specify how to reconcile divergent branches"</b>You used Pull to bring <code>main</code> into your branch. Use <b>Git: Fetch</b>, then <b>Git: Merge…</b> → <b>origin/main</b> instead.</div>
+    <div><b>"Need to specify how to reconcile divergent branches"</b>You used Pull to bring <code>main</code> into your branch. Instead: switch to <code>main</code> and Sync, switch back, then <b>Git: Merge Branch…</b> → <code>main</code>.</div>
+    <div><b>"Identifier has already been declared"</b>You chose <b>Accept Both</b> on a line that declares a variable. Keep one of the two lines.</div>
     <div><b>Markers in the file after a merge</b>Delete every <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code> and <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> line, keep the text you want, save, commit.</div>
     <div><b>Commit button greyed out after a conflict</b>Stage the resolved file first: the <b>+</b> next to it under Merge Changes.</div>
-    <div><b>404 or "permission denied"</b>You're not in the repo's team yet, or VS Code is signed in to another GitHub account (Accounts icon, bottom left). Ask a TA.</div>
+    <div><b>404 or "permission denied"</b>You haven't accepted the invitation yet: open the repo's link and click <b>Accept invitation</b>. Or VS Code is signed in to another GitHub account (Accounts icon, bottom left).</div>
     <div><b>The wrong repo is open</b>Check the Explorer title. <b>File → Open Folder</b> and pick the practice repo, not the exercises fork.</div>
   </div>
 </div>
@@ -545,9 +585,9 @@ function reveal(box,all,Q){
 /* ---------- Two people, one line ---------- */
 (function(){
   var answered=false;
-  [["Ben's title wins. Ana's change is lost.",false,"Git never throws away a commit without telling you. Look again: which option has Git leave the choice to a person?"],
-   ["Ana's title wins, because she pushed first.",false,"Pushing first doesn't make a change more right. Git can't know which title the group wants."],
-   ["Git keeps both titles, one after the other.",false,"That would give the README two titles, and Git can't know if that's what you want. Who should decide?"],
+  [["Ben's note wins. Ana's change is lost.",false,"Git never throws away a commit without telling you. Look again: which option has Git leave the choice to a person?"],
+   ["Ana's note wins, because she pushed first.",false,"Pushing first doesn't make a change more right. Git can't know which note the group wants."],
+   ["Git keeps both lines, one after the other.",false,"That would declare exampleNote twice, and the program wouldn't run. Git can't know what you want. Who should decide?"],
    ["Git stops and asks Ben to choose.",true,"Right. That's a <b>merge conflict</b>. Git combines changes to different lines by itself. When two changes touch the same line, it stops and a person decides."]
   ].forEach(function(o){
     var b=document.createElement("button");b.className="opt";b.textContent=o[0];
@@ -589,20 +629,20 @@ var YA=55,YM=140,YB=225;
 graph("g1",[
   {t:"line",d:"M70 "+YM+" H1050",s:0},
   {t:"text",x:70,y:YM+40,a:"start",txt:"main",c:"lane"},
-  {t:"line",d:curve(110,YM,250,YA),c:"a",s:1},{t:"text",x:250,y:YA-24,txt:"score-display",c:"lane a"},
-  {t:"line",d:curve(110,YM,250,YB),c:"b",s:1},{t:"text",x:250,y:YB+38,txt:"mouse-input",c:"lane b"},
-  {t:"line",d:"M250 "+YA+" H400",c:"a",s:2},{t:"dot",x:400,y:YA,c:"a",s:2},{t:"text",x:400,y:YA-24,txt:"add score",s:2},
+  {t:"line",d:curve(110,YM,250,YA),c:"a",s:1},{t:"text",x:250,y:YA-24,txt:"drone",c:"lane a"},
+  {t:"line",d:curve(110,YM,250,YB),c:"b",s:1},{t:"text",x:250,y:YB+38,txt:"octave-keys",c:"lane b"},
+  {t:"line",d:"M250 "+YA+" H400",c:"a",s:2},{t:"dot",x:400,y:YA,c:"a",s:2},{t:"text",x:400,y:YA-24,txt:"add drone",s:2},
   {t:"line",d:curve(400,YA,560,YM),c:"a",s:3},{t:"dot",x:560,y:YM,s:3},{t:"text",x:560,y:YM+40,txt:"merge",s:3},
-  {t:"line",d:"M250 "+YB+" H700",c:"b",s:4},{t:"dot",x:700,y:YB,c:"b",s:4},{t:"text",x:700,y:YB+38,txt:"add mouse",s:4},
+  {t:"line",d:"M250 "+YB+" H700",c:"b",s:4},{t:"dot",x:700,y:YB,c:"b",s:4},{t:"text",x:700,y:YB+38,txt:"add octave keys",s:4},
   {t:"line",d:curve(700,YB,860,YM),c:"b",s:5},{t:"dot",x:860,y:YM,s:5},{t:"text",x:860,y:YM+40,txt:"merge",s:5},
   {t:"dot",x:110,y:YM,s:0},{t:"text",x:110,y:YM-26,txt:"start",s:0},
   {t:"text",x:1050,y:YM-26,a:"end",txt:"main always runs ✓",s:6}
 ],[
   "<code>main</code> is the version everyone shares. Right now it runs.",
   "Two people start two features. Each makes a branch from <code>main</code>, named after the feature.",
-  "One commits on <code>score-display</code>. <code>main</code> doesn't change: nobody else sees it yet.",
-  "Pull request, reviewed by running it, approved, merged. <code>main</code> now has the score.",
-  "The other commits on <code>mouse-input</code>, in a different file.",
+  "One commits on <code>drone</code>. <code>main</code> doesn't change: nobody else sees it yet.",
+  "Pull request, reviewed by running it, approved, merged. <code>main</code> now has the drone.",
+  "The other commits on <code>octave-keys</code>, in a different file.",
   "Their pull request merges too. Different files, so Git combines them by itself.",
   "Every merge went through a pull request, so <code>main</code> still runs."
 ]);
@@ -610,10 +650,10 @@ graph("g1",[
 graph("g2",[
   {t:"line",d:"M70 "+YM+" H1050",s:0},
   {t:"text",x:70,y:YM+40,a:"start",txt:"main",c:"lane"},
-  {t:"line",d:curve(110,YM,250,YA),c:"a",s:1},{t:"text",x:250,y:YA-24,txt:"title-team-rain",c:"lane a"},
-  {t:"line",d:curve(110,YM,250,YB),c:"b",s:1},{t:"text",x:250,y:YB+38,txt:"title-sounds",c:"lane b"},
-  {t:"line",d:"M250 "+YA+" H360",c:"a",s:2},{t:"dot",x:360,y:YA,c:"a",s:2},{t:"text",x:360,y:YA-24,txt:"edit line 1",s:2},
-  {t:"line",d:"M250 "+YB+" H400",c:"b",s:2},{t:"dot",x:400,y:YB,c:"b",s:2},{t:"text",x:400,y:YB+38,txt:"also edit line 1",s:2},
+  {t:"line",d:curve(110,YM,250,YA),c:"a",s:1},{t:"text",x:250,y:YA-24,txt:"higher-note",c:"lane a"},
+  {t:"line",d:curve(110,YM,250,YB),c:"b",s:1},{t:"text",x:250,y:YB+38,txt:"lower-note",c:"lane b"},
+  {t:"line",d:"M250 "+YA+" H360",c:"a",s:2},{t:"dot",x:360,y:YA,c:"a",s:2},{t:"text",x:360,y:YA-24,txt:"change the note",s:2},
+  {t:"line",d:"M250 "+YB+" H400",c:"b",s:2},{t:"dot",x:400,y:YB,c:"b",s:2},{t:"text",x:400,y:YB+38,txt:"also change it",s:2},
   {t:"line",d:curve(360,YA,520,YM),c:"a",s:3},{t:"dot",x:520,y:YM,s:3},{t:"text",x:520,y:YM-26,txt:"merge",s:3},
   {t:"line",d:curve(400,YB,700,YM),c:"b dash",s:4,u:4},{t:"dot",x:700,y:YM,c:"bad",s:4,u:4},{t:"text",x:700,y:YM-26,txt:"conflict",c:"bad",s:4,u:4},
   {t:"line",d:"M400 "+YB+" H680",c:"b",s:5},{t:"line",d:curve(520,YM,680,YB),c:"",s:5},{t:"dot",x:680,y:YB,c:"b",s:5},{t:"text",x:680,y:YB+38,txt:"pull main, choose",s:5},
@@ -621,37 +661,38 @@ graph("g2",[
   {t:"dot",x:110,y:YM,s:0},{t:"text",x:110,y:YM-26,txt:"start",s:0},
   {t:"text",x:1050,y:YM+40,a:"end",txt:"main always runs ✓",s:6}
 ],[
-  "<code>main</code>: line 1 of <code>README.md</code> says <code># Practice repo</code>.",
+  "<code>main</code>: in <code>script.js</code>, <code>exampleNote</code> is <code>\"C4\"</code>.",
   "Two people make a branch each, from the same commit on <code>main</code>.",
-  "Both change line 1 of <code>README.md</code>, to two different titles.",
-  "The first pull request is reviewed and merged. <code>main</code> has the new title.",
-  "The second can't merge: <code>main</code>'s line 1 changed after this branch started. GitHub says <i>This branch has conflicts that must be resolved.</i>",
-  "On their own branch, the second author pulls <code>main</code> in, chooses what line 1 says, commits and pushes.",
-  "Now it merges cleanly. <code>main</code> has one title, and still runs."
+  "Both change the <code>exampleNote</code> line, to two different notes.",
+  "The first pull request is reviewed and merged. <code>main</code> has the new note.",
+  "The second can't merge: that line on <code>main</code> changed after this branch started. GitHub says <i>This branch has conflicts that must be resolved.</i>",
+  "On their own branch, the second author merges <code>main</code> in, chooses which note to keep, commits and pushes.",
+  "Now it merges cleanly. <code>main</code> has one note, and still runs."
 ]);
 
 /* ---------- Pick a change, lose the markers ---------- */
 (function(){
-  var CUR="# Sounds we like",INC="# Team Rain",REST=["","Our group practises branches here."];
-  var conflicted=["<<<<<<< HEAD","# Sounds we like","=======","# Team Rain",">>>>>>> origin/main"].concat(REST).join("\n");
+  var CUR='const exampleNote = "A3";',INC='const exampleNote = "E4";';
+  var PRE=['const exampleKey = "a";'],REST=["","// Setup is run once, at the start."];
+  var conflicted=PRE.concat(["<<<<<<< HEAD",CUR,"=======",INC,">>>>>>> main"]).concat(REST).join("\n");
   var f=$("#mx-file");
-  f.innerHTML='<span class="lens">Accept Current Change | Accept Incoming Change | Accept Both Changes</span>'+
-    '<span class="mk">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD (Current Change)</span><span class="cur">'+esc(CUR)+'</span><span class="mk">=======</span><span class="inc">'+esc(INC)+'</span><span class="mk">&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/main (Incoming Change)</span>'+
+  f.innerHTML=PRE.map(function(l){return "<span>"+esc(l)+"</span>"}).join("")+'<span class="lens">Accept Current Change | Accept Incoming Change | Accept Both Changes</span>'+
+    '<span class="mk">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD (Current Change)</span><span class="cur">'+esc(CUR)+'</span><span class="mk">=======</span><span class="inc">'+esc(INC)+'</span><span class="mk">&gt;&gt;&gt;&gt;&gt;&gt;&gt; main (Incoming Change)</span>'+
     REST.map(function(l){return "<span>"+(esc(l)||" ")+"</span>"}).join("");
   var out=$("#mx-out"),ed=$("#mx-ed");
   show(["Choose one of the buttons."]);
   function show(lines){ed.hidden=true;$("#mx-checkrow").hidden=true;out.hidden=false;out.innerHTML=lines.map(function(l){return "<span>"+(esc(l)||" ")+"</span>"}).join("")}
   var MSG={
-    cur:["pass","Resolved. Your title stays and the incoming one is gone. Fine, if your group agrees. Next: save, <b>+</b> to stage, commit, Sync Changes."],
-    inc:["pass","Resolved. You took <code>main</code>'s title and dropped your own. Next: save, <b>+</b> to stage, commit, Sync Changes."],
-    both:["warn","No markers left, so Git is happy. But the README now has two titles. Git only checks the markers; whether the file makes sense is up to you."]
+    cur:["pass","Resolved. Your note (A3) stays and <code>main</code>'s is gone. Fine, if your group agrees. Next: save, <b>+</b> to stage, commit, run it, Sync Changes."],
+    inc:["pass","Resolved. You took <code>main</code>'s note (E4) and dropped your own. Next: save, <b>+</b> to stage, commit, run it, Sync Changes."],
+    both:["err","No markers left, so Git is happy. But <code>exampleNote</code> is now declared twice, and the page stops: <code>SyntaxError: Identifier 'exampleNote' has already been declared</code>. Git only checks the markers. Whether the code runs is up to you, so run it."]
   };
   $$("#mx-btns .btn").forEach(function(b){b.addEventListener("click",function(){
     $$("#mx-btns .btn").forEach(function(x){x.classList.toggle("sel",x===b)});
     var c=b.dataset.c;
-    if(c==="cur")show([CUR].concat(REST));
-    else if(c==="inc")show([INC].concat(REST));
-    else if(c==="both")show([CUR,INC].concat(REST));
+    if(c==="cur")show(PRE.concat([CUR],REST));
+    else if(c==="inc")show(PRE.concat([INC],REST));
+    else if(c==="both")show(PRE.concat([CUR,INC],REST));
     else{out.hidden=true;ed.hidden=false;$("#mx-checkrow").hidden=false;if(!ed.value)ed.value=conflicted;ed.focus();fb($("#mx-fb"),"note","Change the file so it says what your group wants, and delete the marker lines. Then <b>Check it</b>.");return}
     fb($("#mx-fb"),MSG[c][0],MSG[c][1]);
   })});
@@ -659,6 +700,7 @@ graph("g2",[
     var v=ed.value,left=v.split("\n").filter(function(l){return /^(<{7}|={7}|>{7})/.test(l)});
     if(left.length)fb($("#mx-fb"),"err","Markers still in the file: <code>"+esc(left[0])+"</code>"+(left.length>1?" and "+(left.length-1)+" more":"")+". Git would commit them as ordinary text, and code with markers in it won't run.");
     else if(!v.trim())fb($("#mx-fb"),"warn","No markers, but the file is empty now. Was that on purpose?");
+    else if((v.match(/^\s*(const|let|var)\s+exampleNote\b/gm)||[]).length>1)fb($("#mx-fb"),"err","No markers left, but <code>exampleNote</code> is declared twice. The page would stop with <code>SyntaxError: Identifier 'exampleNote' has already been declared</code>. Keep one.");
     else fb($("#mx-fb"),"pass","No markers left. This is how you resolve a conflict when the right answer is a mix of both sides. Next: save, <b>+</b> to stage, commit, Sync Changes.");
   });
 })();
@@ -675,8 +717,8 @@ graph("g2",[
   $("#rv-chg").addEventListener("click",function(){pick("chg")});
   $("#rv-run").addEventListener("click",function(){
     $("#rv-conp").hidden=false;
-    conLines($("#rv-con"),[{c:"in",t:"open index.html, press Start"},{c:"bad",t:"Uncaught ReferenceError: playIntro is not defined"},{c:"dim",t:"    at start (main.js:12)"}]);
-    fb($("#rv-fb"),choice==="ok"?"err":"pass",(choice==="ok"?"Approving would have broken <code>main</code>. ":"Good instinct. ")+"<code>main.js</code> still calls <code>playIntro()</code>. It wasn't changed, so it isn't in the diff. Only running it shows the problem. Request changes: <i>main.js line 12 still calls playIntro</i>.");
+    conLines($("#rv-con"),[{c:"in",t:"click the page, hold down A"},{c:"bad",t:"Uncaught (in promise) ReferenceError: startNote is not defined"},{c:"dim",t:"    at keyDown (keyboard.js:14)"}]);
+    fb($("#rv-fb"),choice==="ok"?"err":"pass",(choice==="ok"?"Approving would have broken <code>main</code>. ":"Good instinct. ")+"<code>keyboard.js</code> still calls <code>startNote()</code>. It wasn't changed, so it isn't in the diff, and holding A now plays nothing. Only running it shows the problem. Request changes: <i>keyboard.js line 14 still calls startNote</i>.");
   });
 })();
 
@@ -716,9 +758,9 @@ graph("g2",[
 
 /* ---------- Name the feature, not the person ---------- */
 (function(){
-  var Q=[["score-display",0,"Says exactly what the branch adds."],["anna",1,"A person, not a feature. Anna will make several branches."],
-         ["mouse-input",0,"A feature, in lowercase words with dashes."],["my-stuff",1,"What would the reviewer test? Name the feature."],
-         ["fix-start-button",0,"A fix is a feature too. Clear what to test."],["ben-friday",1,"Who and when, but not what."]];
+  var Q=[["drone",0,"Says exactly what the branch adds."],["anna",1,"A person, not a feature. Anna will make several branches."],
+         ["octave-keys",0,"A feature, in lowercase words with dashes."],["my-stuff",1,"What would the reviewer test? Name the feature."],
+         ["echo-effect",0,"Clear what to listen for when you test it."],["ben-friday",1,"Who and when, but not what."]];
   var done=0,box=$("#nm-quiz");
   Q.forEach(function(q){
     var row=document.createElement("div"),answered=false;
@@ -740,7 +782,7 @@ graph("g2",[
 reveal($("#ww"),$("#ww-all"),[
   ["The reviewer couldn't find the branch","Fetch (or Sync Changes) first. Branches on GitHub only show in VS Code after a fetch."],
   ["I committed to main","Not pushed: <b>Undo Last Commit</b>, make a branch, commit again. Check the bottom left before every commit."],
-  ["My conflict didn't happen","Your branch already had the first title: you pulled <code>main</code> after the first merge. That's step 4 doing its job."],
+  ["My conflict didn't happen","Your branch already had the first note: you pulled <code>main</code> after the first merge. That's step 4 doing its job."],
   ["Markers ended up in the file","Git only checks that you staged the file. Search for <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> before you commit."],
   ["Push rejected","Someone pushed first. <b>Sync Changes</b> pulls their commits, then pushes yours."],
   ["I approved without running it","Check out the branch and run it. The diff only shows what changed."]
