@@ -582,6 +582,10 @@
     .tl .nb{position:absolute;top:5px;height:20px;background:var(--cyan-400);border:2px solid var(--ink-900);border-radius:2px;transition:left .35s var(--ease)}
     .tl .nb.on{background:var(--spot-400)}
     #ladder-count .rung pre.code{line-height:1.32;padding:6px 14px}
+    .ruleol{counter-reset:r}
+    .ruleol li{padding:7px 8px 7px 36px;border-radius:2px;transition:background .16s;counter-increment:r;position:relative}
+    .ruleol li::before{content:counter(r);position:absolute;left:10px;font-family:var(--font-mono);font-weight:700;color:var(--curtain-600)}
+    .ruleol li.on{background:var(--spot-200);box-shadow:inset 3px 0 0 var(--spot-400)}
     .tl .tli{position:relative}
     .tl .tk{position:absolute;bottom:-20px;font-family:var(--font-mono);font-size:12px;color:var(--ink-500);transform:translateX(-50%)}
     .tl .ph{position:absolute;top:0;bottom:0;width:3px;background:var(--curtain-600);visibility:hidden}
@@ -1126,6 +1130,45 @@
           a computer could write that number for us, one line would do. That's the loop.</aside>
       </section>
 
+      <!-- 21b ACT OUT AN ITERATOR -->
+      <section class="slide" id="walk-melody" data-sec="Walking the line" data-demo="Walk the melody">
+        <span class="turn try">Try it</span>
+        <div class="billing">Walking the line</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Act it out: walk the melody</h2>
+        <div class="cols wide-l" style="gap:30px">
+          <div class="stack" style="gap:12px">
+            <div class="line" id="wm-line"></div>
+            <div class="rows lab">
+              <div style="padding:8px 0"><span class="num">01</span><span class="tx" style="font-size:19px"><b>The line.</b> Our array from before the break: each of you holds a note, standing on 0, 1, 2…</span></div>
+              <div style="padding:8px 0"><span class="num">02</span><span class="tx" style="font-size:19px"><b>The Counter</b> remembers one number: the position it's at. It doesn't know any notes.</span></div>
+              <div style="padding:8px 0"><span class="num">03</span><span class="tx" style="font-size:19px"><b>The Caller</b> reads the rule aloud, one step at a time.</span></div>
+            </div>
+          </div>
+          <div class="stack" style="gap:12px">
+            <div class="panel"><div class="bar p"><span>the rule</span><span>in plain words</span></div>
+              <ol class="plain ruleol" id="wm-rule">
+                <li>Start at position 0.</li>
+                <li>Is anyone standing here? If not, stop.</li>
+                <li>The person here plays their note.</li>
+                <li>Step one place on, and go back to 2.</li>
+              </ol>
+            </div>
+            <div class="row"><button class="btn" id="wm-next">Next step</button><button class="btn ghost" id="wm-reset">Start again</button></div>
+            <p class="dir" id="wm-say" style="font-size:19px;min-height:56px">Nobody writes a line per note. One rule, repeated.</p>
+          </div>
+        </div>
+        <aside class="nt">11:20, about five minutes, before the Off By One rounds. Get the array out again: the same
+          volunteers (or the same floor marks) from the Part 1 line, each holding their note card. Two new roles. The
+          Counter is the iterator: they remember one number and stand behind (or point at) that position. The Caller
+          reads the rule aloud. Walk it slowly: "Start at 0." "Is anyone standing at 0?" "Yes." "Play your note." (they
+          sing it, or the class plays it on a laptop) "Step one on." … until the Counter reaches the empty mark: "Is
+          anyone standing at 5?" "No." "Stop." Then compare with the previous slide: fifty notes would mean fifty lines by
+          hand, but the rule stays four lines long whatever the length of the line. Ask: what does the Counter need to
+          know? (Only where it is, and where the line ends.) Use Next step on the slide to follow along: it highlights the
+          rule line being read and plays the note.</aside>
+      </section>
+
       <!-- 22 OFF BY ONE ACTIVITY -->
       <section class="slide" id="off-by-one" data-sec="Walking the line">
         <div class="billing">Walking the line</div>
@@ -1141,21 +1184,21 @@
             <div class="panel"><div class="bar"><span>the rule</span></div><pre class="code" id="ob-code" style="font-size:18px"></pre></div>
             <div class="panel"><div class="bar p"><span>four rounds</span></div>
               <ol class="plain">
-                <li>Build the line. Everyone says their position and value.</li>
-                <li>Walk it with <code>i &lt; length</code>.</li>
+                <li>Swap the notes for value cards. Walk it with <code>i &lt; length</code>.</li>
                 <li>Walk it with <code>i &lt;= length</code>. Where does the Counter end up?</li>
+                <li>Start at <code>i = 1</code>. Who gets missed?</li>
                 <li>Step by two. Or walk it backwards.</li>
               </ol>
             </div>
           </div>
         </div>
-        <aside class="nt">11:20–11:30. The Off By One activity. Reuse the line of people from Part 1 if you can, so it's
-          visibly the same array, now with value cards (numbers). Floor marks 0, 1, 2… Two rotating roles: the Counter
-          and the Caller. Round 1: build the array; each person announces their position and value; confirm the first
-          person is 0, not 1. Round 2: read the rule aloud: the Counter starts at 0, checks "is i less than the length?",
-          the Caller calls the operation and the line does it, then the Counter steps on. Round 3: break it with
+        <aside class="nt">11:25–11:30. The Off By One activity, straight after walking the melody: the same line, the
+          same Counter and Caller, and now the rule written the way code writes it. Swap the note cards for value cards
+          (numbers). Floor marks 0, 1, 2… Two rotating roles: the Counter
+          and the Caller. Round 1: confirm the first person is 0, not 1, then read the rule aloud: the Counter starts at 0, checks "is i less than the length?",
+          the Caller calls the operation and the line does it, then the Counter steps on. Round 2: break it with
           i &lt;= length: the Counter walks off the end into empty space, "position 6: nobody here! undefined!". Fix it
-          back. Round 4: step by two, or walk backwards, to show the Counter is only following a rule. Thirty-second
+          back. Round 3: start at 1: the first person never gets a turn. Round 4: step by two, or walk backwards, to show the Counter is only following a rule. Thirty-second
           debrief: why is the first person 0? What exactly broke with &lt;=? What is the Counter, in one sentence?</aside>
       </section>
 
@@ -1994,6 +2037,35 @@
         $("#bh-play").addEventListener("click", function () { for (var k = 0; k < n; k++) playAt(MEL[k], "8n", k * 0.4) });
         $("#bh-show").addEventListener("click", function () { $("#bh-word").hidden = false; this.hidden = true; render(true) });
         render();
+      })();
+
+      /* ---------- 21b walk the melody ---------- */
+      (function () {
+        var MEL = ["C4", "E4", "G4", "A4", "C5"], pos = 0, phase = 0, stopped = false;
+        var rule = $$("#wm-rule li");
+        function line(cls) {
+          var host = $("#wm-line"); host.innerHTML = "";
+          for (var k = 0; k <= MEL.length; k++) {
+            var c = document.createElement("div"), ghost = k === MEL.length;
+            c.className = "cell" + (ghost ? " ghost" : "") + (k === pos && phase > 0 ? " counter " + (cls || "hi") : "");
+            c.innerHTML = '<div class="v">' + (ghost ? "nobody" : MEL[k]) + '</div><div class="i">' + k + '</div>';
+            host.appendChild(c);
+          }
+        }
+        function show(r, say, cls) { rule.forEach(function (li, k) { li.classList.toggle("on", k === r) }); $("#wm-say").textContent = say; line(cls) }
+        function reset() { pos = 0; phase = 0; stopped = false; $("#wm-next").disabled = false; rule.forEach(function (li) { li.classList.remove("on") }); $("#wm-say").textContent = "Nobody writes a line per note. One rule, repeated."; line() }
+        $("#wm-next").addEventListener("click", function () {
+          if (stopped) return;
+          if (phase === 0) { phase = 1; show(0, "The Counter stands at position 0.") }
+          else if (phase === 1) {
+            if (pos >= MEL.length) { show(1, "Nobody is standing at position " + pos + ". Stop: the melody is done.", "bad"); stopped = true; this.disabled = true; return }
+            phase = 2; show(1, "Position " + pos + ": yes, someone is standing here.");
+          }
+          else if (phase === 2) { play(MEL[pos]); phase = 3; show(2, "Position " + pos + " plays " + MEL[pos] + ".") }
+          else { pos++; phase = 1; show(3, "The Counter steps on to position " + pos + ".") }
+        });
+        $("#wm-reset").addEventListener("click", reset);
+        reset();
       })();
 
       /* ---------- 22 off by one ---------- */
