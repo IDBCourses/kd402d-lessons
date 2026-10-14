@@ -431,6 +431,15 @@
       letter-spacing: -.02em
     }
 
+.wave{display:block;width:100%;height:120px;margin-top:12px;background:var(--paper-100);border:1px solid var(--paper-300);border-radius:2px}
+    .wave .mid{stroke:var(--paper-400);stroke-width:1}
+    .wave .w{fill:none;stroke:var(--ink-900);stroke-width:2.5;stroke-linejoin:round}
+    .wave .ph{stroke:var(--curtain-600);stroke-width:3}
+    .wkey{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:14px;color:var(--ink-500)}
+    .wkey span{padding:0 4px;border-radius:2px}
+    .wkey b{color:var(--ink-900);font-weight:500}
+    .wkey span.on{background:var(--spot-200);animation:flashlite .9s ease}
+
     .snd button.flash {
       animation: flashpk .6s ease
     }
@@ -903,6 +912,8 @@
               <div class="bar p"><span>one sound</span><span>click a part to change it</span></div>
               <div class="pbody">
                 <div class="snd" id="lb-snd"></div>
+                <svg class="wave" id="lb-wave" viewBox="0 0 520 120" role="img" aria-label="The sound, drawn as a wave"></svg>
+                <div class="wkey" id="lb-key"></div>
               </div>
             </div>
             <div class="row"><button class="btn" id="lb-play">Play the sound</button></div>
@@ -919,7 +930,7 @@
         </div>
         <aside class="nt">Beat 2. Narrow from many things in a line to one thing described by several facts. A single
           synth sound isn't a sequence: it's one thing with a note, a length, a loudness, a wave shape. Click the parts
-          to change them and play it. Ask: which is the first part of this sound? (There isn't one. Position means
+          to change them and play it. The drawing under them changes with each part: a higher note packs the wave tighter, a longer sound is wider, a louder one is taller, and the wave shape is the shape of the line (it's why each sounds different: square is buzzy, sine is pure). Ask: which is the first part of this sound? (There isn't one. Position means
           nothing here.) So instead of where it sits, we reach a part by what it's called. Only then reveal the word: an
           object, and the labels are its properties. Concept first, vocabulary second.</aside>
       </section>
@@ -1885,16 +1896,55 @@
           { k: "wave", label: "wave shape", vals: ["triangle", "square", "sine", "sawtooth"], show: function (v) { return v } }
         ], st = { note: 0, len: 0, vol: 0, wave: 0 };
         function cur() { var o = {}; PARTS.forEach(function (p) { o[p.k] = p.vals[st[p.k]] }); return o }
+        /* the drawing: each part changes one thing you can see */
+        var FREQ = { C3: 130.81, C4: 261.63, E4: 329.63, G4: 392 }, WID = { "16n": 0.22, "8n": 0.42, "2n": 0.96 },
+          AMP = { "-20": 0.3, "-8": 0.62, "0": 0.95 }, SEC = { "16n": 0.125, "8n": 0.25, "2n": 1 };
+        var KEY = [["note", "how tightly the wave is packed"], ["len", "how wide it is"], ["vol", "how tall it is"], ["wave", "its shape"]];
+        function shape(w, ph) {
+          var f = ph - Math.floor(ph);
+          if (w === "sine") return Math.sin(2 * Math.PI * f);
+          if (w === "square") return f < 0.5 ? 1 : -1;
+          if (w === "sawtooth") return 2 * f - 1;
+          return f < 0.25 ? 4 * f : f < 0.75 ? 2 - 4 * f : 4 * f - 4;
+        }
+        function draw(o, fk) {
+          var W = 520, H = 120, mid = H / 2, end = WID[o.len] * W, cyc = FREQ[o.note] / 261.63 * 18, amp = AMP[String(o.vol)] * (mid - 9), d = "", N = 900;
+          for (var i = 0; i <= N; i++) {
+            var x = i / N * W, y = mid;
+            if (x <= end) {
+              var env = Math.min(1, x / 6, (end - x) / (end * 0.25 + 1));
+              y = mid - shape(o.wave, x / W * cyc) * amp * Math.max(0, env);
+            }
+            d += (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1);
+          }
+          $("#lb-wave").innerHTML = '<line class="mid" x1="0" y1="' + mid + '" x2="' + W + '" y2="' + mid + '"/><path class="w" d="' + d + '"/><line class="ph" id="lb-ph" x1="0" y1="4" x2="0" y2="' + (H - 4) + '" visibility="hidden"/>';
+          $("#lb-key").innerHTML = KEY.map(function (k) { var p = PARTS.filter(function (x) { return x.k === k[0] })[0]; return '<span' + (fk === k[0] ? ' class="on"' : '') + '><b>' + p.label + '</b>: ' + k[1] + '</span>' }).join("");
+        }
+        var raf = null;
+        function sweep(o) {
+          var ph = $("#lb-ph"); if (!ph) return;
+          if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+          if (raf) cancelAnimationFrame(raf);
+          var end = WID[o.len] * 520, dur = SEC[o.len] * 1000, t0 = performance.now();
+          ph.setAttribute("visibility", "visible");
+          (function step(t) {
+            var k = Math.min(1, Math.max(0, (t - t0) / dur)), x = (k * end).toFixed(1);
+            ph.setAttribute("x1", x); ph.setAttribute("x2", x);
+            if (k < 1) raf = requestAnimationFrame(step); else { ph.setAttribute("visibility", "hidden"); raf = null }
+          })(t0);
+        }
+        function sound() { var o = cur(); playShaped(o); sweep(o) }
         function render(fk) {
           var box = $("#lb-snd"); box.innerHTML = "";
           PARTS.forEach(function (p) {
             var b = document.createElement("button"); b.innerHTML = '<b>' + p.label + '</b><span>' + esc(p.show(p.vals[st[p.k]])) + '</span>';
             if (fk === p.k) b.className = "flash";
-            b.addEventListener("click", function () { st[p.k] = (st[p.k] + 1) % p.vals.length; render(p.k); playShaped(cur()) });
+            b.addEventListener("click", function () { st[p.k] = (st[p.k] + 1) % p.vals.length; render(p.k); sound() });
             box.appendChild(b);
           });
+          draw(cur(), fk);
         }
-        $("#lb-play").addEventListener("click", function () { playShaped(cur()) });
+        $("#lb-play").addEventListener("click", sound);
         $("#lb-name").addEventListener("click", function () { $("#lb-word").hidden = false; this.hidden = true });
         render();
       })();
