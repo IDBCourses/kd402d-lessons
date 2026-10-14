@@ -779,7 +779,7 @@
           </div>
         </div>
         <aside class="nt">10:15. Quick recap of Tuesday through the instrument: a key goes down, the browser calls our
-          function, noteFor turns the key into a note, the synth plays it. Let someone play a s d f on the projector.
+          function, noteFor turns the key into a note, the synth plays it. Let someone play a s d on the projector. Point at the last line: the listener is what hands each key press to playKey.
           Then the question for today: so far every value we stored lived in its own variable or its own line of code.
           As soon as a program handles many related things, or one thing with many parts, that breaks down. Two minutes,
           no more.</aside>
@@ -810,7 +810,7 @@
         </div>
         <aside class="nt">Press Add a note a few times: every note needs a new name and a new line to play it. Ask the
           three questions. The third: to put a note at the start, you'd rename every one of them (note1 becomes note2…).
-          The point: the names hold the values, but nothing holds the melody. Don't fix it yet: the next slides find the
+          Each note also needs its own start time (now, now + 0.5, now + 1…): without the third argument every line starts at the same moment and you hear a chord. The point: the names hold the values, but nothing holds the melody. Don't fix it yet: the next slides find the
           fix in plain words first.</aside>
       </section>
 
@@ -1741,15 +1741,15 @@
 
       /* ---------- 04 recap ---------- */
       (function () {
-        var SRC = 'function noteFor(key) {\n  if (key === "a") {\n    return "C4";\n  } else if (key === "s") {\n    return "D4";\n  } else if (key === "d") {\n    return "E4";\n  } else if (key === "f") {\n    return "F4";\n  }\n  return "";\n}\n\nfunction playKey(event) {\n  const note = noteFor(event.key);\n  if (note !== "") {\n    synth.triggerAttackRelease(note, "8n");\n  }\n}';
+        var SRC = 'function noteFor(key) {\n  if (key === "a") {\n    return "C4";\n  } else if (key === "s") {\n    return "D4";\n  } else if (key === "d") {\n    return "E4";\n  }\n  return "";\n}\n\nfunction playKey(event) {\n  const note = noteFor(event.key);\n  if (note !== "") {\n    synth.triggerAttackRelease(note, "8n");\n  }\n}\n\nwindow.addEventListener("keydown", playKey);';
         code($("#rc-code"), SRC);
-        var map = { a: ["C4", [1, 2]], s: ["D4", [3, 4]], d: ["E4", [5, 6]], f: ["F4", [7, 8]] };
-        var P = pad($("#rc-pad"), "<b>Click here</b>, then press a, s, d, f.", LIVE);
+        var map = { a: ["C4", [1, 2]], s: ["D4", [3, 4]], d: ["E4", [5, 6]] };
+        var P = pad($("#rc-pad"), "<b>Click here</b>, then press a, s, d.", LIVE);
         capture($("#rc-pad"), function (e) {
           P.show(e.key); if (e.repeat) return;
           var m = map[e.key.toLowerCase()];
-          if (m) { play(m[0]); code($("#rc-code"), SRC, m[1].concat([14, 16])); flash($("#rc-code"), m[1]) }
-          else code($("#rc-code"), SRC, [10]);
+          if (m) { play(m[0]); code($("#rc-code"), SRC, m[1].concat([12, 14, 18])); flash($("#rc-code"), m[1]) }
+          else code($("#rc-code"), SRC, [8, 18]);
         });
       })();
 
@@ -1758,12 +1758,12 @@
         var POOL = ["C4", "E4", "G4", "E4", "C4", "D4", "E4", "C4"], n = 3;
         function src() {
           var a = [], b = [];
-          for (var i = 1; i <= n; i++) { a.push('let note' + i + ' = "' + POOL[i - 1] + '";'); b.push('synth.triggerAttackRelease(note' + i + ', "8n");') }
-          return a.join("\n") + "\n\n" + b.join("\n");
+          for (var i = 1; i <= n; i++) { a.push('let note' + i + ' = "' + POOL[i - 1] + '";'); b.push('synth.triggerAttackRelease(note' + i + ', "8n", now' + (i > 1 ? ' + ' + (i - 1) * 0.5 : '') + ');') }
+          return a.join("\n") + "\n\nlet now = Tone.now();\n" + b.join("\n");
         }
-        function render(fl) { code($("#oe-code"), src(), fl ? [n - 1, 2 * n] : null); if (fl) flash($("#oe-code"), [n - 1, 2 * n]); $("#oe-n").textContent = n; $("#oe-add").disabled = n >= POOL.length }
+        function render(fl) { code($("#oe-code"), src(), fl ? [n - 1, 2 * n + 1] : null); if (fl) flash($("#oe-code"), [n - 1, 2 * n + 1]); $("#oe-n").textContent = n; $("#oe-add").disabled = n >= POOL.length }
         $("#oe-add").addEventListener("click", function () { if (n < POOL.length) { n++; render(true) } });
-        $("#oe-play").addEventListener("click", function () { playSeq(POOL.slice(0, n)) });
+        $("#oe-play").addEventListener("click", function () { playSeq(POOL.slice(0, n), 500) });
         $("#oe-reset").addEventListener("click", function () { n = 3; render() });
         render();
       })();
