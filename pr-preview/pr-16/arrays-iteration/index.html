@@ -1364,8 +1364,8 @@
         <aside class="nt">Everyone, in VS Code (the slide editor is the fallback and the projector view). A key press
           calls playMelody, which walks the melody once. Task 1: melody.push("C5") under the list, and the loop doesn't
           change: it asks the array its own length every time, so it doesn't care how long it is. Task 2: 0.4 becomes
-          0.2. Task 3: a fifth pass with melody[5] (or [4]) undefined: no error, no note. Common mistakes: commas instead
-          of semicolons in the for line; melody[i] with round brackets; forgetting now, so everything starts at once.</aside>
+          0.2. The start time is new here: "+" + i * 0.4 joins "+" and a number into a string like "+0.8", which Tone reads as "0.8 seconds from now". It does the same job as now + i * 0.4 on the earlier slides, without Tone.now(). Task 3: a fifth pass with melody[5] (or [4]) undefined: no error, no note. Common mistakes: commas instead
+          of semicolons in the for line; melody[i] with round brackets; forgetting the + (a plain i * 0.4 is a time on Tone's own clock, which has been running since the page started, so those moments are already past and nothing plays); forgetting the start time altogether, so everything starts at once.</aside>
       </section>
 
       <!-- 30 LADDER: COUNT -->
@@ -2198,7 +2198,7 @@
       });
 
       /* ---------- 29 loop editor ---------- */
-      playground("lp", '// ---------- State ----------\nlet melody = ["C4", "E4", "G4", "B4"];\n\n// ---------- Sound ----------\nconst synth = new Tone.PolySynth(Tone.Synth).toDestination();\n\n// ---------- Play the whole melody ----------\nfunction playMelody() {\n  let now = Tone.now();\n  for (let i = 0; i < melody.length; i++) {\n    synth.triggerAttackRelease(melody[i], "8n", now + i * 0.4);\n  }\n}\n\n// ---------- Controls ----------\nfunction keyDown(event) {\n  Tone.start();\n  if (event.repeat === false) {\n    playMelody();\n  }\n}\n\n// ---------- Setup ----------\nwindow.addEventListener("keydown", keyDown);\n');
+      playground("lp", '// ---------- State ----------\nlet melody = ["C4", "E4", "G4", "B4"];\n\n// ---------- Sound ----------\nconst synth = new Tone.PolySynth(Tone.Synth).toDestination();\n\n// ---------- Play the whole melody ----------\nfunction playMelody() {\n  for (let i = 0; i < melody.length; i++) {\n    // "+0.4" means: 0.4 seconds from now\n    synth.triggerAttackRelease(melody[i], "8n", "+" + i * 0.4);\n  }\n}\n\n// ---------- Controls ----------\nfunction keyDown(event) {\n  Tone.start();\n  if (event.repeat === false) {\n    playMelody();\n  }\n}\n\n// ---------- Setup ----------\nwindow.addEventListener("keydown", keyDown);\n');
 
       /* ---------- 30 ladder: count ---------- */
       (function () {
