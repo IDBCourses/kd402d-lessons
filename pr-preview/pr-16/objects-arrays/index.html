@@ -785,7 +785,38 @@
           no more.</aside>
       </section>
 
-      <!-- 05 ONE VARIABLE EACH -->
+      <!-- 05a THE MUSIC MACHINE -->
+      <section class="slide" id="machine" data-sec="Two ways to keep things together" data-demo="A music machine">
+        <span class="turn try">Try it</span>
+        <div class="billing">Two ways to keep things together · The idea</div>
+        <hr class="rule">
+        <h2 class="h1 tight">A music machine</h2>
+        <p class="lede" style="max-width:60ch">Press any key, and it plays the next note of the song. After the last note, it starts again from the first.</p>
+        <div class="cols">
+          <div class="stack">
+            <div class="panel">
+              <div class="bar p"><span>the song</span><span>Mary had a little lamb · first bar</span></div>
+              <div class="pbody">
+                <div class="line" id="mm-line" style="min-height:0"></div>
+                <div class="row" style="gap:0;margin-top:4px" id="mm-words"></div>
+              </div>
+            </div>
+            <div class="pad" id="mm-pad" tabindex="0" aria-label="Keyboard pad"></div>
+          </div>
+          <div class="stack">
+            <p style="margin:0;font-size:20px">To do that, the machine has to know three things:</p>
+            <ol class="plain" style="padding:0">
+              <li>the notes of the song, in order</li>
+              <li>which note comes next</li>
+              <li>what to do after the last one</li>
+            </ol>
+            <p class="dir" style="font-size:19px">How would you build it with what you know so far?</p>
+          </div>
+        </div>
+        <aside class="nt">10:20. The task before any code. We want an automatic music machine: whatever key you press, it plays the next note of the song, and after the last note it goes back to the first. Our song is one bar, played over and over: the first bar of Mary had a little lamb, E D C D. Let someone press keys on the projector: every key does the same thing, only the note changes. Walk through what the machine has to know: the notes, in order; which note is next (it has to remember that between key presses: a variable, like Tuesday's octave); and what happens at the end. Then ask the room how they'd build it with variables, if / else and a listener. Take one or two ideas before the next slide shows the obvious version.</aside>
+      </section>
+
+      <!-- 05b ONE VARIABLE EACH -->
       <section class="slide" id="one-each" data-sec="Two ways to keep things together" data-demo="One variable each">
         <span class="turn try">Try it</span>
         <div class="billing">Two ways to keep things together · The problem</div>
@@ -793,25 +824,21 @@
         <h2 class="h1 tight">One variable each stops working</h2>
         <div class="cols wide-l">
           <div class="panel">
-            <div class="bar m"><span>melody.js</span><span>names to remember: <b id="oe-n">3</b></span></div>
-            <pre class="code sm" id="oe-code" style="font-size:15px;line-height:1.45;max-height:430px"></pre>
+            <div class="bar m"><span>machine.js</span><span>notes in the song: <b id="oe-n">4</b></span></div>
+            <pre class="code sm" id="oe-code" style="font-size:14px;line-height:1.4;max-height:440px;padding:10px 18px"></pre>
           </div>
-          <div class="stack">
-            <div class="row"><button class="btn" id="oe-add">Add a note</button><button class="btn ghost"
-                id="oe-play">Play it</button><button class="btn ghost" id="oe-reset">Start over</button></div>
+          <div class="stack" style="gap:12px">
+            <div class="pad" id="oe-pad" tabindex="0" aria-label="Keyboard pad"></div>
+            <div class="row"><button class="btn" id="oe-add">Add a note</button><button class="btn ghost" id="oe-reset">Start over</button></div>
             <ol class="plain" style="padding:0">
-              <li>How do you play the third note?</li>
-              <li>How do you play the last note, if you don't know how many there are?</li>
-              <li>How do you put a new note at the start?</li>
+              <li style="font-size:18px">When a key goes down, which note does the program want?</li>
+              <li style="font-size:18px">Why can't it say "play note number <code>position</code>"?</li>
+              <li style="font-size:18px">What has to change to add a note to the song?</li>
             </ol>
-            <p class="dir" style="font-size:19px">Each note has its own name. Nothing in the code says they belong
-              together, or in which order.</p>
+            <p class="dir" style="font-size:19px">The program knows the number of the note it wants. It can only ask for a note by its name.</p>
           </div>
         </div>
-        <aside class="nt">Press Add a note a few times: every note needs a new name and a new line to play it. Ask the
-          three questions. The third: to put a note at the start, you'd rename every one of them (note1 becomes note2…).
-          Each note also needs its own start time (now, now + 0.5, now + 1…): without the third argument every line starts at the same moment and you hear a chord. The point: the names hold the values, but nothing holds the melody. Don't fix it yet: the next slides find the
-          fix in plain words first.</aside>
+        <aside class="nt">The machine built with what we have: one variable per note, a position variable that remembers which note is next, and an if / else if for every note. Press keys on the pad: the branch that runs lights up. Question 1: position holds the number of the note it wants, say 3. Question 2: but note3 is a name we typed, not something the program can work out from 3. "note" + position is the string "note3", not the note. So we write one branch per note, to turn a number into a name by hand. Question 3: press Add a note (it adds the start of the next bar, E E E). Every note means a new variable, a new else if, and changing the 4 in position &gt; 4: three places, every time. The point: the program knows which one it wants, but nothing holds the song. Don't fix it yet: the next slides find the fix in plain words first. (In the first worked example of Part 1, this whole if / else if becomes one line: notes[position].)</aside>
       </section>
 
       <!-- 06 BAND -->
@@ -1753,18 +1780,53 @@
         });
       })();
 
-      /* ---------- 05 one variable each ---------- */
+      /* ---------- 05a the music machine ---------- */
       (function () {
-        var POOL = ["C4", "E4", "G4", "E4", "C4", "D4", "E4", "C4"], n = 3;
+        var SONG = ["E4", "D4", "C4", "D4"], WORDS = ["Ma-", "ry", "had", "a"], next = 0;
+        function render(hi) { lineView($("#mm-line"), SONG, { idx: false, hi: hi }) }
+        $("#mm-words").innerHTML = WORDS.map(function (w) { return '<span class="dir" style="width:80px;text-align:center;font-size:18px">' + w + '</span>' }).join("");
+        var P = pad($("#mm-pad"), "<b>Click here</b>, then press any key, again and again.", LIVE);
+        capture($("#mm-pad"), function (e) {
+          P.show(e.key); if (e.repeat) return;
+          play(SONG[next]); render(next);
+          next = next + 1; if (next >= SONG.length) next = 0;
+        });
+        render();
+      })();
+
+      /* ---------- 05b one variable each ---------- */
+      (function () {
+        var POOL = ["E4", "D4", "C4", "D4", "E4", "E4", "E4"], n = 4, pos = 1;
         function src() {
           var a = [], b = [];
-          for (var i = 1; i <= n; i++) { a.push('let note' + i + ' = "' + POOL[i - 1] + '";'); b.push('synth.triggerAttackRelease(note' + i + ', "8n", now' + (i > 1 ? ' + ' + (i - 1) * 0.5 : '') + ');') }
-          return a.join("\n") + "\n\nlet now = Tone.now();\n" + b.join("\n");
+          for (var i = 1; i <= n; i++) {
+            a.push('let note' + i + ' = "' + POOL[i - 1] + '";');
+            b.push((i === 1 ? '  if' : '  } else if') + ' (position === ' + i + ') {');
+            b.push('    synth.triggerAttackRelease(note' + i + ', "8n");');
+          }
+          return a.join("\n") + '\nlet position = 1;\n\nfunction keyDown(event) {\n' + b.join("\n") +
+            '\n  }\n  position = position + 1;\n  if (position > ' + n + ') {\n    position = 1;\n  }\n}';
         }
-        function render(fl) { code($("#oe-code"), src(), fl ? [n - 1, 2 * n + 1] : null); if (fl) flash($("#oe-code"), [n - 1, 2 * n + 1]); $("#oe-n").textContent = n; $("#oe-add").disabled = n >= POOL.length }
-        $("#oe-add").addEventListener("click", function () { if (n < POOL.length) { n++; render(true) } });
-        $("#oe-play").addEventListener("click", function () { playSeq(POOL.slice(0, n), 500) });
-        $("#oe-reset").addEventListener("click", function () { n = 3; render() });
+        function ifLine(k) { return n + 3 + 2 * (k - 1) }
+        function scrollTo(l) { var pre = $("#oe-code"), el = pre.querySelector('[data-l="' + l + '"]'); if (el) pre.scrollTop = Math.max(0, el.offsetTop - 140) }
+        function render(on, fl) {
+          code($("#oe-code"), src(), on || null); if (fl) { flash($("#oe-code"), fl); scrollTo(fl[fl.length - 1]) }
+          $("#oe-n").textContent = n; $("#oe-add").disabled = n >= POOL.length;
+        }
+        var P = pad($("#oe-pad"), "<b>Click here</b>, then press any key.", LIVE);
+        capture($("#oe-pad"), function (e) {
+          P.show(e.key); if (e.repeat) return;
+          play(POOL[pos - 1]);
+          var l = ifLine(pos); render([l, l + 1, 3 * n + 4]); scrollTo(l);
+          pos = pos + 1; if (pos > n) pos = 1;
+        });
+        $("#oe-add").addEventListener("click", function () {
+          if (n >= POOL.length) return;
+          n++; pos = 1;
+          var l = ifLine(n), lines = [n - 1, l, l + 1, 3 * n + 5];
+          render(lines, lines);
+        });
+        $("#oe-reset").addEventListener("click", function () { n = 4; pos = 1; render(); $("#oe-code").scrollTop = 0 });
         render();
       })();
 
