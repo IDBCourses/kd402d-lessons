@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Objects and arrays · KD402D Programming</title>
+  <title>Arrays and iteration · KD402D Programming</title>
   <link rel="stylesheet" href="../shared/tokens.css">
   <link rel="stylesheet" href="../shared/deck.css">
   <style>
@@ -304,145 +304,28 @@
       font-weight: 700
     }
 
-    /* one object, its labelled parts */
-    .obj {
-      border: 2px solid var(--ink-900);
-      background: var(--paper-000);
-      box-shadow: 3px 3px 0 var(--ink-900);
-      border-radius: 2px;
-      min-width: 300px
-    }
 
-    .obj .on {
-      font-family: var(--font-mono);
-      font-weight: 700;
-      font-size: 15px;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      padding: 6px 14px;
-      border-bottom: 2px solid var(--ink-900);
-      background: var(--paper-200);
-      color: var(--ink-900)
-    }
 
-    .obj .pr {
-      display: grid;
-      grid-template-columns: 140px 1fr;
-      gap: 12px;
-      padding: 8px 14px;
-      border-bottom: 1px solid var(--paper-300);
-      align-items: center
-    }
 
-    .obj .pr:last-child {
-      border-bottom: 0
-    }
 
-    .obj .pk {
-      font-family: var(--font-mono);
-      font-size: 17px;
-      color: var(--ink-500);
-      font-weight: 700
-    }
 
-    .obj .pv {
-      font-family: var(--font-mono);
-      font-size: 20px;
-      color: var(--ink-900);
-      font-weight: 700
-    }
 
-    .obj .pr.hi {
-      background: var(--spot-200)
-    }
 
-    .obj .pr.flash {
-      animation: flashlite .9s ease
-    }
 
-    .obj.sm {
-      min-width: 0;
-      width: 200px
-    }
 
-    .obj.sm .pr {
-      padding: 4px 10px;
-      grid-template-columns: 86px 1fr
-    }
 
-    .obj.sm .pk {
-      font-size: 14px
-    }
 
-    .obj.sm .pv {
-      font-size: 16px
-    }
 
-    .obj.sm .on {
-      font-size: 12px;
-      padding: 3px 10px
-    }
 
-    .obj.sm.hi {
-      box-shadow: 3px 3px 0 var(--curtain-600);
-      border-color: var(--curtain-600)
-    }
 
     /* plain-language sound card (opening) */
-    .snd {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px
-    }
 
-    .snd button {
-      text-align: left;
-      border: 2px solid var(--ink-900);
-      background: var(--paper-000);
-      box-shadow: 3px 3px 0 var(--ink-900);
-      border-radius: 2px;
-      padding: 10px 14px;
-      cursor: pointer
-    }
 
-    .snd button:hover {
-      background: var(--paper-200)
-    }
 
-    .snd button:active {
-      transform: translate(2px, 2px);
-      box-shadow: 1px 1px 0 var(--ink-900)
-    }
 
-    .snd b {
-      display: block;
-      font-size: 14px;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      font-weight: 500;
-      color: var(--ink-500)
-    }
 
-    .snd span {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 28px;
-      color: var(--ink-900);
-      letter-spacing: -.02em
-    }
 
-.wave{display:block;width:100%;height:120px;margin-top:12px;background:var(--paper-100);border:1px solid var(--paper-300);border-radius:2px}
-    .wave .mid{stroke:var(--paper-400);stroke-width:1}
-    .wave .w{fill:none;stroke:var(--ink-900);stroke-width:2.5;stroke-linejoin:round}
-    .wave .ph{stroke:var(--curtain-600);stroke-width:3}
-    .wkey{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:14px;color:var(--ink-500)}
-    .wkey span{padding:0 4px;border-radius:2px}
-    .wkey b{color:var(--ink-900);font-weight:500}
-    .wkey span.on{background:var(--spot-200);animation:flashlite .9s ease}
 
-    .snd button.flash {
-      animation: flashpk .6s ease
-    }
 
     .two {
       display: grid;
@@ -524,21 +407,7 @@
       line-height: 1
     }
 
-    .path {
-      font-family: var(--font-mono);
-      font-weight: 700;
-      font-size: 22px;
-      color: var(--ink-900);
-      background: var(--paper-000);
-      border: 2px solid var(--ink-900);
-      padding: 8px 14px;
-      border-radius: 2px;
-      min-height: 48px
-    }
 
-    .path .pv {
-      color: var(--curtain-600)
-    }
 
     /* playground: student code + a pad */
     .pad {
@@ -679,29 +548,47 @@
     }
 
     /* the modelling sheet */
-    .sheetf {
-      display: flex;
-      flex-direction: column;
-      gap: 8px
-    }
 
-    .sheetf label.f {
-      font-size: 14px;
-      letter-spacing: .06em;
-      text-transform: uppercase
-    }
 
-    .sheetf textarea.t {
-      font-family: var(--font-ui);
-      font-size: 16px;
-      line-height: 1.35;
-      resize: none;
-      padding: 6px 10px
-    }
+
+    /* the Counter's state, and the line's empty end */
+    .state3{display:grid;grid-template-columns:repeat(3,1fr);border:2px solid var(--ink-900);background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900)}
+    .state3>div{padding:8px 14px}
+    .state3>div+div{border-left:1px solid var(--paper-300)}
+    .state3 b{display:block;font-size:13px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;color:var(--ink-500)}
+    .state3 span{font-family:var(--font-mono);font-weight:700;font-size:24px;color:var(--ink-900)}
+    .state3 span.no{color:var(--error-ink)}
+    .state3 span.yes{color:var(--pass-ink)}
+    .cell.ghost .v{border-style:dashed;box-shadow:none;background:transparent;color:var(--ink-300);font-size:15px}
+    .cell.counter .i{color:var(--curtain-600)}
+    .cell.counter .i::after{content:" ▲"}
+    .cell.bad .v{background:var(--error-surface);border-color:var(--curtain-600);color:var(--error-ink);border-style:solid}
+    .cell.hf .v{background:var(--pass-surface);border-color:var(--applause-600)}
+    .rule-pick{display:flex;gap:8px;align-items:center}
+    .rule-pick .small{white-space:nowrap}
+    .rule-pick .btn{text-transform:none;letter-spacing:0;font-size:15px;padding:7px 11px}
+    table.passes td,table.passes th{padding:5px 10px;white-space:nowrap}
+    table.passes td{font-size:17px}
+    table.passes th,.state3 b{text-transform:none;letter-spacing:0;font-family:var(--font-mono);font-weight:700}
+    table.passes tr.on td{background:var(--spot-200)}
+    table.passes td.no{color:var(--error-ink)}
+    .nc>div{grid-template-columns:200px 1fr;gap:14px;padding:7px 0;font-size:18px}
+    .nc code{font-size:17px;color:var(--ink-900);font-weight:700}
+    .nc>div.dim{color:var(--paper-400)}.nc>div.dim code{color:var(--paper-400)}
+    /* a timeline: when each note starts */
+    .tl{position:relative;border:2px solid var(--ink-900);background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900);padding:8px 12px 26px 56px;height:170px}
+    .tl .trk{position:relative;height:30px;border-bottom:1px solid var(--paper-300)}
+    .tl .lb{position:absolute;left:-46px;top:5px;font-family:var(--font-mono);font-weight:700;font-size:14px;color:var(--ink-700)}
+    .tl .nb{position:absolute;top:5px;height:20px;background:var(--cyan-400);border:2px solid var(--ink-900);border-radius:2px;transition:left .35s var(--ease)}
+    .tl .nb.on{background:var(--spot-400)}
+    #ladder-count .rung pre.code{line-height:1.32;padding:6px 14px}
+    .tl .tli{position:relative}
+    .tl .tk{position:absolute;bottom:-20px;font-family:var(--font-mono);font-size:12px;color:var(--ink-500);transform:translateX(-50%)}
+    .tl .ph{position:absolute;top:0;bottom:0;width:3px;background:var(--curtain-600);visibility:hidden}
   </style>
 </head>
 
-<body data-lecture="objects-arrays" data-home="../">
+<body data-lecture="arrays-iteration" data-home="../">
   <main id="stage">
     <div id="deck">
 
@@ -712,18 +599,19 @@
         <div class="scan"></div>
         <div class="inner">
           <div class="billing">KD402D Programming · Week 42</div>
-          <h1 class="hero">In a list, or by label.</h1>
-          <p class="lede">Objects and arrays: two ways to keep values that belong together.</p>
+          <h1 class="hero">Line them up. Walk the line.</h1>
+          <p class="lede">Arrays keep many notes in order. A <code>for</code> loop walks through them, so you don't have to do it by hand.</p>
         </div>
         <div
           style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
-          <div class="m" style="font-size:17px;color:var(--ink-200)">KD402D Programming · Objects and arrays · Thu 15
-            Oct</div>
+          <div class="m" style="font-size:17px;color:var(--ink-200)">KD402D Programming · Arrays and iteration · Thu 15 Oct</div>
         </div>
         <aside class="nt">10:15. Welcome back. Keys: arrows to move, I for the slide index, N for these notes, E to jump
           to the next exercise. Students can open the same link on their laptops: every "Your turn" slide works on its
           own screen. Headphones: there is sound today. Laptops with VS Code from Part 1: everyone makes their own
-          practice copy of the A1 template and codes along in its script.js.</aside>
+          practice copy of the A1 template and codes along in its script.js. Two activities with people today: the line
+          of notes in Part 1 and the Off By One walk after the break. Prepare value cards and floor marks 0, 1, 2… and
+          keep the same line for both if you can.</aside>
       </section>
 
       <!-- 02 RUNNING ORDER -->
@@ -732,20 +620,16 @@
         <hr class="rule">
         <h2 class="h1">What we'll do today</h2>
         <div class="rows order">
-          <div><span class="num">01</span><span class="nm">Two ways to keep things together<small>Things in a line, and
-                things with labelled parts, before any code</small></span></div>
-          <div><span class="num">02</span><span class="nm">Arrays<small>A list in order: reach by position, add and
-                remove at either end</small></span></div>
-          <div><span class="num">03</span><span class="nm">Objects<small>One thing with labelled parts: reach by name,
-                change a part</small></span></div>
-          <div><span class="num">04</span><span class="nm">Model something musical<small>Decide what's a list and what's
-                a label, then build it</small></span></div>
+          <div><span class="num">01</span><span class="nm">Things in a line<small>Many of one kind, in order, reached by position, before any code</small></span></div>
+          <div><span class="num">02</span><span class="nm">Arrays<small>Make one, reach in by position, add and remove at either end</small></span></div>
+          <div><span class="num">03</span><span class="nm">Walking the line<small>By hand doesn't scale: a line of people walks itself</small></span></div>
+          <div><span class="num">04</span><span class="nm">The for loop<small>Start, test, step, body: play every note, and count as you go</small></span></div>
         </div>
         <p class="dir" style="margin-top:16px">A break after arrays.</p>
         <aside class="nt">Timings for you only (not on the slide): recap and opening 10:15–10:35, Part 1 arrays
-          10:35–11:05, break 11:05–11:15, Part 2 objects 11:15–11:40, quiz and modelling 11:40–11:55, wrap-up
-          11:55–12:00. The opening is all plain language: no brackets until after the people-in-a-line activity at the
-          start of Part 1.</aside>
+          10:35–11:05, break 11:05–11:15, bridge 11:15–11:20, Off By One 11:20–11:30, Part 2 the for loop 11:30–11:55,
+          quiz and wrap-up 11:55–12:00. The opening is plain language: no brackets until after the people-in-a-line
+          activity at the start of Part 1.</aside>
       </section>
 
       <!-- 03 OBJECTIVES -->
@@ -754,24 +638,22 @@
         <hr class="rule">
         <h2 class="h1">Five things to take home</h2>
         <div class="rows lab">
-          <div><span class="num">01</span><span class="tx">Make an array and get an item out by its position, counting
-              from zero.</span></div>
+          <div><span class="num">01</span><span class="tx">Make an array and get an item out by its position.</span></div>
           <div><span class="num">02</span><span class="tx">Change an array with <code>push</code>, <code>pop</code>,
               <code>shift</code> and <code>unshift</code>, and count it with <code>.length</code>.</span></div>
-          <div><span class="num">03</span><span class="tx">Make an object and read its properties.</span></div>
-          <div><span class="num">04</span><span class="tx">Read and change properties with dot notation and bracket
-              notation.</span></div>
-          <div><span class="num">05</span><span class="tx">Explain when to use an array, and when to use an
-              object.</span></div>
+          <div><span class="num">03</span><span class="tx">Walk an array with a <code>for</code> loop: start, test, step.</span></div>
+          <div><span class="num">04</span><span class="tx">Explain why positions start at zero, and spot an off-by-one.</span></div>
+          <div><span class="num">05</span><span class="tx">Use a loop to do something with every item: play it, count it.</span></div>
         </div>
-        <aside class="nt">The session's learning objectives from the course plan. Point at number 05: it's the one that
-          matters most, and the opening is all about it. Come back to the list at the end.</aside>
+        <aside class="nt">The session's learning objectives from the course plan. Come back to them at the end. Number 04
+          is the one students will meet again and again: they'll feel it in the Off By One walk, hear it in code, and
+          spot it in the closing quiz.</aside>
       </section>
 
       <!-- 04 RECAP -->
-      <section class="slide" id="recap" data-sec="Two ways to keep things together" data-demo="Tuesday's keyboard">
+      <section class="slide" id="recap" data-sec="Things in a line" data-demo="Tuesday's keyboard">
         <span class="turn try">Try it</span>
-        <div class="billing">Two ways to keep things together · Recap</div>
+        <div class="billing">Things in a line · Recap</div>
         <hr class="rule">
         <h2 class="h1 tight">Tuesday: a key chooses a note</h2>
         <div class="cols wide-l">
@@ -783,21 +665,20 @@
             <div class="pad" id="rc-pad" tabindex="0" aria-label="Keyboard pad"></div>
             <p style="margin:0;font-size:19px">Every note has its own place in the code: one <code>else if</code> per
               key, typed out by hand.</p>
-            <p class="dir" style="font-size:20px">A melody has many notes. A sound has many settings. Where do we keep
-              them all?</p>
+            <p class="dir" style="font-size:20px">A melody has many notes. Where do we keep them all?</p>
           </div>
         </div>
         <aside class="nt">10:15. Quick recap of Tuesday through the instrument: a key goes down, the browser calls our
           function, noteFor turns the key into a note, the synth plays it. Let someone play a s d on the projector. Point at the last line: the listener is what hands each key press to playKey.
           Then the question for today: so far every value we stored lived in its own variable or its own line of code.
-          As soon as a program handles many related things, or one thing with many parts, that breaks down. Two minutes,
+          As soon as a program handles many related things, the notes of a melody, the steps of a pattern, that breaks down. Two minutes,
           no more.</aside>
       </section>
 
       <!-- 05a THE MUSIC MACHINE -->
-      <section class="slide" id="machine" data-sec="Two ways to keep things together" data-demo="A music machine">
+      <section class="slide" id="machine" data-sec="Things in a line" data-demo="A music machine">
         <span class="turn try">Try it</span>
-        <div class="billing">Two ways to keep things together · The idea</div>
+        <div class="billing">Things in a line · The idea</div>
         <hr class="rule">
         <h2 class="h1 tight">A music machine</h2>
         <p class="lede" style="max-width:60ch">Press any key, and it plays the next note of the song. After the last note, it starts again from the first.</p>
@@ -826,9 +707,9 @@
       </section>
 
       <!-- 05b ONE VARIABLE EACH -->
-      <section class="slide" id="one-each" data-sec="Two ways to keep things together" data-demo="One variable each">
+      <section class="slide" id="one-each" data-sec="Things in a line" data-demo="One variable each">
         <span class="turn try">Try it</span>
-        <div class="billing">Two ways to keep things together · The problem</div>
+        <div class="billing">Things in a line · The problem</div>
         <hr class="rule">
         <h2 class="h1 tight">One variable each stops working</h2>
         <div class="cols wide-l" style="gap:28px">
@@ -858,24 +739,24 @@
       </section>
 
       <!-- 06 BAND -->
-      <section class="slide stage" id="two-ways" data-sec="Two ways to keep things together">
+      <section class="slide stage" id="in-line-band" data-sec="Things in a line">
         <div class="beam y"></div>
         <div class="beam m"></div>
         <div class="scan"></div>
         <div class="inner">
-          <div class="billing">Two ways to keep things together</div>
-          <h2 class="hero md">Some things come in a line. Some things have parts.</h2>
-          <p class="lede">Two ideas, in plain words first. The code comes later, and by then it won't be new.</p>
+          <div class="billing">Things in a line</div>
+          <h2 class="hero md">Many things, kept in a line.</h2>
+          <p class="lede">One idea, in plain words first. The code comes later, and by then it won't be new.</p>
         </div>
-        <aside class="nt">The opening is a ladder of two ideas, each in plain language, each mapping onto one structure
-          we'll write later. Take them one at a time and don't rush to code. No brackets on any slide until Part 1.
+        <aside class="nt">The opening plants one idea in plain language before any notation: many things of the same
+          kind, kept in order, reached by their position. Don't rush to code. No brackets on any slide until Part 1.
         </aside>
       </section>
 
       <!-- 07 BEAT 1: A LINE -->
-      <section class="slide" id="in-a-line" data-sec="Two ways to keep things together" data-demo="Things in a line">
+      <section class="slide" id="in-a-line" data-sec="Things in a line" data-demo="Things in a line">
         <span class="turn try">Try it</span>
-        <div class="billing">Two ways to keep things together · In a line</div>
+        <div class="billing">Things in a line · In a line</div>
         <hr class="rule">
         <h2 class="h1 tight">Some things come in a line</h2>
         <div class="seg" role="group" aria-label="Example" id="il-seg" style="margin-bottom:18px"></div>
@@ -899,84 +780,35 @@
           "What's it called?": that's an array.</aside>
       </section>
 
-      <!-- 08 BEAT 2: LABELLED PARTS -->
-      <section class="slide" id="labelled" data-sec="Two ways to keep things together"
-        data-demo="One thing, labelled parts">
-        <span class="turn try">Try it</span>
-        <div class="billing">Two ways to keep things together · Labelled parts</div>
-        <hr class="rule">
-        <h2 class="h1 tight">Some things have labelled parts</h2>
-        <div class="cols">
-          <div class="stack">
-            <div class="panel">
-              <div class="bar p"><span>one sound</span><span>click a part to change it</span></div>
-              <div class="pbody">
-                <div class="snd" id="lb-snd"></div>
-                <svg class="wave" id="lb-wave" viewBox="0 0 520 120" role="img" aria-label="The sound, drawn as a wave"></svg>
-                <div class="wkey" id="lb-key"></div>
-              </div>
-            </div>
-            <div class="row"><button class="btn" id="lb-play">Play the sound</button></div>
-          </div>
-          <div class="stack">
-            <p style="margin:0;font-size:21px"><b>One thing</b>, not many. Its parts are different kinds: a note, a
-              length, a loudness, a wave shape.</p>
-            <p style="margin:0;font-size:21px"><b>No order.</b> "The second part of the sound" means nothing.</p>
-            <p style="margin:0;font-size:21px"><b>Reached by label:</b> "the loudness of this sound".</p>
-            <p class="row" style="gap:14px;margin:6px 0 0"><button class="btn alt" id="lb-name">What's it
-                called?</button><span class="reveal-word" id="lb-word" hidden>An object. Its labels are
-                properties.</span></p>
-          </div>
-        </div>
-        <aside class="nt">Beat 2. Narrow from many things in a line to one thing described by several facts. A single
-          synth sound isn't a sequence: it's one thing with a note, a length, a loudness, a wave shape. Click the parts
-          to change them and play it. The drawing under them changes with each part: a higher note packs the wave tighter, a longer sound is wider, a louder one is taller, and the wave shape is the shape of the line (it's why each sounds different: square is buzzy, sine is pure). Ask: which is the first part of this sound? (There isn't one. Position means
-          nothing here.) So instead of where it sits, we reach a part by what it's called. Only then reveal the word: an
-          object, and the labels are its properties. Concept first, vocabulary second.</aside>
-      </section>
-
       <!-- 09 QUIZ 1 -->
-      <section class="slide" id="quiz-line-or-label" data-sec="Two ways to keep things together"
-        data-ex="A line or labelled parts?">
+      <section class="slide" id="quiz-line" data-sec="Things in a line" data-ex="A line, by position?">
         <span class="turn">Your turn</span>
-        <div class="billing">Two ways to keep things together · Check</div>
+        <div class="billing">Things in a line · Check</div>
         <hr class="rule">
-        <h2 class="h1 tight">A line, or labelled parts?</h2>
-        <p style="margin:0 0 10px;font-size:19px">For each one: is it naturally many things in order, reached by
-          position, or one thing with labelled parts?</p>
+        <h2 class="h1 tight">Is it a line, reached by position?</h2>
+        <p style="margin:0 0 10px;font-size:19px">For each one: is it naturally many things in order, where you reach one by saying where it sits?</p>
         <div class="rows quiz" id="q1"></div>
         <div class="fb" id="q1-fb" style="margin-top:14px"></div>
-        <aside class="nt">On their own laptops, then discuss the answers together. Then open it up to the room (not on
-          the slide): what else in life takes one of these two shapes? A shopping list, a queue at the café, a contact
-          in your phone, a recipe (labelled: name, time, serves… with a list of steps inside!). Let them sort their own
-          examples.</aside>
+        <aside class="nt">On their own laptops, then discuss the answers together. The synth settings are the one to
+          talk about: volume, wave shape and note are one thing with labelled parts, not a line. Plant that lightly; it's
+          Friday's topic. Then open it up to the room (not on the slide): what else in life is a list in order? A queue
+          at the café, a recipe's steps, the stops on a bus line, a to-do list. Let them surface their own.</aside>
       </section>
 
-      <!-- 10 THE DECISION -->
-      <section class="slide" id="position-or-label" data-sec="Two ways to keep things together">
-        <div class="billing">Two ways to keep things together · The decision</div>
+      <!-- 10 BY POSITION -->
+      <section class="slide" id="by-position" data-sec="Things in a line">
+        <div class="billing">Things in a line · The idea</div>
         <hr class="rule">
-        <h2 class="h1">Position or label: that's the decision</h2>
-        <div class="two">
-          <div>
-            <h3>A line → array</h3>
-            <p>Many things of the same kind, in order.</p>
-            <p>You reach one by <b>where it sits</b>.</p>
-            <p class="ex">the notes of a melody · the steps of a pattern · a playlist</p>
-          </div>
-          <div>
-            <h3>Labelled parts → object</h3>
-            <p>One thing, described by several facts.</p>
-            <p>You reach a part by <b>what it's called</b>.</p>
-            <p class="ex">one sound · a drum machine's settings · one song's details</p>
-          </div>
+        <h2 class="h1">Position is how you reach in</h2>
+        <div class="rows lab big">
+          <div><span class="num">01</span><span class="tx"><b>Many of the same kind.</b> All notes, all steps, all songs.</span></div>
+          <div><span class="num">02</span><span class="tx"><b>Kept in order.</b> Swap two and it's a different melody.</span></div>
+          <div><span class="num">03</span><span class="tx"><b>Reached by position:</b> "the third one", not by its own name.</span></div>
         </div>
-        <p class="dir" style="margin-top:auto">Ask "is there a first one?" If yes, it's a line. If the question makes no
-          sense, it's labelled parts.</p>
-        <aside class="nt">The throughline for the whole lecture: many of a kind, by position; or one thing, many
-          labelled parts, by name. Everything after this is notation for these two ideas. The "is there a first one?"
-          test is a handy rule of thumb. Ask for their own examples and sort them together if the quiz discussion didn't
-          already.</aside>
+        <p class="dir" style="margin-top:auto">Hold on to the line. After the break, a loop walks it from the first position to the last.</p>
+        <aside class="nt">The whole foundation the morning builds on, in three lines. Position is how you reach in; in
+          Part 2, position is also what the loop walks. Back to the music machine: it needed "the note at position 3",
+          and the only way it could ask was by name. That's what the next part fixes.</aside>
       </section>
 
       <!-- 11 ACT IT OUT -->
@@ -1007,7 +839,7 @@
           the room calls out each person's new number. The shuffle is the point: adding or removing at the front moves
           everyone else; at the end nobody else moves. Ask: if the line was 1000 people long, which end would you rather
           work at? This slide names the four moves and which end each works on, so the picture and the words land
-          together.</aside>
+          together. Keep the line (and the floor marks) in mind: after the break, the loop walks this exact line.</aside>
       </section>
 
       <!-- 12 LINE SIM -->
@@ -1057,7 +889,7 @@
             <div style="padding:10px 0"><span class="num">1</span><span class="tx" style="font-size:20px">Open <a
                   href="https://github.com/IDBCourses/kd402d-a1-template" target="_blank"
                   rel="noopener">github.com/IDBCourses/kd402d-a1-template</a>. Click <b>Use this template</b> →
-                <b>Create a new repository</b>. Owner: you. Name: <code>objects-and-arrays</code>.</span></div>
+                <b>Create a new repository</b>. Owner: you. Name: <code>arrays-practice</code>.</span></div>
             <div style="padding:10px 0"><span class="num">2</span><span class="tx" style="font-size:20px">In VS Code:
                 <b>Clone Repository</b>, and paste the link to your new repository.</span></div>
             <div style="padding:10px 0"><span class="num">3</span><span class="tx" style="font-size:20px">Open
@@ -1247,326 +1079,314 @@
         <div class="inner">
           <div class="billing">Break</div>
           <h2 class="hero">Break.</h2>
-          <p class="lede">Stretch, refill. After the break: one thing with labelled parts.</p>
+          <p class="lede">Stretch, refill. After the break: we stop walking the line by hand.</p>
         </div>
         <aside class="nt">11:05–11:15, ten minutes. The slide doesn't show the length or the time; tell the room when to
           be back.</aside>
       </section>
 
-      <!-- 20 BAND OBJECTS -->
-      <section class="slide stage" id="objects-open" data-sec="Objects">
+      <!-- 20 BAND BY HAND -->
+      <section class="slide stage" id="by-hand-band" data-sec="By hand doesn't scale">
         <div class="beam y"></div>
         <div class="beam m"></div>
         <div class="scan"></div>
         <div class="inner">
-          <div class="billing">Objects</div>
-          <h2 class="hero md">One thing. Many labelled parts.</h2>
-          <p class="lede">An array is many of a kind, reached by position. An object is one thing, and you reach its
-            parts by name.</p>
+          <div class="billing">By hand doesn't scale</div>
+          <h2 class="hero md">Do this to every note.</h2>
+          <p class="lede">Before the break, we reached into the line by hand, one position at a time. Now the line gets walked for us.</p>
         </div>
-        <aside class="nt">11:15. Pick up beat 2 from the opening: the sound with a note, a length, a loudness. Same four
-          steps as before the break: idea, strategy, plan, code.</aside>
+        <aside class="nt">11:15. Pick the thread back up: every array operation so far was manual. We typed the
+          position, or called one method once. Iteration is not a new idea: it's the same reaching by position, done
+          again and again by a simple rule.</aside>
       </section>
 
-      <!-- 21 LADDER 3: ONE SOUND -->
-      <section class="slide" id="ladder-object" data-sec="Objects" data-demo="Describe one sound">
+      <!-- 21 BY HAND -->
+      <section class="slide" id="by-hand" data-sec="By hand doesn't scale" data-demo="Play it by hand">
         <span class="turn try">Try it</span>
-        <div class="billing">Objects · From idea to code</div>
+        <div class="billing">By hand doesn't scale · The problem</div>
         <hr class="rule">
-        <h2 class="h1 tight">Describe one sound, then play it</h2>
-        <div class="cols wide-l" style="gap:30px">
-          <div>
-            <div class="ladder" id="lo-lad"></div>
-            <div class="lnav" id="lo-nav"></div>
+        <h2 class="h1 tight">The whole melody, by hand</h2>
+        <div class="cols wide-l" style="gap:28px">
+          <div class="panel">
+            <div class="bar m"><span>melody.js</span><span>lines to write: <b id="bh-n">4</b></span></div>
+            <pre class="code sm" id="bh-code" style="font-size:14px;line-height:1.45;padding:10px 18px"></pre>
           </div>
-          <div class="stack" id="lo-try" style="gap:12px">
-            <div id="lo-obj"></div>
-            <div class="row" id="lo-btns" style="gap:8px"></div>
-            <div class="panel">
-              <div class="bar y"><span>console</span></div>
-              <div class="console con-s" id="lo-con"></div>
-            </div>
-            <p class="vsnote"><span class="vl">In script.js</span>Put <code>tone</code> under <code>State</code>. Make
-              <b>t</b> play it.</p>
+          <div class="stack" style="gap:12px">
+            <div class="seg" role="group" aria-label="How many notes" id="bh-seg"><button class="btn ghost sel" data-n="4">4 notes</button><button class="btn ghost" data-n="8">8 notes</button><button class="btn ghost" data-n="50">50 notes</button></div>
+            <div class="row"><button class="btn" id="bh-play">Play it</button></div>
+            <p style="margin:0;font-size:19px">The third number on each line is <b>when</b> the note starts: <code>now</code>, then a little later each time.</p>
+            <p class="prompt" style="font-size:24px">What changes from one line to the next?</p>
+            <p class="row" style="gap:14px;margin:0"><button class="btn alt" id="bh-show">Show me</button><span class="reveal-word" id="bh-word" style="font-size:24px" hidden>Only one number: 0, 1, 2, 3…</span></p>
           </div>
         </div>
-        <aside class="nt">Third example. The strategy step is where the opening pays off: one thing, parts with no
-          order, so labels, so an object. The code: curly braces make an object; inside, label colon value, with commas
-          between. Reading a part is the name, a dot, the label: tone.note. Click the plan steps to see which code does
-          each. Click the buttons to read each part. Careful: tone with a small t is our sound; Tone with a capital T is
-          the library. JavaScript sees two different names.</aside>
+        <aside class="nt">11:15–11:20. Playing four notes by hand means four nearly identical lines. Switch to 8 and 50:
+          what if we don't even know how many until the program runs? The third argument of triggerAttackRelease is new:
+          when to start the note. now is the moment the code runs (Tone.now()); now + 1 * 0.4 is 0.4 seconds later. Ask
+          what changes from line to line, then press Show me: only the position, which appears twice on every line. If
+          a computer could write that number for us, one line would do. That's the loop.</aside>
       </section>
 
-      <!-- 22 OBJECT PARTS -->
-      <section class="slide" id="object-parts" data-sec="Objects" data-ex="Name the parts">
-        <span class="turn">Your turn</span>
-        <div class="billing">Objects · The parts</div>
+      <!-- 22 OFF BY ONE ACTIVITY -->
+      <section class="slide" id="off-by-one" data-sec="Walking the line">
+        <div class="billing">Walking the line</div>
         <hr class="rule">
-        <h2 class="h1 tight">Name the parts</h2>
+        <h2 class="h1 tight">Off by one: the line walks itself</h2>
+        <div class="cols wide-l">
+          <div class="rows lab">
+            <div style="padding:10px 0"><span class="num">01</span><span class="tx" style="font-size:20px"><b>The line.</b> Six to eight of you, each holding a value card, standing on the floor marks 0, 1, 2…</span></div>
+            <div style="padding:10px 0"><span class="num">02</span><span class="tx" style="font-size:20px"><b>The Counter</b> stands at one position at a time, and only moves when the rule says so.</span></div>
+            <div style="padding:10px 0"><span class="num">03</span><span class="tx" style="font-size:20px"><b>The Caller</b> says what to do at each position: "high-five if your value is greater than five".</span></div>
+          </div>
+          <div class="stack">
+            <div class="panel"><div class="bar"><span>the rule</span></div><pre class="code" id="ob-code" style="font-size:18px"></pre></div>
+            <div class="panel"><div class="bar p"><span>four rounds</span></div>
+              <ol class="plain">
+                <li>Build the line. Everyone says their position and value.</li>
+                <li>Walk it with <code>i &lt; length</code>.</li>
+                <li>Walk it with <code>i &lt;= length</code>. Where does the Counter end up?</li>
+                <li>Step by two. Or walk it backwards.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <aside class="nt">11:20–11:30. The Off By One activity. Reuse the line of people from Part 1 if you can, so it's
+          visibly the same array, now with value cards (numbers). Floor marks 0, 1, 2… Two rotating roles: the Counter
+          and the Caller. Round 1: build the array; each person announces their position and value; confirm the first
+          person is 0, not 1. Round 2: read the rule aloud: the Counter starts at 0, checks "is i less than the length?",
+          the Caller calls the operation and the line does it, then the Counter steps on. Round 3: break it with
+          i &lt;= length: the Counter walks off the end into empty space, "position 6: nobody here! undefined!". Fix it
+          back. Round 4: step by two, or walk backwards, to show the Counter is only following a rule. Thirty-second
+          debrief: why is the first person 0? What exactly broke with &lt;=? What is the Counter, in one sentence?</aside>
+      </section>
+
+      <!-- 23 WALK REPLAY -->
+      <section class="slide" id="walk" data-sec="Walking the line" data-demo="Walk the line">
+        <span class="turn try">Try it</span>
+        <div class="billing">Walking the line · Replay</div>
+        <hr class="rule">
+        <h2 class="h1 tight">The Counter follows a rule</h2>
+        <div class="row" id="wk-rule" style="gap:18px;margin-bottom:12px"></div>
+        <div class="cols wide-l" style="gap:28px">
+          <div class="stack" style="gap:12px">
+            <div class="panel"><div class="bar"><span>walk.js</span></div><pre class="code" id="wk-code" style="font-size:17px"></pre></div>
+            <div class="line" id="wk-line"></div>
+          </div>
+          <div class="stack" style="gap:12px">
+            <div class="state3" id="wk-state"></div>
+            <div class="row"><button class="btn" id="wk-next">Next pass</button><button class="btn ghost" id="wk-run">Run it all</button><button class="btn ghost" id="wk-reset">Start again</button></div>
+            <div class="panel"><div class="bar y"><span>what happened</span></div><div class="console con-s" id="wk-con" style="min-height:96px;max-height:130px"></div></div>
+          </div>
+        </div>
+        <aside class="nt">A replay of the activity that students can run on their own laptops. Each Next pass is one trip
+          round the rule: check the test; if it's true, do the body at that position, then step. Try i &lt;= line.length:
+          the Counter steps onto the empty dashed square, and line[6] is undefined. Start at 1: the first person is
+          skipped. Step by two: every other person. The rule is all the Counter knows.</aside>
+      </section>
+
+      <!-- 24 BAND FOR -->
+      <section class="slide stage" id="for-band" data-sec="The for loop">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">The for loop</div>
+          <h2 class="hero md">The Counter, written down.</h2>
+          <p class="lede">Start, test, step, body. Four parts, one line of code, and the same rule the line just followed.</p>
+        </div>
+        <aside class="nt">11:30. Map the activity directly onto code, one piece at a time, each tied back to a person in
+          the line. Same Tone.js floor as Part 1: notes as strings, triggerAttackRelease. No Tone.Loop.</aside>
+      </section>
+
+      <!-- 25 FOR PARTS -->
+      <section class="slide" id="for-parts" data-sec="The for loop" data-ex="Name the parts">
+        <span class="turn">Your turn</span>
+        <div class="billing">The for loop · The parts</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Find the Counter in the code</h2>
         <div class="cols wide-l">
           <div class="stack">
             <div class="panel">
-              <div class="bar"><span>tone.js</span><span>click the code</span></div>
-              <pre class="code lg" id="op-code"
-                style="font-size:20px"><span class="k">let</span> <span class="pl">tone</span> = <span class="part" data-part="open">{</span> <span class="part" data-part="label"><span class="pl">note</span></span><span class="part" data-part="colon">:</span> <span class="part" data-part="value"><span class="s">"C4"</span></span><span class="part" data-part="comma">,</span> <span class="pl">duration</span>: <span class="s">"8n"</span> <span class="part" data-part="open">}</span>;
-
-<span class="pl">synth</span>.<span class="fn">triggerAttackRelease</span>(<span class="part" data-part="read"><span class="pl">tone</span>.<span class="pl">note</span></span>, <span class="pl">tone</span>.<span class="pl">duration</span>);</pre>
+              <div class="bar"><span>melody.js</span><span>click the code</span></div>
+<pre class="code" id="fp-code" style="font-size:18px;line-height:1.7"><span class="k">for</span> (<span class="part" data-part="start"><span class="k">let</span> <span class="pl">i</span> = <span class="n">0</span></span>; <span class="part" data-part="test"><span class="pl">i</span> &lt; <span class="pl">melody</span>.<span class="pl">length</span></span>; <span class="part" data-part="step"><span class="pl">i</span>++</span>) {
+  <span class="part" data-part="body"><span class="pl">synth</span>.<span class="fn">triggerAttackRelease</span>(<span class="pl">melody</span>[<span class="pl">i</span>], <span class="s">"8n"</span>, <span class="pl">now</span> + <span class="pl">i</span> * <span class="n">0.4</span>);</span>
+}</pre>
             </div>
-            <p class="dir" style="font-size:19px">Read it aloud: "tone is an object: note is C4, duration is eighth
-              note."</p>
+            <div class="rows nc" id="fp-map"></div>
           </div>
           <div class="stack">
-            <div class="small muted" id="op-step">1 of 6</div>
-            <div class="prompt" id="op-q" style="font-size:28px"></div>
-            <div class="fb" id="op-fb"></div>
-            <div class="row"><button class="btn" id="op-next" hidden>Next part</button></div>
+            <div class="small muted" id="fp-step">1 of 4</div>
+            <div class="prompt" id="fp-q" style="font-size:28px"></div>
+            <div class="fb" id="fp-fb"></div>
+            <div class="row"><button class="btn" id="fp-next" hidden>Next part</button></div>
           </div>
         </div>
-        <aside class="nt">Six parts, one at a time. The colon and the comma are where most typos happen: a = instead of
-          : inside the braces, or a missing comma between properties (SyntaxError: Unexpected identifier). Contrast with
-          the array: square brackets and positions there; curly braces and labels here.</aside>
+        <aside class="nt">Four parts, one at a time, each a person or a move from the activity. let i = 0: the Counter
+          standing at position 0. i &lt; melody.length: "does the Counter keep going?", checked before every pass; the
+          line that sent the Counter off the end when it was wrong. i++: the Counter moving one place on (i++ is
+          i = i + 1). The body: what the Caller says to do at each position. The semicolons separate the three parts of
+          the rule; there's no semicolon after i++.</aside>
       </section>
 
-      <!-- 23 CHANGE A PROPERTY -->
-      <section class="slide" id="change-part" data-sec="Objects" data-demo="Change a part">
+      <!-- 26 LADDER: PLAY EVERY NOTE -->
+      <section class="slide" id="ladder-loop" data-sec="The for loop" data-demo="Play every note">
         <span class="turn try">Try it</span>
-        <div class="billing">Objects · Changing parts</div>
+        <div class="billing">The for loop · From idea to code</div>
         <hr class="rule">
-        <h2 class="h1 tight">Change a part, hear the difference</h2>
-        <div class="cols">
-          <div class="stack" style="gap:12px">
-            <div class="rows fnq" id="cp-rows"></div>
-            <div class="seg" role="group" aria-label="Notation" id="cp-seg"><button class="btn ghost sel"
-                data-n="dot">Dot notation</button><button class="btn ghost" data-n="br">Bracket notation</button></div>
-          </div>
-          <div class="stack" style="gap:12px">
-            <div id="cp-obj"></div>
-            <div class="row"><button class="btn" id="cp-play">Play tone</button><button class="btn ghost"
-                id="cp-reset">Start over</button></div>
-            <p class="dir" id="cp-dir" style="font-size:19px;min-height:84px">Run a line, then play the sound.</p>
-          </div>
-        </div>
-        <aside class="nt">Changing a property uses the same reach as reading it, with = on the right. Run tone.note =
-          "E4" and play: the object is the same, one part changed. tone.velocity = 0.5 adds a label that wasn't there:
-          objects grow by naming a new part (no push: there's no end to add at). Then switch to bracket notation: every
-          line does the same thing, written tone["note"]. Same reach, different syntax. Don't dwell.</aside>
-      </section>
-
-      <!-- 24 BRACKETS -->
-      <section class="slide" id="brackets" data-sec="Objects">
-        <div class="billing">Objects · Bracket notation</div>
-        <hr class="rule">
-        <h2 class="h1 tight">Same reach, different syntax</h2>
-        <div class="cols">
-          <div class="stack">
-            <div class="panel">
-              <div class="bar"><span>today</span></div>
-              <pre class="code" id="br-a" style="font-size:18px"></pre>
-            </div>
-            <p style="margin:0;font-size:20px">Both give back <code>"C4"</code>. With brackets, the label is a string,
-              in quotes.</p>
-          </div>
-          <div class="stack">
-            <div class="panel">
-              <div class="bar p"><span>later: when only the program knows the label</span></div>
-              <pre class="code" id="br-b" style="font-size:18px"></pre>
-            </div>
-            <p style="margin:0;font-size:20px">When the label is in a variable, only brackets work. The dot looks for a
-              label literally called <code>part</code>.</p>
-          </div>
-        </div>
-        <p class="dir" style="margin-top:auto">Use the dot when you know the label as you write. Keep the brackets in
-          mind for later.</p>
-        <aside class="nt">Keep it light: introduce brackets as the same reach in a different syntax, and move on. Why it
-          earns its place: later, when the label isn't known until the program runs (which key was pressed, which
-          setting the player picked), dot notation can't do it and brackets are the only way. Seeing it now means it
-          won't come out of nowhere then. Arrays use the same brackets with a number: notes[0]. That's not a
-          coincidence.</aside>
-      </section>
-
-      <!-- 25 TEMPLATE OBJECT -->
-      <section class="slide" id="template-object" data-sec="Objects" data-ex="An object in your template">
-        <span class="turn">Your turn</span>
-        <div class="billing">Objects · In script.js</div>
-        <hr class="rule">
-        <h2 class="h1 tight">Your template already wants one</h2>
-        <div class="cols">
-          <div class="stack" style="gap:10px">
-            <div class="panel">
-              <div class="bar m"><span>script.js · now</span><span>two names, one idea</span></div>
-              <pre class="code sm" id="to-a" style="font-size:15px"></pre>
-            </div>
-          </div>
-          <div class="stack" style="gap:10px">
-            <div class="panel">
-              <div class="bar"><span>script.js · with an object</span><span>one name, two labels</span></div>
-              <pre class="code sm" id="to-b" style="font-size:15px"></pre>
-            </div>
-          </div>
-        </div>
-        <div class="cols" style="margin-top:14px">
-          <p style="margin:0;font-size:19px"><b>Idea:</b> the example is one key that plays one note. <b>Strategy:</b>
-            one thing, two labelled parts: <code>key</code> and <code>note</code>.</p>
-          <p class="vsnote"><span class="vl">In VS Code</span>Change <code>Settings</code> to the object, and every
-            <code>exampleKey</code> and <code>exampleNote</code> to <code>example.key</code> and
-            <code>example.note</code>. Hold <b>A</b>: it should sound the same.</p>
-        </div>
-        <aside class="nt">A refactor: the instrument does exactly the same, but the code says what belongs together. The
-          template's Settings section has exampleKey and exampleNote: two variables whose names already say "these are
-          parts of one thing". Four edits: the object, and three uses (the if in keyDown, triggerAttack, the if and
-          triggerRelease in keyUp: count them). If it goes quiet, one use was missed: the console shows ReferenceError:
-          exampleNote is not defined. Ask: what else in your A1 instrument is one thing with labelled parts?</aside>
-      </section>
-
-      <!-- 26 LADDER 4: A LIST OF SOUNDS -->
-      <section class="slide" id="ladder-steps" data-sec="Objects" data-demo="A list of labelled sounds">
-        <span class="turn try">Try it</span>
-        <div class="billing">Objects · Bringing them together</div>
-        <hr class="rule">
-        <h2 class="h1 tight">A melody where each note has a length</h2>
+        <h2 class="h1 tight">Play every note of the melody</h2>
         <div class="cols wide-l" style="gap:30px">
-          <div>
-            <div class="ladder" id="ls4-lad"></div>
-            <div class="lnav" id="ls4-nav"></div>
-          </div>
-          <div class="stack" id="ls4-try" style="gap:10px">
-            <div class="line" id="ls4-line" style="gap:8px"></div>
-            <div class="row" style="gap:8px"><span class="small muted" style="width:76px">position</span><button
-                class="chip" data-i="0">[0]</button><button class="chip" data-i="1">[1]</button><button class="chip"
-                data-i="2">[2]</button></div>
-            <div class="row" style="gap:8px"><span class="small muted" style="width:76px">label</span><button
-                class="chip" data-k="note">.note</button><button class="chip" data-k="duration">.duration</button></div>
-            <div class="path" id="ls4-path">steps</div>
-            <div class="row"><button class="btn" id="ls4-play">Play this step</button></div>
+          <div><div class="ladder" id="ll-lad"></div><div class="lnav" id="ll-nav"></div></div>
+          <div class="stack" id="ll-try" style="gap:10px">
+            <table class="io passes"><thead><tr><th>i</th><th>i &lt; 4</th><th>melody[i]</th><th>starts at</th></tr></thead><tbody id="ll-rows"></tbody></table>
+            <div class="row"><button class="btn" id="ll-next">Run the next pass</button><button class="btn ghost" id="ll-play">Play it</button><button class="btn ghost" id="ll-reset">Start again</button></div>
           </div>
         </div>
-        <aside class="nt">Bringing them together, briefly. The idea needs both shapes: the melody is a line (position),
-          and each note in it is one thing with labelled parts (label). So the strategy is a list of objects. Reaching
-          in goes in the same order: first where it sits, then what it's called: steps[1].duration. Click a position and
-          then a label; the path shows the code and what it gives back. Ask: what's steps[2]? (undefined: there are two
-          steps.) And steps[0].volume? (undefined: no such label.) One or two lines only; this seeds the afternoon.
-          Playing every step without typing each one is Friday's topic.</aside>
+        <aside class="nt">The worked example, same four steps as Part 1. Strategy is where the activity pays off: the same
+          thing happens at every position, so let a counter walk the positions. Students predict before it runs: how many
+          notes, in what order? Step through the passes: each row is one trip round the rule, and the fifth check
+          (4 &lt; 4) is false, so the loop stops. Then Play it. The bridge's lines are all here: melody[i] and i * 0.4
+          are the number that changed from line to line. In script.js this goes in a function playMelody(), called from keyDown: that's the editor two slides on.</aside>
       </section>
 
-      <!-- 27 STEPS EDITOR -->
-      <section class="slide" id="steps-code" data-sec="Objects" data-ex="Sounds and steps">
+      <!-- 27 THE LOOP DOESN'T WAIT -->
+      <section class="slide" id="loop-time" data-sec="The for loop" data-ex="When does it play?">
         <span class="turn">Your turn</span>
-        <div class="billing">Objects · In script.js</div>
+        <div class="billing">The for loop · Time</div>
         <hr class="rule">
-        <h2 class="h1 tight">One sound, then a list of them</h2>
+        <h2 class="h1 tight">The loop doesn't wait</h2>
+        <div class="cols wide-l" style="gap:28px">
+          <div class="stack" style="gap:12px">
+            <div class="seg" role="group" aria-label="Start time" id="lt-seg"><button class="btn ghost sel" data-m="time">With a start time</button><button class="btn ghost" data-m="none">Without</button></div>
+            <div class="panel"><div class="bar"><span>melody.js</span></div><pre class="code sm" id="lt-code" style="font-size:15px"></pre></div>
+            <div class="tl" id="lt-tl"></div>
+            <div class="row"><button class="btn" id="lt-play">Play it</button></div>
+          </div>
+          <div class="stack" style="gap:12px">
+            <p style="margin:0;font-size:19px">The whole loop runs in a blink, long before the first note has finished. It doesn't play the notes one by one: it tells Tone <b>when</b> to play each one.</p>
+            <p class="prompt" style="font-size:24px">With four notes and <code>i * 0.4</code>, when does the last note start?</p>
+            <div class="row" id="lt-opts" style="gap:8px"></div>
+            <div class="fb" id="lt-fb"></div>
+          </div>
+        </div>
+        <aside class="nt">Why a melody is a melody and not a chord: the notes are spaced out. Take the start time away
+          and play: all four notes start at the same moment, because the loop finishes in microseconds. The loop doesn't
+          wait between passes; Tone waits, because we told it when. i grows by one each pass, so each start time is
+          pushed later by the same amount. The last note is i = 3, so it starts 3 * 0.4 = 1.2 seconds after now. Common
+          wrong answer: 1.6 (counting four steps, not three: the first note starts at 0). That's an off-by-one too.</aside>
+      </section>
+
+      <!-- 28 BREAK IT -->
+      <section class="slide" id="break-loop" data-sec="The for loop" data-demo="Break it on purpose">
+        <span class="turn try">Try it</span>
+        <div class="billing">The for loop · Off by one</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Break it on purpose, and listen</h2>
+        <div class="row" id="bl-rule" style="gap:18px;margin-bottom:12px"></div>
+        <div class="cols wide-l" style="gap:28px">
+          <div class="stack" style="gap:12px">
+            <div class="panel"><div class="bar"><span>melody.js</span><span>slowed down</span></div><pre class="code" id="bl-code" style="font-size:16px"></pre></div>
+            <div class="line" id="bl-line"></div>
+          </div>
+          <div class="stack" style="gap:12px">
+            <div class="state3" id="bl-state"></div>
+            <div class="row"><button class="btn" id="bl-next">Next pass</button><button class="btn ghost" id="bl-run">Run it all</button><button class="btn ghost" id="bl-reset">Start again</button></div>
+            <div class="panel"><div class="bar y"><span>what happened</span></div><div class="console con-s" id="bl-con" style="min-height:96px;max-height:130px"></div></div>
+          </div>
+        </div>
+        <aside class="nt">The off-by-one they just walked, now heard. The replay is slowed down so they can follow each
+          pass. Predict first, then run. With i &lt;= melody.length there's a fifth pass: melody[4] is undefined. Tone
+          doesn't stop with an error; it gets nothing to play, and the program carries on. That's why off-by-one bugs are
+          sneaky: often nothing tells you. Start at 1: the first note never plays. Fix it back together.</aside>
+      </section>
+
+      <!-- 29 LOOP EDITOR -->
+      <section class="slide" id="loop-code" data-sec="The for loop" data-ex="A key plays the melody">
+        <span class="turn">Your turn</span>
+        <div class="billing">The for loop · In script.js</div>
+        <hr class="rule">
+        <h2 class="h1 tight">One key plays the whole melody</h2>
         <div class="cols wide-l pg" style="flex:1;min-height:0">
-          <div class="panel">
-            <div class="bar"><span>script.js</span><span>Ctrl / ⌘ + Enter runs</span></div><textarea
-              class="code-ed pg-ed" id="sc-ed" spellcheck="false" aria-label="Code editor"></textarea>
-          </div>
+          <div class="panel"><div class="bar"><span>script.js</span><span>Ctrl / ⌘ + Enter runs</span></div><textarea class="code-ed pg-ed" id="lp-ed" spellcheck="false" aria-label="Code editor"></textarea></div>
           <div class="stack" style="gap:10px">
-            <div class="row"><button class="btn" id="sc-run">Run</button><button class="btn ghost"
-                id="sc-reset">Reset</button></div>
-            <div class="pad" id="sc-pad" tabindex="0" aria-label="Keyboard pad"></div>
-            <div class="panel">
-              <div class="bar y"><span>console</span></div>
-              <div class="console con-s" id="sc-con" style="max-height:100px;min-height:64px"></div>
-            </div>
+            <div class="row"><button class="btn" id="lp-run">Run</button><button class="btn ghost" id="lp-reset">Reset</button></div>
+            <div class="pad" id="lp-pad" tabindex="0" aria-label="Keyboard pad"></div>
+            <div class="panel"><div class="bar y"><span>console</span></div><div class="console con-s" id="lp-con" style="max-height:90px;min-height:56px"></div></div>
             <ol class="plain tasks">
-              <li>Make <b>y</b> change <code>tone.duration</code> to <code>"2n"</code>, and log <code>tone</code>.</li>
-              <li>Make <b>2</b> play the second step.</li>
-              <li>Add a third step with <code>push</code>, and make <b>3</b> play it.</li>
+              <li>Add a fifth note with <code>push</code>, under the list. Do you need to change the loop?</li>
+              <li>Make the melody play twice as fast.</li>
+              <li>Change <code>&lt;</code> to <code>&lt;=</code>. What do you hear? Fix it again.</li>
             </ol>
-            <p class="vsnote"><span class="vl">In VS Code</span>Add these to your <code>script.js</code>, next to this
-              morning's <code>notes</code>.</p>
+            <p class="vsnote"><span class="vl">In VS Code</span>Same code, same sections, in your <code>script.js</code>.</p>
           </div>
         </div>
-        <aside class="nt">On their own laptops. Task 1 is a property change and a log: the console shows the whole
-          object. Task 2: steps[1].note and steps[1].duration. Task 3: steps.push({ note: "G4", duration: "8n" }) under
-          the list, then a 3 branch reaching steps[2]. The push can go straight after the list: the object you push is
-          written exactly like the others. Common mistakes: steps.note (undefined: steps is the list; it has no labels,
-          only positions); a missing comma between two objects in the list; Tone with a small t.</aside>
+        <aside class="nt">Everyone, in VS Code (the slide editor is the fallback and the projector view). A key press
+          calls playMelody, which walks the melody once. Task 1: melody.push("C5") under the list, and the loop doesn't
+          change: it asks the array its own length every time, so it doesn't care how long it is. Task 2: 0.4 becomes
+          0.2. Task 3: a fifth pass with melody[5] (or [4]) undefined: no error, no note. Common mistakes: commas instead
+          of semicolons in the for line; melody[i] with round brackets; forgetting now, so everything starts at once.</aside>
       </section>
 
-      <!-- 28 QUIZ 2 -->
-      <section class="slide" id="quiz-song" data-sec="Model something musical" data-ex="A song, part by part">
-        <span class="turn">Your turn</span>
-        <div class="billing">Model something musical</div>
+      <!-- 30 LADDER: COUNT -->
+      <section class="slide" id="ladder-count" data-sec="The for loop" data-demo="Count as you go">
+        <span class="turn try">Try it</span>
+        <div class="billing">The for loop · More than playing</div>
         <hr class="rule">
-        <h2 class="h1 tight">A song, part by part</h2>
-        <p style="margin:0 0 10px;font-size:19px">Is each part a line of things (array), a labelled part (property), or
-          both?</p>
-        <div class="rows quiz" id="q2"></div>
-        <div class="fb" id="q2-fb" style="margin-top:14px"></div>
-        <aside class="nt">11:40. A short quiz, then discuss as a class. The last row is the one to talk about: a whole
-          song is one thing with labelled parts (title, tempo), and one of those parts is a list (sections), and each
-          section is again labelled parts. Real data nests. Sketch it on the board as a tree if there's time.</aside>
-      </section>
-
-      <!-- 29 MODEL IT -->
-      <section class="slide" id="model-it" data-sec="Model something musical" data-ex="Model a musical thing">
-        <span class="turn">Your turn</span>
-        <div class="billing">Model something musical · From idea to code</div>
-        <hr class="rule">
-        <h2 class="h1 tight">Model something musical</h2>
-        <div class="seg" role="group" aria-label="What to model" id="mi-seg" style="margin-bottom:12px"></div>
-        <div class="cols pg" style="flex:1;min-height:0;gap:28px">
-          <div class="sheetf" id="mi-sheet">
-            <label class="f">Idea · what is it, in plain words?<textarea class="t" rows="2"
-                data-f="idea"></textarea></label>
-            <label class="f">Strategy · which parts are a line, which are labels?<textarea class="t" rows="3"
-                data-f="strat"></textarea></label>
-            <label class="f">Plan · the steps to build it<textarea class="t" rows="3" data-f="plan"></textarea></label>
-            <p class="small muted" id="mi-hint" style="margin:0"></p>
-          </div>
-          <div class="stack" style="gap:10px;min-height:0">
-            <div class="panel" style="flex:1;display:flex;flex-direction:column;min-height:0">
-              <div class="bar"><span>Code · model.js</span><span>saved in this browser</span></div><textarea
-                class="code-ed pg-ed" id="mi-ed" spellcheck="false" aria-label="Code editor"></textarea>
-            </div>
-            <div class="row"><button class="btn" id="mi-run">Run</button><span class="small muted">Log what you made.
-                Then compare with a neighbour.</span></div>
-            <div class="panel">
-              <div class="bar y"><span>console</span></div>
-              <div class="console con-s" id="mi-con" style="max-height:96px;min-height:56px"></div>
-            </div>
+        <h2 class="h1 tight">Count while you walk</h2>
+        <div class="cols wide-l" style="gap:30px">
+          <div><div class="ladder" id="ct-lad"></div><div class="lnav" id="ct-nav"></div></div>
+          <div class="stack" id="ct-try" style="gap:10px">
+            <table class="io passes"><thead><tr><th>i</th><th>melody[i]</th><th>=== "C4"?</th><th>count</th></tr></thead><tbody id="ct-rows"></tbody></table>
+            <div class="row"><button class="btn" id="ct-next">Run the next pass</button><button class="btn ghost" id="ct-reset">Start again</button></div>
+            <div class="panel"><div class="bar y"><span>console</span></div><div class="console" id="ct-con" style="min-height:44px;padding:8px 18px"></div></div>
           </div>
         </div>
-        <aside class="nt">About ten minutes. Students choose a track, a drum pattern, a playlist, or something of their
-          own, and climb the same four steps as every example today: write the idea, decide for each part whether it's a
-          line or a label, plan it, then write it as code and log it. Plain language first, code last. Everything is
-          saved in their browser; they can also do the code part in script.js. Last three minutes: compare with a
-          neighbour. Did you make the same choices? Where you differ, can you both argue for yours? (There's often more
-          than one good answer.) TAs listen for students who can build it but can't say why array or object.</aside>
+        <aside class="nt">The loop can do more than visit: it can build something as it goes. One pattern only today: a
+          count. count starts at 0 before the loop (inside it would reset every pass: a common mistake), grows by one
+          when the condition holds, and is used after the loop. Predict the count before stepping: 3. The same walk,
+          a different body. map, filter and reduce stay out of scope.</aside>
       </section>
 
-      <!-- 30 WRAP-UP -->
+      <!-- 31 OFF-BY-ONE QUIZ -->
+      <section class="slide" id="quiz-loops" data-sec="Wrap-up" data-ex="What breaks?">
+        <span class="turn">Your turn</span>
+        <div class="billing">Wrap-up · Check</div>
+        <hr class="rule">
+        <h2 class="h1 tight">What does each loop do?</h2>
+        <p style="margin:0 0 10px;font-size:19px"><code>melody</code> has four notes. Each loop plays <code>melody[i]</code>. What happens?</p>
+        <div class="rows quiz" id="q3"></div>
+        <div class="fb" id="q3-fb" style="margin-top:14px"></div>
+        <aside class="nt">11:55. Two or three of these on their own laptops, then discuss. The pattern: the start and the
+          test decide the first and last position. &lt;= runs one pass too many; starting at 1 skips the first; - 1 in
+          the test skips the last. Ask: which one is correct, and how can you tell without running it?</aside>
+      </section>
+
+      <!-- 32 WRAP-UP -->
       <section class="slide stage" id="wrap-up" data-sec="Wrap-up">
         <div class="beam y"></div>
         <div class="beam m"></div>
         <div class="scan"></div>
         <div class="inner">
           <div class="billing">Wrap-up</div>
-          <h2 class="hero md">By position, or by label.</h2>
-          <p class="lede">Array: many of a kind, in order, reached by position. Object: one thing, reached by labelled
-            property.</p>
-          <div class="terms" style="max-width:700px"><span>[ ]</span><span>notes[0]</span><span>.length</span><span>push
-              · pop</span><span>unshift · shift</span><span>{ }</span><span>tone.note</span><span>tone["note"]</span>
-          </div>
+          <h2 class="hero md">Start, test, step, body.</h2>
+          <p class="lede">An array keeps many of a kind in order, reached by position. A <code>for</code> loop is the Counter, written down: it walks every position for you.</p>
+          <div class="terms" style="max-width:700px"><span>[ ]</span><span>melody[i]</span><span>.length</span><span>push · pop</span><span>unshift · shift</span><span>for</span><span>i &lt; melody.length</span><span>i++</span></div>
         </div>
-        <aside class="nt">11:55. Summarise: array = many of a kind, reached by position; object = one thing, reached by
-          labelled property; a list of objects puts the two together. And the way we got to code every time: idea,
-          strategy, plan, then code. Back to the five objectives. Point at the repetition from this morning: playing
-          three notes meant three nearly identical lines. That's a problem worth solving, and it's Friday's: iteration.
-        </aside>
+        <aside class="nt">Summarise: an array is many of a kind, reached by position; a for loop is the Counter from the
+          line, automated: start, test, step, body, repeated until the test fails. Off-by-one happens at the edges, and
+          they've now felt it, heard it and spotted it in code. Back to the five objectives.</aside>
       </section>
 
-      <!-- 31 NEXT -->
+      <!-- 33 NEXT -->
       <section class="slide" id="next" data-sec="Wrap-up">
-        <div class="billing">After lunch · Group learning and exercises</div>
+        <div class="billing">Next · Exercises and Friday</div>
         <hr class="rule">
-        <h2 class="h1">This afternoon</h2>
+        <h2 class="h1">What's next</h2>
         <div class="cols">
           <div class="stack">
-            <p class="lede" style="margin:0">Exercises on objects and arrays, in VS Code: sync your fork of the
-              exercises repo and open <code>objects-and-arrays/</code>.</p>
-            <p class="lede" style="margin:0">You start from this morning's <code>notes</code> melody and
-              <code>tone</code> object. Core for everyone, then blue and purple.</p>
+            <p class="lede" style="margin:0">Exercises on arrays and iteration, in VS Code: sync your fork of the
+              exercises repo and open <code>arrays-and-iteration/</code>. You start from this morning's
+              <code>melody</code> and its loop.</p>
+            <p class="lede" style="margin:0">Friday: these arrays held single values. Next we meet one thing with labelled
+              parts, and then arrays of them.</p>
           </div>
           <div class="rows lab" style="border-top:1px solid var(--ink-900)">
             <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a
@@ -1578,13 +1398,13 @@
                   href="https://github.com/IDBCourses/kd402d-a1-template" target="_blank" rel="noopener">The A1
                   template</a></span></div>
             <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a
-                  href="https://mau.instructure.com/courses/22858/modules/137084" target="_blank" rel="noopener">Canvas:
-                  Objects and arrays module</a></span></div>
+                  href="https://mau.instructure.com/courses/22858/modules/137086" target="_blank" rel="noopener">Canvas:
+                  Arrays and iteration module</a></span></div>
           </div>
         </div>
-        <aside class="nt">Preview the afternoon: independent, self-paced work in VS Code, TAs circulating. Sync fork on
-          GitHub, then Pull in VS Code. Three blocks in the core track: the melody extended, one sound described, an
-          array of steps. Reminder: Tone.start() needs a key press or click before any sound plays.</aside>
+        <aside class="nt">Preview the exercises: write and debug their own loops. Predict before you run, every time:
+          that's how the off-by-one habit gets built. Sync fork on GitHub, then Pull in VS Code. Preview Friday: objects,
+          then arrays of objects. Reminder: Tone.start() needs a key press or click before any sound plays.</aside>
       </section>
 
     </div>
@@ -1621,15 +1441,6 @@
           }, i * (gap || 330)))
         });
       }
-      /* a sound with its own wave shape and loudness (opening slide) */
-      var shaped = {};
-      function playShaped(o) {
-        audioOn(); if (!T) return;
-        var k = o.wave;
-        if (!shaped[k]) { shaped[k] = new T.Synth({ oscillator: { type: k } }).toDestination() }
-        var s = shaped[k]; s.volume.value = o.vol;
-        try { s.triggerAttackRelease(o.note, o.len) } catch (e) { }
-      }
 
       /* ============ a row of boxes (an array) ============
          opt: {idx:true|false, hi:index, moved:[indices], fresh:[indices], click:fn(i)} */
@@ -1644,15 +1455,6 @@
           if (opt.click) c.querySelector(".v").addEventListener("click", function () { opt.click(i) });
           host.appendChild(c);
         });
-      }
-      /* one object, its labelled parts */
-      function objView(host, name, obj, opt) {
-        opt = opt || {};
-        var h = '<div class="obj' + (opt.sm ? " sm" : "") + (opt.hiAll ? " hi" : "") + '"><div class="on">' + esc(name) + '</div>';
-        Object.keys(obj).forEach(function (k) {
-          h += '<div class="pr' + (opt.hi === k ? " hi" : "") + (opt.flash === k ? " flash" : "") + '"><span class="pk">' + esc(k) + '</span><span class="pv">' + esc(D.fmt(typeof obj[k] === "string" ? JSON.stringify(obj[k]) : obj[k])) + '</span></div>';
-        });
-        host.innerHTML = h + '</div>';
       }
       function show(arr) { return "[" + arr.map(function (x) { return JSON.stringify(x) }).join(", ") + "]" }
 
@@ -1887,69 +1689,7 @@
         render();
       })();
 
-      /* ---------- 08 labelled parts ---------- */
-      (function () {
-        var PARTS = [
-          { k: "note", label: "note", vals: ["C4", "E4", "G4", "C3"], show: function (v) { return v } },
-          { k: "len", label: "length", vals: ["8n", "2n", "16n"], show: function (v) { return { "8n": "short", "2n": "long", "16n": "very short" }[v] } },
-          { k: "vol", label: "loudness", vals: [-8, -20, 0], show: function (v) { return { "-8": "medium", "-20": "quiet", "0": "loud" }[v] } },
-          { k: "wave", label: "wave shape", vals: ["triangle", "square", "sine", "sawtooth"], show: function (v) { return v } }
-        ], st = { note: 0, len: 0, vol: 0, wave: 0 };
-        function cur() { var o = {}; PARTS.forEach(function (p) { o[p.k] = p.vals[st[p.k]] }); return o }
-        /* the drawing: each part changes one thing you can see */
-        var FREQ = { C3: 130.81, C4: 261.63, E4: 329.63, G4: 392 }, WID = { "16n": 0.22, "8n": 0.42, "2n": 0.96 },
-          AMP = { "-20": 0.3, "-8": 0.62, "0": 0.95 }, SEC = { "16n": 0.125, "8n": 0.25, "2n": 1 };
-        var KEY = [["note", "how tightly the wave is packed"], ["len", "how wide it is"], ["vol", "how tall it is"], ["wave", "its shape"]];
-        function shape(w, ph) {
-          var f = ph - Math.floor(ph);
-          if (w === "sine") return Math.sin(2 * Math.PI * f);
-          if (w === "square") return f < 0.5 ? 1 : -1;
-          if (w === "sawtooth") return 2 * f - 1;
-          return f < 0.25 ? 4 * f : f < 0.75 ? 2 - 4 * f : 4 * f - 4;
-        }
-        function draw(o, fk) {
-          var W = 520, H = 120, mid = H / 2, end = WID[o.len] * W, cyc = FREQ[o.note] / 261.63 * 18, amp = AMP[String(o.vol)] * (mid - 9), d = "", N = 900;
-          for (var i = 0; i <= N; i++) {
-            var x = i / N * W, y = mid;
-            if (x <= end) {
-              var env = Math.min(1, x / 6, (end - x) / (end * 0.25 + 1));
-              y = mid - shape(o.wave, x / W * cyc) * amp * Math.max(0, env);
-            }
-            d += (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1);
-          }
-          $("#lb-wave").innerHTML = '<line class="mid" x1="0" y1="' + mid + '" x2="' + W + '" y2="' + mid + '"/><path class="w" d="' + d + '"/><line class="ph" id="lb-ph" x1="0" y1="4" x2="0" y2="' + (H - 4) + '" visibility="hidden"/>';
-          $("#lb-key").innerHTML = KEY.map(function (k) { var p = PARTS.filter(function (x) { return x.k === k[0] })[0]; return '<span' + (fk === k[0] ? ' class="on"' : '') + '><b>' + p.label + '</b>: ' + k[1] + '</span>' }).join("");
-        }
-        var raf = null;
-        function sweep(o) {
-          var ph = $("#lb-ph"); if (!ph) return;
-          if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-          if (raf) cancelAnimationFrame(raf);
-          var end = WID[o.len] * 520, dur = SEC[o.len] * 1000, t0 = performance.now();
-          ph.setAttribute("visibility", "visible");
-          (function step(t) {
-            var k = Math.min(1, Math.max(0, (t - t0) / dur)), x = (k * end).toFixed(1);
-            ph.setAttribute("x1", x); ph.setAttribute("x2", x);
-            if (k < 1) raf = requestAnimationFrame(step); else { ph.setAttribute("visibility", "hidden"); raf = null }
-          })(t0);
-        }
-        function sound() { var o = cur(); playShaped(o); sweep(o) }
-        function render(fk) {
-          var box = $("#lb-snd"); box.innerHTML = "";
-          PARTS.forEach(function (p) {
-            var b = document.createElement("button"); b.innerHTML = '<b>' + p.label + '</b><span>' + esc(p.show(p.vals[st[p.k]])) + '</span>';
-            if (fk === p.k) b.className = "flash";
-            b.addEventListener("click", function () { st[p.k] = (st[p.k] + 1) % p.vals.length; render(p.k); sound() });
-            box.appendChild(b);
-          });
-          draw(cur(), fk);
-        }
-        $("#lb-play").addEventListener("click", sound);
-        $("#lb-name").addEventListener("click", function () { $("#lb-word").hidden = false; this.hidden = true });
-        render();
-      })();
-
-      /* ---------- quiz rows (09 and 28) ---------- */
+      /* ---------- quiz rows (09 and 31) ---------- */
       function quiz(box, fbEl, Q, choices, hint) {
         var done = 0;
         Q.forEach(function (q) {
@@ -1970,9 +1710,10 @@
       }
       quiz($("#q1"), $("#q1-fb"), [
         ["The notes in a C major scale", 0, "Many notes of one kind, in order: C, D, E… The third note of the scale is E."],
-        ["A drum machine's current settings: tempo, volume, pattern name", 1, "One machine, described by several facts. Which is the first setting? The question makes no sense."],
-        ["The songs in a playlist", 0, "Many songs, in an order you chose. \"Play the next one\" only works because there's an order."]
-      ], ["many, in order", "labelled parts"], "Ask: is there a first one? Does swapping two of them change it?");
+        ["A synth's settings: volume, wave shape, note", 1, "Those are one thing with labelled parts. Which is the first setting? The question makes no sense. That shape is Friday's topic."],
+        ["The songs in a playlist", 0, "Many songs, in an order you chose. \"Play the next one\" only works because there's an order."],
+        ["The steps of a drum pattern", 0, "Step one, step two… a drum machine plays them in order, by position."]
+      ], ["yes, by position", "no"], "Ask: is there a first one? Does swapping two of them change it?");
 
       /* ---------- 11 act it out ---------- */
       lineView($("#al-line"), ["C4", "E4", "G4", "A4", "C5"], {});
@@ -2149,168 +1890,281 @@
       /* ---------- 18 melody editor ---------- */
       playground("me", '// ---------- State ----------\nlet notes = ["C4", "E4", "G4"];\n\n// ---------- Sound ----------\nconst synth = new Tone.PolySynth(Tone.Synth).toDestination();\n\n// ---------- Controls ----------\nfunction keyDown(event) {\n  Tone.start();\n  if (event.repeat === false) {\n    if (event.key === "a") {\n      synth.triggerAttackRelease(notes[0], "8n");\n    } else if (event.key === "s") {\n      synth.triggerAttackRelease(notes[1], "8n");\n    } else if (event.key === "p") {\n      notes.push("B4");\n      console.log(notes);\n    }\n  }\n}\n\n// ---------- Setup ----------\nwindow.addEventListener("keydown", keyDown);\n');
 
-      /* ---------- 21 ladder: one sound ---------- */
-      (function () {
-        var tone = { note: "C4", duration: "8n" }, tryEl = $("#lo-try");
-        function log(l) { conLines($("#lo-con"), l) }
-        ladder("lo", {
-          idea: "One sound: the note C4, played short.",
-          strat: "It's <b>one</b> thing, not many. Its parts are different kinds and have no order, so give each a <b>label</b> and reach it by name.", shape: "object",
-          plan: [["Make one sound with two labelled parts: a note and a duration.", [0, 1]], ["Reach each part by its label.", [2, 3]], ["Hand both parts to the synth.", [3]]],
-          code: '// 1. one sound, two labelled parts\nlet tone = { note: "C4", duration: "8n" };\n// 2. and 3. reach each part by label\nsynth.triggerAttackRelease(tone.note, tone.duration);',
-          onStep: function (i) { gate(tryEl, i === 3) }
-        });
-        objView($("#lo-obj"), "tone", tone);
-        [["tone.note", "note"], ["tone.duration", "duration"], ["tone.volume", "volume"]].forEach(function (x) {
-          var b = document.createElement("button"); b.className = "btn cy"; b.textContent = x[0]; b.style.textTransform = "none";
-          b.addEventListener("click", function () {
-            objView($("#lo-obj"), "tone", tone, { hi: x[1] });
-            var v = tone[x[1]]; log([{ c: "in", t: x[0] }, v === undefined ? "undefined  · there's no part labelled volume" : JSON.stringify(v)]);
-          });
-          $("#lo-btns").appendChild(b);
-        });
-        var pb = document.createElement("button"); pb.className = "btn"; pb.textContent = "Play tone";
-        pb.addEventListener("click", function () { play(tone.note, tone.duration); log([{ c: "in", t: "synth.triggerAttackRelease(tone.note, tone.duration)" }, "plays C4 for an eighth note"]) });
-        $("#lo-btns").appendChild(pb);
-        log([{ c: "dim", t: "Click a button to reach a part." }]);
-      })();
+      /* ---------- play a note a little later ---------- */
+      function playAt(note, dur, later) {
+        audioOn(); var s = syn(); if (!s || !note) return;
+        try { s.triggerAttackRelease(note, dur || "8n", T.now() + (later || 0)) } catch (e) { }
+      }
 
-      /* ---------- 22 object parts ---------- */
-      (function () {
-        var Q = [
-          { p: "open", q: "Click what makes this an object.", ok: "The curly braces <code>{ }</code> wrap the whole object. An array uses square ones." },
-          { p: "label", q: "Click a label: a property's name.", ok: "<code>note</code> is a label. No quotes needed: it's a name, like a variable's." },
-          { p: "colon", q: "Click what sits between a label and its value.", ok: "A colon. Inside an object it's <code>:</code>, never <code>=</code>." },
-          { p: "value", q: "Click the value labelled note.", ok: "<code>\"C4\"</code>: a string, like any value you've stored before." },
-          { p: "comma", q: "Click what separates two properties.", ok: "A comma between each label-and-value pair. Forget it and you get a SyntaxError." },
-          { p: "read", q: "Click where a part is read back by its label.", ok: "<code>tone.note</code>: the object's name, a dot, the label. It gives back <code>\"C4\"</code>." }
-        ], i = 0, done = false;
-        function ask() { $("#op-q").textContent = Q[i].q; $("#op-step").textContent = (i + 1) + " of " + Q.length; $("#op-next").hidden = true; done = false }
-        $$("#op-code .part").forEach(function (p) {
-          p.addEventListener("click", function (e) {
-            e.stopPropagation(); if (done || i >= Q.length) return;
-            if (p.dataset.part === Q[i].p) { $$('#op-code .part[data-part="' + Q[i].p + '"]').forEach(function (x) { x.classList.add("hit") }); done = true; fb($("#op-fb"), "pass", Q[i].ok); if (i < Q.length - 1) $("#op-next").hidden = false; else $("#op-step").textContent = "All six found." }
-            else { p.classList.add("miss"); setTimeout(function () { p.classList.remove("miss") }, 600); fb($("#op-fb"), "note", "Not that one. Read the first line aloud, slowly: what goes where?") }
-          })
-        });
-        $("#op-next").addEventListener("click", function () { i++; fb($("#op-fb")); ask() });
-        ask();
-      })();
-
-      /* ---------- 23 change a property ---------- */
-      (function () {
-        var START = { note: "C4", duration: "8n" }, tone, note = "dot";
-        var L = [
-          { k: "note", v: "E4", d: "The note part changed. Same object, same name, one part different." },
-          { k: "duration", v: "2n", d: "Longer now. Reaching a part to change it looks the same as reading it, with = after it." },
-          { k: "velocity", v: 0.5, d: "There was no velocity label, so now there is. An object grows by naming a new part. Play: it's quieter." },
-          { k: "note", v: "G3", d: "Back to note, and lower this time." }
-        ];
-        function line(l) { var v = typeof l.v === "string" ? '"' + l.v + '"' : String(l.v); return (note === "dot" ? "tone." + l.k : 'tone["' + l.k + '"]') + " = " + v + ";" }
-        function rows() {
-          var box = $("#cp-rows"); box.innerHTML = "";
-          L.forEach(function (l) {
-            var r = document.createElement("div"); r.innerHTML = '<code>' + esc(line(l)) + '</code><button class="btn cy">Run</button>';
-            r.querySelector("button").addEventListener("click", function () { tone[l.k] = l.v; objView($("#cp-obj"), "tone", tone, { flash: l.k, hi: l.k }); $("#cp-dir").textContent = l.d });
-            box.appendChild(r);
+      /* ---------- a walker: the Counter follows a rule, one pass at a time ----------
+         o: {arr, name, body (code lines), act(value, i) -> {msg, cls, bad}, gap} */
+      function walker(id, o) {
+        var cfg = { start: 0, op: "<", step: 1 }, L = o.arr.length, i, done, lines, timer = null;
+        var pre = $("#" + id + "-code"), con = $("#" + id + "-con"), nextB = $("#" + id + "-next"), runB = $("#" + id + "-run");
+        [["start", "start at", [[0, "i = 0"], [1, "i = 1"]]],
+         ["op", "keep going while", [["<", "i < " + o.name + ".length"], ["<=", "i <= " + o.name + ".length"]]],
+         ["step", "then", [[1, "i++"], [2, "i += 2"]]]].forEach(function (g) {
+          var box = document.createElement("div"); box.className = "rule-pick";
+          box.innerHTML = '<span class="small muted">' + g[1] + '</span><span class="seg"></span>';
+          var seg = box.querySelector(".seg");
+          g[2].forEach(function (c) {
+            var b = document.createElement("button"); b.className = "btn ghost" + (cfg[g[0]] === c[0] ? " sel" : ""); b.textContent = c[1];
+            b.setAttribute("aria-pressed", cfg[g[0]] === c[0]);
+            b.addEventListener("click", function () {
+              cfg[g[0]] = c[0];
+              $$("button", seg).forEach(function (x) { x.classList.toggle("sel", x === b); x.setAttribute("aria-pressed", x === b) });
+              reset();
+            });
+            seg.appendChild(b);
           });
+          $("#" + id + "-rule").appendChild(box);
+        });
+        function src() { return "for (let i = " + cfg.start + "; i " + cfg.op + " " + o.name + ".length; " + (cfg.step === 1 ? "i++" : "i += 2") + ") {\n" + o.body + "\n}" }
+        function bodyLines() { var n = o.body.split("\n").length, r = []; for (var k = 1; k <= n; k++) r.push(k); return r }
+        function drawLine(cur, cls) {
+          var host = $("#" + id + "-line"); host.innerHTML = "";
+          for (var k = 0; k <= L; k++) {
+            var c = document.createElement("div"), ghost = k === L;
+            c.className = "cell" + (ghost ? " ghost" : "") + (k === cur ? " counter " + (cls || "hi") : "");
+            c.innerHTML = '<div class="v">' + (ghost ? (k === cur ? "undefined" : "empty") : esc(String(o.arr[k]))) + '</div><div class="i">' + k + '</div>';
+            host.appendChild(c);
+          }
         }
-        function reset() { tone = { note: START.note, duration: START.duration }; objView($("#cp-obj"), "tone", tone); $("#cp-dir").textContent = "Run a line, then play the sound." }
-        $("#cp-play").addEventListener("click", function () {
-          audioOn(); var s = syn(); if (!s) return;
-          try { s.triggerAttackRelease(tone.note, tone.duration, undefined, tone.velocity === undefined ? 1 : tone.velocity) } catch (e) { }
-        });
-        $("#cp-reset").addEventListener("click", reset);
-        $$("#cp-seg [data-n]").forEach(function (b) {
-          b.addEventListener("click", function () {
-            note = b.dataset.n; $$("#cp-seg [data-n]").forEach(function (x) { x.classList.toggle("sel", x === b); x.setAttribute("aria-pressed", x === b) }); rows();
-            $("#cp-dir").textContent = note === "br" ? 'Same lines, written with brackets: tone["note"]. They do exactly the same.' : "Run a line, then play the sound.";
-          })
-        });
-        rows(); reset();
-      })();
-
-      /* ---------- 24 brackets ---------- */
-      code($("#br-a"), 'tone.note        // "C4"\ntone["note"]     // "C4"');
-      code($("#br-b"), 'let part = "duration";\n\ntone[part]       // "8n"\ntone.part        // undefined');
-
-      /* ---------- 25 template object ---------- */
-      code($("#to-a"), '// ---------- Settings ----------\nconst exampleKey = "a";\nconst exampleNote = "C4";\n\n// in keyDown\nif (event.key === exampleKey) {\n  synth.triggerAttack(exampleNote, Tone.now());\n}', [1, 2]);
-      code($("#to-b"), '// ---------- Settings ----------\nconst example = { key: "a", note: "C4" };\n\n\n// in keyDown\nif (event.key === example.key) {\n  synth.triggerAttack(example.note, Tone.now());\n}', [1, 5, 6]);
-
-      /* ---------- 26 ladder: a list of sounds ---------- */
-      (function () {
-        var steps = [{ note: "C4", duration: "8n" }, { note: "E4", duration: "4n" }], pi = null, pk = null, tryEl = $("#ls4-try");
-        ladder("ls4", {
-          idea: "A short melody where every note has its own length.",
-          strat: "The melody is a line: a <b>list</b>. Each note in it is one thing with labelled parts: an <b>object</b>. So, a list of objects.", shape: "array of objects",
-          plan: [["Make a list of sounds, each with a note and a duration.", [0, 1, 2, 3, 4]], ["Reach a step by its position.", [5, 7]], ["Then reach its parts by label.", [6, 7]]],
-          code: '// 1. a list of sounds, each with labels\nlet steps = [\n  { note: "C4", duration: "8n" },\n  { note: "E4", duration: "4n" }\n];\n// 2. first by position,\n// 3. then by label\nsynth.triggerAttackRelease(steps[0].note, steps[0].duration);',
-          onStep: function (i) { gate(tryEl, i === 3) }
-        });
-        function render() {
-          var host = $("#ls4-line"); host.innerHTML = "";
-          steps.forEach(function (s, i) {
-            var c = document.createElement("div"); c.className = "cell";
-            var o = document.createElement("div"); objView(o, "steps[" + i + "]", s, { sm: true, hiAll: pi === i, hi: pi === i ? pk : null });
-            c.appendChild(o.firstChild); var ix = document.createElement("div"); ix.className = "i"; ix.textContent = i; c.appendChild(ix); host.appendChild(c);
-          });
-          var expr = "steps", val;
-          if (pi !== null) { expr += "[" + pi + "]"; val = steps[pi]; if (pk !== null) { expr += "." + pk; val = val === undefined ? undefined : val[pk] } }
-          var out = pi === null ? "" : (val === undefined ? (pi >= steps.length ? "undefined  · no step " + pi : "undefined") : (typeof val === "object" ? "{ note: \"" + val.note + "\", duration: \"" + val.duration + "\" }" : JSON.stringify(val)));
-          $("#ls4-path").innerHTML = esc(expr) + (out ? ' <span class="muted">→</span> <span class="pv">' + esc(out) + '</span>' : "");
-          $$("#ls4-try [data-i]").forEach(function (b) { b.classList.toggle("right", +b.dataset.i === pi) });
-          $$("#ls4-try [data-k]").forEach(function (b) { b.classList.toggle("right", b.dataset.k === pk); b.disabled = pi === null });
-          $("#ls4-play").disabled = pi === null || pi >= steps.length;
+        function state(iv, test, val) {
+          $("#" + id + "-state").innerHTML = '<div><b>i</b><span>' + iv + '</span></div><div><b>test</b><span class="' + (test === true ? "yes" : test === false ? "no" : "") + '">' + (test === undefined ? "–" : test) + '</span></div><div><b>' + o.name + '[i]</b><span>' + esc(val) + '</span></div>';
         }
-        $$("#ls4-try [data-i]").forEach(function (b) { b.addEventListener("click", function () { pi = +b.dataset.i; pk = null; render() }) });
-        $$("#ls4-try [data-k]").forEach(function (b) { b.addEventListener("click", function () { if (pi === null) return; pk = b.dataset.k; render() }) });
-        $("#ls4-play").addEventListener("click", function () { var s = steps[pi]; if (s) play(s.note, s.duration) });
+        function log(t, c) { lines.push(c ? { c: c, t: t } : t); lines = lines.slice(-5); conLines(con, lines); con.scrollTop = 1e4 }
+        function stop() { if (timer) { clearInterval(timer); timer = null } runB.textContent = "Run it all" }
+        function reset() {
+          stop(); i = cfg.start; done = false; lines = [];
+          code(pre, src()); drawLine(null); state(i, undefined, "–");
+          conLines(con, [{ c: "dim", t: "Predict, then press Next pass." }]); nextB.disabled = false;
+        }
+        function pass() {
+          if (done) return;
+          var ok = cfg.op === "<" ? i < L : i <= L, t = i + " " + cfg.op + " " + L;
+          if (!ok) {
+            done = true; code(pre, src(), [0]); drawLine(null); state(i, false, "–");
+            log("i is " + i + ": " + t + " is false. The loop stops.", "dim"); nextB.disabled = true; stop(); return;
+          }
+          var v = o.arr[i], r = o.act(v, i);
+          code(pre, src(), bodyLines()); flash(pre, bodyLines()); drawLine(i, r.cls);
+          state(i, true, v === undefined ? "undefined" : JSON.stringify(v));
+          log("i is " + i + ": " + t + " is true. " + r.msg, r.bad ? "bad" : "");
+          i += cfg.step;
+        }
+        nextB.addEventListener("click", function () { stop(); pass() });
+        runB.addEventListener("click", function () {
+          if (timer) { stop(); return }
+          if (done) reset();
+          runB.textContent = "Stop"; pass();
+          timer = setInterval(function () { if (done || !$("#" + id + "-line").offsetParent) { stop(); return } pass() }, o.gap || 700);
+        });
+        $("#" + id + "-reset").addEventListener("click", reset);
+        reset();
+      }
+
+      /* ---------- 21 by hand ---------- */
+      (function () {
+        var MEL = ["C4", "E4", "G4", "B4", "C5", "B4", "G4", "E4"], n = 4;
+        function q(x) { return '"' + x + '"' }
+        function line(k) { return 'synth.triggerAttackRelease(melody[' + k + '], "8n", now + ' + k + ' * 0.4);' }
+        function src() {
+          var notes = [];
+          for (var k = 0; k < Math.min(n, 8); k++) notes.push(q(MEL[k]));
+          var head = 'let melody = [' + (n === 4 ? notes.slice(0, 4).join(", ") : n === 8 ? notes.slice(0, 4).join(", ") + ",\n  " + notes.slice(4).join(", ") : notes.slice(0, 4).join(", ") + ", … 46 more") + '];\nlet now = Tone.now();\n\n';
+          var body = [];
+          if (n <= 8) for (var j = 0; j < n; j++) body.push(line(j));
+          else { for (var m = 0; m < 6; m++) body.push(line(m)); body.push("// … 43 more lines like these"); body.push(line(49)) }
+          return head + body.join("\n");
+        }
+        function render(spot) {
+          var s = src(), first = s.split("\n").indexOf("") + 1, all = [];
+          s.split("\n").forEach(function (l, k) { if (k >= first && l.indexOf("synth") === 0) all.push(k) });
+          code($("#bh-code"), s, spot ? all : null);
+          $("#bh-n").textContent = n; $("#bh-play").disabled = n > 8;
+          $("#bh-play").textContent = n > 8 ? "Too long to play" : "Play it";
+        }
+        $$("#bh-seg [data-n]").forEach(function (b) {
+          b.addEventListener("click", function () {
+            n = +b.dataset.n; $$("#bh-seg [data-n]").forEach(function (x) { x.classList.toggle("sel", x === b); x.setAttribute("aria-pressed", x === b) });
+            render(!$("#bh-word").hidden);
+          });
+        });
+        $("#bh-play").addEventListener("click", function () { for (var k = 0; k < n; k++) playAt(MEL[k], "8n", k * 0.4) });
+        $("#bh-show").addEventListener("click", function () { $("#bh-word").hidden = false; this.hidden = true; render(true) });
         render();
       })();
 
-      /* ---------- 27 steps editor ---------- */
-      playground("sc", '// ---------- State ----------\nlet tone = { note: "C4", duration: "8n" };\nlet steps = [\n  { note: "C4", duration: "8n" },\n  { note: "E4", duration: "4n" }\n];\n\n// ---------- Sound ----------\nconst synth = new Tone.PolySynth(Tone.Synth).toDestination();\n\n// ---------- Controls ----------\nfunction keyDown(event) {\n  Tone.start();\n  if (event.repeat === false) {\n    if (event.key === "t") {\n      synth.triggerAttackRelease(tone.note, tone.duration);\n    } else if (event.key === "e") {\n      tone.note = "E4";\n      console.log(tone);\n    } else if (event.key === "1") {\n      synth.triggerAttackRelease(steps[0].note, steps[0].duration);\n    }\n  }\n}\n\n// ---------- Setup ----------\nwindow.addEventListener("keydown", keyDown);\n');
+      /* ---------- 22 off by one ---------- */
+      code($("#ob-code"), "for (i = 0; i < length; i++) {\n  // the Caller says what to do\n}");
 
-      /* ---------- 28 quiz: a song ---------- */
-      quiz($("#q2"), $("#q2-fb"), [
-        ["The song's title", 1, "One fact about the song, with a label: <code>title</code>."],
-        ["Its tempo", 1, "Another labelled fact: <code>tempo</code>. Is there a first one, among title and tempo? No."],
-        ["Its sections: intro, verse, chorus, verse, outro", 0, "Many sections, in order. Swap two and it's a different song."],
-        ["One section: its name and how many bars", 1, "One section, described by labelled parts: <code>name</code>, <code>bars</code>."],
-        ["The whole song", 2, "Labelled parts (title, tempo), and one of them, sections, is a list. Each section is labelled parts again. Real data nests."]
-      ], ["a line", "labelled parts", "both"], "Ask: is there a first one? Does swapping two change it? Could it be both?");
+      /* ---------- 23 walk replay ---------- */
+      walker("wk", {
+        arr: [3, 7, 2, 9, 5, 6], name: "line",
+        body: "  if (line[i] > 5) {\n    highFive(i);\n  }",
+        act: function (v, i) {
+          if (v === undefined) return { msg: "line[" + i + "] is undefined: nobody stands here!", cls: "bad", bad: true };
+          if (v > 5) return { msg: "line[" + i + "] is " + v + ": greater than 5, high-five!", cls: "hf" };
+          return { msg: "line[" + i + "] is " + v + ": not greater than 5.", cls: "hi" };
+        }
+      });
 
-      /* ---------- 29 model it ---------- */
+      /* ---------- 25 for parts ---------- */
       (function () {
-        var SUBJ = {
-          track: { label: "A track", hint: "A track has a name and an instrument (labels), and a list of notes. Maybe each note has a duration too?", code: 'let track = {\n  name: "Bassline",\n  notes: ["C2", "C2", "G2", "A2"]\n};\n\nconsole.log(track.name);\nconsole.log(track.notes[0]);\n' },
-          drums: { label: "A drum pattern", hint: "Is a pattern a line of steps? What does each step know: which drum, how loud?", code: '// your drum pattern\n\n' },
-          playlist: { label: "A playlist", hint: "A playlist is a line of songs. What labelled parts does one song have?", code: '// your playlist\n\n' },
-          own: { label: "Your own", hint: "Something from your A1 instrument? Settings, a set of keys, a scale…", code: '// your own\n\n' }
-        }, cur = sget("mi:cur") || "track";
-        var seg = $("#mi-seg");
-        Object.keys(SUBJ).forEach(function (k) { var b = document.createElement("button"); b.className = "btn ghost"; b.textContent = SUBJ[k].label; b.dataset.k = k; b.addEventListener("click", function () { cur = k; sset("mi:cur", k); load() }); seg.appendChild(b) });
-        var ed = $("#mi-ed"), fields = $$("#mi-sheet textarea");
-        function key(f) { return "mi:" + cur + ":" + f }
-        function load() {
-          $$("#mi-seg [data-k]").forEach(function (b) { b.classList.toggle("sel", b.dataset.k === cur); b.setAttribute("aria-pressed", b.dataset.k === cur) });
-          fields.forEach(function (t) { t.value = sget(key(t.dataset.f)) || "" });
-          ed.value = sget(key("code")) || SUBJ[cur].code;
-          $("#mi-hint").textContent = SUBJ[cur].hint;
-          conLines($("#mi-con"), [{ c: "dim", t: "Press Run." }]);
-        }
-        fields.forEach(function (t) { t.addEventListener("input", function () { sset(key(t.dataset.f), t.value) }); t.addEventListener("keydown", function (e) { e.stopPropagation() }) });
-        ed.addEventListener("input", function () { sset(key("code"), ed.value) });
-        function run() {
-          var r = D.run(ed.value), lines = [{ c: "in", t: "run model.js" }].concat(r.logs);
-          if (r.error) lines.push({ c: "bad", t: r.blocked ? r.error.message : (r.error.name || "Error") + ": " + r.error.message });
-          else if (!r.logs.length) lines.push({ c: "dim", t: "(nothing was logged. console.log what you made.)" });
-          conLines($("#mi-con"), lines); $("#mi-con").scrollTop = 1e4;
-        }
-        $("#mi-run").addEventListener("click", run); D.edKeys(ed, run);
-        load();
+        var Q = [
+          { p: "start", q: "Click where the Counter starts.", ok: "<code>let i = 0</code>: the Counter, standing at position 0. It runs once, before the first pass.", m: ["let i = 0", "the Counter starts at 0"] },
+          { p: "test", q: "Click the question asked before every pass: does the Counter keep going?", ok: "<code>i &lt; melody.length</code>: true, and the loop runs the body again. False, and it stops. This is the line that sent the Counter off the end.", m: ["i < melody.length", "keep going while this is true"] },
+          { p: "step", q: "Click the Counter moving one place on.", ok: "<code>i++</code> adds one to <code>i</code>, after every pass. It's short for <code>i = i + 1</code>.", m: ["i++", "the Counter steps on"] },
+          { p: "body", q: "Click what the Caller says to do at each position.", ok: "The body, between the braces: play the note at position <code>i</code>, <code>i * 0.4</code> seconds after <code>now</code>.", m: ["{ … }", "what to do at each position"] }
+        ], i = 0, done = false;
+        var map = $("#fp-map");
+        Q.forEach(function (q) { var r = document.createElement("div"); r.className = "dim"; r.innerHTML = '<code>' + esc(q.m[0]) + '</code><span>' + esc(q.m[1]) + '</span>'; map.appendChild(r) });
+        function ask() { $("#fp-q").textContent = Q[i].q; $("#fp-step").textContent = (i + 1) + " of " + Q.length; $("#fp-next").hidden = true; done = false }
+        $$("#fp-code .part").forEach(function (p) {
+          p.addEventListener("click", function (e) {
+            e.stopPropagation(); if (done || i >= Q.length) return;
+            if (p.dataset.part === Q[i].p) {
+              p.classList.add("hit"); done = true; fb($("#fp-fb"), "pass", Q[i].ok); map.children[i].classList.remove("dim");
+              if (i < Q.length - 1) $("#fp-next").hidden = false; else $("#fp-step").textContent = "All four found.";
+            } else { p.classList.add("miss"); setTimeout(function () { p.classList.remove("miss") }, 600); fb($("#fp-fb"), "note", "Not that one. Think of the line of people: who does this?") }
+          });
+        });
+        $("#fp-next").addEventListener("click", function () { i++; fb($("#fp-fb")); ask() });
+        ask();
       })();
+
+      /* ---------- 26 ladder: play every note ---------- */
+      (function () {
+        var melody = ["C4", "E4", "G4", "B4"], k = 0, tryEl = $("#ll-try"), timers = [];
+        var SRC = 'let melody = ["C4", "E4", "G4", "B4"];\nlet now = Tone.now();\nfor (let i = 0; i < melody.length; i++) {\n  synth.triggerAttackRelease(melody[i], "8n", now + i * 0.4);\n}';
+        var L = ladder("ll", {
+          idea: "Play every note of the melody, one after another.",
+          strat: "The same thing happens at every position, from the first to the last. Let a counter <b>walk the positions</b>, like the Counter in the line.", shape: "for loop",
+          plan: [["Start the counter at the first position, 0.", [2]], ["Keep going while the counter is still inside the melody.", [2]], ["At each position, play the note there, a little later each time.", [3]], ["Step the counter on by one.", [2]]],
+          code: SRC,
+          onStep: function (s) { gate(tryEl, s === 3) }
+        });
+        function row(j) {
+          var ok = j < melody.length, tr = document.createElement("tr");
+          tr.innerHTML = '<td>' + j + '</td><td class="' + (ok ? "" : "no") + '">' + ok + '</td><td>' + (ok ? esc(JSON.stringify(melody[j])) : "loop stops") + '</td><td>' + (ok ? "now + " + (j * 0.4).toFixed(1) : "") + '</td>';
+          return tr;
+        }
+        function reset() { timers.forEach(clearTimeout); k = 0; $("#ll-rows").innerHTML = ""; $("#ll-next").disabled = false }
+        $("#ll-next").addEventListener("click", function () {
+          if (k > melody.length) return;
+          $$("#ll-rows tr").forEach(function (r) { r.classList.remove("on") });
+          var tr = row(k); tr.classList.add("on"); $("#ll-rows").appendChild(tr);
+          if (k < melody.length) { code(L.pre(), SRC, [2, 3]); flash(L.pre(), [3]); playAt(melody[k]) } else code(L.pre(), SRC, [2]);
+          k++; if (k > melody.length) this.disabled = true;
+        });
+        $("#ll-play").addEventListener("click", function () {
+          reset(); var rows = $("#ll-rows");
+          for (var j = 0; j <= melody.length; j++) rows.appendChild(row(j));
+          melody.forEach(function (n, j) {
+            playAt(n, "8n", j * 0.4);
+            timers.push(setTimeout(function () { $$("#ll-rows tr").forEach(function (r, x) { r.classList.toggle("on", x === j) }) }, j * 400));
+          });
+          $("#ll-next").disabled = true;
+        });
+        $("#ll-reset").addEventListener("click", reset);
+        reset();
+      })();
+
+      /* ---------- 27 the loop doesn't wait ---------- */
+      (function () {
+        var melody = ["C4", "E4", "G4", "B4"], mode = "time", MAX = 1.8, raf = null;
+        var tl = $("#lt-tl");
+        tl.innerHTML = '<div class="tli">' + melody.map(function (n) { return '<div class="trk"><span class="lb">' + n + '</span><span class="nb"></span></div>' }).join("") +
+          [0, 0.4, 0.8, 1.2, 1.6].map(function (t) { return '<span class="tk" style="left:' + (t / MAX * 100) + '%">' + t + ' s</span>' }).join("") + '<span class="ph"></span></div>';
+        function start(j) { return mode === "time" ? j * 0.4 : 0 }
+        function render() {
+          code($("#lt-code"), mode === "time"
+            ? 'let now = Tone.now();\nfor (let i = 0; i < melody.length; i++) {\n  synth.triggerAttackRelease(melody[i], "8n", now + i * 0.4);\n}'
+            : 'for (let i = 0; i < melody.length; i++) {\n  synth.triggerAttackRelease(melody[i], "8n");\n}', [mode === "time" ? 2 : 1]);
+          $$("#lt-tl .nb").forEach(function (b, j) { b.style.left = (start(j) / MAX * 100) + "%"; b.style.width = (0.25 / MAX * 100) + "%" });
+        }
+        $$("#lt-seg [data-m]").forEach(function (b) {
+          b.addEventListener("click", function () { mode = b.dataset.m; $$("#lt-seg [data-m]").forEach(function (x) { x.classList.toggle("sel", x === b); x.setAttribute("aria-pressed", x === b) }); render() });
+        });
+        $("#lt-play").addEventListener("click", function () {
+          var bars = $$("#lt-tl .nb");
+          melody.forEach(function (n, j) {
+            playAt(n, "8n", start(j));
+            setTimeout(function () { bars[j].classList.add("on"); setTimeout(function () { bars[j].classList.remove("on") }, 250) }, start(j) * 1000);
+          });
+          if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+          var ph = $("#lt-tl .ph"), t0 = performance.now(), end = mode === "time" ? 1.45 : 0.25;
+          if (raf) cancelAnimationFrame(raf);
+          ph.style.visibility = "visible";
+          (function step(t) {
+            var s = Math.max(0, (t - t0) / 1000); ph.style.left = (Math.min(s, end) / MAX * 100) + "%";
+            if (s < end) raf = requestAnimationFrame(step); else { ph.style.visibility = "hidden"; raf = null }
+          })(t0);
+        });
+        var answered = false;
+        [["0.4 s", 0], ["1.2 s", 1], ["1.6 s", 0]].forEach(function (o) {
+          var b = document.createElement("button"); b.className = "btn ghost"; b.textContent = o[0];
+          b.addEventListener("click", function () {
+            if (answered) return;
+            if (o[1]) { b.classList.add("sel"); answered = true; fb($("#lt-fb"), "pass", "Correct. The last note is at <code>i = 3</code>, so it starts <code>3 * 0.4</code> = 1.2 seconds after <code>now</code>. The first note is at 0.") }
+            else { b.disabled = true; fb($("#lt-fb"), "note", "Which <code>i</code> does the last note have? The first one starts at <code>0 * 0.4</code>.") }
+          });
+          $("#lt-opts").appendChild(b);
+        });
+        render();
+      })();
+
+      /* ---------- 28 break it ---------- */
+      walker("bl", {
+        arr: ["C4", "E4", "G4", "B4"], name: "melody", gap: 600,
+        body: '  synth.triggerAttackRelease(melody[i], "8n");',
+        act: function (v, i) {
+          if (v === undefined) return { msg: "melody[" + i + "] is undefined: nothing to play, and no error.", cls: "bad", bad: true };
+          play(v); return { msg: "Plays " + v + ".", cls: "hi" };
+        }
+      });
+
+      /* ---------- 29 loop editor ---------- */
+      playground("lp", '// ---------- State ----------\nlet melody = ["C4", "E4", "G4", "B4"];\n\n// ---------- Sound ----------\nconst synth = new Tone.PolySynth(Tone.Synth).toDestination();\n\n// ---------- Play the whole melody ----------\nfunction playMelody() {\n  let now = Tone.now();\n  for (let i = 0; i < melody.length; i++) {\n    synth.triggerAttackRelease(melody[i], "8n", now + i * 0.4);\n  }\n}\n\n// ---------- Controls ----------\nfunction keyDown(event) {\n  Tone.start();\n  if (event.repeat === false) {\n    playMelody();\n  }\n}\n\n// ---------- Setup ----------\nwindow.addEventListener("keydown", keyDown);\n');
+
+      /* ---------- 30 ladder: count ---------- */
+      (function () {
+        var melody = ["C4", "E4", "C4", "G4", "C4"], k = 0, count = 0, tryEl = $("#ct-try");
+        var L = ladder("ct", {
+          idea: "How many times does C4 come in the melody?",
+          strat: "Walk every position as before, and keep a <b>running count</b> that grows when the note is C4.", shape: "loop + count",
+          plan: [["Before the loop, start a count at 0.", [1]], ["Walk every position.", [2]], ["If the note there is C4, add one to the count.", [3, 4, 5]], ["After the loop, show the count.", [7]]],
+          code: 'let melody = ["C4", "E4", "C4", "G4", "C4"];\nlet count = 0;\nfor (let i = 0; i < melody.length; i++) {\n  if (melody[i] === "C4") {\n    count++;\n  }\n}\nconsole.log(count);',
+          onStep: function (s) { gate(tryEl, s === 3) }
+        });
+        var SRC = 'let melody = ["C4", "E4", "C4", "G4", "C4"];\nlet count = 0;\nfor (let i = 0; i < melody.length; i++) {\n  if (melody[i] === "C4") {\n    count++;\n  }\n}\nconsole.log(count);';
+        function reset() { k = 0; count = 0; $("#ct-rows").innerHTML = ""; $("#ct-next").disabled = false; conLines($("#ct-con"), [{ c: "dim", t: "Predict the count, then step through." }]) }
+        $("#ct-next").addEventListener("click", function () {
+          $$("#ct-rows tr").forEach(function (r) { r.classList.remove("on") });
+          if (k >= melody.length) {
+            code(L.pre(), SRC, [7]); conLines($("#ct-con"), [{ c: "in", t: "console.log(count)" }, String(count)]); this.disabled = true; return;
+          }
+          var hit = melody[k] === "C4"; if (hit) count++;
+          var tr = document.createElement("tr"); tr.className = "on";
+          tr.innerHTML = '<td>' + k + '</td><td>' + esc(JSON.stringify(melody[k])) + '</td><td class="' + (hit ? "" : "no") + '">' + hit + '</td><td>' + count + '</td>';
+          $("#ct-rows").appendChild(tr);
+          code(L.pre(), SRC, hit ? [3, 4] : [3]); if (hit) flash(L.pre(), [4]);
+          if (hit) play("C4");
+          k++;
+        });
+        $("#ct-reset").addEventListener("click", reset);
+        reset();
+      })();
+
+      /* ---------- 31 quiz: what does each loop do? ---------- */
+      quiz($("#q3"), $("#q3-fb"), [
+        ["<code>for (let i = 0; i &lt;= melody.length; i++)</code>", 3, "The last pass has <code>i = 4</code>, and <code>melody[4]</code> is undefined."],
+        ["<code>for (let i = 1; i &lt; melody.length; i++)</code>", 1, "Position 0 is the first note, and the Counter never stands there."],
+        ["<code>for (let i = 0; i &lt; melody.length; i++)</code>", 0, "Positions 0, 1, 2 and 3: all four, and it stops at 4."],
+        ["<code>for (let i = 0; i &lt; melody.length - 1; i++)</code>", 2, "The test stops at 3, so position 3, the last note, never plays."]
+      ], ["plays all four", "skips the first", "skips the last", "runs off the end"], "Trace it: what is i on the first pass? What is the last i that passes the test?");
+
     })();
   </script>
 </body>
