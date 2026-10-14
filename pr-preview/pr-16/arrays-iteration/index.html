@@ -1313,8 +1313,8 @@
         <aside class="nt">Why a melody is a melody and not a chord: the notes are spaced out. Take the start time away
           and play: all four notes start at the same moment, because the loop finishes in microseconds. The loop doesn't
           wait between passes; Tone waits, because we told it when. i grows by one each pass, so each start time is
-          pushed later by the same amount. The last note is i = 3, so it starts 3 * 0.4 = 1.2 seconds after now. Common
-          wrong answer: 1.6 (counting four steps, not three: the first note starts at 0). That's an off-by-one too.</aside>
+          pushed later by the same amount. The last note is i = 3, so it starts at 3 * 0.4 = 1.2 seconds. Common
+          wrong answer: 1.6 (counting four steps, not three: the first note starts at 0). That's an off-by-one too. Heads-up: Tone reads a plain number like i * 0.4 as a time on its own clock, which starts when sound starts on the page. Right after loading, the first press plays (the first note may be lost); a press a few seconds later plays nothing, because those times are already past. If a student's melody goes quiet, that's why; now + i * 0.4 (with let now = Tone.now() before the loop) or "+" + i * 0.4 fixes it.</aside>
       </section>
 
       <!-- 28 BREAK IT -->
@@ -1364,8 +1364,8 @@
         <aside class="nt">Everyone, in VS Code (the slide editor is the fallback and the projector view). A key press
           calls playMelody, which walks the melody once. Task 1: melody.push("C5") under the list, and the loop doesn't
           change: it asks the array its own length every time, so it doesn't care how long it is. Task 2: 0.4 becomes
-          0.2. The start time is new here: "+" + i * 0.4 joins "+" and a number into a string like "+0.8", which Tone reads as "0.8 seconds from now". It does the same job as now + i * 0.4 on the earlier slides, without Tone.now(). Task 3: a fifth pass with melody[5] (or [4]) undefined: no error, no note. Common mistakes: commas instead
-          of semicolons in the for line; melody[i] with round brackets; forgetting the + (a plain i * 0.4 is a time on Tone's own clock, which has been running since the page started, so those moments are already past and nothing plays); forgetting the start time altogether, so everything starts at once.</aside>
+          0.2. Task 3: a fifth pass with melody[5] (or [4]) undefined: no error, no note. Common mistakes: commas instead
+          of semicolons in the for line; melody[i] with round brackets; forgetting the start time altogether, so everything starts at once. Heads-up: Tone reads a plain number like i * 0.4 as a time on its own clock, which starts when sound starts on the page. Right after loading, the first press plays (the first note may be lost); a press a few seconds later plays nothing, because those times are already past. If a student's melody goes quiet, that's why; now + i * 0.4 (with let now = Tone.now() before the loop) or "+" + i * 0.4 fixes it.</aside>
       </section>
 
       <!-- 30 LADDER: COUNT -->
@@ -2152,8 +2152,8 @@
         function start(j) { return mode === "time" ? j * 0.4 : 0 }
         function render() {
           code($("#lt-code"), mode === "time"
-            ? 'let now = Tone.now();\nfor (let i = 0; i < melody.length; i++) {\n  synth.triggerAttackRelease(melody[i], "8n", now + i * 0.4);\n}'
-            : 'for (let i = 0; i < melody.length; i++) {\n  synth.triggerAttackRelease(melody[i], "8n");\n}', [mode === "time" ? 2 : 1]);
+            ? 'for (let i = 0; i < melody.length; i++) {\n  synth.triggerAttackRelease(melody[i], "8n", i * 0.4);\n}'
+            : 'for (let i = 0; i < melody.length; i++) {\n  synth.triggerAttackRelease(melody[i], "8n");\n}', [1]);
           $$("#lt-tl .nb").forEach(function (b, j) { b.style.left = (start(j) / MAX * 100) + "%"; b.style.width = (0.25 / MAX * 100) + "%" });
         }
         $$("#lt-seg [data-m]").forEach(function (b) {
@@ -2179,7 +2179,7 @@
           var b = document.createElement("button"); b.className = "btn ghost"; b.textContent = o[0];
           b.addEventListener("click", function () {
             if (answered) return;
-            if (o[1]) { b.classList.add("sel"); answered = true; fb($("#lt-fb"), "pass", "Correct. The last note is at <code>i = 3</code>, so it starts <code>3 * 0.4</code> = 1.2 seconds after <code>now</code>. The first note is at 0.") }
+            if (o[1]) { b.classList.add("sel"); answered = true; fb($("#lt-fb"), "pass", "Correct. The last note is at <code>i = 3</code>, so it starts at <code>3 * 0.4</code> = 1.2 seconds. The first note starts at 0.") }
             else { b.disabled = true; fb($("#lt-fb"), "note", "Which <code>i</code> does the last note have? The first one starts at <code>0 * 0.4</code>.") }
           });
           $("#lt-opts").appendChild(b);
@@ -2198,7 +2198,7 @@
       });
 
       /* ---------- 29 loop editor ---------- */
-      playground("lp", '// ---------- State ----------\nlet melody = ["C4", "E4", "G4", "B4"];\n\n// ---------- Sound ----------\nconst synth = new Tone.PolySynth(Tone.Synth).toDestination();\n\n// ---------- Play the whole melody ----------\nfunction playMelody() {\n  for (let i = 0; i < melody.length; i++) {\n    // "+0.4" means: 0.4 seconds from now\n    synth.triggerAttackRelease(melody[i], "8n", "+" + i * 0.4);\n  }\n}\n\n// ---------- Controls ----------\nfunction keyDown(event) {\n  Tone.start();\n  if (event.repeat === false) {\n    playMelody();\n  }\n}\n\n// ---------- Setup ----------\nwindow.addEventListener("keydown", keyDown);\n');
+      playground("lp", '// ---------- State ----------\nlet melody = ["C4", "E4", "G4", "B4"];\n\n// ---------- Sound ----------\nconst synth = new Tone.PolySynth(Tone.Synth).toDestination();\n\n// ---------- Play the whole melody ----------\nfunction playMelody() {\n  for (let i = 0; i < melody.length; i++) {\n    synth.triggerAttackRelease(melody[i], "8n", i * 0.4);\n  }\n}\n\n// ---------- Controls ----------\nfunction keyDown(event) {\n  Tone.start();\n  if (event.repeat === false) {\n    playMelody();\n  }\n}\n\n// ---------- Setup ----------\nwindow.addEventListener("keydown", keyDown);\n');
 
       /* ---------- 30 ladder: count ---------- */
       (function () {
