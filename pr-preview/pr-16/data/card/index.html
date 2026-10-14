@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Practice student card · KD402D Programming</title>
+<link rel="stylesheet" href="../../shared/tokens.css">
+<style>
+body{margin:0;background:var(--paper-100);color:var(--ink-700);font-family:var(--font-ui);font-size:18px;line-height:1.55}
+a{color:var(--curtain-600);text-decoration-thickness:1.5px;text-underline-offset:3px}
+a:hover{color:var(--curtain-700);text-decoration-thickness:3px}
+:focus-visible{outline:2px solid var(--curtain-600);outline-offset:2px}
+main{max-width:1000px;margin:0 auto;padding:40px 16px 64px}
+.billing{font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;color:var(--ink-500)}
+.rule{border:0;border-top:1px solid var(--ink-900);margin:12px 0 20px}
+h1{font-family:var(--font-display);font-weight:700;font-size:clamp(34px,6vw,54px);line-height:1.02;letter-spacing:-.035em;color:var(--ink-900);margin:0 0 14px}
+.lede{font-size:20px;max-width:56ch;margin:0 0 22px}
+.layout{display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:start}
+@media (max-width:760px){.layout{grid-template-columns:1fr}}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.btn{font-family:var(--font-mono);font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:10px 16px;border:2px solid var(--ink-900);border-radius:2px;background:var(--curtain-600);color:var(--paper-100);box-shadow:3px 3px 0 var(--ink-900);cursor:pointer}
+.btn:hover{background:var(--curtain-700)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink-900)}
+.btn.ghost{background:var(--paper-000);color:var(--ink-900)}.btn.ghost:hover{background:var(--paper-200)}
+.btn.alt{background:var(--spot-400);color:var(--ink-900)}.btn.alt:hover{background:var(--spot-300)}
+.panel{border:2px solid var(--ink-900);border-radius:2px;box-shadow:3px 3px 0 var(--ink-900);background:var(--paper-000);margin-top:22px}
+.bar{font-family:var(--font-mono);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-900);padding:7px 14px;border-bottom:2px solid var(--ink-900);background:var(--spot-400)}
+.pbody{padding:14px 16px;font-size:17px}
+.pbody p{margin:0 0 10px}
+input[type=range]{width:100%;accent-color:var(--curtain-600)}
+.small{font-size:15px;color:var(--ink-500)}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:17px}
+dt{color:var(--ink-500)}dd{margin:0;font-family:var(--font-mono);color:var(--ink-900)}
+
+/* ---------- the card: everything in --u, which is one real millimetre after calibration ---------- */
+.holder{display:inline-block;padding:10px}
+.card{--u:1mm;position:relative;width:calc(53.98 * var(--u));height:calc(85.6 * var(--u));border-radius:calc(3.18 * var(--u));overflow:hidden;background:#fff;box-shadow:0 0 0 1px var(--ink-300),3px 3px 0 var(--ink-900);font-family:var(--font-ui);color:#fff}
+.card .low{position:absolute;left:0;right:0;top:29%;bottom:0;background:var(--ink-800)}
+.card .mark{position:absolute;left:12%;top:5%;display:flex;gap:calc(2.2 * var(--u));align-items:center;color:var(--ink-900)}
+.card .mark .sq{width:calc(8 * var(--u));height:calc(8 * var(--u));background:var(--curtain-600);display:grid;place-items:center;color:#fff;font-family:var(--font-mono);font-weight:700;font-size:calc(2.6 * var(--u))}
+.card .mark b{display:block;font-family:var(--font-display);font-weight:700;font-size:calc(3.9 * var(--u));line-height:1;letter-spacing:-.02em}
+.card .mark small{display:block;font-family:var(--font-mono);font-size:calc(1.9 * var(--u));font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:calc(.8 * var(--u));color:var(--curtain-600)}
+.card .photo{position:absolute;left:50%;top:36%;width:57%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;overflow:hidden;background:#fff;border:calc(.9 * var(--u)) solid #fff}
+.card .photo svg{display:block;width:100%;height:100%}
+.card .role{position:absolute;left:12%;top:59%;font-family:var(--font-ui);font-weight:700;font-size:calc(8.2 * var(--u));line-height:1;letter-spacing:.01em}
+.card .name{position:absolute;left:12%;right:8%;top:71.5%;font-weight:700;font-size:calc(4.3 * var(--u));line-height:1.12}
+.card .num{position:absolute;left:12%;font-weight:700;font-size:calc(3.7 * var(--u));letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.card .n1{top:82.5%}.card .n2{top:89.5%}
+.card .fake{position:absolute;right:calc(2.5 * var(--u));bottom:calc(1.6 * var(--u));font-family:var(--font-mono);font-size:calc(1.5 * var(--u));letter-spacing:.06em;text-transform:uppercase;color:var(--ink-200)}
+
+@media print{
+  @page{margin:15mm}
+  body{background:#fff}
+  main>*:not(.layout),.side{display:none!important}
+  .layout{display:block}
+  .holder{padding:0}
+  .card{--u:1mm!important;box-shadow:0 0 0 .2mm #999;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="billing">Data · Variables: the idea</div><hr class="rule">
+  <h1>A practice student card</h1>
+  <p class="lede">No need to swap your real card. Make a practice one with an invented face, name and numbers, and slide it under the transparency instead.</p>
+
+  <div class="layout">
+    <div class="holder"><div class="card" id="card" aria-label="Practice student card">
+      <div class="low"></div>
+      <div class="mark"><span class="sq">JS</span><span><b>KD402D</b><small>Practice card</small></span></div>
+      <div class="photo" id="photo"></div>
+      <div class="role">STUDENT</div>
+      <div class="name" id="c-name"></div>
+      <div class="num n1" id="c-card"></div>
+      <div class="num n2" id="c-pnr"></div>
+      <div class="fake">Not valid ID</div>
+    </div></div>
+
+    <div class="side">
+      <div class="row">
+        <button class="btn" id="new">New card</button>
+        <button class="btn ghost" id="print">Print</button>
+      </div>
+      <div class="panel">
+        <div class="bar">On this card</div>
+        <div class="pbody">
+          <dl>
+            <dt>name</dt><dd id="d-name"></dd>
+            <dt>card number</dt><dd id="d-card"></dd>
+            <dt>personal number</dt><dd id="d-pnr"></dd>
+            <dt>date of birth</dt><dd id="d-dob"></dd>
+          </dl>
+          <p class="small" style="margin:12px 0 0">Everything is invented. The personal number has a deliberately wrong check digit, so it can't belong to anyone.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="bar" style="background:var(--cyan-400)">Real size</div>
+        <div class="pbody">
+          <p>Screens differ, so check the size once. Hold a bank card (or any card that size) against the screen and drag until the two match exactly.</p>
+          <input type="range" id="scale" min="0.5" max="2" step="0.005" aria-label="Card size on this screen">
+          <div class="row" style="justify-content:space-between;margin-top:6px">
+            <span class="small" id="scale-out"></span>
+            <button class="btn ghost" id="scale-reset" style="font-size:12px;padding:6px 10px">Reset</button>
+          </div>
+          <p class="small" style="margin:10px 0 0">This browser remembers the setting. Printing always comes out at real size (85.6 × 54 mm), as long as the print dialog's scale is 100%.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+(function(){
+"use strict";
+var $=function(s){return document.querySelector(s)};
+var KEY_SEED="kd402d:data:practice-card",KEY_SCALE="kd402d:card-scale";
+function sget(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function sset(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+
+/* seeded random numbers, so the same card comes back after a reload */
+function rng(seed){var a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;var t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
+
+/* first and middle names come from the same group, so they sit together naturally */
+var NAMES=[
+  ["Alva","Elsa","Maja","Noor","Amira","Leila","Saga","Ines","Yara","Ebba","Wilma","Zara","Aisha","Freja","Mira","Hana","Selma","Lina","Sofia","Tindra","Maria","Linnea","Sofie","Elin","Ida","Amal"],
+  ["Elias","Omar","Hugo","Liam","Noah","Ali","Karim","Viktor","Malte","Theo","Arvid","Yusuf","Leon","Axel","Matteo","Jonas","Emil","Samir","Kian","Ludvig","Johan","Erik","Anders","Karl","Nils","Rasmus"],
+  ["Kim","Robin","Alex","Sam","Charlie","Billie","Love","Eli","Noa","Ariel"]];
+var LAST=["Lindqvist","Andersson","Haddad","Nguyen","Okafor","Berg","Sandberg","Ahmadi","Johansson","Kowalski","Ekström","Rahimi","Larsson","Novak","Svensson",
+          "Hosseini","Holm","Petrović","Nilsson","Yilmaz","Lund","Kaya","Bergström","Mendoza","Persson","Al-Sayed","Dahl","Lehtonen","Karlsson","Sjöberg","Fernández","Wallin"];
+
+/* ---------- a generated face: flat shapes in an SVG ---------- */
+var SKIN=["#f6d7c3","#eec1a1","#e0ac86","#c98e66","#a86f4b","#8a5536","#6b3f27","#4f2d1c"];
+var HAIR=["#1d1410","#3a2416","#5b3a22","#8a5a2b","#b5793a","#d9a75b","#e7d3a8","#9a9a9a","#7a2b18","#2b2b3a"];
+var SHIRT=["#00d5e0","#ffde3c","#ff2d72","#13cb84","#3a3aff","#f4fbff","#2b2f66","#e0bc00"];
+var BG=["#e9f6ff","#cfe7f5","#fff4c4","#d9fbfd","#dcfaee","#ffe3ec"];
+function pick(r,a){return a[Math.floor(r()*a.length)]}
+function face(r){
+  var skin=pick(r,SKIN),hair=pick(r,HAIR),shirt=pick(r,SHIRT),bg=pick(r,BG);
+  var style=Math.floor(r()*6),glasses=r()<.3,beard=r()<.18,smile=r(),eyeY=50+r()*2,brow=r()<.5;
+  var s='<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">';
+  s+='<rect width="100" height="100" fill="'+bg+'"/>';
+  /* long hair sits behind the head */
+  if(style===1)s+='<path d="M24 46 Q24 18 50 18 Q76 18 76 46 L80 92 L20 92 Z" fill="'+hair+'"/>';
+  if(style===4)s+='<g fill="'+hair+'"><circle cx="30" cy="40" r="13"/><circle cx="70" cy="40" r="13"/><circle cx="28" cy="58" r="11"/><circle cx="72" cy="58" r="11"/></g>';
+  /* shoulders and neck */
+  s+='<path d="M10 104 Q12 78 50 76 Q88 78 90 104 Z" fill="'+shirt+'"/>';
+  s+='<rect x="42" y="60" width="16" height="18" fill="'+skin+'"/>';
+  s+='<path d="M42 74 Q50 82 58 74" fill="none" stroke="rgba(0,0,0,.12)" stroke-width="2"/>';
+  /* ears and head */
+  s+='<ellipse cx="29" cy="'+(eyeY+2)+'" rx="4" ry="6" fill="'+skin+'"/><ellipse cx="71" cy="'+(eyeY+2)+'" rx="4" ry="6" fill="'+skin+'"/>';
+  s+='<ellipse cx="50" cy="48" rx="21" ry="25" fill="'+skin+'"/>';
+  if(beard)s+='<path d="M30 52 Q31 74 50 75 Q69 74 70 52 Q66 66 50 66 Q34 66 30 52 Z" fill="'+hair+'"/>';
+  /* hair on top */
+  if(style===0)s+='<path d="M28 44 Q27 22 50 21 Q73 22 72 44 Q66 32 50 31 Q36 31 28 44 Z" fill="'+hair+'"/>';
+  if(style===1)s+='<path d="M28 46 Q28 21 50 21 Q72 21 72 46 Q64 30 44 32 Q34 36 28 46 Z" fill="'+hair+'"/>';
+  if(style===2)s+='<path d="M29 40 Q30 23 50 23 Q70 23 71 40 Q62 30 50 30 Q38 30 29 40 Z" fill="'+hair+'" opacity=".85"/>';
+  if(style===3)s+='<circle cx="50" cy="17" r="8" fill="'+hair+'"/><path d="M28 44 Q27 22 50 22 Q73 22 72 44 Q64 30 50 30 Q36 30 28 44 Z" fill="'+hair+'"/>';
+  if(style===4)s+='<g fill="'+hair+'"><circle cx="36" cy="28" r="10"/><circle cx="50" cy="24" r="11"/><circle cx="64" cy="28" r="10"/><circle cx="29" cy="38" r="7"/><circle cx="71" cy="38" r="7"/></g>';
+  if(style===5)s+='<path d="M28 42 Q30 20 52 21 Q74 23 72 42 L66 36 Q58 30 44 34 Q36 36 28 42 Z" fill="'+hair+'"/>';
+  /* eyes, brows, nose, mouth */
+  s+='<g fill="#1d1410"><ellipse cx="41" cy="'+eyeY+'" rx="2.3" ry="2.6"/><ellipse cx="59" cy="'+eyeY+'" rx="2.3" ry="2.6"/></g>';
+  if(brow)s+='<g stroke="'+hair+'" stroke-width="2" stroke-linecap="round" fill="none"><path d="M37 '+(eyeY-6)+' Q41 '+(eyeY-8)+' 45 '+(eyeY-6)+'"/><path d="M55 '+(eyeY-6)+' Q59 '+(eyeY-8)+' 63 '+(eyeY-6)+'"/></g>';
+  s+='<path d="M50 '+(eyeY+3)+' L48 '+(eyeY+10)+' L51 '+(eyeY+10)+'" fill="none" stroke="rgba(0,0,0,.25)" stroke-width="1.4" stroke-linecap="round"/>';
+  var my=eyeY+16,curve=2+smile*5;
+  s+='<path d="M44 '+my+' Q50 '+(my+curve)+' 56 '+my+'" fill="none" stroke="#7a2b2b" stroke-width="1.8" stroke-linecap="round"/>';
+  if(glasses)s+='<g fill="none" stroke="#0b0b52" stroke-width="1.6"><rect x="34" y="'+(eyeY-5)+'" width="13" height="10" rx="3"/><rect x="53" y="'+(eyeY-5)+'" width="13" height="10" rx="3"/><path d="M47 '+eyeY+' L53 '+eyeY+'"/></g>';
+  return s+'</svg>';
+}
+
+/* ---------- numbers ---------- */
+function digits(r,n){var s="";for(var i=0;i<n;i++)s+=Math.floor(r()*10);return s}
+function luhn(ten){var sum=0;for(var i=0;i<9;i++){var d=+ten[i]*(i%2?1:2);sum+=d>9?d-9:d}return (10-sum%10)%10}
+function pad(n){return (n<10?"0":"")+n}
+function person(r){
+  var y=1998+Math.floor(r()*9),m=1+Math.floor(r()*12),d=1+Math.floor(r()*28);
+  var serial=digits(r,3);
+  var short=String(y).slice(2)+pad(m)+pad(d)+serial;
+  var wrong=(luhn(short)+1+Math.floor(r()*9))%10;   /* never the real check digit */
+  return {pnr:y+pad(m)+pad(d)+"-"+serial+wrong,dob:y+"-"+pad(m)+"-"+pad(d)};
+}
+
+function render(seed){
+  var r=rng(seed);
+  var g=NAMES[Math.floor(r()*NAMES.length)],first=pick(r,g),mid=pick(r,g);
+  var name=first+(r()<.4&&mid!==first?" "+mid:"")+" "+pick(r,LAST);
+  var card=String(1+Math.floor(r()*9))+digits(r,8);
+  var p=person(r);
+  $("#photo").innerHTML=face(r);
+  $("#c-name").textContent=name;$("#c-card").textContent=card;$("#c-pnr").textContent=p.pnr;
+  $("#d-name").textContent=name;$("#d-card").textContent=card;$("#d-pnr").textContent=p.pnr;$("#d-dob").textContent=p.dob;
+}
+function newSeed(){return Math.floor(Math.random()*4294967296)}
+var seed=parseInt(sget(KEY_SEED),10);
+if(!(seed>=0)){seed=newSeed();sset(KEY_SEED,String(seed))}
+render(seed);
+$("#new").addEventListener("click",function(){seed=newSeed();sset(KEY_SEED,String(seed));render(seed)});
+$("#print").addEventListener("click",function(){window.print()});
+
+/* ---------- real size: --u is one millimetre times this viewer's calibration ---------- */
+var sc=parseFloat(sget(KEY_SCALE));if(!(sc>=.5&&sc<=2))sc=1;
+function setScale(v){sc=v;$("#card").style.setProperty("--u",v+"mm");$("#scale").value=v;$("#scale-out").textContent=Math.round(v*100)+"% of the browser's millimetre"}
+setScale(sc);
+$("#scale").addEventListener("input",function(){setScale(parseFloat(this.value));sset(KEY_SCALE,String(sc))});
+$("#scale-reset").addEventListener("click",function(){setScale(1);sset(KEY_SCALE,"1")});
+})();
+</script>
+</body>
+</html>
