@@ -127,10 +127,10 @@
     .three .ex{font-size:17px;line-height:1.35;color:var(--ink-700)}
     .three .ex[hidden]{display:block;visibility:hidden}
 
-    /* the modelling sheet */
-    .sheetf{display:flex;flex-direction:column;gap:8px}
-    .sheetf label.f{font-size:14px;letter-spacing:.06em;text-transform:uppercase}
-    .sheetf textarea.t{font-family:var(--font-ui);font-size:16px;line-height:1.35;resize:none;padding:6px 10px}
+    /* a short reference list */
+    .docs>div{grid-template-columns:110px 1fr;gap:14px;padding:8px 0;align-items:baseline}
+    .docs code{font-size:17px;font-weight:700;color:var(--ink-900)}
+    .docs span{font-size:17px;line-height:1.35}
   </style>
 </head>
 
@@ -163,10 +163,10 @@
           <div><span class="num">01</span><span class="nm">One thing, many parts<small>Yesterday's line, a student card, and the problem objects solve</small></span></div>
           <div><span class="num">02</span><span class="nm">Objects<small>Make one, read and change it by label, and find the objects you've used all week</small></span></div>
           <div><span class="num">03</span><span class="nm">Arrays of objects<small>Position, then label: a melody where every note has its own length</small></span></div>
-          <div><span class="num">04</span><span class="nm">Model a thing<small>Decide which parts are a list and which are labels, then write it</small></span></div>
+          <div><span class="num">04</span><span class="nm">Look it up<small>The event object you've used since Tuesday, and where to find what's in any object: MDN and the Tone.js docs</small></span></div>
         </div>
         <p class="dir" style="margin-top:16px">A break after objects.</p>
-        <aside class="nt">Timings for you only (not on the slide): recap and opening 10:15–10:35, Part 1 objects 10:35–11:15, break 11:15–11:25, Part 2 arrays of objects 11:25–11:50, quiz and modelling activity 11:50–12:00. The opening is plain language: yesterday's arrays and plain variables are fine to show, but no curly braces until Part 1.</aside>
+        <aside class="nt">Timings for you only (not on the slide): recap and opening 10:15–10:35, Part 1 objects 10:35–11:15, break 11:15–11:25, Part 2 arrays of objects 11:25–11:50, the event object and looking things up 11:50–12:00 (the song quiz only if there's time). The opening is plain language: yesterday's arrays and plain variables are fine to show, but no curly braces until Part 1.</aside>
       </section>
 
       <!-- 03 OBJECTIVES -->
@@ -179,9 +179,9 @@
           <div><span class="num">02</span><span class="tx">Read and write a property with a dot, <code>tone.note</code>, or with brackets, <code>tone["note"]</code>.</span></div>
           <div><span class="num">03</span><span class="tx">Add a property, change one, and say which a line of code does.</span></div>
           <div><span class="num">04</span><span class="tx">Choose between an array and an object: position or label?</span></div>
-          <div><span class="num">05</span><span class="tx">Model a real thing as an array of objects, and reach into it by position and label.</span></div>
+          <div><span class="num">05</span><span class="tx">Reach into an array of objects by position and label, and look up an object's properties on MDN and in the Tone.js docs.</span></div>
         </div>
-        <aside class="nt">The session's learning objectives from the course plan. Come back to them at the end. Number 04 is the decision the whole morning hangs on; number 05 is the afternoon's starting point.</aside>
+        <aside class="nt">The session's learning objectives from the course plan. Come back to them at the end. Number 04 is the decision the whole morning hangs on; number 05 ends with a habit: when an object isn't yours, look up its properties.</aside>
       </section>
 
       <!-- 04 RECAP -->
@@ -634,47 +634,133 @@
         <aside class="nt">On their own laptops, in the slide editor. Any key plays all the steps. Task 1: change one property inside the list. Task 2: steps.push({ note: "C5", duration: "4n" }); the loop doesn't change, because it asks steps.length every time. Task 3: velocity in each object (0.2 to 1), and a fourth value in the call. A step without a velocity gives undefined, which Tone treats as full volume: worth noticing. Common mistakes: steps.note or steps.duration (undefined: steps is the list); a missing comma between two objects in the list; steps(i) with round brackets (TypeError: steps is not a function).</aside>
       </section>
 
-      <!-- 24 QUIZ: A SONG -->
-      <section class="slide" id="quiz-song" data-sec="Model a thing" data-ex="A song, part by part">
+      <!-- 24 THE EVENT IS AN OBJECT -->
+      <section class="slide" id="event-object" data-sec="Look it up" data-ex="What's in the event?">
         <span class="turn">Your turn</span>
-        <div class="billing">Model a thing</div>
+        <div class="billing">Look it up</div>
+        <hr class="rule">
+        <h2 class="h1 tight">The event is an object too</h2>
+        <div class="cols wide-l" style="gap:36px">
+          <div class="stack" style="gap:14px">
+            <div class="panel">
+              <div class="bar"><span>keyboard.js · Tuesday</span></div>
+              <pre class="code" id="ev-code" style="font-size:16px"></pre>
+            </div>
+            <div class="pad" id="ev-pad" tabindex="0" aria-label="Keyboard pad"></div>
+            <ol class="plain tasks">
+              <li>Press <b>a</b>, then hold <b>Shift</b> and press <b>a</b>. Which properties change? Which stay the same?</li>
+              <li>Hold a key down. What does <code>repeat</code> do?</li>
+              <li>Where would you find out what <code>code</code> means?</li>
+            </ol>
+          </div>
+          <div class="stack" style="gap:10px">
+            <div id="ev-obj"></div>
+            <p class="dir" id="ev-dir" style="font-size:19px;margin:0">Click the pad and press a key. This is the real object the browser hands to <code>keyDown</code>.</p>
+          </div>
+        </div>
+        <aside class="nt">11:50. The objects so far were ones we wrote. Since Tuesday, students have been handed one every time a key goes down: event. They've used event.key and event.repeat (and event.shiftKey in the group session). Each key press shows the real object's parts on the right. On their own laptops. Task 1: with Shift, key goes from "a" to "A", code stays "KeyA", shiftKey turns true. key is what the key produced; code is which key it was. Task 2: repeat is true while the key is held, which is why Tuesday's code checks it. Task 3 is the bridge: none of us remembers all of these; there's a place where the full list lives. (Ctrl and ⌘ combinations are left to the browser, so the pad doesn't see them; Alt and Shift work.)</aside>
+      </section>
+
+      <!-- 25 LOOK IT UP: MDN -->
+      <section class="slide" id="look-mdn" data-sec="Look it up">
+        <div class="billing">Look it up · MDN</div>
+        <hr class="rule">
+        <h2 class="h1 tight">The browser's objects: MDN</h2>
+        <div class="cols" style="gap:36px">
+          <div class="stack" style="gap:14px">
+            <div class="rows lab">
+              <div style="padding:9px 0"><span class="num">1</span><span class="tx" style="font-size:20px">Search for <b>mdn keyboardevent</b>. MDN is the reference for everything the browser gives you.</span></div>
+              <div style="padding:9px 0"><span class="num">2</span><span class="tx" style="font-size:20px">Skip down to <b>Instance properties</b>: every label the object has.</span></div>
+              <div style="padding:9px 0"><span class="num">3</span><span class="tx" style="font-size:20px">Read the name and the first sentence. Follow the link only if you need more.</span></div>
+              <div style="padding:9px 0"><span class="num">4</span><span class="tx" style="font-size:20px">Try it: log it, press keys, see if it does what you read.</span></div>
+            </div>
+            <div class="row"><a class="btn alt" href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent" target="_blank" rel="noopener" style="text-decoration:none">Open KeyboardEvent on MDN</a></div>
+          </div>
+          <div class="panel">
+            <div class="bar p"><span>KeyboardEvent · Instance properties</span><span>in short</span></div>
+            <div class="pbody">
+              <div class="rows docs">
+                <div><code>key</code><span>the character the key typed, or its name: <code>"a"</code>, <code>"A"</code>, <code>"Enter"</code></span></div>
+                <div><code>code</code><span>which physical key it was, whatever it typed: <code>"KeyA"</code></span></div>
+                <div><code>repeat</code><span><code>true</code> while the key is held down</span></div>
+                <div><code>shiftKey</code><span><code>true</code> if Shift was held. Also <code>altKey</code>, <code>ctrlKey</code>, <code>metaKey</code></span></div>
+                <div><code>location</code><span>where on the keyboard: left, right, number pad</span></div>
+              </div>
+              <p class="small muted" style="margin:10px 0 0">…plus what every event has, such as <code>type</code> and <code>timeStamp</code>.</p>
+            </div>
+          </div>
+        </div>
+        <aside class="nt">Open MDN live on the projector and do the four steps out loud: search, scroll to Instance properties, read one entry, try it. The panel on the right is our short version, not MDN's words: the real page has more (isComposing, and the deprecated ones like keyCode and charCode, marked with a warning: show students that marker and tell them to skip those). Point out that KeyboardEvent "inherits" from Event: type and timeStamp are on a parent page. The habit to build: when you meet an object you didn't write, look up its properties instead of guessing.</aside>
+      </section>
+
+      <!-- 26 LOOK IT UP: TONE.JS -->
+      <section class="slide" id="look-tone" data-sec="Look it up" data-demo="Read it, then try it">
+        <span class="turn try">Try it</span>
+        <div class="billing">Look it up · Tone.js</div>
+        <hr class="rule">
+        <h2 class="h1 tight">A library's objects: its own docs</h2>
+        <div class="cols" style="gap:36px">
+          <div class="stack" style="gap:14px">
+            <div class="rows lab">
+              <div style="padding:9px 0"><span class="num">1</span><span class="tx" style="font-size:20px">Open the Tone.js docs for <b>our version</b>, 15.1.22, and find <b>Synth</b>.</span></div>
+              <div style="padding:9px 0"><span class="num">2</span><span class="tx" style="font-size:20px"><b>Properties</b>: <code>oscillator</code>, <code>envelope</code>, <code>volume</code>… <b>Methods</b>: <code>triggerAttackRelease</code>…</span></div>
+              <div style="padding:9px 0"><span class="num">3</span><span class="tx" style="font-size:20px"><code>envelope</code> is another object. Click through: <code>attack</code>, <code>decay</code>, <code>sustain</code>, <code>release</code>.</span></div>
+            </div>
+            <div class="row"><a class="btn alt" href="https://tonejs.github.io/docs/15.1.22/classes/Synth.html" target="_blank" rel="noopener" style="text-decoration:none">Open Synth in the Tone.js docs</a></div>
+          </div>
+          <div class="stack" style="gap:12px">
+            <div class="panel">
+              <div class="bar"><span>synth.js</span></div>
+              <pre class="code" id="lt-code" style="font-size:17px"></pre>
+            </div>
+            <div class="row" style="gap:10px"><span class="small muted" style="width:70px">release</span><div class="seg" role="group" aria-label="Release" id="lt-rel"></div></div>
+            <div class="row" style="gap:10px"><span class="small muted" style="width:70px">attack</span><div class="seg" role="group" aria-label="Attack" id="lt-att"></div><span style="flex:1"></span><button class="btn" id="lt-play">Play</button></div>
+            <p class="dir" style="font-size:19px;margin:0">Two dots, two hops: the synth, its envelope, the envelope's release.</p>
+          </div>
+        </div>
+        <aside class="nt">Same habit, for a library. Open the Synth page live. Make sure it's the 15.1.22 docs: Tone's pages for other versions differ, and search engines often land on old ones. Properties are labels holding values or other objects (oscillator, which we met before the break; envelope); methods are the actions (triggerAttackRelease). Click envelope: it's an AmplitudeEnvelope, another object with its own page: attack, decay, sustain, release, in seconds. Then on the right: set release and attack and play. These run for real: synth.envelope.release = 3 lets the note ring on. That's the loop to teach: read the docs, then try it and listen.</aside>
+      </section>
+
+      <!-- 27 LOOK IT UP: EDITOR -->
+      <section class="slide" id="lookup-code" data-sec="Look it up" data-ex="Look it up, then use it">
+        <span class="turn">Your turn</span>
+        <div class="billing">Look it up · Write it</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Look it up, then use it</h2>
+        <div class="cols wide-l pg" style="flex:1;min-height:0">
+          <div class="panel">
+            <div class="bar"><span>keys.js</span><span>Ctrl / ⌘ + Enter runs</span></div><textarea class="code-ed pg-ed" id="lk-ed" spellcheck="false" aria-label="Code editor"></textarea>
+          </div>
+          <div class="stack" style="gap:10px">
+            <div class="row"><button class="btn" id="lk-run">Run</button><button class="btn ghost" id="lk-reset">Reset</button></div>
+            <div class="pad" id="lk-pad" tabindex="0" aria-label="Keyboard pad"></div>
+            <div class="panel">
+              <div class="bar y"><span>console</span></div>
+              <div class="console con-s" id="lk-con" style="max-height:90px;min-height:56px"></div>
+            </div>
+            <ol class="plain tasks">
+              <li>Hold <b>Shift</b> and press <b>a</b>: silence. Why? Log <code>event.code</code> as well.</li>
+              <li>On MDN, read about <code>shiftKey</code>. Make Shift + <b>a</b> play <code>"C5"</code>.</li>
+              <li>On the Tone.js Synth page, find <code>envelope</code>. Make every note ring longer.</li>
+            </ol>
+          </div>
+        </div>
+        <aside class="nt">On their own laptops, with MDN and the Tone.js docs open in another tab. Task 1: with Shift, event.key is "A", not "a", so the if doesn't match; event.code is "KeyA" either way. Task 2: one way is an else if with event.key === "A" (or event.code === "KeyA" and event.shiftKey) playing "C5"; accept anything that works and ask them where they found the name. Task 3: synth.envelope.release = 2 under the synth line (or attack for a slow start). If someone types synth.release, it gives no error and no change: an object happily takes a new label it doesn't use. That's exactly why we look things up. The afternoon exercises continue from here.</aside>
+      </section>
+
+      <!-- 28 QUIZ: A SONG -->
+      <section class="slide" id="quiz-song" data-sec="Wrap-up" data-ex="A song, part by part">
+        <span class="turn">Your turn</span>
+        <div class="billing">Wrap-up · Check</div>
         <hr class="rule">
         <h2 class="h1 tight">A song, part by part</h2>
         <p style="margin:0 0 10px;font-size:19px">Is each part a list of things (array), a labelled part (property), or both?</p>
         <div class="rows quiz" id="q2"></div>
         <div class="fb" id="q2-fb" style="margin-top:14px"></div>
-        <aside class="nt">11:50. Two minutes, then discuss as a class. The last row is the one to talk about: a whole song is one thing with labelled parts (title, tempo), and one of those parts is a list (sections), and each section is labelled parts again. Real data nests. Sketch it on the board as a tree if there's time.</aside>
+        <aside class="nt">If there's time; skip it if the look-it-up tasks ran long (it works on their own laptops after class too). The last row is the one to talk about: a whole song is one thing with labelled parts (title, tempo), one of those parts is a list (sections), and each section is labelled parts again. Real data nests.</aside>
       </section>
 
-      <!-- 25 MODEL IT -->
-      <section class="slide" id="model-it" data-sec="Model a thing" data-ex="Model a musical thing">
-        <span class="turn">Your turn</span>
-        <div class="billing">Model a thing · From idea to code</div>
-        <hr class="rule">
-        <h2 class="h1 tight">Model something musical</h2>
-        <div class="seg" role="group" aria-label="What to model" id="mi-seg" style="margin-bottom:12px"></div>
-        <div class="cols pg" style="flex:1;min-height:0;gap:28px">
-          <div class="sheetf" id="mi-sheet">
-            <label class="f">Idea · what is it, in plain words?<textarea class="t" rows="2" data-f="idea"></textarea></label>
-            <label class="f">Strategy · which parts are a list, which are labels?<textarea class="t" rows="3" data-f="strat"></textarea></label>
-            <label class="f">Plan · the steps to build it<textarea class="t" rows="3" data-f="plan"></textarea></label>
-            <p class="small muted" id="mi-hint" style="margin:0"></p>
-          </div>
-          <div class="stack" style="gap:10px;min-height:0">
-            <div class="panel" style="flex:1;display:flex;flex-direction:column;min-height:0">
-              <div class="bar"><span>Code · model.js</span><span>saved in this browser</span></div><textarea class="code-ed pg-ed" id="mi-ed" spellcheck="false" aria-label="Code editor"></textarea>
-            </div>
-            <div class="row"><button class="btn" id="mi-run">Run</button><span class="small muted">Log what you made. Then compare with a neighbour.</span></div>
-            <div class="panel">
-              <div class="bar y"><span>console</span></div>
-              <div class="console con-s" id="mi-con" style="max-height:96px;min-height:56px"></div>
-            </div>
-          </div>
-        </div>
-        <aside class="nt">About seven minutes. Students choose a track, a drum pattern, a playlist, or something of their own, and climb the same four steps: write the idea, decide for each part whether it's a list or a label, plan it, then write it and log it. Plain language first, code last. Everything is saved in their browser. Last two minutes: compare with a neighbour. Did you make the same choices? Where you differ, can you both argue for yours? There's often more than one good answer. Listen for students who can build it but can't say why array or object. Then preview the afternoon.</aside>
-      </section>
-
-      <!-- 26 WRAP-UP -->
+      <!-- 29 WRAP-UP -->
       <section class="slide stage" id="wrap-up" data-sec="Wrap-up">
         <div class="beam y"></div>
         <div class="beam m"></div>
@@ -683,12 +769,12 @@
           <div class="billing">Wrap-up</div>
           <h2 class="hero md">By position, or by label.</h2>
           <p class="lede">Array: many of a kind, reached by position. Object: one thing, reached by label. An array of objects: position, then label.</p>
-          <div class="terms" style="max-width:720px"><span>{ }</span><span>person1.firstName</span><span>tone["note"]</span><span>person1.program = "IDB"</span><span>synth.oscillator.type</span><span>steps[0].note</span><span>steps[i].duration</span></div>
+          <div class="terms" style="max-width:720px"><span>{ }</span><span>person1.firstName</span><span>tone["note"]</span><span>person1.program = "IDB"</span><span>synth.oscillator.type</span><span>steps[0].note</span><span>steps[i].duration</span><span>event.code</span><span>synth.envelope.release</span></div>
         </div>
-        <aside class="nt">Summarise: an object groups the facts about one thing and you reach them by label, with a dot or with brackets; assigning to a label changes it, or adds it if it wasn't there; a property's value can be another object or an action (a method); and an array of objects puts position and label together. Back to the five objectives.</aside>
+        <aside class="nt">Summarise: an object groups the facts about one thing and you reach them by label, with a dot or with brackets; assigning to a label changes it, or adds it if it wasn't there; a property's value can be another object or an action (a method); an array of objects puts position and label together; and for objects we didn't write (the event, the synth) MDN and the Tone.js docs list their properties. Back to the five objectives.</aside>
       </section>
 
-      <!-- 27 NEXT -->
+      <!-- 30 NEXT -->
       <section class="slide" id="next" data-sec="Wrap-up">
         <div class="billing">Next · Exercises and Monday</div>
         <hr class="rule">
@@ -700,11 +786,12 @@
           </div>
           <div class="rows lab" style="border-top:1px solid var(--ink-900)">
             <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://eloquentjavascript.net/04_data.html" target="_blank" rel="noopener">Eloquent JavaScript, chapter 4: Data structures</a></span></div>
-            <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://tonejs.github.io/" target="_blank" rel="noopener">Tone.js documentation</a></span></div>
+            <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent" target="_blank" rel="noopener">MDN: KeyboardEvent</a></span></div>
+            <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://tonejs.github.io/docs/15.1.22/classes/Synth.html" target="_blank" rel="noopener">Tone.js 15.1.22: Synth</a></span></div>
             <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://mau.instructure.com/courses/22858/modules/137084" target="_blank" rel="noopener">Canvas: Objects and arrays module</a></span></div>
           </div>
         </div>
-        <aside class="nt">Preview the afternoon exercises: model, reach in, loop. Sync fork on GitHub, then Pull in VS Code. Eloquent JavaScript chapter 4 is the reading: it covers arrays, objects and methods in more depth than today. Monday is data processing: destructuring (taking an object apart into variables) and scope moved there from today.</aside>
+        <aside class="nt">Preview the afternoon exercises: reach in, loop, and look things up. Sync fork on GitHub, then Pull in VS Code. Eloquent JavaScript chapter 4 is the reading: it covers arrays, objects and methods in more depth than today. Monday is data processing: destructuring (taking an object apart into variables) and scope moved there from today.</aside>
       </section>
 
     </div>
@@ -752,7 +839,7 @@
         opt = opt || {};
         var h = '<div class="obj' + (opt.sm ? " sm" : "") + (opt.hiAll ? " hi" : "") + (opt.click ? " click" : "") + '"><div class="on">' + esc(name) + '</div>';
         Object.keys(obj).forEach(function (k) {
-          h += '<div class="pr' + (opt.hi === k ? " hi" : "") + (opt.flash === k ? " flash" : "") + '" data-k="' + esc(k) + '"><span class="pk">' + esc(k) + '</span><span class="pv">' + esc(val(obj[k])) + '</span></div>';
+          h += '<div class="pr' + (opt.hi === k ? " hi" : "") + (opt.flash === k || (Array.isArray(opt.flash) && opt.flash.indexOf(k) > -1) ? " flash" : "") + '" data-k="' + esc(k) + '"><span class="pk">' + esc(k) + '</span><span class="pv">' + esc(val(obj[k])) + '</span></div>';
         });
         host.innerHTML = h + '</div>';
         if (opt.click) $$(".pr", host).forEach(function (r) { r.addEventListener("click", function () { opt.click(r.dataset.k) }) });
@@ -1222,7 +1309,7 @@
       /* ---------- 23 steps editor ---------- */
       playground("st", '// ---------- State ----------\n' + STEPS_SRC + '\n\n// ---------- Sound ----------\nconst synth = new Tone.Synth().toDestination();\n\n// ---------- Play every step ----------\nfunction playSteps() {\n  for (let i = 0; i < steps.length; i++) {\n    synth.triggerAttackRelease(\n      steps[i].note,\n      steps[i].duration,\n      Tone.now() + i * 0.4\n    );\n  }\n}\n\n// ---------- Controls ----------\nfunction keyDown(event) {\n  Tone.start();\n  if (event.repeat === false) {\n    playSteps();\n  }\n}\n\n// ---------- Setup ----------\nwindow.addEventListener("keydown", keyDown);\n');
 
-      /* ---------- 24 quiz: a song ---------- */
+      /* ---------- 28 quiz: a song ---------- */
       quiz($("#q2"), $("#q2-fb"), [
         ["The song's title", 1, "One fact about the song, with a label: <code>title</code>."],
         ["Its tempo", 1, "Another labelled fact: <code>tempo</code>. Is there a first one, among title and tempo? No."],
@@ -1231,37 +1318,56 @@
         ["The whole song", 2, "Labelled parts (title, tempo), and one of them, sections, is a list. Each section is labelled parts again. Real data nests."]
       ], ["a list", "a label", "both"], "Ask: is there a first one? Does swapping two change it? Could it be both?");
 
-      /* ---------- 25 model it ---------- */
+      /* ---------- 24 the event is an object ---------- */
       (function () {
-        var SUBJ = {
-          track: { label: "A track", hint: "A track has a name and an instrument (labels), and a list of notes. Maybe each note has a duration too?", code: 'let track = {\n  name: "Bassline",\n  notes: ["C2", "C2", "G2", "A2"]\n};\n\nconsole.log(track.name);\nconsole.log(track.notes[0]);\n' },
-          drums: { label: "A drum pattern", hint: "Is a pattern a line of steps? What does each step know: which drum, how loud?", code: '// your drum pattern\n\n' },
-          playlist: { label: "A playlist", hint: "A playlist is a line of songs. What labelled parts does one song have?", code: '// your playlist\n\n' },
-          own: { label: "Your own", hint: "Something from your A1 instrument? Its settings, a set of keys, a scale…", code: '// your own\n\n' }
-        }, cur = sget("mi:cur") || "track";
-        if (!SUBJ[cur]) cur = "track";
-        var seg = $("#mi-seg");
-        Object.keys(SUBJ).forEach(function (k) { var b = document.createElement("button"); b.className = "btn ghost"; b.textContent = SUBJ[k].label; b.dataset.k = k; b.addEventListener("click", function () { cur = k; sset("mi:cur", k); load() }); seg.appendChild(b) });
-        var ed = $("#mi-ed"), fields = $$("#mi-sheet textarea");
-        function key(f) { return "mi:" + cur + ":" + f }
-        function load() {
-          $$("#mi-seg [data-k]").forEach(function (b) { b.classList.toggle("sel", b.dataset.k === cur); b.setAttribute("aria-pressed", b.dataset.k === cur) });
-          fields.forEach(function (t) { t.value = sget(key(t.dataset.f)) || "" });
-          ed.value = sget(key("code")) || SUBJ[cur].code;
-          $("#mi-hint").textContent = SUBJ[cur].hint;
-          conLines($("#mi-con"), [{ c: "dim", t: "Press Run." }]);
-        }
-        fields.forEach(function (t) { t.addEventListener("input", function () { sset(key(t.dataset.f), t.value) }); t.addEventListener("keydown", function (e) { e.stopPropagation() }) });
-        ed.addEventListener("input", function () { sset(key("code"), ed.value) });
-        function run() {
-          var r = D.run(ed.value), lines = [{ c: "in", t: "run model.js" }].concat(r.logs);
-          if (r.error) lines.push({ c: r.blocked ? "dim" : "bad", t: r.blocked ? r.error.message : "The code stopped: " + (r.error.name || "Error") + ": " + r.error.message });
-          else if (!r.logs.length) lines.push({ c: "dim", t: "(nothing was logged. console.log what you made.)" });
-          conLines($("#mi-con"), lines); $("#mi-con").scrollTop = 1e4;
-        }
-        $("#mi-run").addEventListener("click", run); D.edKeys(ed, run);
-        load();
+        var SRC = 'function keyDown(event) {\n  if (event.repeat === false) {\n    if (event.key === "a") {\n      synth.triggerAttackRelease("C4", "8n");\n    }\n  }\n}\n\nwindow.addEventListener("keydown", keyDown);';
+        code($("#ev-code"), SRC);
+        var KEYS = ["type", "key", "code", "repeat", "shiftKey", "altKey", "ctrlKey", "metaKey", "location"], last = null;
+        var P = pad($("#ev-pad"), "<b>Click here</b>, then press keys. Try Shift too.", LIVE), el = $("#ev-pad");
+        objView($("#ev-obj"), "event", {});
+        el.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") { el.blur(); return }
+          if (e.key === "Tab" || e.ctrlKey || e.metaKey) return;
+          e.preventDefault(); e.stopPropagation();
+          P.show(e.key);
+          var o = {}, changed = [];
+          KEYS.forEach(function (k) { o[k] = e[k]; if (last && last[k] !== e[k]) changed.push(k) });
+          objView($("#ev-obj"), "event", o, { flash: changed });
+          code($("#ev-code"), SRC, [1, 2]);
+          last = o;
+          $("#ev-dir").innerHTML = "<code>event.key</code> is <code>" + esc(JSON.stringify(e.key)) + "</code>, <code>event.code</code> is <code>" + esc(JSON.stringify(e.code)) + "</code>. Nine labels shown here; the real object has more.";
+        });
+        el.addEventListener("keyup", function (e) { if (e.key !== "Escape" && !e.ctrlKey && !e.metaKey) { e.preventDefault(); e.stopPropagation() } });
+        el.addEventListener("mousedown", function () { setTimeout(function () { el.focus() }, 0) });
       })();
+
+      /* ---------- 26 look it up: Tone.js ---------- */
+      (function () {
+        var ls = null, rel = 1, att = 0.005;
+        function lsyn() { if (!T) return null; if (!ls) { ls = new T.Synth().toDestination(); ls.volume.value = -10 } return ls }
+        function show(on) { code($("#lt-code"), 'const synth = new Tone.Synth().toDestination();\n\nsynth.envelope.attack = ' + att + ';\nsynth.envelope.release = ' + rel + ';\n\nsynth.triggerAttackRelease("C4", "8n");', on); if (on) flash($("#lt-code"), on) }
+        function seg(host, vals, get, set, line) {
+          vals.forEach(function (v) {
+            var b = document.createElement("button"); b.className = "btn ghost" + (v === get() ? " sel" : ""); b.textContent = String(v); b.style.textTransform = "none";
+            b.addEventListener("click", function () {
+              set(v); $$(".btn", host).forEach(function (x) { x.classList.toggle("sel", x === b); x.setAttribute("aria-pressed", x === b) });
+              show([line]); playIt();
+            });
+            host.appendChild(b);
+          });
+        }
+        function playIt() {
+          audioOn(); var s = lsyn(); if (!s) return;
+          try { s.envelope.attack = att; s.envelope.release = rel; s.triggerAttackRelease("C4", "8n") } catch (e) { }
+        }
+        seg($("#lt-rel"), [0.1, 1, 3], function () { return rel }, function (v) { rel = v }, 3);
+        seg($("#lt-att"), [0.005, 0.3], function () { return att }, function (v) { att = v }, 2);
+        $("#lt-play").addEventListener("click", function () { show([5]); playIt() });
+        show();
+      })();
+
+      /* ---------- 27 look it up: editor ---------- */
+      playground("lk", '// ---------- Sound ----------\nconst synth = new Tone.Synth().toDestination();\n\n// ---------- Controls ----------\nfunction keyDown(event) {\n  Tone.start();\n  console.log(event.key);\n  if (event.repeat === false) {\n    if (event.key === "a") {\n      synth.triggerAttackRelease("C4", "8n");\n    }\n  }\n}\n\n// ---------- Setup ----------\nwindow.addEventListener("keydown", keyDown);\n');
     })();
   </script>
 </body>
