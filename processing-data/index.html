@@ -135,6 +135,13 @@
     .fnq .ch{display:flex;gap:8px;flex-wrap:wrap}
     .fnq .chip{text-transform:none;letter-spacing:0}
     .fnq .q{font-size:19px;color:var(--ink-900)}
+    .nest .box{border:2px solid var(--ink-900);border-radius:2px;padding:6px 10px 10px;background:var(--paper-000);transition:background .2s,box-shadow .2s}
+    .nest .box .box{margin-top:8px;border-style:dashed}
+    .nest .box.on{background:var(--spot-200);box-shadow:inset 4px 0 0 var(--spot-400)}
+    .nest .bl{font-family:var(--font-ui);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-500);font-weight:500;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .nest .chip{text-transform:none;letter-spacing:0;font-size:15px}
+    .nest .chip.sel{background:var(--ink-900);color:var(--spot-400)}
+    .lab .tx code{background:var(--spot-200);color:var(--ink-900);padding:0 4px;border-radius:2px}
   </style>
 </head>
 
@@ -172,7 +179,7 @@
           <div><span class="num">06</span><span class="nm">Wrap-up<small>The one move we made twice, and what's next</small></span></div>
         </div>
         <p class="dir" style="margin-top:16px">A break after the first example.</p>
-        <aside class="nt">Timings for you only (not on the slide): framing 10:15–10:30, Example 1 10:30–11:00, break 11:00–11:10, where variables live 11:10–11:20, Example 2 11:20–11:45, describe-then-represent activity 11:45–11:55 (ten minutes, down from the plan's fifteen to make room for scope and destructuring), wrap-up 11:55–12:00. The framing section has no code at all. Code starts in Example 1, after "a tap is a moment in time" has been motivated.</aside>
+        <aside class="nt">Timings for you only (not on the slide): framing 10:15–10:30, Example 1 10:30–11:00, break 11:00–11:10, where variables live 11:10–11:25, Example 2 11:25–11:47, describe-then-represent activity 11:47–11:55 (eight minutes, down from the plan's fifteen to make room for scope and destructuring), wrap-up 11:55–12:00. The framing section has no code at all. Code starts in Example 1, after "a tap is a moment in time" has been motivated.</aside>
       </section>
 
       <!-- 03 OBJECTIVES -->
@@ -465,7 +472,29 @@
           <h2 class="hero md">Why is taps at the top?</h2>
           <p class="lede">In the tap code, <code>taps</code> sits above the function and <code>gap</code> sits inside it. Where a variable is made decides how long it lasts, and who can see it.</p>
         </div>
-        <aside class="nt">11:10, about ten minutes for this section, before the swipe. These two ideas were moved here from Friday's Objects lecture, and the tap code we just wrote is the reason they matter: one variable has to remember every tap, the other only matters for one tap. Scope first, then destructuring as its first payoff. Timing knock-on: Example 2 runs 11:20–11:45 and the paper activity gets ten minutes instead of fifteen.</aside>
+        <aside class="nt">11:10, about fifteen minutes for this section, before the swipe. These two ideas were moved here from Friday's Objects lecture, and the tap code we just wrote is the reason they matter: one variable has to remember every tap, the other only matters for one tap. Scope first, then destructuring as its first payoff. Timing knock-on: Example 2 runs 11:25–11:47 and the paper activity gets eight minutes instead of fifteen.</aside>
+      </section>
+
+      <!-- WHY FORGET -->
+      <section class="slide" id="scope-why" data-sec="Where variables live">
+        <div class="billing">Where variables live · Why forget?</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Some things you only need briefly</h2>
+        <div class="two">
+          <div>
+            <h3>In your head</h3>
+            <p><b>For years:</b> your name, the way home, your friends' faces.</p>
+            <p><b>For seconds:</b> a door code from a text, held until you've typed it. The 1 you carry when you add 27 + 15.</p>
+            <p class="ex">Short-term memory forgets on purpose. If you kept every door code, the one you need would be lost among them.</p>
+          </div>
+          <div>
+            <h3>In code</h3>
+            <p><b>For the whole time:</b> <code>taps</code>, every tap, for as long as the page is open.</p>
+            <p><b>For a moment:</b> <code>i</code> in a <code>for</code> loop, only while the loop runs. <code>gap</code> in <code>keyDown</code>, only for this one tap.</p>
+            <p class="ex">If every <code>i</code> and every <code>gap</code> stayed forever, they would pile up and get in each other's way.</p>
+          </div>
+        </div>
+        <aside class="nt">Motivate scope before naming it. Start with people: some things we remember for years, others only for seconds, like a door code someone texted you, or the 1 you carry in 27 + 15. Ask: what's the door code from the last building you visited? Nobody knows, and that's a good thing. Short-term memory forgets on purpose. Code is the same. taps has to last as long as the page. But i in a loop only matters while the loop runs, and gap only matters for one tap; a temporary calculation inside a function is scrap paper. If JavaScript kept every one of them forever, every loop's i would clash with every other loop's i. So variables come with a lifetime, and where you write them decides it. That's what the next two slides show.</aside>
       </section>
 
       <!-- PREDICT: TAPS INSIDE -->
@@ -513,6 +542,32 @@
           </div>
         </div>
         <aside class="nt">Tap the space bar a few times with taps at the top: taps grows in the outer box, and gap appears in the inner box for each call, then fades. Switch to taps inside keyDown and tap again: taps is made in the inner box every time, so its length is always 1. Then press Log gap at the bottom: a console.log(gap) outside the function stops the code with ReferenceError: gap is not defined. gap only exists inside the braces it was made in. The rule to take away: a variable made inside { } is made fresh each time that code runs, and only that code can see it. If something has to remember between events, it goes at the top, in the State section. That's why the house layout has one.</aside>
+      </section>
+
+      <!-- SCOPE MAP -->
+      <section class="slide" id="scope-map" data-sec="Where variables live" data-demo="Scope">
+        <span class="turn try">Try it</span>
+        <div class="billing">Where variables live · Scope</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Scope: where a variable can be seen</h2>
+        <div class="cols">
+          <div class="stack">
+            <div class="panel">
+              <div class="bar"><span>taps.js</span><span>click a variable</span></div>
+              <pre class="code" id="sm-code" style="font-size:15px;line-height:1.5"></pre>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="nest" id="sm-nest"></div>
+            <p class="dir" id="sm-dir" style="font-size:18px;min-height:54px">Click a variable to see where it can be used.</p>
+            <div class="rows lab" style="border-top:1px solid var(--ink-900)">
+              <div style="grid-template-columns:44px 1fr;padding:6px 0"><span class="num" style="font-size:26px">1</span><span class="tx" style="font-size:18px">A variable belongs to the nearest <code>{ }</code> around the line that makes it.</span></div>
+              <div style="grid-template-columns:44px 1fr;padding:6px 0"><span class="num" style="font-size:26px">2</span><span class="tx" style="font-size:18px">It exists from that line to the closing <code>}</code>, then it's gone.</span></div>
+              <div style="grid-template-columns:44px 1fr;padding:6px 0"><span class="num" style="font-size:26px">3</span><span class="tx" style="font-size:18px">Code inside can see out. Code outside can't see in.</span></div>
+            </div>
+          </div>
+        </div>
+        <aside class="nt">Now name it: scope. Each pair of braces makes a box, and boxes sit inside each other: the file, keyDown, the if, the for loop. Click each variable in turn and its lines light up. taps: the whole file, as long as the page. event: only inside keyDown, a new one for every key press. gaps: only inside the if, made fresh each tap. i: only inside the for loop; once the loop ends, i is gone, which is exactly what we want from a loop counter. Read the three rules aloud. Rule 3 explains the ReferenceError from the last slide: console.log(gap) at the bottom of the file is outside, looking in. Act it out if there's time: four students stand in nested hoops or chalk circles on the floor. Each holds the variables of their box. Someone inside may ask anyone in a bigger circle around them for a value; nobody may reach into a smaller circle.</aside>
       </section>
 
       <!-- SCOPE CHECK -->
@@ -583,7 +638,7 @@
           <h2 class="hero md">Same idea. Position instead of time.</h2>
           <p class="lede">A finger dragged across the keyboard. Capture a list, then look at how it changes: this time it's where each key sits.</p>
         </div>
-        <aside class="nt">11:20. Same spine as Example 1: capture a sequence, then look at how it changes. But the interesting thing now is position, not time. Ask someone to drag a finger along the top row of their laptop keyboard while you go to the next slide.</aside>
+        <aside class="nt">11:25. Same spine as Example 1: capture a sequence, then look at how it changes. But the interesting thing now is position, not time. Ask someone to drag a finger along the top row of their laptop keyboard while you go to the next slide.</aside>
       </section>
 
       <!-- 18 DESCRIBE A SWIPE -->
@@ -760,7 +815,7 @@
             <p class="dir" style="font-size:20px">On paper, no code. Then compare with a neighbour: did you choose the same thing to store?</p>
           </div>
         </div>
-        <aside class="nt">11:45, ten minutes (the plan's fifteen, shortened for the scope section). Students pick an action (their own, or from the list) and work the four steps on paper. No code in this activity: fifteen minutes is only enough for the representation thinking, and that's the point. After about six minutes, pairs compare: did you choose the same representation? Different choices are the interesting part: ask a pair who chose differently to explain both. The next slide has an optional card for anyone who'd rather type; it's saved in their own browser only. Their action comes back as block 4 this afternoon.</aside>
+        <aside class="nt">11:47, eight minutes (the plan's fifteen, shortened for the scope section). Students pick an action (their own, or from the list) and work the four steps on paper. No code in this activity: fifteen minutes is only enough for the representation thinking, and that's the point. After about five minutes, pairs compare: did you choose the same representation? Different choices are the interesting part: ask a pair who chose differently to explain both. The next slide has an optional card for anyone who'd rather type; it's saved in their own browser only. Their action comes back as block 4 this afternoon.</aside>
       </section>
 
       <!-- 26 THE CARD -->
@@ -1231,6 +1286,33 @@
         });
         $("#sd-reset").addEventListener("click", function () { taps = []; show() });
         show();
+      })();
+
+      /* ---------- where variables live: scope map ---------- */
+      (function () {
+        var SRC = 'let taps = [];\n\nfunction keyDown(event) {\n  if (event.key === " ") {\n    taps.push(Date.now());\n    let gaps = [];\n    for (let i = 1; i < taps.length; i++) {\n      gaps.push(taps[i] - taps[i - 1]);\n    }\n    console.log(gaps);\n  }\n}\n\nwindow.addEventListener("keydown", keyDown);';
+        function range(a, b) { var r = []; for (var i = a; i <= b; i++) r.push(i); return r }
+        var V = {
+          taps: { lines: range(0, 13), box: 0, t: "<code>taps</code> is made on line 1, outside every function. Every line in the file can use it, and it lasts as long as the page is open." },
+          event: { lines: range(2, 11), box: 1, t: "<code>event</code> belongs to <code>keyDown</code>, lines 3 to 12. Each key press gets a new one, gone when the function ends." },
+          gaps: { lines: range(5, 10), box: 2, t: "<code>gaps</code> is made inside the <code>if</code>, on line 6, and is gone at its closing brace on line 11. A fresh, empty list for every tap." },
+          i: { lines: range(6, 8), box: 3, t: "<code>i</code> only lives inside the <code>for</code> loop, lines 7 to 9. When the loop ends, the counter is gone: nobody needs it any more." }
+        };
+        var B = [["the whole file", ["taps"]], ["inside keyDown", ["event"]], ["inside the if", ["gaps"]], ["inside the for loop", ["i"]]];
+        var h = "";
+        B.forEach(function (b, j) { h += '<div class="box" data-b="' + j + '"><div class="bl">' + b[0] + b[1].map(function (v) { return ' <button class="chip" data-v="' + v + '">' + v + '</button>' }).join("") + '</div>' });
+        B.forEach(function () { h += '</div>' });
+        $("#sm-nest").innerHTML = h;
+        code($("#sm-code"), SRC);
+        $$("#sm-nest .chip").forEach(function (c) {
+          c.addEventListener("click", function () {
+            var v = V[c.dataset.v];
+            $$("#sm-nest .chip").forEach(function (x) { x.classList.toggle("sel", x === c) });
+            $$("#sm-nest .box").forEach(function (x) { x.classList.toggle("on", +x.dataset.b === v.box) });
+            code($("#sm-code"), SRC, v.lines);
+            $("#sm-dir").innerHTML = v.t;
+          });
+        });
       })();
 
       /* ---------- where variables live: top or inside ---------- */
