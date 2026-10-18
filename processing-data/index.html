@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Processing data · KD402D Programming</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/deck.css">
+  <style>
+    /* styles used only by this lecture */
+    .order>div{grid-template-columns:72px 1fr;align-items:center;padding:7px 0}
+    .order .nm{font-size:23px;color:var(--ink-900);font-weight:500}
+    .order .nm small{display:block;font-size:16px;color:var(--ink-500);font-weight:400}
+    .prompt{font-family:var(--font-display);font-weight:700;font-size:30px;letter-spacing:-.025em;color:var(--ink-900);line-height:1.15;margin:0}
+    .h1.tight{margin-bottom:14px}
+    @keyframes flashpk{0%{background:var(--spot-400)}100%{background:var(--paper-000)}}
+
+    /* a row of boxes: an array */
+    .line{display:flex;gap:10px;flex-wrap:nowrap;align-items:flex-start;min-height:84px}
+    .cell{display:flex;flex-direction:column;align-items:center;gap:5px}
+    .cell .v{min-width:58px;height:52px;padding:0 8px;border:2px solid var(--ink-900);background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900);border-radius:2px;font-family:var(--font-mono);font-weight:700;font-size:18px;color:var(--ink-900);display:flex;align-items:center;justify-content:center}
+    .cell .i{font-family:var(--font-mono);font-size:14px;font-weight:700;color:var(--ink-500)}
+    .cell.hi .v{background:var(--spot-400)}
+    .cell.more .v{border-style:dashed;box-shadow:none;color:var(--ink-500);background:transparent}
+    .line.sm .cell .v{font-size:15px;height:44px;min-width:48px}
+
+    /* pad: a focusable place that catches keys */
+    .pad{border:2px dashed var(--ink-300);background:var(--paper-200);border-radius:2px;padding:10px 16px;display:grid;grid-template-columns:90px 1fr;gap:14px;align-items:center;cursor:pointer;min-height:80px;transition:background .16s,border-color .16s}
+    .pad:focus{outline:none;border:2px solid var(--curtain-600);background:var(--spot-200)}
+    .pad:focus-visible{outline:2px solid var(--curtain-600);outline-offset:2px}
+    .pad .pk{font-family:var(--font-mono);font-weight:700;font-size:30px;color:var(--ink-900);text-align:center;border:2px solid var(--ink-900);background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900);border-radius:2px;padding:6px 0;min-height:56px;line-height:40px;white-space:nowrap;overflow:hidden}
+    .pad .pk.flash{animation:flashpk .5s ease}
+    .pad .ph{font-size:17px;color:var(--ink-700);line-height:1.4}
+    .pad .ph b{color:var(--ink-900)}
+
+    /* playground: student code + a pad */
+    .cols.pg{align-items:stretch}
+    .cols.pg>.panel{display:flex;flex-direction:column;min-height:0}
+    textarea.pg-ed{flex:1;min-height:0;font-size:14px;line-height:1.5;white-space:pre;overflow:auto}
+    .con-s{max-height:130px;overflow:auto;font-size:15px;min-height:80px}
+    ol.plain.tasks{padding:0}
+    ol.plain.tasks li{font-size:17px;padding:5px 0;line-height:1.4}
+
+    /* three ways to store it */
+    table.reps td{font-family:var(--font-ui);font-size:19px;padding:10px;vertical-align:middle}
+    table.reps td.val{font-family:var(--font-mono);font-size:18px;font-weight:700}
+    table.reps td.ans{width:140px;text-align:center;font-family:var(--font-mono);font-weight:700;font-size:24px}
+    table.reps td.ans.y{background:var(--pass-surface);color:var(--pass-ink)}
+    table.reps td.ans.x{background:var(--error-surface);color:var(--error-ink)}
+    .qs{display:flex;flex-wrap:wrap;gap:10px}
+    .qs .btn{text-transform:none;letter-spacing:0;font-size:15px}
+    .qs .btn.sel,.qs .btn.sel:hover{background:var(--ink-900);color:var(--spot-400)}
+
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:40px;border-top:1px solid var(--ink-900);padding-top:18px}
+    .two h3{font-family:var(--font-display);font-weight:700;font-size:40px;letter-spacing:-.03em;color:var(--ink-900);margin:0 0 10px;line-height:1.05}
+    .two p{margin:0 0 10px;font-size:21px}
+    .two .ex{font-family:var(--font-display);font-style:italic;font-weight:500;color:var(--ink-500);font-size:20px}
+
+    /* big numbers */
+    .big{font-family:var(--font-display);font-weight:700;font-size:64px;letter-spacing:-.04em;color:var(--ink-900);line-height:1;font-variant-numeric:tabular-nums}
+    .big.md{font-size:44px}
+    .big small{font-family:var(--font-ui);font-weight:500;font-size:17px;letter-spacing:0;color:var(--ink-500);display:block;margin-top:6px}
+    .big.flashbg{animation:flashlite .9s ease}
+    .hist{font-family:var(--font-mono);font-size:17px;color:var(--ink-500);line-height:1.6}
+
+    /* a time line of taps */
+    .tl{position:relative;height:118px;border-bottom:2px solid var(--ink-900);margin:6px 8px 0}
+    .tl .tk{position:absolute;bottom:0;width:4px;height:56px;margin-left:-2px;background:var(--curtain-600)}
+    .tl .tk b{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:13px;color:var(--ink-500)}
+    .tl .gp{position:absolute;bottom:14px;transform:translateX(-50%);font-family:var(--font-mono);font-size:15px;font-weight:700;color:var(--ink-900);background:var(--spot-200);padding:0 5px;border-radius:2px;white-space:nowrap}
+    .tl .emp{position:absolute;left:0;bottom:30px;font-family:var(--font-display);font-style:italic;font-weight:500;font-size:20px;color:var(--ink-500)}
+    .tl-ax{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:13px;color:var(--ink-500);margin:4px 8px 0}
+
+    /* taps per second meter */
+    .meter{height:30px;border:2px solid var(--ink-900);background:var(--paper-000);border-radius:2px;position:relative;overflow:hidden}
+    .meter i{position:absolute;left:0;top:0;bottom:0;background:var(--spot-400);border-right:2px solid var(--ink-900);transition:width .25s var(--ease)}
+    .meter-ax{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:13px;color:var(--ink-500);margin-top:4px}
+
+    /* a row of keys with positions */
+    .krow{outline:none;border:2px dashed var(--ink-300);background:var(--paper-200);padding:14px 16px 10px;border-radius:2px;cursor:pointer;transition:background .16s,border-color .16s}
+    .krow:focus{border:2px solid var(--curtain-600);background:var(--spot-200)}
+    .krow:focus-visible{outline:2px solid var(--curtain-600);outline-offset:2px}
+    .krow .ks{display:flex;gap:8px}
+    .krow .key{width:52px;display:flex;flex-direction:column;align-items:center;gap:4px}
+    .krow .key .c{width:52px;height:54px;border:2px solid var(--ink-900);border-radius:2px;background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900);font-family:var(--font-mono);font-weight:700;font-size:22px;color:var(--ink-900);display:flex;align-items:center;justify-content:center;transition:background .12s}
+    .krow .key .i{font-family:var(--font-mono);font-size:15px;font-weight:700;color:var(--curtain-600)}
+    .krow.noidx .key .i{visibility:hidden}
+    .krow .key.on .c{background:var(--spot-400)}
+    .krow .key.was .c{background:var(--spot-200)}
+    .krow .hint{font-size:16px;color:var(--ink-700);margin-top:10px}
+    .krow .hint b{color:var(--ink-900)}
+    .verdict{font-family:var(--font-display);font-weight:700;font-size:40px;letter-spacing:-.03em;color:var(--ink-900);line-height:1.05;min-height:44px}
+    .verdict.flashbg{animation:flashlite .9s ease}
+
+    /* side by side: two sequences */
+    .pair{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+    .seq{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;align-items:center;font-family:var(--font-mono);font-size:17px;color:var(--ink-900)}
+    .seq .lb{font-family:var(--font-ui);font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-500);font-weight:500}
+    .seq .ch{color:var(--curtain-600);font-weight:700}
+
+    /* rows of questions, shared answer chips */
+    .quiz.sw>div{grid-template-columns:1fr 430px}
+    .quiz.sw .sc{font-family:var(--font-mono);font-size:17px;color:var(--ink-900)}
+    .quiz.sw .sc span{color:var(--ink-500);font-size:15px;margin-left:10px}
+    .quiz.sw .chip{font-size:14px;padding:5px 10px;text-transform:none}
+
+    /* the activity card */
+    .acard{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px}
+    .acard label.f{font-size:14px}
+    .acard textarea.t{font-family:var(--font-ui);font-size:17px;line-height:1.35;resize:none;height:84px}
+    .acard input.t{font-family:var(--font-ui);font-size:18px}
+    ul.prompts{list-style:none;margin:0;padding:6px 18px}
+    ul.prompts li{padding:6px 0;border-bottom:1px solid var(--paper-300);font-size:19px;color:var(--ink-900)}
+    ul.prompts li:last-child{border-bottom:0}
+    /* where variables live */
+    .scopes{display:flex;flex-direction:column;gap:0}
+    .scope{border:2px solid var(--ink-900);border-radius:2px;padding:8px 12px;min-height:58px}
+    .scope.out{background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900);padding-bottom:12px}
+    .scope.in{background:var(--paper-200);border-style:dashed;margin:-2px 0 0 28px}
+    .scope .sl{font-family:var(--font-ui);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-500);font-weight:500;margin-bottom:6px}
+    .vars{display:flex;gap:8px;flex-wrap:wrap;min-height:30px;transition:opacity .4s}
+    .vars.gone{opacity:.25}
+    .vars .vr{font-family:var(--font-mono);font-size:16px;font-weight:700;color:var(--ink-900);border:2px solid var(--ink-900);background:var(--spot-200);padding:2px 10px;border-radius:2px}
+    .vars .vr.flash{animation:flashlite .9s ease}
+    .vars .none{font-family:var(--font-display);font-style:italic;font-weight:500;font-size:17px;color:var(--ink-500)}
+    .obj{border:2px solid var(--ink-900);background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900);border-radius:2px}
+    .obj .on{font-family:var(--font-mono);font-weight:700;font-size:14px;letter-spacing:.06em;padding:5px 14px;border-bottom:2px solid var(--ink-900);background:var(--paper-200);color:var(--ink-900)}
+    .obj .pr{display:grid;grid-template-columns:120px 1fr;gap:12px;padding:6px 14px;border-bottom:1px solid var(--paper-300);align-items:center}
+    .obj .pr:last-child{border-bottom:0}
+    .obj .pk{font-family:var(--font-mono);font-size:16px;color:var(--ink-500);font-weight:700}
+    .obj .pv{font-family:var(--font-mono);font-size:18px;color:var(--ink-900);font-weight:700}
+    .obj .pr.hi{background:var(--spot-200)}
+    .fnq>div{grid-template-columns:1fr;gap:8px;padding:10px 0}
+    .fnq .ch{display:flex;gap:8px;flex-wrap:wrap}
+    .fnq .chip{text-transform:none;letter-spacing:0}
+    .fnq .q{font-size:19px;color:var(--ink-900)}
+    .nest .box{border:2px solid var(--ink-900);border-radius:2px;padding:6px 10px 10px;background:var(--paper-000);transition:background .2s,box-shadow .2s}
+    .nest .box .box{margin-top:8px;border-style:dashed}
+    .nest .box.on{background:var(--spot-200);box-shadow:inset 4px 0 0 var(--spot-400)}
+    .nest .bl{font-family:var(--font-ui);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-500);font-weight:500;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .nest .chip{text-transform:none;letter-spacing:0;font-size:15px}
+    .nest .chip.sel{background:var(--ink-900);color:var(--spot-400)}
+    .lab .tx code{background:var(--spot-200);color:var(--ink-900);padding:0 4px;border-radius:2px}
+  </style>
+</head>
+
+<body data-lecture="processing-data" data-home="../">
+  <main id="stage">
+    <div id="deck">
+
+      <!-- 01 COVER -->
+      <section class="slide stage" id="cover" data-sec="Opening">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">KD402D Programming · Week 43</div>
+          <h1 class="hero">A tap becomes a number.</h1>
+          <p class="lede">Before any code, we decide what the data version of a real action is. Today: a tap, and a swipe.</p>
+        </div>
+        <div style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
+          <div class="m" style="font-size:17px;color:var(--ink-200)">KD402D Programming · Processing data · Mon 19 Oct</div>
+        </div>
+        <aside class="nt">10:15. Welcome back. Keys: arrows to move, I for the slide index, N for these notes, E to jump to the next exercise. Students open the same link on their laptops: every "Your turn" slide works on its own screen, and today's code runs in the editors on the slides (VS Code is for the afternoon exercises). The one-line plan: this lecture is hard every year, and the hard part isn't the syntax. It's the leap from "a person is doing a thing" to "here is the data that stands for that thing." We take that leap slowly, twice.</aside>
+      </section>
+
+      <!-- 02 RUNNING ORDER -->
+      <section class="slide" id="running-order" data-sec="Opening">
+        <div class="billing">Today</div>
+        <hr class="rule">
+        <h2 class="h1">What we'll do today</h2>
+        <div class="rows order">
+          <div><span class="num">01</span><span class="nm">From the world to data<small>Describe a real action in words, and find the thing in it a program can hold</small></span></div>
+          <div><span class="num">02</span><span class="nm">Example 1: tapping one key<small>Moments in time, a list of them, and the gaps between them</small></span></div>
+          <div><span class="num">03</span><span class="nm">Where variables live<small>Why <code>taps</code> sits at the top, and taking an object apart into variables</small></span></div>
+          <div><span class="num">04</span><span class="nm">Example 2: swiping across the keys<small>A key's position is its place in a list. Rising or falling?</small></span></div>
+          <div><span class="num">05</span><span class="nm">Describe, then represent<small>An action of your own, on paper, compared with a neighbour</small></span></div>
+          <div><span class="num">06</span><span class="nm">Wrap-up<small>The one move we made twice, and what's next</small></span></div>
+        </div>
+        <p class="dir" style="margin-top:16px">A break after the first example.</p>
+        <aside class="nt">Timings for you only (not on the slide): framing 10:15–10:30, Example 1 10:30–11:00, break 11:00–11:10, where variables live 11:10–11:25, Example 2 11:25–11:40 (shortened: describe a swipe, position from the row array, predict), describe-then-represent activity 11:40–11:55, wrap-up 11:55–12:00. The framing section has no code at all. Code starts in Example 1, after "a tap is a moment in time" has been motivated.</aside>
+      </section>
+
+      <!-- 03 OBJECTIVES -->
+      <section class="slide" id="objectives" data-sec="Opening">
+        <div class="billing">By lunch you can</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Six things to take home</h2>
+        <div class="rows lab">
+          <div><span class="num">01</span><span class="tx">Describe the path from a real action to data, and explain why that path is a choice you make.</span></div>
+          <div><span class="num">02</span><span class="tx">Store a repeated action as a list of moments, and find the gaps between them.</span></div>
+          <div><span class="num">03</span><span class="tx">Read fast and slow as small and large numbers that a program can compare.</span></div>
+          <div><span class="num">04</span><span class="tx">Give keys a position with an array, and read a swipe as rising or falling positions.</span></div>
+          <div><span class="num">05</span><span class="tx">Spot the shared shape: capture a list of events, then look at how each value changes.</span></div>
+          <div><span class="num">06</span><span class="tx">Say where a variable lives and how long it lasts, and take an object apart into plain variables.</span></div>
+        </div>
+        <aside class="nt">The session's learning objectives from the course plan, in plain words, plus number 06: scope and destructuring, moved here from Friday. Number 01 is the real point of the morning; number 05 is what ties the two examples together. Come back to these at the end.</aside>
+      </section>
+
+      <!-- 04 BAND -->
+      <section class="slide stage" id="world-band" data-sec="From the world to data">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">From the world to data</div>
+          <h2 class="hero md">A program can't hold a person tapping.</h2>
+          <p class="lede">It can only hold data. So before writing anything, we decide: what is the data version of this thing?</p>
+        </div>
+        <aside class="nt">10:15. No code on screen for this whole section. Something happens in the world: a person taps a key, drags a finger across the keyboard. A program can't hold "a person tapping". It can only hold numbers, strings, lists. So the real first job of a programmer is deciding what the data version of a thing is. That decision is a choice, and different choices decide which questions you can answer at all. Let that sit for a moment before moving on.</aside>
+      </section>
+
+      <!-- 05 DESCRIBE IT -->
+      <section class="slide" id="describe-tap" data-sec="From the world to data">
+        <div class="billing">From the world to data · In words first</div>
+        <hr class="rule">
+        <h2 class="h1">Describe it in words first</h2>
+        <div class="rows lab big">
+          <div><span class="num">01</span><span class="tx">Someone taps a key quickly, several times. <b>What happens?</b> Plain words, no code.</span></div>
+          <div><span class="num">02</span><span class="tx">Look at your words. <b>Which of them could you measure?</b></span></div>
+        </div>
+        <aside class="nt">About five minutes, all out loud. Ask question 1 and collect the room's words on the whiteboard. Every year people say things like "fast", "lots of times", "close together", "again and again", "one after another". Then ask question 2: which of these words could you measure? Circle them. Lead towards time: "fast", "close together" and "one after another" are all about time. "Close together" is already pointing at data: close together in time. We haven't written any code, but we've found the thing worth capturing. That move, plain description first and then spotting the measurable thing inside it, is what we do twice today.</aside>
+      </section>
+
+      <!-- 06 THE CHOICE -->
+      <section class="slide" id="the-choice" data-sec="From the world to data" data-demo="Three ways to store it">
+        <span class="turn try">Try it</span>
+        <div class="billing">From the world to data · A choice</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Storing it is a choice</h2>
+        <p class="lede" style="margin-bottom:12px">Five quick taps on the a key, stored three different ways. Click a question: which version can answer it?</p>
+        <div class="qs" id="ch-qs"></div>
+        <table class="io reps" style="margin-top:16px">
+          <thead><tr><th>Store it as</th><th>What's stored</th><th>Answers it?</th></tr></thead>
+          <tbody id="ch-rows"></tbody>
+        </table>
+        <p class="dir" id="ch-dir" style="margin-top:14px"></p>
+        <aside class="nt">Still no code: these are descriptions of data, not JavaScript. One action, three versions. Click each question in turn. A count answers "how many" and nothing else. The key names answer "which key", but not "how fast". Only the moments can answer "how fast" and "did they speed up". The point: what you store decides which questions you can ever ask later. Nothing is lost by storing the moments: you can work out the count from them. You can't go back the other way.</aside>
+      </section>
+
+      <!-- 07 TWO GOALS -->
+      <section class="slide" id="two-goals" data-sec="From the world to data">
+        <div class="billing">From the world to data · Today</div>
+        <hr class="rule">
+        <h2 class="h1">What we'll build today</h2>
+        <div class="two">
+          <div>
+            <h3>Timed taps</h3>
+            <p>One key, tapped slowly or in a quick flurry. Something that can tell how fast someone is tapping.</p>
+            <p class="ex">What happened: the same key, again and again, closer or further apart in time.</p>
+          </div>
+          <div>
+            <h3>A swipe across the keys</h3>
+            <p>A finger dragged along a row of keys. Something that can tell which way it went.</p>
+            <p class="ex">What happened: different keys, one after another, in an order.</p>
+          </div>
+        </div>
+        <p class="dir" style="margin-top:22px">Same steps both times: describe it, find the measurable thing, keep a list of it, look at how it changes.</p>
+        <aside class="nt">A roadmap, not an explanation: one or two sentences each. Now that we have the motivating example, here is what we'll try to make. First, something that handles timed taps: how fast is someone tapping one key? Second, something that handles a swipe across the keys: which direction did a finger drag? Then dive straight into the first one.</aside>
+      </section>
+
+      <!-- 08 A TAP IS A MOMENT -->
+      <section class="slide" id="one-tap" data-sec="Example 1: tapping one key" data-demo="A tap is a moment">
+        <span class="turn try">Try it</span>
+        <div class="billing">Example 1: tapping one key</div>
+        <hr class="rule">
+        <h2 class="h1 tight">A tap is a moment in time</h2>
+        <div class="cols">
+          <div class="stack">
+            <p class="lede" style="margin:0">What's the smallest true thing we can write down about one tap? <b>When it happened.</b></p>
+            <div class="panel">
+              <div class="bar"><span>moment.js</span><span>new today</span></div>
+              <pre class="code lg" id="ot-code"></pre>
+            </div>
+            <p class="dir" style="font-size:20px"><code>Date.now()</code> gives back the time right now, as a number: milliseconds since 1 January 1970.</p>
+          </div>
+          <div class="stack">
+            <div class="pad" id="ot-pad" tabindex="0" aria-label="Keyboard pad"></div>
+            <div class="big" id="ot-big">–<small>Press a key to catch the moment.</small></div>
+            <div class="hist" id="ot-hist"></div>
+          </div>
+        </div>
+        <aside class="nt">10:30. New material: say so out loud. Date.now() is new; don't assume anyone has seen it. One tap is a moment, so the smallest true thing we can record is when it happened. Click the pad and press a key a few times. The number is huge and mostly the same: only the last few digits change. Ask: what does 1760000000000 mean on its own? Nothing much. Keep that thought: the differences between these numbers will matter, not the numbers themselves. Every press here counts, even held keys: that problem comes on the next slide but one.</aside>
+      </section>
+
+      <!-- 09 MANY TAPS, ONE LIST -->
+      <section class="slide" id="taps-list" data-sec="Example 1: tapping one key" data-demo="Many taps, one list">
+        <span class="turn try">Try it</span>
+        <div class="billing">Example 1: tapping one key · A list</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Many taps, one list</h2>
+        <div class="cols">
+          <div class="stack">
+            <div class="panel">
+              <div class="bar"><span>taps.js</span></div>
+              <pre class="code" id="tl-code" style="font-size:17px"></pre>
+            </div>
+            <p class="dir" style="font-size:20px">Each tap pushes one moment onto the end of the list. A flurry of taps is now a list of numbers: an array, like the melodies last week.</p>
+          </div>
+          <div class="stack">
+            <div class="pad" id="tl-pad" tabindex="0" aria-label="Keyboard pad"></div>
+            <div class="big md" id="tl-n">0<small>taps.length</small></div>
+            <div class="line sm" id="tl-line"></div>
+            <div class="row"><button class="btn ghost" id="tl-reset">Start again</button></div>
+          </div>
+        </div>
+        <aside class="nt">If we push each moment into an array, a flurry of taps becomes a list of numbers. Pause here: we've turned a physical action into a data structure they already know from Thursday and Friday. Tap the space bar a few times, slowly. Only the space bar counts: other keys show on the pad but the code ignores them. Don't hold the key yet; that's the next slide. The list shows the newest moments; the dashed box says how many came before.</aside>
+      </section>
+
+      <!-- 10 HOLD THE KEY -->
+      <section class="slide" id="held-key" data-sec="Example 1: tapping one key" data-demo="Hold the key">
+        <span class="turn try">Try it</span>
+        <div class="billing">Example 1: tapping one key · Check the data</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Hold the key. What happened?</h2>
+        <div class="cols">
+          <div class="stack">
+            <div class="panel">
+              <div class="bar"><span>taps.js</span></div>
+              <pre class="code" id="hk-code" style="font-size:17px"></pre>
+            </div>
+            <div class="row"><button class="btn alt" id="hk-tog" aria-pressed="false">Check for repeats</button><button class="btn ghost" id="hk-reset">Start again</button></div>
+          </div>
+          <div class="stack">
+            <div class="pad" id="hk-pad" tabindex="0" aria-label="Keyboard pad"></div>
+            <div class="big md" id="hk-n">0<small>taps.length</small></div>
+            <div><div class="small muted" style="margin-bottom:6px">The last gaps between moments, in milliseconds</div><div class="line sm" id="hk-gaps"></div></div>
+            <p class="dir" id="hk-dir" style="font-size:20px">Hold the space bar down for two seconds.</p>
+          </div>
+        </div>
+        <aside class="nt">Let it fail first. Hold the space bar for two seconds: taps.length shoots up, and the gaps are tiny and all the same (around 30 ms). Stop and ask: why does the data say rapid tapping when nobody tapped? Discuss: the browser repeats a held key, like holding a letter while typing, and every repeat is another keydown. What could we do about it? They know event.repeat from the starter code in earlier sessions: ask them to name the fix rather than giving it. Then press Check for repeats and hold again: one hold, one tap. Make the point that catching repeats is a choice: sometimes you want held keys to repeat. And the bigger point, the core of today: data has to be checked against the real action it claims to stand for. The afternoon starter code leaves this check out on purpose, so they add it themselves.</aside>
+      </section>
+
+      <!-- 11 PREDICT -->
+      <section class="slide" id="predict-gaps" data-sec="Example 1: tapping one key" data-ex="Big gaps or small?">
+        <span class="turn">Your turn</span>
+        <div class="billing">Example 1: tapping one key · Predict</div>
+        <hr class="rule">
+        <h2 class="h1">A quick flurry: big gaps or small?</h2>
+        <div class="cols wide-l">
+          <div class="stack">
+            <p class="lede" style="margin:0">A gap is one moment minus the moment before it. Someone taps the space bar five times, as fast as they can. What will the gaps look like?</p>
+            <div class="stack" id="pg-opts" style="gap:10px"></div>
+            <div class="fb" id="pg-fb"></div>
+          </div>
+          <div class="panel">
+            <div class="bar p"><span>a gap</span></div>
+            <pre class="code lg" id="pg-code"></pre>
+          </div>
+        </div>
+        <aside class="nt">Predict before the demo: everyone picks on their own laptop first, then a show of hands. Quick taps sit close together in time, so the gaps are small numbers. The wrong answers get a hint, not the answer. Then go to the next slide and check it.</aside>
+      </section>
+
+      <!-- 12 THE GAPS -->
+      <section class="slide" id="gaps" data-sec="Example 1: tapping one key" data-demo="The gaps">
+        <span class="turn try">Try it</span>
+        <div class="billing">Example 1: tapping one key · The gaps</div>
+        <hr class="rule">
+        <h2 class="h1 tight">The pattern lives in the gaps</h2>
+        <div class="cols wide-r">
+          <div class="stack">
+            <div class="panel">
+              <div class="bar"><span>gaps.js</span></div>
+              <pre class="code" id="gp-code" style="font-size:16px"></pre>
+            </div>
+            <div class="row"><button class="btn alt" id="gp-why">Why start at 1?</button><button class="btn ghost" id="gp-reset">Start again</button></div>
+            <p class="dir" id="gp-dir" style="font-size:19px"></p>
+          </div>
+          <div class="stack">
+            <div class="pad" id="gp-pad" tabindex="0" aria-label="Keyboard pad"></div>
+            <div>
+              <div class="tl" id="gp-tl"></div>
+              <div class="tl-ax"><span>first tap shown</span><span>time →</span><span>newest</span></div>
+            </div>
+            <div class="console con-s" id="gp-con" style="min-height:60px;max-height:110px"></div>
+          </div>
+        </div>
+        <aside class="nt">The raw moments are big and meaningless on their own. The interesting thing is the gap between one tap and the one before. Tap slowly, then a quick flurry: each tap is a line on the time line, and the gap sits between two lines. Quick tapping is small gaps; slow tapping is big gaps. This is the payoff: the intuition from the start of the lecture and the numbers finally line up. Press Why start at 1? and say it out loud: the first tap has nothing before it, so it has no gap. If i started at 0, taps[i - 1] would be taps[-1], which is undefined, and a number minus undefined is NaN.</aside>
+      </section>
+
+      <!-- 13 RATE -->
+      <section class="slide" id="rate" data-sec="Example 1: tapping one key" data-demo="Taps per second">
+        <span class="turn try">Try it</span>
+        <div class="billing">Example 1: tapping one key · One step further</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Small gaps, high rate</h2>
+        <div class="cols">
+          <div class="stack">
+            <div class="panel">
+              <div class="bar"><span>rate.js</span></div>
+              <pre class="code" id="rt-code" style="font-size:17px"></pre>
+            </div>
+            <p class="dir" style="font-size:20px">There are 1000 milliseconds in a second. A gap of 250 fits in a second four times: 4 taps per second.</p>
+          </div>
+          <div class="stack">
+            <div class="pad" id="rt-pad" tabindex="0" aria-label="Keyboard pad"></div>
+            <div class="row" style="gap:40px;align-items:flex-start">
+              <div class="big md" id="rt-gap">–<small>gap, in ms</small></div>
+              <div class="big md" id="rt-rate">–<small>taps per second</small></div>
+            </div>
+            <div><div class="meter"><i id="rt-bar" style="width:0"></i></div><div class="meter-ax"><span>0</span><span>slow</span><span>fast</span><span>10</span></div></div>
+          </div>
+        </div>
+        <aside class="nt">Keep this light. The gap is a small number when they're fast; turn it the other way round and you get a rate: 1000 / gap is roughly taps per second. Tap and watch both numbers move in opposite directions. The point: one derived number now stands in for "how fast were they going". The slide rounds to one decimal; real code prints long decimals like 4.3478260869565215. That's fine.</aside>
+      </section>
+
+      <!-- 14 WHAT'S THE DATA -->
+      <section class="slide" id="quiz-data" data-sec="Example 1: tapping one key" data-ex="What's the data?">
+        <span class="turn">Your turn</span>
+        <div class="billing">Example 1: tapping one key · Check</div>
+        <hr class="rule">
+        <h2 class="h1">What's the data?</h2>
+        <div class="cols wide-l">
+          <div class="stack">
+            <p class="prompt">Someone taps a key rapidly, five times. What should we store?</p>
+            <div class="stack" id="qd-opts" style="gap:10px"></div>
+          </div>
+          <div class="fb" id="qd-fb"></div>
+        </div>
+        <aside class="nt">Each student picks on their own laptop, then discuss as a class. The moments are the choice that lets us answer questions later: how fast, speeding up or slowing down, even how many. "Fast" is a conclusion, not data: once you've stored the word, the moments are gone and you can't ask anything else. The key name five times can count the taps, and nothing about time.</aside>
+      </section>
+
+      <!-- 15 TAP TIMING IN CODE -->
+      <section class="slide" id="taps-code" data-sec="Example 1: tapping one key" data-demo="Tap timing in code">
+        <span class="turn try">Try it</span>
+        <div class="billing">Example 1: tapping one key · All together</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Tap timing, all together</h2>
+        <div class="cols wide-l pg" style="flex:1;min-height:0">
+          <div class="panel">
+            <div class="bar"><span>taps.js</span><span>Ctrl / ⌘ + Enter runs</span></div><textarea class="code-ed pg-ed" id="tc-ed" spellcheck="false" aria-label="Code editor"></textarea>
+          </div>
+          <div class="stack" style="gap:10px">
+            <div class="row"><button class="btn" id="tc-run">Run</button><button class="btn ghost" id="tc-reset">Reset</button></div>
+            <div class="pad" id="tc-pad" tabindex="0" aria-label="Keyboard pad"></div>
+            <div class="panel">
+              <div class="bar y"><span>console</span></div>
+              <div class="console con-s" id="tc-con" style="max-height:120px;min-height:80px"></div>
+            </div>
+            <ol class="plain tasks">
+              <li>Predict, then tap: slowly, then fast. Which number gets smaller?</li>
+              <li>Here we only need the newest gap, so <code>i</code> is the last index. Why <code>taps.length &gt; 1</code>?</li>
+              <li>Take out the <code>event.repeat</code> check and hold the space bar.</li>
+            </ol>
+          </div>
+        </div>
+        <aside class="nt">The whole of Example 1 in one program, in the house layout from last week (State, Controls, Setup; no sound needed). Run it, click the pad, tap the space bar. Ask for a prediction before each run. Students can run their own copy; it's saved in their browser. Task 2: with one tap, there's nothing before it, so no gap: the check skips it. Task 3: the same flood as before. The afternoon's block 1 builds this up step by step, starting without the repeat check.</aside>
+      </section>
+
+      <!-- 16 BREAK -->
+      <section class="slide stage" id="break" data-sec="Break">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">Break</div>
+          <div class="timer" id="tm" aria-live="off">10:00</div>
+          <p class="lede" id="tm-msg" style="margin-top:22px">Stretch, refill. After the break: where variables live, then position instead of time.</p>
+          <div class="row" style="margin-top:20px"><button class="btn alt" id="tm-go">Start</button><button class="btn ghost" id="tm-reset">Reset</button></div>
+        </div>
+        <aside class="nt">11:00–11:10, ten minutes. Press Start for the countdown, or tell the room when to be back.</aside>
+      </section>
+
+      <!-- WHERE VARIABLES LIVE: BAND -->
+      <section class="slide stage" id="scope-band" data-sec="Where variables live">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">Where variables live</div>
+          <h2 class="hero md">Why is taps at the top?</h2>
+          <p class="lede">In the tap code, <code>taps</code> sits above the function and <code>gap</code> sits inside it. Where a variable is made decides how long it lasts, and who can see it.</p>
+        </div>
+        <aside class="nt">11:10, about fifteen minutes for this section, before the swipe. These two ideas were moved here from Friday's Objects lecture, and the tap code we just wrote is the reason they matter: one variable has to remember every tap, the other only matters for one tap. Scope first, then destructuring as its first payoff. Timing knock-on: Example 2 is shortened to 11:25–11:40, so the paper activity keeps its fifteen minutes.</aside>
+      </section>
+
+      <!-- WHY FORGET -->
+      <section class="slide" id="scope-why" data-sec="Where variables live">
+        <div class="billing">Where variables live · Why forget?</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Some things you only need briefly</h2>
+        <div class="two">
+          <div>
+            <h3>In your head</h3>
+            <p><b>For years:</b> your name, the way home, your friends' faces.</p>
+            <p><b>For seconds:</b> a door code from a text, held until you've typed it. The 1 you carry when you add 27 + 15.</p>
+            <p class="ex">Short-term memory forgets on purpose. If you kept every door code, the one you need would be lost among them.</p>
+          </div>
+          <div>
+            <h3>In code</h3>
+            <p><b>For the whole time:</b> <code>taps</code>, every tap, for as long as the page is open.</p>
+            <p><b>For a moment:</b> <code>i</code> in a <code>for</code> loop, only while the loop runs. <code>gap</code> in <code>keyDown</code>, only for this one tap.</p>
+            <p class="ex">If every <code>i</code> and every <code>gap</code> stayed forever, they would pile up and get in each other's way.</p>
+          </div>
+        </div>
+        <aside class="nt">Motivate scope before naming it. Start with people: some things we remember for years, others only for seconds, like a door code someone texted you, or the 1 you carry in 27 + 15. Ask: what's the door code from the last building you visited? Nobody knows, and that's a good thing. Short-term memory forgets on purpose. Code is the same. taps has to last as long as the page. But i in a loop only matters while the loop runs, and gap only matters for one tap; a temporary calculation inside a function is scrap paper. If JavaScript kept every one of them forever, every loop's i would clash with every other loop's i. So variables come with a lifetime, and where you write them decides it. That's what the next two slides show.</aside>
+      </section>
+
+      <!-- PREDICT: TAPS INSIDE -->
+      <section class="slide" id="scope-predict" data-sec="Where variables live" data-ex="What if taps moved inside?">
+        <span class="turn">Your turn</span>
+        <div class="billing">Where variables live · Predict</div>
+        <hr class="rule">
+        <h2 class="h1 tight">What if taps moved inside?</h2>
+        <div class="cols">
+          <div class="panel">
+            <div class="bar"><span>taps.js · moved</span></div>
+            <pre class="code" id="sp-code" style="font-size:17px"></pre>
+          </div>
+          <div class="stack">
+            <p class="lede" style="margin:0">One line has moved into the function. Someone taps the space bar five times. What does the fifth tap log?</p>
+            <div class="stack" id="sp-opts" style="gap:10px"></div>
+            <div class="fb" id="sp-fb"></div>
+          </div>
+        </div>
+        <aside class="nt">Everyone predicts on their laptop first. The answer is 1, every time. Each time the browser calls keyDown, the function starts from its first line, so let taps = [] makes a brand new empty list, pushes one moment into it, logs a length of 1, and the list is thrown away when the function ends. Act it out if there's time: one student plays keyDown with a sheet of paper. Every time you say "tap", they take a fresh sheet, write one time on it, read out how many times are on it, and crumple it up. Then move the list to the whiteboard (the top of the file): now it survives between calls.</aside>
+      </section>
+
+      <!-- SCOPE DEMO -->
+      <section class="slide" id="scope-demo" data-sec="Where variables live" data-demo="Outside or inside">
+        <span class="turn try">Try it</span>
+        <div class="billing">Where variables live · Outside or inside</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Made fresh on every call</h2>
+        <div class="cols">
+          <div class="stack">
+            <div class="seg" id="sd-seg"><button class="btn ghost sel" data-m="top">taps at the top</button><button class="btn ghost" data-m="in">taps inside keyDown</button></div>
+            <div class="panel">
+              <div class="bar"><span>taps.js</span></div>
+              <pre class="code" id="sd-code" style="font-size:16px"></pre>
+            </div>
+            <div class="row"><button class="btn alt" id="sd-gap">Log gap at the bottom</button><button class="btn ghost" id="sd-reset">Start again</button></div>
+          </div>
+          <div class="stack">
+            <div class="pad" id="sd-pad" tabindex="0" aria-label="Keyboard pad"></div>
+            <div class="scopes">
+              <div class="scope out"><div class="sl">the whole file · lives as long as the page</div><div class="vars" id="sd-out"></div></div>
+              <div class="scope in"><div class="sl">inside keyDown · made on each call, gone when it ends</div><div class="vars" id="sd-in"></div></div>
+            </div>
+            <div class="console con-s" id="sd-con" style="min-height:52px;max-height:80px"></div>
+          </div>
+        </div>
+        <aside class="nt">Tap the space bar a few times with taps at the top: taps grows in the outer box, and gap appears in the inner box for each call, then fades. Switch to taps inside keyDown and tap again: taps is made in the inner box every time, so its length is always 1. Then press Log gap at the bottom: a console.log(gap) outside the function stops the code with ReferenceError: gap is not defined. gap only exists inside the braces it was made in. The rule to take away: a variable made inside { } is made fresh each time that code runs, and only that code can see it. If something has to remember between events, it goes at the top, in the State section. That's why the house layout has one.</aside>
+      </section>
+
+      <!-- SCOPE MAP -->
+      <section class="slide" id="scope-map" data-sec="Where variables live" data-demo="Scope">
+        <span class="turn try">Try it</span>
+        <div class="billing">Where variables live · Scope</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Scope: where a variable can be seen</h2>
+        <div class="cols">
+          <div class="stack">
+            <div class="panel">
+              <div class="bar"><span>taps.js</span><span>click a variable</span></div>
+              <pre class="code" id="sm-code" style="font-size:15px;line-height:1.5"></pre>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="nest" id="sm-nest"></div>
+            <p class="dir" id="sm-dir" style="font-size:18px;min-height:54px">Click a variable to see where it can be used.</p>
+            <div class="rows lab" style="border-top:1px solid var(--ink-900)">
+              <div style="grid-template-columns:44px 1fr;padding:6px 0"><span class="num" style="font-size:26px">1</span><span class="tx" style="font-size:18px">A variable belongs to the nearest <code>{ }</code> around the line that makes it.</span></div>
+              <div style="grid-template-columns:44px 1fr;padding:6px 0"><span class="num" style="font-size:26px">2</span><span class="tx" style="font-size:18px">It exists from that line to the closing <code>}</code>, then it's gone.</span></div>
+              <div style="grid-template-columns:44px 1fr;padding:6px 0"><span class="num" style="font-size:26px">3</span><span class="tx" style="font-size:18px">Code inside can see out. Code outside can't see in.</span></div>
+            </div>
+          </div>
+        </div>
+        <aside class="nt">Now name it: scope. Each pair of braces makes a box, and boxes sit inside each other: the file, keyDown, the if, the for loop. Click each variable in turn and its lines light up. taps: the whole file, as long as the page. event: only inside keyDown, a new one for every key press. gaps: only inside the if, made fresh each tap. i: only inside the for loop; once the loop ends, i is gone, which is exactly what we want from a loop counter. Read the three rules aloud. Rule 3 explains the ReferenceError from the last slide: console.log(gap) at the bottom of the file is outside, looking in. Act it out if there's time: four students stand in nested hoops or chalk circles on the floor. Each holds the variables of their box. Someone inside may ask anyone in a bigger circle around them for a value; nobody may reach into a smaller circle.</aside>
+      </section>
+
+      <!-- SCOPE CHECK -->
+      <section class="slide" id="scope-check" data-sec="Where variables live" data-ex="Top or inside?">
+        <span class="turn">Your turn</span>
+        <div class="billing">Where variables live · Check</div>
+        <hr class="rule">
+        <h2 class="h1 tight">At the top, or inside?</h2>
+        <p class="lede" style="margin-bottom:8px">For each variable from today's code: does it need to remember between key presses?</p>
+        <div class="rows quiz sw" id="sk"></div>
+        <div class="fb" id="sk-fb" style="margin-top:10px"></div>
+        <aside class="nt">One question decides it: does this value have to survive from one key press to the next? taps and swipe collect across many presses, so they live at the top. gap, rate and position are worked out fresh for each press, so they live inside the function. row never changes; it could live in either place, but it belongs at the top so it's made once and every function can use it. swipe is a preview: it comes back in the afternoon exercises, and it is the same idea as taps.</aside>
+      </section>
+
+      <!-- DESTRUCTURING -->
+      <section class="slide" id="destructure" data-sec="Where variables live" data-demo="Take it apart">
+        <span class="turn try">Try it</span>
+        <div class="billing">Where variables live · Taking an object apart</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Taking an object apart</h2>
+        <div class="cols wide-l">
+          <div class="stack">
+            <div class="panel">
+              <div class="bar"><span>one at a time</span></div>
+              <pre class="code" id="de-old" style="font-size:16px"></pre>
+            </div>
+            <div class="panel">
+              <div class="bar"><span>all at once</span><span>new today</span></div>
+              <pre class="code" id="de-new" style="font-size:16px"></pre>
+            </div>
+            <p class="dir" style="font-size:19px">The names in the braces are labels on the object. Each one becomes a plain variable with that property's value.</p>
+          </div>
+          <div class="stack">
+            <div class="pad" id="de-pad" tabindex="0" aria-label="Keyboard pad"></div>
+            <div id="de-obj"></div>
+            <div id="de-vars"></div>
+          </div>
+        </div>
+        <aside class="nt">New syntax: destructuring. Friday's objects come back: the event the browser hands us is an object with labelled parts. const { key, repeat } = event; makes two new variables, key and repeat, and fills each from the property with the same label. It's the same as the two lines in the top panel, written once. Press keys on the pad: the event object shows on the right, and the two variables it gives. Then the settings example from the top: const { tempo } = settings. Keep it to this: pulling properties into plain variables with the same names. No renaming, no defaults, no nesting. The scope payoff: these are new variables, made with const inside keyDown, so they're made fresh for every key press, which is exactly right for things that belong to one event.</aside>
+      </section>
+
+      <!-- DESTRUCTURING CHECK -->
+      <section class="slide" id="destructure-check" data-sec="Where variables live" data-ex="What comes out?">
+        <span class="turn">Your turn</span>
+        <div class="billing">Where variables live · Check</div>
+        <hr class="rule">
+        <h2 class="h1 tight">What comes out?</h2>
+        <div class="cols wide-r">
+          <div class="panel">
+            <div class="bar p"><span>sound.js</span></div>
+            <pre class="code" id="dc-code" style="font-size:17px"></pre>
+          </div>
+          <div class="stack">
+            <div class="rows fnq" id="dc"></div>
+            <div class="fb" id="dc-fb"></div>
+          </div>
+        </div>
+        <aside class="nt">Students answer on their own laptops. Row 1: note is "E4", a plain string, not an object. Row 2: velocity is 0.5; several names in the braces make several variables. Row 3: there's no volume label on sound, so volume is undefined; no error, which is why typos here are sneaky. Row 4: key was made inside keyDown, so it only exists there, made fresh for each key press.</aside>
+      </section>
+
+      <!-- 17 BAND -->
+      <section class="slide stage" id="swipe-band" data-sec="Example 2: swiping across the keys">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">Example 2: swiping across the keys</div>
+          <h2 class="hero md">Same idea. Position instead of time.</h2>
+          <p class="lede">A finger dragged across the keyboard. Capture a list, then look at how it changes: this time it's where each key sits.</p>
+        </div>
+        <aside class="nt">11:25. Same spine as Example 1: capture a sequence, then look at how it changes. But the interesting thing now is position, not time. Ask someone to drag a finger along the top row of their laptop keyboard while you go to the next slide.</aside>
+      </section>
+
+      <!-- 18 DESCRIBE A SWIPE -->
+      <section class="slide" id="describe-swipe" data-sec="Example 2: swiping across the keys" data-demo="Describe a swipe">
+        <span class="turn try">Try it</span>
+        <div class="billing">Example 2: swiping across the keys · In words first</div>
+        <hr class="rule">
+        <h2 class="h1">What happens in a swipe?</h2>
+        <div class="rows reveal" id="ds"></div>
+        <div class="row" style="margin-top:16px"><button class="btn ghost" id="ds-all">Show all</button></div>
+        <aside class="nt">Plain description first, as before. Ask the room each question before clicking it. What happens in a swipe? Several different keys get pressed, one after another, in an order. So the data version of a swipe is a list of keys in the order they arrived. Compare with taps: there it was the same key again and again, and the thing worth keeping was when. Here it's different keys, and the thing worth keeping is which, in order.</aside>
+      </section>
+
+      <!-- 19 A KEY'S POSITION -->
+      <section class="slide" id="key-position" data-sec="Example 2: swiping across the keys" data-demo="Give keys a position">
+        <span class="turn try">Try it</span>
+        <div class="billing">Example 2: swiping across the keys · Position</div>
+        <hr class="rule">
+        <h2 class="h1 tight">A key doesn't know where it is</h2>
+        <div class="cols wide-r">
+          <div class="stack">
+            <p class="lede" style="margin:0">To JavaScript, <code>"w"</code> is a string. Nothing about it says "left of e". So we make that up ourselves.</p>
+            <div class="panel">
+              <div class="bar"><span>row.js</span><span>indexOf is new</span></div>
+              <pre class="code" id="kp-code" style="font-size:16px"></pre>
+            </div>
+          </div>
+          <div class="stack">
+            <div id="kp-row"></div>
+            <div class="verdict" id="kp-v"></div>
+            <p class="dir" style="font-size:20px">We chose this list and its order. The order of the array is what makes "left" and "right" something a program can work out at all.</p>
+          </div>
+        </div>
+        <aside class="nt">The key teaching move of Example 2. A key like "w" has no built-in sense of being left of another key. So we make one: we define the row as an array, and a key's position is its index in that array, found with row.indexOf(key). New: indexOf. It gives back the position of the first match, or -1 if the value isn't in the array at all. Click the row and press keys: q is 0, p is 9, and a gives -1. Emphasise: we chose this representation. Put the letters in a different order and "direction" would mean something else.</aside>
+      </section>
+
+      <!-- 20 PREDICT -->
+      <section class="slide" id="predict-swipe" data-sec="Example 2: swiping across the keys" data-ex="Up or down?">
+        <span class="turn">Your turn</span>
+        <div class="billing">Example 2: swiping across the keys · Predict</div>
+        <hr class="rule">
+        <h2 class="h1">From q towards p: up or down?</h2>
+        <div class="cols wide-l">
+          <div class="stack">
+            <p class="lede" style="margin:0">Someone swipes along the top row, starting at q and moving towards p. As each key comes in, we look up its position. What do the positions do?</p>
+            <div class="stack" id="ps-opts" style="gap:10px"></div>
+            <div class="fb" id="ps-fb"></div>
+          </div>
+          <div class="panel">
+            <div class="bar p"><span>the row</span></div>
+            <pre class="code" id="ps-code" style="font-size:16px"></pre>
+          </div>
+        </div>
+        <aside class="nt">Predict before the demo, on laptops first. q is at 0 and p at 9, so moving from q towards p the positions climb. Right to left, they fall. That's the whole trick: direction is whether the positions rise or fall.</aside>
+      </section>
+
+      <!-- WRITE IT TOGETHER -->
+      <section class="slide stage" id="swipe-live-code" data-sec="Example 2: swiping across the keys">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">Example 2: swiping across the keys · Together</div>
+          <h2 class="hero md">Now we write it together.</h2>
+          <p class="lede">Here on the screen, one step at a time: the row, a list of positions, then which way the finger went.</p>
+        </div>
+        <aside class="nt">Switch to your editor and write the swipe code live, with the class telling you what comes next. A possible order, matching the afternoon's block 3: a row array of q to p; on keydown, row.indexOf(event.key) and log it; skip -1 and push the position onto a swipe list; on keyup, compare the first and the last position and log the direction; empty the list so the next swipe starts fresh. Predict before every run. Run it after each step so the class sees the data change. Remember the scope section: row and swipe go at the top, position goes inside keyDown.</aside>
+      </section>
+
+      <!-- 24 THE SHARED SHAPE -->
+      <section class="slide" id="quiz-shape" data-sec="Example 2: swiping across the keys" data-ex="The shared shape">
+        <span class="turn">Your turn</span>
+        <div class="billing">Example 2: swiping across the keys · Check</div>
+        <hr class="rule">
+        <h2 class="h1 tight">What do these two have in common?</h2>
+        <div class="pair">
+          <div class="panel">
+            <div class="bar p"><span>Example 1 · taps</span></div>
+            <div class="pbody seq">
+              <span class="lb">action</span><span>space, space, space, space</span>
+              <span class="lb">stored</span><span>[0, 210, 390, 620]</span>
+              <span class="lb">change</span><span class="ch">+210, +180, +230</span>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="bar p"><span>Example 2 · swipe</span></div>
+            <div class="pbody seq">
+              <span class="lb">action</span><span>q, w, e, r</span>
+              <span class="lb">stored</span><span>[0, 1, 2, 3]</span>
+              <span class="lb">change</span><span class="ch">+1, +1, +1</span>
+            </div>
+          </div>
+        </div>
+        <div class="cols wide-l" style="margin-top:18px">
+          <div class="stack" id="qs-opts" style="gap:10px"></div>
+          <div class="fb" id="qs-fb"></div>
+        </div>
+        <aside class="nt">The moments here are shown counting from the first tap, so the numbers stay small. Show the two side by side and ask: what do these have in common? Lead the class to it: both capture a list of events, then look at the change from one value to the next. In taps, the change is the gap in time; in a swipe, it's the step in position. The wrong answers each describe one example but not the other.</aside>
+      </section>
+
+      <!-- 25 THE ACTIVITY -->
+      <section class="slide" id="activity" data-sec="Describe, then represent">
+        <div class="billing">Describe, then represent</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Describe, then represent</h2>
+        <div class="cols wide-l">
+          <div class="rows lab">
+            <div><span class="num">01</span><span class="tx">Pick a small real action. Describe it in plain words.</span></div>
+            <div><span class="num">02</span><span class="tx">Circle the measurable thing inside your description.</span></div>
+            <div><span class="num">03</span><span class="tx">Decide what you'd store to hold a list of it.</span></div>
+            <div><span class="num">04</span><span class="tx">Say what the change from one value to the next would show.</span></div>
+          </div>
+          <div class="stack">
+            <div class="panel">
+              <div class="bar p"><span>pick one, or your own</span></div>
+              <ul class="prompts">
+                <li>Knocking on a door</li>
+                <li>Walking up and down a corridor</li>
+                <li>Drumming your fingers on the desk</li>
+                <li>Turning the volume up, then down</li>
+                <li>A ball bouncing until it stops</li>
+                <li>Typing your own name</li>
+              </ul>
+            </div>
+            <p class="dir" style="font-size:20px">On paper, no code. Then compare with a neighbour: did you choose the same thing to store?</p>
+          </div>
+        </div>
+        <aside class="nt">11:40, fifteen minutes. Students pick an action (their own, or from the list) and work the four steps on paper. No code in this activity: fifteen minutes is only enough for the representation thinking, and that's the point. After about ten minutes, pairs compare: did you choose the same representation? Different choices are the interesting part: ask a pair who chose differently to explain both. The next slide has an optional card for anyone who'd rather type; it's saved in their own browser only. Their action comes back as block 4 this afternoon.</aside>
+      </section>
+
+      <!-- 26 THE CARD -->
+      <section class="slide" id="activity-card" data-sec="Describe, then represent" data-ex="Describe, then represent">
+        <span class="turn">Your turn</span>
+        <div class="billing">Describe, then represent · Your card</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Your action, four steps</h2>
+        <div class="row" style="margin-bottom:12px">
+          <label class="f grow" style="font-size:14px">The action<input class="t" id="ac-act" type="text" maxlength="80" style="font-family:var(--font-ui);font-size:18px"></label>
+          <button class="btn alt" id="ac-pick" style="align-self:flex-end">Give me one</button>
+        </div>
+        <div class="acard">
+          <label class="f">01 · In plain words<textarea class="t" id="ac-1" maxlength="300"></textarea></label>
+          <label class="f">02 · The measurable thing<textarea class="t" id="ac-2" maxlength="300"></textarea></label>
+          <label class="f">03 · What you'd store<textarea class="t" id="ac-3" maxlength="300"></textarea></label>
+          <label class="f">04 · What the change shows<textarea class="t" id="ac-4" maxlength="300"></textarea></label>
+        </div>
+        <p class="small muted" style="margin:10px 0 0">Saved in this browser only. Paper works as well.</p>
+        <aside class="nt">Optional, for anyone who'd rather type than write. Give me one fills in an action from the list if the field is empty. A good card for "knocking on a door": in words, several knocks, sometimes quick, sometimes with a pause; measurable thing, when each knock happens; store, a list of moments; the change, the gaps: a pause shows up as one big gap. Walk around and ask about step 3: is it a list? Of what? In what order?</aside>
+      </section>
+
+      <!-- 27 RECAP -->
+      <section class="slide stage" id="wrap-up" data-sec="Wrap-up">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">Wrap-up</div>
+          <h2 class="hero md">Describe it. Store a list. Watch it change.</h2>
+          <p class="lede">Plain words first, then the measurable thing inside them, then a list of it, then the change from one value to the next.</p>
+          <div class="terms" style="max-width:740px"><span>Date.now()</span><span>taps.push(…)</span><span>event.repeat</span><span>taps[i] - taps[i - 1]</span><span>1000 / gap</span><span>row.indexOf(key)</span><span>const { key } = event</span></div>
+        </div>
+        <aside class="nt">11:55. Summarise the one transferable skill: describe the real thing in plain words, find the measurable thing inside it, choose a data structure to hold a list of it, then look at how each value changes from the one before. Taps: moments, then gaps. Swipe: positions, then rising or falling. Both times, the representation was a choice we made, and we checked it against the real action (held keys, noisy swipes). And in between: a variable made inside braces is made fresh each call, so anything that must remember between events lives at the top; const { key } = event takes an object apart into plain variables. Back to the six objectives.</aside>
+      </section>
+
+      <!-- 28 NEXT -->
+      <section class="slide" id="next" data-sec="Wrap-up">
+        <div class="billing">Next · Exercises and Thursday</div>
+        <hr class="rule">
+        <h2 class="h1">What's next</h2>
+        <div class="cols">
+          <div class="stack">
+            <p class="lede" style="margin:0">This afternoon: build both examples yourself in the <code>processing-data/</code> folder, make them audible, then your own action. In VS Code: sync your fork of the exercises repo first.</p>
+            <p class="lede" style="margin:0">Thursday: Processing data II. The same thinking with a new kind of input, and turning the captured values into something expressive.</p>
+          </div>
+          <div class="rows lab" style="border-top:1px solid var(--ink-900)">
+            <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://mau.instructure.com/courses/22858/modules/137085" target="_blank" rel="noopener">Canvas: Processing data module</a></span></div>
+            <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now" target="_blank" rel="noopener">MDN: Date.now()</a></span></div>
+            <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf" target="_blank" rel="noopener">MDN: Array indexOf()</a></span></div>
+            <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/repeat" target="_blank" rel="noopener">MDN: KeyboardEvent repeat</a></span></div>
+          </div>
+        </div>
+        <aside class="nt">Preview the afternoon: blocks 1 to 3 rebuild this morning's two examples step by step and make them audible; block 4 is the action from the paper activity. Sync the fork on GitHub, then pull in VS Code. Thursday is Processing Data II: Pointers: the same capture-then-compare thinking, applied to a new kind of input, where the captured values start becoming expressive.</aside>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="../shared/deck.js"></script>
+  <script src="../shared/workspace.js"></script>
+  <script>
+    (function () {
+      "use strict";
+      var D = Deck, $ = D.$, $$ = D.$$, esc = D.esc, code = D.code, flash = D.flash, fb = D.fb, conLines = D.conLines;
+      var sget = D.store.get, sset = D.store.set;
+      var T = window.Tone;
+
+      /* ============ sound helpers ============ */
+      function audioOn() { try { if (T && T.getContext().state !== "running") T.start() } catch (e) { } }
+
+      /* ============ a row of boxes (an array) ============
+         Shows the last `max` values; a dashed box counts the ones before. */
+      function lineView(host, arr, opt) {
+        opt = opt || {};
+        var max = opt.max || arr.length, from = Math.max(0, arr.length - max);
+        host.innerHTML = "";
+        if (from > 0) {
+          var m = document.createElement("div"); m.className = "cell more";
+          m.innerHTML = '<div class="v">' + from + ' more</div><div class="i">&nbsp;</div>'; host.appendChild(m);
+        }
+        arr.slice(from).forEach(function (v, j) {
+          var i = from + j, c = document.createElement("div");
+          c.className = "cell" + (opt.hi === i ? " hi" : "");
+          c.innerHTML = '<div class="v">' + esc(String(v)) + '</div>' + (opt.idx === false ? "" : '<div class="i">' + i + '</div>');
+          host.appendChild(c);
+        });
+      }
+
+      /* ============ key capture + pad (as in the User input lecture) ============ */
+      function capture(el, onDown, onUp, onBlur) {
+        function ok(e) { return !(e.key === "Escape" || e.key === "Tab" || e.metaKey || e.ctrlKey || e.altKey) }
+        el.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") { el.blur(); return }
+          if (!ok(e)) return;
+          e.preventDefault(); e.stopPropagation(); audioOn(); onDown(e);
+        });
+        el.addEventListener("keyup", function (e) { if (!ok(e)) return; e.preventDefault(); e.stopPropagation(); if (onUp) onUp(e) });
+        el.addEventListener("mousedown", function () { setTimeout(function () { el.focus() }, 0) });
+        el.addEventListener("blur", function () { if (onBlur) onBlur() });
+      }
+      function pad(el, idle, live) {
+        el.innerHTML = '<div class="pk">&nbsp;</div><div class="ph"></div>';
+        var pk = el.querySelector(".pk"), ph = el.querySelector(".ph");
+        function txt() { ph.innerHTML = document.activeElement === el ? live : idle }
+        el.addEventListener("focus", txt); el.addEventListener("blur", txt); txt();
+        return { show: function (k) { var t = k === " " ? "space" : k; pk.textContent = t; pk.style.fontSize = t.length > 6 ? "16px" : t.length > 2 ? "22px" : ""; pk.classList.remove("flash"); void pk.offsetWidth; pk.classList.add("flash") } };
+      }
+      var IDLE = "<b>Click here</b>, then press keys.", LIVE = "<b>Listening.</b> Press keys. Esc or click elsewhere to stop.";
+      var SP_IDLE = "<b>Click here</b>, then tap the space bar.", SP_LIVE = "<b>Listening.</b> Tap the space bar. Esc or click elsewhere to stop.";
+
+      /* ============ a row of keys q to p, with positions ============ */
+      var ROW = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"];
+      function keyRow(host, opt) {
+        opt = opt || {};
+        host.innerHTML = '<div class="krow' + (opt.noIdx ? " noidx" : "") + '" tabindex="0" aria-label="Top row of keys"><div class="ks"></div><div class="hint"></div></div>';
+        var kr = host.firstChild, ks = kr.firstChild, hint = kr.lastChild, keys = {};
+        ROW.forEach(function (k, i) {
+          var d = document.createElement("div"); d.className = "key";
+          d.innerHTML = '<span class="c">' + k + '</span><span class="i">' + i + '</span>';
+          ks.appendChild(d); keys[k] = d;
+        });
+        function txt() { hint.innerHTML = document.activeElement === kr ? (opt.live || LIVE) : (opt.idle || "<b>Click the row</b>, then press keys.") }
+        kr.addEventListener("focus", txt); kr.addEventListener("blur", txt); txt();
+        capture(kr, opt.down || function () { }, opt.up, opt.blur);
+        return {
+          set: function (k, cls, on) { if (keys[k]) keys[k].classList.toggle(cls, on) },
+          clear: function () { ROW.forEach(function (k) { keys[k].classList.remove("on", "was") }) }
+        };
+      }
+
+      /* ============ playground: student code + a pad ============
+         The code sees a stand-in window/document whose listeners only hear this pad,
+         a Tone whose instruments are cleaned up on every run, and a console that prints here. */
+      var CTORS = ["Synth", "PolySynth", "FMSynth", "AMSynth", "MonoSynth", "DuoSynth", "MembraneSynth", "MetalSynth", "PluckSynth", "NoiseSynth", "Distortion", "Reverb", "FeedbackDelay", "Chorus", "Filter", "Tremolo", "Vibrato", "BitCrusher", "Loop"];
+      function playground(id, start) {
+        var ed = $("#" + id + "-ed"), con = $("#" + id + "-con"), padEl = $("#" + id + "-pad");
+        var P = pad(padEl, IDLE, LIVE), listeners = [], made = [], ran = false, KEY = "pg2:" + id;
+        ed.value = sget(KEY) || start;
+        ed.addEventListener("input", function () { sset(KEY, ed.value) });
+        function out(cls, t) {
+          var s = document.createElement("span"); if (cls) s.className = cls; s.textContent = t;
+          if (con.dataset.fresh) { con.innerHTML = ""; delete con.dataset.fresh }
+          else if (con.childNodes.length) con.appendChild(document.createTextNode("\n"));
+          con.appendChild(s);
+          while (con.childNodes.length > 80) con.removeChild(con.firstChild);
+          con.scrollTop = con.scrollHeight;
+        }
+        var lg = function () { out("", Array.prototype.map.call(arguments, D.fmt).join(" ")) };
+        var cons = { log: lg, info: lg, warn: lg, error: lg };
+        var fakeWin = {
+          addEventListener: function (type, fn) { if (typeof fn === "function") listeners.push({ type: String(type), fn: fn }) },
+          removeEventListener: function (type, fn) { listeners = listeners.filter(function (l) { return !(l.type === type && l.fn === fn) }) }
+        };
+        function toneEnv() {
+          if (!T) return undefined;
+          var W = {};
+          Object.keys(T).forEach(function (k) { if (CTORS.indexOf(k) < 0) Object.defineProperty(W, k, { enumerable: true, get: function () { return T[k] } }) });
+          CTORS.forEach(function (n) {
+            var C = T[n]; if (!C) return;
+            var f = function () {
+              var a = Array.prototype.slice.call(arguments).map(function (x) { return x && x.__orig ? x.__orig : x });
+              var o = new (Function.prototype.bind.apply(C, [null].concat(a)))(); made.push(o); return o;
+            };
+            f.__orig = C; Object.defineProperty(W, n, { enumerable: true, value: f });
+          });
+          return W;
+        }
+        function silence() { made.forEach(function (o) { try { if (o.releaseAll) o.releaseAll(); else if (o.triggerRelease) o.triggerRelease() } catch (e) { } }) }
+        function cleanup() { silence(); var old = made; made = []; setTimeout(function () { old.forEach(function (o) { try { o.dispose() } catch (e) { } }) }, 1500) }
+        function runIt() {
+          audioOn(); cleanup(); listeners = []; con.innerHTML = "";
+          var r = D.run(ed.value, null, { window: fakeWin, document: fakeWin, Tone: toneEnv(), console: cons });
+          ran = true;
+          if (r.error) { out(r.blocked ? "dim" : "bad", r.blocked ? r.error.message : "The code stopped: " + (r.error.name || "Error") + ": " + r.error.message); return }
+          if (!listeners.length) out("dim", "(ran, but nothing is listening. Is addEventListener still at the bottom?)");
+          else out("in", "listening. Click the pad and press keys.");
+        }
+        function fire(e) {
+          P.show(e.key);
+          if (!ran) runIt();
+          listeners.forEach(function (l) {
+            if (l.type !== e.type) return;
+            try { l.fn(e) } catch (err) { out("bad", "The code stopped: " + (err.name || "Error") + ": " + err.message) }
+          });
+        }
+        capture(padEl, fire, fire, silence);
+        D.edKeys(ed, runIt);
+        $("#" + id + "-run").addEventListener("click", runIt);
+        var armed = false;
+        $("#" + id + "-reset").addEventListener("click", function () {
+          var b = this;
+          if (!armed) { armed = true; b.textContent = "Sure? Click again"; setTimeout(function () { if (armed) { armed = false; b.textContent = "Reset" } }, 2500); return }
+          armed = false; b.textContent = "Reset";
+          ed.value = start; sset(KEY, start); cleanup(); listeners = []; ran = false; con.innerHTML = ""; out("dim", "Back to the start. Press Run."); con.dataset.fresh = "1";
+        });
+        out("dim", "Press Run, then click the pad and press keys."); con.dataset.fresh = "1";
+      }
+
+      /* ============ one question, a stack of options ============
+         O: [[text, right, feedback html]]; a wrong option's feedback is a hint. */
+      function mcq(box, fbEl, O) {
+        var answered = false;
+        O.forEach(function (o) {
+          var b = document.createElement("button"); b.className = "opt"; b.innerHTML = o[0];
+          b.addEventListener("click", function () {
+            if (answered) return;
+            if (o[1]) { b.classList.add("right"); answered = true; fb(fbEl, "pass", o[2]) }
+            else { b.classList.add("wrong"); fb(fbEl, "note", o[2]) }
+          });
+          box.appendChild(b);
+        });
+      }
+      /* ============ quiz rows: one set of choices for every row ============ */
+      function quiz(box, fbEl, Q, choices, hint) {
+        var done = 0;
+        Q.forEach(function (q) {
+          var row = document.createElement("div");
+          row.innerHTML = '<span class="sc">' + q[0] + '</span><span class="ch"></span>';
+          var ch = row.querySelector(".ch"), answered = false;
+          choices.forEach(function (c, j) {
+            var b = document.createElement("button"); b.className = "chip"; b.textContent = c;
+            b.addEventListener("click", function () {
+              if (answered) return;
+              if (j === q[1]) { b.classList.add("right"); answered = true; done++; fb(fbEl, "pass", "Correct. " + q[2] + (done === Q.length ? " That's all of them." : "")) }
+              else { b.classList.add("wrong"); fb(fbEl, "note", q[3] || hint) }
+            });
+            ch.appendChild(b);
+          });
+          box.appendChild(row);
+        });
+      }
+
+      /* ---------- 06 three ways to store it ---------- */
+      (function () {
+        var R = [["A number: how many", "5"], ["A list of key names", "a, a, a, a, a"], ["A list of moments", "0.00 s, 0.21 s, 0.39 s, 0.62 s, 0.80 s"]];
+        var Q = [
+          ["How many taps?", [1, 1, 1], "All three can count. Even the moments: there are five of them."],
+          ["Which key was it?", [0, 1, 0], "Only the key names. If we wanted both, we'd have to store both."],
+          ["How fast were they going?", [0, 0, 1], "Only the moments. Five taps in under a second is fast; the count alone could have taken an hour."],
+          ["Did they slow down at the end?", [0, 0, 1], "Only the moments: compare the time between the last two taps with the ones before."]
+        ];
+        var body = $("#ch-rows");
+        body.innerHTML = R.map(function (r) { return '<tr><td>' + r[0] + '</td><td class="val">' + esc(r[1]) + '</td><td class="ans"></td></tr>' }).join("");
+        var cells = $$(".ans", body);
+        Q.forEach(function (q) {
+          var b = document.createElement("button"); b.className = "btn ghost"; b.textContent = q[0];
+          b.addEventListener("click", function () {
+            $$("#ch-qs .btn").forEach(function (x) { x.classList.toggle("sel", x === b) });
+            cells.forEach(function (c, i) { c.className = "ans " + (q[1][i] ? "y" : "x"); c.textContent = q[1][i] ? "✓" : "×" });
+            $("#ch-dir").textContent = q[2];
+          });
+          $("#ch-qs").appendChild(b);
+        });
+      })();
+
+      /* ---------- 08 a tap is a moment ---------- */
+      (function () {
+        var SRC = 'let moment = Date.now();\nconsole.log(moment);';
+        code($("#ot-code"), SRC);
+        var P = pad($("#ot-pad"), IDLE, LIVE), hist = [];
+        capture($("#ot-pad"), function (e) {
+          P.show(e.key);
+          var n = Date.now();
+          hist.unshift(n); hist = hist.slice(0, 4);
+          var big = $("#ot-big");
+          big.innerHTML = n + '<small>Date.now() when you pressed ' + esc(e.key === " " ? "space" : e.key) + '</small>';
+          big.classList.remove("flashbg"); void big.offsetWidth; big.classList.add("flashbg");
+          $("#ot-hist").innerHTML = hist.slice(1).map(function (h) { return esc(String(h)) }).join("<br>");
+          code($("#ot-code"), SRC, [0]);
+        });
+      })();
+
+      /* ---------- 09 and 10: a list of taps ---------- */
+      function tapList(id, opt) {
+        var taps = [], guard = !!opt.guard;
+        var P = pad($("#" + id + "-pad"), SP_IDLE, SP_LIVE);
+        function src() {
+          return guard
+            ? 'let taps = [];\n\nfunction keyDown(event) {\n  if (event.repeat === false) {\n    if (event.key === " ") {\n      taps.push(Date.now());\n      console.log(taps);\n    }\n  }\n}\n\nwindow.addEventListener("keydown", keyDown);'
+            : 'let taps = [];\n\nfunction keyDown(event) {\n  if (event.key === " ") {\n    taps.push(Date.now());\n    console.log(taps);\n  }\n}\n\nwindow.addEventListener("keydown", keyDown);';
+        }
+        function render() {
+          var n = $("#" + id + "-n");
+          n.innerHTML = taps.length + '<small>taps.length</small>';
+          if (opt.gaps) {
+            var g = [];
+            for (var i = 1; i < taps.length; i++) g.push(taps[i] - taps[i - 1]);
+            lineView($("#" + id + "-gaps"), g, { max: 6, idx: false });
+          } else lineView($("#" + id + "-line"), taps.map(function (t) { return t }), { max: 3, hi: taps.length - 1 });
+        }
+        capture($("#" + id + "-pad"), function (e) {
+          P.show(e.key);
+          if (guard && e.repeat) return;
+          if (e.key !== " ") return;
+          taps.push(Date.now()); render();
+          code($("#" + id + "-code"), src(), guard ? [5] : [3]);
+          if (opt.onTap) opt.onTap(taps, e);
+        });
+        $("#" + id + "-reset").addEventListener("click", function () { taps = []; render(); code($("#" + id + "-code"), src()) });
+        code($("#" + id + "-code"), src()); render();
+        return {
+          toggle: function () { guard = !guard; taps = []; render(); code($("#" + id + "-code"), src(), guard ? [3, 8] : []); if (guard) flash($("#" + id + "-code"), [3, 8]); return guard }
+        };
+      }
+      tapList("tl", {});
+      (function () {
+        var L = tapList("hk", {
+          gaps: true, onTap: function (taps, e) {
+            if (e.repeat && taps.length > 5) $("#hk-dir").innerHTML = "Nobody tapped, but the list says rapid tapping. Why? And what could we do about it?";
+          }
+        });
+        $("#hk-tog").addEventListener("click", function () {
+          var on = L.toggle();
+          this.textContent = on ? "Stop checking" : "Check for repeats";
+          this.setAttribute("aria-pressed", on);
+          $("#hk-dir").innerHTML = on ? "Now hold it again. A held key sends repeats with <code>event.repeat</code> set to <code>true</code>, and we skip them: one hold, one tap." : "Hold the space bar down for two seconds.";
+        });
+      })();
+
+      /* ---------- 11 predict the gaps ---------- */
+      code($("#pg-code"), 'gap = this moment\n    - the one before');
+      mcq($("#pg-opts"), $("#pg-fb"), [
+        ["Big gaps", false, "Think about what a gap measures: the time from one tap to the next. Are quick taps far apart in time, or close together?"],
+        ["Small gaps", true, "Correct. Quick taps are close together in time, so each moment minus the one before is a small number. Next slide: check it."],
+        ["The same gaps as slow tapping", false, "The moments are different when you tap faster. What happens to the time from one tap to the next?"]
+      ]);
+
+      /* ---------- 12 the gaps ---------- */
+      (function () {
+        var SRC = 'for (let i = 1; i < taps.length; i++) {\n  let gap = taps[i] - taps[i - 1];\n  console.log(gap + " ms");\n}';
+        var taps = [], P = pad($("#gp-pad"), SP_IDLE, SP_LIVE), MAX = 8;
+        code($("#gp-code"), SRC);
+        function render() {
+          var tl = $("#gp-tl"), show = taps.slice(-MAX);
+          if (!show.length) { tl.innerHTML = '<span class="emp">Tap the space bar: slowly, then fast.</span>'; return }
+          var t0 = show[0], span = Math.max(show[show.length - 1] - t0, 1500), h = "";
+          function x(t) { return (4 + 92 * (t - t0) / span) + "%" }
+          show.forEach(function (t, j) {
+            var i = taps.length - show.length + j;
+            h += '<span class="tk" style="left:' + x(t) + '"><b>' + i + '</b></span>';
+            if (j > 0) h += '<span class="gp" style="left:calc((' + x(show[j - 1]) + ' + ' + x(t) + ') / 2)">' + (t - show[j - 1]) + '</span>';
+          });
+          tl.innerHTML = h;
+        }
+        function log() {
+          var lines = [];
+          for (var i = Math.max(1, taps.length - 3); i < taps.length; i++) lines.push((taps[i] - taps[i - 1]) + " ms");
+          conLines($("#gp-con"), lines.length ? lines : [{ c: "dim", t: taps.length ? "One tap: nothing before it, so no gap yet." : "The gaps appear here." }]);
+        }
+        capture($("#gp-pad"), function (e) {
+          P.show(e.key);
+          if (e.repeat || e.key !== " ") return;
+          taps.push(Date.now()); render(); log();
+          if (taps.length > 1) { code($("#gp-code"), SRC, [1]); flash($("#gp-code"), [1]) }
+        });
+        $("#gp-why").addEventListener("click", function () {
+          code($("#gp-code"), SRC, [0]);
+          $("#gp-dir").innerHTML = "Tap 0 has nothing before it, so it has no gap. Start at 0 and <code>taps[i - 1]</code> is <code>taps[-1]</code>: <code>undefined</code>. A number minus <code>undefined</code> is <code>NaN</code>.";
+        });
+        $("#gp-reset").addEventListener("click", function () { taps = []; render(); log(); code($("#gp-code"), SRC); $("#gp-dir").textContent = "" });
+        render(); log();
+      })();
+
+      /* ---------- 13 taps per second ---------- */
+      (function () {
+        var SRC = 'let gap = taps[i] - taps[i - 1];\nlet rate = 1000 / gap;\nconsole.log(rate + " taps per second");';
+        var last = 0, P = pad($("#rt-pad"), SP_IDLE, SP_LIVE);
+        code($("#rt-code"), SRC);
+        capture($("#rt-pad"), function (e) {
+          P.show(e.key);
+          if (e.repeat || e.key !== " ") return;
+          var now = Date.now();
+          if (last) {
+            var gap = now - last, rate = 1000 / gap;
+            $("#rt-gap").innerHTML = gap + '<small>gap, in ms</small>';
+            $("#rt-rate").innerHTML = (Math.round(rate * 10) / 10) + '<small>taps per second</small>';
+            $("#rt-bar").style.width = Math.min(100, rate * 10) + "%";
+            code($("#rt-code"), SRC, [1]);
+          } else { $("#rt-gap").innerHTML = '–<small>one tap: no gap yet</small>' }
+          last = now;
+        });
+      })();
+
+      /* ---------- 14 what's the data ---------- */
+      mcq($("#qd-opts"), $("#qd-fb"), [
+        ['The key name, five times: <span class="m">"a", "a", "a", "a", "a"</span>', false, "That can tell us how many taps, and which key. Can it tell us whether they were rapid? What's missing?"],
+        ["The five moments in time", true, "Correct. From the moments we can work out the gaps, the rate, whether they sped up, and even the count. Store the moments and the questions stay open."],
+        ['The word <span class="m">"fast"</span>', false, "That's a conclusion, not data. Once it's stored, what else could you ask? Store what happened, and work out \"fast\" from it."]
+      ]);
+
+      /* ---------- 15 tap timing in code ---------- */
+      playground("tc", '// ---------- State ----------\nlet taps = [];\n\n// ---------- Controls ----------\nfunction keyDown(event) {\n  if (event.repeat === false) {\n    if (event.key === " ") {\n      taps.push(Date.now());\n      if (taps.length > 1) {\n        let i = taps.length - 1;\n        let gap = taps[i] - taps[i - 1];\n        let rate = 1000 / gap;\n        console.log(gap + " ms, " + rate + " taps per second");\n      }\n    }\n  }\n}\n\n// ---------- Setup ----------\nwindow.addEventListener("keydown", keyDown);\n');
+
+      /* ---------- 16 break timer ---------- */
+      (function () {
+        var total = 10 * 60, left = total, t = null, BRK = "Stretch, refill. After the break: where variables live, then position instead of time.";
+        function show() { var m = Math.floor(left / 60), s = left % 60; $("#tm").textContent = m + ":" + (s < 10 ? "0" : "") + s; if (left === 0) { $("#tm-msg").textContent = "Time's up. Back to your seats."; stop() } }
+        function stop() { clearInterval(t); t = null; $("#tm-go").textContent = left === 0 ? "Start" : "Resume" }
+        $("#tm-go").addEventListener("click", function () {
+          if (t) { stop(); return }
+          if (left === 0) left = total;
+          $("#tm-msg").textContent = BRK;
+          t = setInterval(function () { left = Math.max(0, left - 1); show() }, 1000); this.textContent = "Pause";
+        });
+        $("#tm-reset").addEventListener("click", function () { stop(); left = total; show(); $("#tm-go").textContent = "Start"; $("#tm-msg").textContent = BRK });
+      })();
+
+      /* ---------- where variables live: predict ---------- */
+      code($("#sp-code"), 'function keyDown(event) {\n  let taps = [];\n  if (event.key === " ") {\n    taps.push(Date.now());\n    console.log(taps.length);\n  }\n}\n\nwindow.addEventListener("keydown", keyDown);', [1]);
+      mcq($("#sp-opts"), $("#sp-fb"), [
+        ["<code>5</code>", false, "That's what happens with <code>taps</code> at the top. Follow one call from its first line: what's in <code>taps</code> right after line 2?"],
+        ["<code>1</code>", true, "Correct. Every call starts at line 2, so every tap makes a brand new empty list, puts one moment in it, and throws it away when the function ends."],
+        ["It stops with an error", false, "Nothing here is misspelled or missing. Follow one call from its first line: what does line 2 do, every single time?"]
+      ]);
+
+      /* ---------- where variables live: outside or inside ---------- */
+      (function () {
+        var mode = "top", taps = [], fade = null, P = pad($("#sd-pad"), SP_IDLE, SP_LIVE);
+        var BODY = '    taps.push(Date.now());\n    let i = taps.length - 1;\n    let gap = taps[i] - taps[i - 1];\n    console.log(taps.length, gap);\n  }\n}';
+        function src(extra) {
+          return (mode === "top" ? 'let taps = [];\n\nfunction keyDown(event) {\n  if (event.key === " ") {\n' : 'function keyDown(event) {\n  let taps = [];\n  if (event.key === " ") {\n') + BODY + (extra ? '\n\nconsole.log(gap);' : "");
+        }
+        function chip(t) { return '<span class="vr flash">' + esc(t) + '</span>' }
+        function none(t) { return '<span class="none">' + t + '</span>' }
+        function idle() {
+          $("#sd-out").innerHTML = mode === "top" ? chip("taps: " + taps.length + (taps.length === 1 ? " moment" : " moments")) : none("nothing kept here");
+          $("#sd-in").innerHTML = none("nothing yet: keyDown isn't running");
+          $("#sd-in").classList.remove("gone");
+        }
+        function show() { code($("#sd-code"), src()); idle(); conLines($("#sd-con"), [{ c: "dim", t: "Click the pad and tap the space bar." }]) }
+        capture($("#sd-pad"), function (e) {
+          P.show(e.key);
+          if (e.repeat || e.key !== " ") return;
+          var list = mode === "top" ? taps : [];
+          list.push(Date.now());
+          var i = list.length - 1, gap = list[i] - list[i - 1];
+          var inner = [chip("i: " + i), chip("gap: " + String(gap))];
+          if (mode === "in") inner.unshift(chip("taps: 1 moment"));
+          $("#sd-out").innerHTML = mode === "top" ? chip("taps: " + taps.length + (taps.length === 1 ? " moment" : " moments")) : none("nothing kept here");
+          var inn = $("#sd-in"); inn.classList.remove("gone"); inn.innerHTML = inner.join("");
+          clearTimeout(fade); fade = setTimeout(function () { inn.classList.add("gone") }, 1400);
+          conLines($("#sd-con"), [list.length + " " + String(gap)]);
+          code($("#sd-code"), src(), mode === "top" ? [6] : [3]);
+        });
+        $$("#sd-seg .btn").forEach(function (b) {
+          b.addEventListener("click", function () {
+            mode = b.dataset.m; taps = [];
+            $$("#sd-seg .btn").forEach(function (x) { x.classList.toggle("sel", x === b) });
+            show(); flash($("#sd-code"), mode === "top" ? [0] : [1]);
+          });
+        });
+        $("#sd-gap").addEventListener("click", function () {
+          var lines = src(true).split("\n").length;
+          code($("#sd-code"), src(true), [lines - 1]);
+          conLines($("#sd-con"), [{ c: "bad", t: "The code stopped: ReferenceError: gap is not defined" }]);
+        });
+        $("#sd-reset").addEventListener("click", function () { taps = []; show() });
+        show();
+      })();
+
+      /* ---------- where variables live: scope map ---------- */
+      (function () {
+        var SRC = 'let taps = [];\n\nfunction keyDown(event) {\n  if (event.key === " ") {\n    taps.push(Date.now());\n    let gaps = [];\n    for (let i = 1; i < taps.length; i++) {\n      gaps.push(taps[i] - taps[i - 1]);\n    }\n    console.log(gaps);\n  }\n}\n\nwindow.addEventListener("keydown", keyDown);';
+        function range(a, b) { var r = []; for (var i = a; i <= b; i++) r.push(i); return r }
+        var V = {
+          taps: { lines: range(0, 13), box: 0, t: "<code>taps</code> is made on line 1, outside every function. Every line in the file can use it, and it lasts as long as the page is open." },
+          event: { lines: range(2, 11), box: 1, t: "<code>event</code> belongs to <code>keyDown</code>, lines 3 to 12. Each key press gets a new one, gone when the function ends." },
+          gaps: { lines: range(5, 10), box: 2, t: "<code>gaps</code> is made inside the <code>if</code>, on line 6, and is gone at its closing brace on line 11. A fresh, empty list for every tap." },
+          i: { lines: range(6, 8), box: 3, t: "<code>i</code> only lives inside the <code>for</code> loop, lines 7 to 9. When the loop ends, the counter is gone: nobody needs it any more." }
+        };
+        var B = [["the whole file", ["taps"]], ["inside keyDown", ["event"]], ["inside the if", ["gaps"]], ["inside the for loop", ["i"]]];
+        var h = "";
+        B.forEach(function (b, j) { h += '<div class="box" data-b="' + j + '"><div class="bl">' + b[0] + b[1].map(function (v) { return ' <button class="chip" data-v="' + v + '">' + v + '</button>' }).join("") + '</div>' });
+        B.forEach(function () { h += '</div>' });
+        $("#sm-nest").innerHTML = h;
+        code($("#sm-code"), SRC);
+        $$("#sm-nest .chip").forEach(function (c) {
+          c.addEventListener("click", function () {
+            var v = V[c.dataset.v];
+            $$("#sm-nest .chip").forEach(function (x) { x.classList.toggle("sel", x === c) });
+            $$("#sm-nest .box").forEach(function (x) { x.classList.toggle("on", +x.dataset.b === v.box) });
+            code($("#sm-code"), SRC, v.lines);
+            $("#sm-dir").innerHTML = v.t;
+          });
+        });
+      })();
+
+      /* ---------- where variables live: top or inside ---------- */
+      quiz($("#sk"), $("#sk-fb"), [
+        ["let taps = [];", 0, "<code>taps</code> collects a moment from every tap, so it has to outlive each call."],
+        ["let gap = taps[i] - taps[i - 1];", 1, "<code>gap</code> belongs to one tap. It's worked out fresh each time."],
+        ["let rate = 1000 / gap;", 1, "Like <code>gap</code>, it's about this one tap only."],
+        ["let swipe = [];", 0, "Same as <code>taps</code>: it collects positions across several key presses."],
+        ["let position = row.indexOf(event.key);", 1, "Each key press has its own position. Nothing to remember."],
+        ["const row = [\"q\", \"w\", \"e\", …];", 0, "It never changes, and every function uses it: make it once, at the top."]
+      ], ["At the top", "Inside the function"], "Ask: does this value have to survive from one key press to the next?");
+
+      /* ---------- taking an object apart ---------- */
+      (function () {
+        code($("#de-old"), 'function keyDown(event) {\n  let key = event.key;\n  let repeat = event.repeat;\n}');
+        var NEW = 'function keyDown(event) {\n  const { key, repeat } = event;\n}\n\nlet settings = { tempo: 90, note: "C4" };\nconst { tempo } = settings;  // 90';
+        code($("#de-new"), NEW);
+        var P = pad($("#de-pad"), IDLE, LIVE);
+        function show(e) {
+          var ev = e ? { type: "keydown", key: e.key, repeat: e.repeat, code: e.code } : { type: "keydown", key: "a", repeat: false, code: "KeyA" };
+          $("#de-obj").innerHTML = '<div class="obj"><div class="on">event</div>' + Object.keys(ev).map(function (k) {
+            return '<div class="pr' + (k === "key" || k === "repeat" ? " hi" : "") + '"><span class="pk">' + k + '</span><span class="pv">' + esc(JSON.stringify(ev[k])) + '</span></div>';
+          }).join("") + '</div>';
+          $("#de-vars").innerHTML = '<div class="small muted" style="margin-bottom:6px">' + (e ? "inside keyDown, for this key press:" : "after a key press, inside keyDown:") + '</div><div class="vars"><span class="vr flash">key: ' + esc(JSON.stringify(ev.key)) + '</span><span class="vr flash">repeat: ' + ev.repeat + '</span></div>';
+        }
+        capture($("#de-pad"), function (e) { P.show(e.key); show(e); code($("#de-new"), NEW, [1]) });
+        show();
+      })();
+
+      /* ---------- what comes out? ---------- */
+      var DC_SRC = 'let sound = {\n  note: "E4",\n  duration: "8n",\n  velocity: 0.5\n};\n\nconst { note } = sound;\nconst { duration, velocity } = sound;\nconst { volume } = sound;\n\nfunction keyDown(event) {\n  const { key } = event;\n}';
+      code($("#dc-code"), DC_SRC);
+      (function () {
+        var Q = [
+          { q: "<code>note</code> is", c: ['"E4"', '{ note: "E4" }', "undefined"], a: 0, ok: "A plain string, pulled out of the object.", hint: "The braces are on the left of the =. They say which label to pull out, not to make an object.", l: [6] },
+          { q: "<code>velocity</code> is", c: ['"8n"', "0.5", "undefined"], a: 1, ok: "Two names in the braces make two variables, each matched by label.", hint: "Variables are matched by label, not by position. Which label is velocity?", l: [7] },
+          { q: "<code>volume</code> is", c: ["0", "undefined", "an error"], a: 1, ok: "There's no volume label on sound, so there's nothing to pull out. No error, so a typo here goes quiet.", hint: "Look for a volume label on sound. What does reading a missing property give?", l: [8] },
+          { q: "<code>key</code> can be used", c: ["anywhere in the file", "only inside keyDown"], a: 1, ok: "It's made inside keyDown's braces, fresh for each key press.", hint: "Where is the line that makes key? Think back to gap.", l: [11] }
+        ], done = 0;
+        Q.forEach(function (q) {
+          var row = document.createElement("div");
+          row.innerHTML = '<span class="q">' + q.q + '</span><span class="ch"></span>';
+          var ch = row.querySelector(".ch"), answered = false;
+          q.c.forEach(function (c, j) {
+            var b = document.createElement("button"); b.className = "chip"; b.textContent = c;
+            b.addEventListener("click", function () {
+              code($("#dc-code"), DC_SRC, q.l);
+              if (answered) return;
+              if (j === q.a) { b.classList.add("right"); answered = true; done++; fb($("#dc-fb"), "pass", "Correct. " + q.ok + (done === Q.length ? " That's all of them." : "")) }
+              else { b.classList.add("wrong"); fb($("#dc-fb"), "note", q.hint) }
+            });
+            ch.appendChild(b);
+          });
+          $("#dc").appendChild(row);
+        });
+      })();
+
+      /* ---------- 18 describe a swipe ---------- */
+      (function () {
+        var R = [["In plain words", "A finger drags across the keyboard, left to right or right to left."], ["What gets pressed", "Several different keys, one after another."], ["In what order", "The order the finger passed them. Change the order and it's a different swipe."], ["So the data is", "A list of keys, in the order they arrived."]];
+        var box = $("#ds");
+        R.forEach(function (d) { var r = document.createElement("div"); r.innerHTML = '<button class="opt">' + d[0] + '</button><span class="ans" hidden>' + d[1] + '</span>'; r.querySelector("button").addEventListener("click", function () { r.querySelector(".ans").hidden = false; this.classList.add("right") }); box.appendChild(r) });
+        $("#ds-all").addEventListener("click", function () { $$("#ds .ans").forEach(function (a) { a.hidden = false }); $$("#ds .opt").forEach(function (b) { b.classList.add("right") }) });
+      })();
+
+      var ROW_SRC = 'let row = ["q", "w", "e", "r", "t",\n           "y", "u", "i", "o", "p"];';
+
+      /* ---------- 19 a key's position ---------- */
+      (function () {
+        function show(k, on) { code($("#kp-code"), ROW_SRC + '\n\nrow.indexOf(' + JSON.stringify(k) + ');  // ' + ROW.indexOf(k), on) }
+        var K = keyRow($("#kp-row"), {
+          down: function (e) {
+            if (e.repeat) return;
+            var k = e.key.length === 1 ? e.key.toLowerCase() : e.key, p = ROW.indexOf(k);
+            K.clear(); K.set(k, "on", true);
+            show(k, [3]);
+            var v = $("#kp-v");
+            v.innerHTML = p === -1 ? esc(k === " " ? "space" : k) + ' isn\'t in the row: <span style="color:var(--curtain-600)">-1</span>' : esc(k) + ' is at position <span style="color:var(--curtain-600)">' + p + '</span>';
+            v.classList.remove("flashbg"); void v.offsetWidth; v.classList.add("flashbg");
+          }
+        });
+        show("w");
+      })();
+
+      /* ---------- 20 predict the swipe ---------- */
+      code($("#ps-code"), ROW_SRC + '\n\n// q is at 0, p is at 9');
+      mcq($("#ps-opts"), $("#ps-fb"), [
+        ["The positions go up", true, "Correct. q is at 0 and p is at 9, so moving towards p each key's position is bigger. Right to left, they go down."],
+        ["The positions go down", false, "Look at the row: what's the position of q, and of p? Which way are we moving?"],
+        ["They stay the same", false, "Each key in a swipe is a different key, at a different place in the row. Look up q and then w."]
+      ]);
+
+      /* ---------- 24 the shared shape ---------- */
+      mcq($("#qs-opts"), $("#qs-fb"), [
+        ["Both store the names of the keys", false, "The taps store moments, not key names. Look at the \"stored\" line in each."],
+        ["Both capture a list of events, then look at how each value changes from the one before", true, "Correct. Taps: the change is the gap in time. Swipe: the change is the step in position. Same shape, different measurable thing."],
+        ["Both use <code>Date.now()</code>", false, "Only the taps need the time. The swipe stores positions from <code>row.indexOf</code>."],
+        ["Both need a loop that starts at 0", false, "The gaps loop starts at 1, so not even the taps do. Look at the \"change\" line in each."]
+      ]);
+
+      /* ---------- 26 the activity card ---------- */
+      (function () {
+        var A = ["Knocking on a door", "Walking up and down a corridor", "Drumming your fingers on the desk", "Turning the volume up, then down", "A ball bouncing until it stops", "Typing your own name"];
+        var F = ["act", "1", "2", "3", "4"], card = {};
+        try { card = JSON.parse(sget("card") || "{}") || {} } catch (e) { card = {} }
+        F.forEach(function (f) {
+          var el = $("#ac-" + f);
+          el.value = typeof card[f] === "string" ? card[f] : "";
+          el.addEventListener("input", function () { card[f] = el.value; sset("card", JSON.stringify(card)) });
+          el.addEventListener("keydown", function (e) { e.stopPropagation() });
+        });
+        $("#ac-pick").addEventListener("click", function () {
+          var el = $("#ac-act"), cur = A.indexOf(el.value);
+          if (el.value && cur === -1) { el.focus(); return }
+          el.value = A[(cur + 1 + Math.floor(Math.random() * (A.length - 1))) % A.length];
+          card.act = el.value; sset("card", JSON.stringify(card));
+        });
+      })();
+    })();
+  </script>
+</body>
+
+</html>
