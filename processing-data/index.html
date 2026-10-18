@@ -438,7 +438,7 @@
             </ol>
           </div>
         </div>
-        <aside class="nt">The whole of Example 1 in one program, in the house layout from last week (State, Sound, Controls, Setup). Run it, click the pad, tap the space bar. Ask for a prediction before each run. Students can run their own copy; it's saved in their browser. Task 2: with one tap, there's nothing before it, so no gap: the check skips it. Task 3: the same flood as before, now with sound. The afternoon's block 1 builds this up step by step, starting without the repeat check.</aside>
+        <aside class="nt">The whole of Example 1 in one program, in the house layout from last week (State, Controls, Setup; no sound needed). Run it, click the pad, tap the space bar. Ask for a prediction before each run. Students can run their own copy; it's saved in their browser. Task 2: with one tap, there's nothing before it, so no gap: the check skips it. Task 3: the same flood as before. The afternoon's block 1 builds this up step by step, starting without the repeat check.</aside>
       </section>
 
       <!-- 16 BREAK -->
@@ -909,7 +909,7 @@
       var CTORS = ["Synth", "PolySynth", "FMSynth", "AMSynth", "MonoSynth", "DuoSynth", "MembraneSynth", "MetalSynth", "PluckSynth", "NoiseSynth", "Distortion", "Reverb", "FeedbackDelay", "Chorus", "Filter", "Tremolo", "Vibrato", "BitCrusher", "Loop"];
       function playground(id, start) {
         var ed = $("#" + id + "-ed"), con = $("#" + id + "-con"), padEl = $("#" + id + "-pad");
-        var P = pad(padEl, IDLE, LIVE), listeners = [], made = [], ran = false, KEY = "pg:" + id;
+        var P = pad(padEl, IDLE, LIVE), listeners = [], made = [], ran = false, KEY = "pg2:" + id;
         ed.value = sget(KEY) || start;
         ed.addEventListener("input", function () { sset(KEY, ed.value) });
         function out(cls, t) {
@@ -1164,7 +1164,7 @@
       ]);
 
       /* ---------- 15 tap timing in code ---------- */
-      playground("tc", '// ---------- State ----------\nlet taps = [];\n\n// ---------- Sound ----------\nconst synth = new Tone.Synth().toDestination();\n\n// ---------- Controls ----------\nfunction keyDown(event) {\n  Tone.start();\n  if (event.repeat === false) {\n    if (event.key === " ") {\n      taps.push(Date.now());\n      synth.triggerAttackRelease("C4", "16n");\n      if (taps.length > 1) {\n        let i = taps.length - 1;\n        let gap = taps[i] - taps[i - 1];\n        let rate = 1000 / gap;\n        console.log(gap + " ms, " + rate + " taps per second");\n      }\n    }\n  }\n}\n\n// ---------- Setup ----------\nwindow.addEventListener("keydown", keyDown);\n');
+      playground("tc", '// ---------- State ----------\nlet taps = [];\n\n// ---------- Controls ----------\nfunction keyDown(event) {\n  if (event.repeat === false) {\n    if (event.key === " ") {\n      taps.push(Date.now());\n      if (taps.length > 1) {\n        let i = taps.length - 1;\n        let gap = taps[i] - taps[i - 1];\n        let rate = 1000 / gap;\n        console.log(gap + " ms, " + rate + " taps per second");\n      }\n    }\n  }\n}\n\n// ---------- Setup ----------\nwindow.addEventListener("keydown", keyDown);\n');
 
       /* ---------- 16 break timer ---------- */
       (function () {
