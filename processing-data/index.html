@@ -705,7 +705,7 @@
           <h2 class="hero md">Now we write it together.</h2>
           <p class="lede">Here on the screen, one step at a time: the row, a list of positions, then which way the finger went.</p>
         </div>
-        <aside class="nt">Switch to your editor and write the swipe code live, with the class telling you what comes next. A possible order, matching the afternoon's block 3: a row array of q to p; on keydown, row.indexOf(event.key) and log it; skip -1 and push the position onto a swipe list; on keyup, compare the first and the last position and log the direction; empty the list so the next swipe starts fresh. Predict before every run. Run it after each step so the class sees the data change. Remember the scope section: row and swipe go at the top, position goes inside keyDown.</aside>
+        <aside class="nt">Switch to your editor and write the swipe code live, with the class telling you what comes next. A possible order, matching the afternoon's block 3: a row array of q to p; on keydown, row.indexOf(event.key) and log it; skip -1 and push the position onto a swipe list; on keyup, compare the first and the last position and log the direction; empty the list so the next swipe starts fresh. Try a real drag at this point: the first key comes up while the finger is already on the next one, so the swipe ends after two keys. That's the moment to add held, a count of keys that are down (up on keydown, down on keyup), and only finish the swipe when it's back to 0, as the afternoon's block 3 does. Predict before every run. Run it after each step so the class sees the data change. Remember the scope section: row, swipe and held go at the top, position goes inside keyDown.</aside>
       </section>
 
       <!-- 24 THE SHARED SHAPE -->
