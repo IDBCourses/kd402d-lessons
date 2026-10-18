@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../shared/deck.css">
   <style>
     /* styles used only by this lecture */
-    .order>div{grid-template-columns:72px 1fr;align-items:center;padding:10px 0}
+    .order>div{grid-template-columns:72px 1fr;align-items:center;padding:7px 0}
     .order .nm{font-size:23px;color:var(--ink-900);font-weight:500}
     .order .nm small{display:block;font-size:16px;color:var(--ink-500);font-weight:400}
     .prompt{font-family:var(--font-display);font-weight:700;font-size:30px;letter-spacing:-.025em;color:var(--ink-900);line-height:1.15;margin:0}
@@ -120,6 +120,28 @@
     ul.prompts{list-style:none;margin:0;padding:6px 18px}
     ul.prompts li{padding:6px 0;border-bottom:1px solid var(--paper-300);font-size:19px;color:var(--ink-900)}
     ul.prompts li:last-child{border-bottom:0}
+    /* where variables live */
+    .scopes{display:flex;flex-direction:column;gap:0}
+    .scope{border:2px solid var(--ink-900);border-radius:2px;padding:8px 12px;min-height:58px}
+    .scope.out{background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900);padding-bottom:12px}
+    .scope.in{background:var(--paper-200);border-style:dashed;margin:-2px 0 0 28px}
+    .scope .sl{font-family:var(--font-ui);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-500);font-weight:500;margin-bottom:6px}
+    .vars{display:flex;gap:8px;flex-wrap:wrap;min-height:30px;transition:opacity .4s}
+    .vars.gone{opacity:.25}
+    .vars .vr{font-family:var(--font-mono);font-size:16px;font-weight:700;color:var(--ink-900);border:2px solid var(--ink-900);background:var(--spot-200);padding:2px 10px;border-radius:2px}
+    .vars .vr.flash{animation:flashlite .9s ease}
+    .vars .none{font-family:var(--font-display);font-style:italic;font-weight:500;font-size:17px;color:var(--ink-500)}
+    .obj{border:2px solid var(--ink-900);background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900);border-radius:2px}
+    .obj .on{font-family:var(--font-mono);font-weight:700;font-size:14px;letter-spacing:.06em;padding:5px 14px;border-bottom:2px solid var(--ink-900);background:var(--paper-200);color:var(--ink-900)}
+    .obj .pr{display:grid;grid-template-columns:120px 1fr;gap:12px;padding:6px 14px;border-bottom:1px solid var(--paper-300);align-items:center}
+    .obj .pr:last-child{border-bottom:0}
+    .obj .pk{font-family:var(--font-mono);font-size:16px;color:var(--ink-500);font-weight:700}
+    .obj .pv{font-family:var(--font-mono);font-size:18px;color:var(--ink-900);font-weight:700}
+    .obj .pr.hi{background:var(--spot-200)}
+    .fnq>div{grid-template-columns:1fr;gap:8px;padding:10px 0}
+    .fnq .ch{display:flex;gap:8px;flex-wrap:wrap}
+    .fnq .chip{text-transform:none;letter-spacing:0}
+    .fnq .q{font-size:19px;color:var(--ink-900)}
   </style>
 </head>
 
@@ -151,27 +173,29 @@
         <div class="rows order">
           <div><span class="num">01</span><span class="nm">From the world to data<small>Describe a real action in words, and find the thing in it a program can hold</small></span></div>
           <div><span class="num">02</span><span class="nm">Example 1: tapping one key<small>Moments in time, a list of them, and the gaps between them</small></span></div>
-          <div><span class="num">03</span><span class="nm">Example 2: swiping across the keys<small>A key's position is its place in a list. Rising or falling?</small></span></div>
-          <div><span class="num">04</span><span class="nm">Describe, then represent<small>An action of your own, on paper, compared with a neighbour</small></span></div>
-          <div><span class="num">05</span><span class="nm">Wrap-up<small>The one move we made twice, and what's next</small></span></div>
+          <div><span class="num">03</span><span class="nm">Where variables live<small>Why <code>taps</code> sits at the top, and taking an object apart into variables</small></span></div>
+          <div><span class="num">04</span><span class="nm">Example 2: swiping across the keys<small>A key's position is its place in a list. Rising or falling?</small></span></div>
+          <div><span class="num">05</span><span class="nm">Describe, then represent<small>An action of your own, on paper, compared with a neighbour</small></span></div>
+          <div><span class="num">06</span><span class="nm">Wrap-up<small>The one move we made twice, and what's next</small></span></div>
         </div>
         <p class="dir" style="margin-top:16px">A break after the first example.</p>
-        <aside class="nt">Timings for you only (not on the slide): framing 10:15–10:30, Example 1 10:30–11:00, break 11:00–11:10, Example 2 11:10–11:40, describe-then-represent activity 11:40–11:55, wrap-up 11:55–12:00. The framing section has no code at all. Code starts in Example 1, after "a tap is a moment in time" has been motivated.</aside>
+        <aside class="nt">Timings for you only (not on the slide): framing 10:15–10:30, Example 1 10:30–11:00, break 11:00–11:10, where variables live 11:10–11:20, Example 2 11:20–11:45, describe-then-represent activity 11:45–11:55 (ten minutes, down from the plan's fifteen to make room for scope and destructuring), wrap-up 11:55–12:00. The framing section has no code at all. Code starts in Example 1, after "a tap is a moment in time" has been motivated.</aside>
       </section>
 
       <!-- 03 OBJECTIVES -->
       <section class="slide" id="objectives" data-sec="Opening">
         <div class="billing">By lunch you can</div>
         <hr class="rule">
-        <h2 class="h1">Five things to take home</h2>
+        <h2 class="h1 tight">Six things to take home</h2>
         <div class="rows lab">
           <div><span class="num">01</span><span class="tx">Describe the path from a real action to data, and explain why that path is a choice you make.</span></div>
           <div><span class="num">02</span><span class="tx">Store a repeated action as a list of moments, and find the gaps between them.</span></div>
           <div><span class="num">03</span><span class="tx">Read fast and slow as small and large numbers that a program can compare.</span></div>
           <div><span class="num">04</span><span class="tx">Give keys a position with an array, and read a swipe as rising or falling positions.</span></div>
           <div><span class="num">05</span><span class="tx">Spot the shared shape: capture a list of events, then look at how each value changes.</span></div>
+          <div><span class="num">06</span><span class="tx">Say where a variable lives and how long it lasts, and take an object apart into plain variables.</span></div>
         </div>
-        <aside class="nt">The session's learning objectives from the course plan, in plain words. Number 01 is the real point of the morning; number 05 is what ties the two examples together. Come back to these at the end.</aside>
+        <aside class="nt">The session's learning objectives from the course plan, in plain words, plus number 06: scope and destructuring, moved here from Friday. Number 01 is the real point of the morning; number 05 is what ties the two examples together. Come back to these at the end.</aside>
       </section>
 
       <!-- 04 BAND -->
@@ -443,10 +467,128 @@
         <div class="inner">
           <div class="billing">Break</div>
           <div class="timer" id="tm" aria-live="off">10:00</div>
-          <p class="lede" id="tm-msg" style="margin-top:22px">Stretch, refill. After the break: the same idea, with position instead of time.</p>
+          <p class="lede" id="tm-msg" style="margin-top:22px">Stretch, refill. After the break: where variables live, then position instead of time.</p>
           <div class="row" style="margin-top:20px"><button class="btn alt" id="tm-go">Start</button><button class="btn ghost" id="tm-reset">Reset</button></div>
         </div>
         <aside class="nt">11:00–11:10, ten minutes. Press Start for the countdown, or tell the room when to be back.</aside>
+      </section>
+
+      <!-- WHERE VARIABLES LIVE: BAND -->
+      <section class="slide stage" id="scope-band" data-sec="Where variables live">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">Where variables live</div>
+          <h2 class="hero md">Why is taps at the top?</h2>
+          <p class="lede">In the tap code, <code>taps</code> sits above the function and <code>gap</code> sits inside it. Where a variable is made decides how long it lasts, and who can see it.</p>
+        </div>
+        <aside class="nt">11:10, about ten minutes for this section, before the swipe. These two ideas were moved here from Friday's Objects lecture, and the tap code we just wrote is the reason they matter: one variable has to remember every tap, the other only matters for one tap. Scope first, then destructuring as its first payoff. Timing knock-on: Example 2 runs 11:20–11:45 and the paper activity gets ten minutes instead of fifteen.</aside>
+      </section>
+
+      <!-- PREDICT: TAPS INSIDE -->
+      <section class="slide" id="scope-predict" data-sec="Where variables live" data-ex="What if taps moved inside?">
+        <span class="turn">Your turn</span>
+        <div class="billing">Where variables live · Predict</div>
+        <hr class="rule">
+        <h2 class="h1 tight">What if taps moved inside?</h2>
+        <div class="cols">
+          <div class="panel">
+            <div class="bar"><span>taps.js · moved</span></div>
+            <pre class="code" id="sp-code" style="font-size:17px"></pre>
+          </div>
+          <div class="stack">
+            <p class="lede" style="margin:0">One line has moved into the function. Someone taps the space bar five times. What does the fifth tap log?</p>
+            <div class="stack" id="sp-opts" style="gap:10px"></div>
+            <div class="fb" id="sp-fb"></div>
+          </div>
+        </div>
+        <aside class="nt">Everyone predicts on their laptop first. The answer is 1, every time. Each time the browser calls keyDown, the function starts from its first line, so let taps = [] makes a brand new empty list, pushes one moment into it, logs a length of 1, and the list is thrown away when the function ends. Act it out if there's time: one student plays keyDown with a sheet of paper. Every time you say "tap", they take a fresh sheet, write one time on it, read out how many times are on it, and crumple it up. Then move the list to the whiteboard (the top of the file): now it survives between calls.</aside>
+      </section>
+
+      <!-- SCOPE DEMO -->
+      <section class="slide" id="scope-demo" data-sec="Where variables live" data-demo="Outside or inside">
+        <span class="turn try">Try it</span>
+        <div class="billing">Where variables live · Outside or inside</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Made fresh on every call</h2>
+        <div class="cols">
+          <div class="stack">
+            <div class="seg" id="sd-seg"><button class="btn ghost sel" data-m="top">taps at the top</button><button class="btn ghost" data-m="in">taps inside keyDown</button></div>
+            <div class="panel">
+              <div class="bar"><span>taps.js</span></div>
+              <pre class="code" id="sd-code" style="font-size:16px"></pre>
+            </div>
+            <div class="row"><button class="btn alt" id="sd-gap">Log gap at the bottom</button><button class="btn ghost" id="sd-reset">Start again</button></div>
+          </div>
+          <div class="stack">
+            <div class="pad" id="sd-pad" tabindex="0" aria-label="Keyboard pad"></div>
+            <div class="scopes">
+              <div class="scope out"><div class="sl">the whole file · lives as long as the page</div><div class="vars" id="sd-out"></div></div>
+              <div class="scope in"><div class="sl">inside keyDown · made on each call, gone when it ends</div><div class="vars" id="sd-in"></div></div>
+            </div>
+            <div class="console con-s" id="sd-con" style="min-height:52px;max-height:80px"></div>
+          </div>
+        </div>
+        <aside class="nt">Tap the space bar a few times with taps at the top: taps grows in the outer box, and gap appears in the inner box for each call, then fades. Switch to taps inside keyDown and tap again: taps is made in the inner box every time, so its length is always 1. Then press Log gap at the bottom: a console.log(gap) outside the function stops the code with ReferenceError: gap is not defined. gap only exists inside the braces it was made in. The rule to take away: a variable made inside { } is made fresh each time that code runs, and only that code can see it. If something has to remember between events, it goes at the top, in the State section. That's why the house layout has one.</aside>
+      </section>
+
+      <!-- SCOPE CHECK -->
+      <section class="slide" id="scope-check" data-sec="Where variables live" data-ex="Top or inside?">
+        <span class="turn">Your turn</span>
+        <div class="billing">Where variables live · Check</div>
+        <hr class="rule">
+        <h2 class="h1 tight">At the top, or inside?</h2>
+        <p class="lede" style="margin-bottom:8px">For each variable from today's code: does it need to remember between key presses?</p>
+        <div class="rows quiz sw" id="sk"></div>
+        <div class="fb" id="sk-fb" style="margin-top:10px"></div>
+        <aside class="nt">One question decides it: does this value have to survive from one key press to the next? taps and swipe collect across many presses, so they live at the top. gap, rate and position are worked out fresh for each press, so they live inside the function. row never changes; it could live in either place, but it belongs at the top so it's made once and every function can use it. The swipe preview is deliberate: swipe is the same idea as taps.</aside>
+      </section>
+
+      <!-- DESTRUCTURING -->
+      <section class="slide" id="destructure" data-sec="Where variables live" data-demo="Take it apart">
+        <span class="turn try">Try it</span>
+        <div class="billing">Where variables live · Taking an object apart</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Taking an object apart</h2>
+        <div class="cols wide-l">
+          <div class="stack">
+            <div class="panel">
+              <div class="bar"><span>one at a time</span></div>
+              <pre class="code" id="de-old" style="font-size:16px"></pre>
+            </div>
+            <div class="panel">
+              <div class="bar"><span>all at once</span><span>new today</span></div>
+              <pre class="code" id="de-new" style="font-size:16px"></pre>
+            </div>
+            <p class="dir" style="font-size:19px">The names in the braces are labels on the object. Each one becomes a plain variable with that property's value.</p>
+          </div>
+          <div class="stack">
+            <div class="pad" id="de-pad" tabindex="0" aria-label="Keyboard pad"></div>
+            <div id="de-obj"></div>
+            <div id="de-vars"></div>
+          </div>
+        </div>
+        <aside class="nt">New syntax: destructuring. Friday's objects come back: the event the browser hands us is an object with labelled parts. const { key, repeat } = event; makes two new variables, key and repeat, and fills each from the property with the same label. It's the same as the two lines in the top panel, written once. Press keys on the pad: the event object shows on the right, and the two variables it gives. Then the settings example from the top: const { tempo } = settings. Keep it to this: pulling properties into plain variables with the same names. No renaming, no defaults, no nesting. The scope payoff: these are new variables, made with const inside keyDown, so they're made fresh for every key press, which is exactly right for things that belong to one event.</aside>
+      </section>
+
+      <!-- DESTRUCTURING CHECK -->
+      <section class="slide" id="destructure-check" data-sec="Where variables live" data-ex="What comes out?">
+        <span class="turn">Your turn</span>
+        <div class="billing">Where variables live · Check</div>
+        <hr class="rule">
+        <h2 class="h1 tight">What comes out?</h2>
+        <div class="cols wide-r">
+          <div class="panel">
+            <div class="bar p"><span>sound.js</span></div>
+            <pre class="code" id="dc-code" style="font-size:17px"></pre>
+          </div>
+          <div class="stack">
+            <div class="rows fnq" id="dc"></div>
+            <div class="fb" id="dc-fb"></div>
+          </div>
+        </div>
+        <aside class="nt">Students answer on their own laptops. Row 1: note is "E4", a plain string, not an object. Row 2: velocity is 0.5; several names in the braces make several variables. Row 3: there's no volume label on sound, so volume is undefined; no error, which is why typos here are sneaky. Row 4: key was made inside keyDown, so it only exists there, made fresh for each key press.</aside>
       </section>
 
       <!-- 17 BAND -->
@@ -459,7 +601,7 @@
           <h2 class="hero md">Same idea. Position instead of time.</h2>
           <p class="lede">A finger dragged across the keyboard. Capture a list, then look at how it changes: this time it's where each key sits.</p>
         </div>
-        <aside class="nt">11:10. Same spine as Example 1: capture a sequence, then look at how it changes. But the interesting thing now is position, not time. Ask someone to drag a finger along the top row of their laptop keyboard while you go to the next slide.</aside>
+        <aside class="nt">11:20. Same spine as Example 1: capture a sequence, then look at how it changes. But the interesting thing now is position, not time. Ask someone to drag a finger along the top row of their laptop keyboard while you go to the next slide.</aside>
       </section>
 
       <!-- 18 DESCRIBE A SWIPE -->
@@ -636,7 +778,7 @@
             <p class="dir" style="font-size:20px">On paper, no code. Then compare with a neighbour: did you choose the same thing to store?</p>
           </div>
         </div>
-        <aside class="nt">11:40, fifteen minutes. Students pick an action (their own, or from the list) and work the four steps on paper. No code in this activity: fifteen minutes is only enough for the representation thinking, and that's the point. After about ten minutes, pairs compare: did you choose the same representation? Different choices are the interesting part: ask a pair who chose differently to explain both. The next slide has an optional card for anyone who'd rather type; it's saved in their own browser only. Their action comes back as block 4 this afternoon.</aside>
+        <aside class="nt">11:45, ten minutes (the plan's fifteen, shortened for the scope section). Students pick an action (their own, or from the list) and work the four steps on paper. No code in this activity: fifteen minutes is only enough for the representation thinking, and that's the point. After about six minutes, pairs compare: did you choose the same representation? Different choices are the interesting part: ask a pair who chose differently to explain both. The next slide has an optional card for anyone who'd rather type; it's saved in their own browser only. Their action comes back as block 4 this afternoon.</aside>
       </section>
 
       <!-- 26 THE CARD -->
@@ -668,9 +810,9 @@
           <div class="billing">Wrap-up</div>
           <h2 class="hero md">Describe it. Store a list. Watch it change.</h2>
           <p class="lede">Plain words first, then the measurable thing inside them, then a list of it, then the change from one value to the next.</p>
-          <div class="terms" style="max-width:740px"><span>Date.now()</span><span>taps.push(…)</span><span>event.repeat</span><span>taps[i] - taps[i - 1]</span><span>1000 / gap</span><span>row.indexOf(key)</span><span>swipe[0]</span><span>swipe[swipe.length - 1]</span></div>
+          <div class="terms" style="max-width:740px"><span>Date.now()</span><span>taps.push(…)</span><span>event.repeat</span><span>taps[i] - taps[i - 1]</span><span>1000 / gap</span><span>row.indexOf(key)</span><span>swipe[0]</span><span>swipe[swipe.length - 1]</span><span>const { key } = event</span></div>
         </div>
-        <aside class="nt">11:55. Summarise the one transferable skill: describe the real thing in plain words, find the measurable thing inside it, choose a data structure to hold a list of it, then look at how each value changes from the one before. Taps: moments, then gaps. Swipe: positions, then rising or falling. Both times, the representation was a choice we made, and we checked it against the real action (held keys, noisy swipes). Back to the five objectives.</aside>
+        <aside class="nt">11:55. Summarise the one transferable skill: describe the real thing in plain words, find the measurable thing inside it, choose a data structure to hold a list of it, then look at how each value changes from the one before. Taps: moments, then gaps. Swipe: positions, then rising or falling. Both times, the representation was a choice we made, and we checked it against the real action (held keys, noisy swipes). And in between: a variable made inside braces is made fresh each call, so anything that must remember between events lives at the top; const { key } = event takes an object apart into plain variables. Back to the six objectives.</aside>
       </section>
 
       <!-- 28 NEXT -->
@@ -1077,7 +1219,7 @@
 
       /* ---------- 16 break timer ---------- */
       (function () {
-        var total = 10 * 60, left = total, t = null, BRK = "Stretch, refill. After the break: the same idea, with position instead of time.";
+        var total = 10 * 60, left = total, t = null, BRK = "Stretch, refill. After the break: where variables live, then position instead of time.";
         function show() { var m = Math.floor(left / 60), s = left % 60; $("#tm").textContent = m + ":" + (s < 10 ? "0" : "") + s; if (left === 0) { $("#tm-msg").textContent = "Time's up. Back to your seats."; stop() } }
         function stop() { clearInterval(t); t = null; $("#tm-go").textContent = left === 0 ? "Start" : "Resume" }
         $("#tm-go").addEventListener("click", function () {
@@ -1087,6 +1229,114 @@
           t = setInterval(function () { left = Math.max(0, left - 1); show() }, 1000); this.textContent = "Pause";
         });
         $("#tm-reset").addEventListener("click", function () { stop(); left = total; show(); $("#tm-go").textContent = "Start"; $("#tm-msg").textContent = BRK });
+      })();
+
+      /* ---------- where variables live: predict ---------- */
+      code($("#sp-code"), 'function keyDown(event) {\n  let taps = [];\n  if (event.key === " ") {\n    taps.push(Date.now());\n    console.log(taps.length);\n  }\n}\n\nwindow.addEventListener("keydown", keyDown);', [1]);
+      mcq($("#sp-opts"), $("#sp-fb"), [
+        ["<code>5</code>", false, "That's what happens with <code>taps</code> at the top. Follow one call from its first line: what's in <code>taps</code> right after line 2?"],
+        ["<code>1</code>", true, "Correct. Every call starts at line 2, so every tap makes a brand new empty list, puts one moment in it, and throws it away when the function ends."],
+        ["It stops with an error", false, "Nothing here is misspelled or missing. Follow one call from its first line: what does line 2 do, every single time?"]
+      ]);
+
+      /* ---------- where variables live: outside or inside ---------- */
+      (function () {
+        var mode = "top", taps = [], fade = null, P = pad($("#sd-pad"), SP_IDLE, SP_LIVE);
+        var BODY = '    taps.push(Date.now());\n    let i = taps.length - 1;\n    let gap = taps[i] - taps[i - 1];\n    console.log(taps.length, gap);\n  }\n}';
+        function src(extra) {
+          return (mode === "top" ? 'let taps = [];\n\nfunction keyDown(event) {\n  if (event.key === " ") {\n' : 'function keyDown(event) {\n  let taps = [];\n  if (event.key === " ") {\n') + BODY + (extra ? '\n\nconsole.log(gap);' : "");
+        }
+        function chip(t) { return '<span class="vr flash">' + esc(t) + '</span>' }
+        function none(t) { return '<span class="none">' + t + '</span>' }
+        function idle() {
+          $("#sd-out").innerHTML = mode === "top" ? chip("taps: " + taps.length + (taps.length === 1 ? " moment" : " moments")) : none("nothing kept here");
+          $("#sd-in").innerHTML = none("nothing yet: keyDown isn't running");
+          $("#sd-in").classList.remove("gone");
+        }
+        function show() { code($("#sd-code"), src()); idle(); conLines($("#sd-con"), [{ c: "dim", t: "Click the pad and tap the space bar." }]) }
+        capture($("#sd-pad"), function (e) {
+          P.show(e.key);
+          if (e.repeat || e.key !== " ") return;
+          var list = mode === "top" ? taps : [];
+          list.push(Date.now());
+          var i = list.length - 1, gap = list[i] - list[i - 1];
+          var inner = [chip("i: " + i), chip("gap: " + String(gap))];
+          if (mode === "in") inner.unshift(chip("taps: 1 moment"));
+          $("#sd-out").innerHTML = mode === "top" ? chip("taps: " + taps.length + (taps.length === 1 ? " moment" : " moments")) : none("nothing kept here");
+          var inn = $("#sd-in"); inn.classList.remove("gone"); inn.innerHTML = inner.join("");
+          clearTimeout(fade); fade = setTimeout(function () { inn.classList.add("gone") }, 1400);
+          conLines($("#sd-con"), [list.length + " " + String(gap)]);
+          code($("#sd-code"), src(), mode === "top" ? [6] : [3]);
+        });
+        $$("#sd-seg .btn").forEach(function (b) {
+          b.addEventListener("click", function () {
+            mode = b.dataset.m; taps = [];
+            $$("#sd-seg .btn").forEach(function (x) { x.classList.toggle("sel", x === b) });
+            show(); flash($("#sd-code"), mode === "top" ? [0] : [1]);
+          });
+        });
+        $("#sd-gap").addEventListener("click", function () {
+          var lines = src(true).split("\n").length;
+          code($("#sd-code"), src(true), [lines - 1]);
+          conLines($("#sd-con"), [{ c: "bad", t: "The code stopped: ReferenceError: gap is not defined" }]);
+        });
+        $("#sd-reset").addEventListener("click", function () { taps = []; show() });
+        show();
+      })();
+
+      /* ---------- where variables live: top or inside ---------- */
+      quiz($("#sk"), $("#sk-fb"), [
+        ["let taps = [];", 0, "<code>taps</code> collects a moment from every tap, so it has to outlive each call."],
+        ["let gap = taps[i] - taps[i - 1];", 1, "<code>gap</code> belongs to one tap. It's worked out fresh each time."],
+        ["let rate = 1000 / gap;", 1, "Like <code>gap</code>, it's about this one tap only."],
+        ["let swipe = [];", 0, "Same as <code>taps</code>: it collects positions across several key presses."],
+        ["let position = row.indexOf(event.key);", 1, "Each key press has its own position. Nothing to remember."],
+        ["const row = [\"q\", \"w\", \"e\", …];", 0, "It never changes, and every function uses it: make it once, at the top."]
+      ], ["At the top", "Inside the function"], "Ask: does this value have to survive from one key press to the next?");
+
+      /* ---------- taking an object apart ---------- */
+      (function () {
+        code($("#de-old"), 'function keyDown(event) {\n  let key = event.key;\n  let repeat = event.repeat;\n}');
+        var NEW = 'function keyDown(event) {\n  const { key, repeat } = event;\n}\n\nlet settings = { tempo: 90, note: "C4" };\nconst { tempo } = settings;  // 90';
+        code($("#de-new"), NEW);
+        var P = pad($("#de-pad"), IDLE, LIVE);
+        function show(e) {
+          var ev = e ? { type: "keydown", key: e.key, repeat: e.repeat, code: e.code } : { type: "keydown", key: "a", repeat: false, code: "KeyA" };
+          $("#de-obj").innerHTML = '<div class="obj"><div class="on">event</div>' + Object.keys(ev).map(function (k) {
+            return '<div class="pr' + (k === "key" || k === "repeat" ? " hi" : "") + '"><span class="pk">' + k + '</span><span class="pv">' + esc(JSON.stringify(ev[k])) + '</span></div>';
+          }).join("") + '</div>';
+          $("#de-vars").innerHTML = '<div class="small muted" style="margin-bottom:6px">' + (e ? "inside keyDown, for this key press:" : "after a key press, inside keyDown:") + '</div><div class="vars"><span class="vr flash">key: ' + esc(JSON.stringify(ev.key)) + '</span><span class="vr flash">repeat: ' + ev.repeat + '</span></div>';
+        }
+        capture($("#de-pad"), function (e) { P.show(e.key); show(e); code($("#de-new"), NEW, [1]) });
+        show();
+      })();
+
+      /* ---------- what comes out? ---------- */
+      var DC_SRC = 'let sound = {\n  note: "E4",\n  duration: "8n",\n  velocity: 0.5\n};\n\nconst { note } = sound;\nconst { duration, velocity } = sound;\nconst { volume } = sound;\n\nfunction keyDown(event) {\n  const { key } = event;\n}';
+      code($("#dc-code"), DC_SRC);
+      (function () {
+        var Q = [
+          { q: "<code>note</code> is", c: ['"E4"', '{ note: "E4" }', "undefined"], a: 0, ok: "A plain string, pulled out of the object.", hint: "The braces are on the left of the =. They say which label to pull out, not to make an object.", l: [6] },
+          { q: "<code>velocity</code> is", c: ['"8n"', "0.5", "undefined"], a: 1, ok: "Two names in the braces make two variables, each matched by label.", hint: "Variables are matched by label, not by position. Which label is velocity?", l: [7] },
+          { q: "<code>volume</code> is", c: ["0", "undefined", "an error"], a: 1, ok: "There's no volume label on sound, so there's nothing to pull out. No error, so a typo here goes quiet.", hint: "Look for a volume label on sound. What does reading a missing property give?", l: [8] },
+          { q: "<code>key</code> can be used", c: ["anywhere in the file", "only inside keyDown"], a: 1, ok: "It's made inside keyDown's braces, fresh for each key press.", hint: "Where is the line that makes key? Think back to gap.", l: [11] }
+        ], done = 0;
+        Q.forEach(function (q) {
+          var row = document.createElement("div");
+          row.innerHTML = '<span class="q">' + q.q + '</span><span class="ch"></span>';
+          var ch = row.querySelector(".ch"), answered = false;
+          q.c.forEach(function (c, j) {
+            var b = document.createElement("button"); b.className = "chip"; b.textContent = c;
+            b.addEventListener("click", function () {
+              code($("#dc-code"), DC_SRC, q.l);
+              if (answered) return;
+              if (j === q.a) { b.classList.add("right"); answered = true; done++; fb($("#dc-fb"), "pass", "Correct. " + q.ok + (done === Q.length ? " That's all of them." : "")) }
+              else { b.classList.add("wrong"); fb($("#dc-fb"), "note", q.hint) }
+            });
+            ch.appendChild(b);
+          });
+          $("#dc").appendChild(row);
+        });
       })();
 
       /* ---------- 18 describe a swipe ---------- */
