@@ -42,13 +42,6 @@
     ol.plain.tasks{padding:0}
     ol.plain.tasks li{font-size:17px;padding:5px 0;line-height:1.4}
 
-    /* describe it in words */
-    .words{display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start;min-height:150px}
-    .word{font-family:var(--font-ui);font-size:20px;font-weight:500;padding:6px 14px;border:2px solid var(--ink-900);border-radius:999px;background:var(--paper-000);color:var(--ink-900);box-shadow:2px 2px 0 var(--ink-900);transition:background .2s}
-    .word.mine{border-style:dashed}
-    .word.hit{background:var(--spot-400)}
-    .word.dim{color:var(--ink-300);border-color:var(--paper-400);box-shadow:none}
-
     /* three ways to store it */
     table.reps td{font-family:var(--font-ui);font-size:19px;padding:10px;vertical-align:middle}
     table.reps td.val{font-family:var(--font-mono);font-size:18px;font-weight:700}
@@ -212,26 +205,15 @@
       </section>
 
       <!-- 05 DESCRIBE IT -->
-      <section class="slide" id="describe-tap" data-sec="From the world to data" data-ex="Describe it in words">
-        <span class="turn">Your turn</span>
+      <section class="slide" id="describe-tap" data-sec="From the world to data">
         <div class="billing">From the world to data · In words first</div>
         <hr class="rule">
-        <h2 class="h1 tight">Describe it in words first</h2>
-        <div class="cols wide-l">
-          <div class="stack">
-            <p class="prompt">Someone taps a key quickly, several times. What happens?</p>
-            <div class="row">
-              <input class="t grow" id="dw-in" type="text" maxlength="40" placeholder="a word or two" aria-label="Your words" style="font-family:var(--font-ui);width:auto">
-              <button class="btn" id="dw-add">Add it</button>
-            </div>
-            <div class="words" id="dw-words"></div>
-          </div>
-          <div class="stack">
-            <div class="row"><button class="btn alt" id="dw-find">Find the measurable thing</button><button class="btn ghost" id="dw-clear">Clear mine</button></div>
-            <p class="dir" id="dw-dir">Say it out loud first. Then add your own words: they appear with a dashed outline.</p>
-          </div>
+        <h2 class="h1">Describe it in words first</h2>
+        <div class="rows lab big">
+          <div><span class="num">01</span><span class="tx">Someone taps a key quickly, several times. <b>What happens?</b> Plain words, no code.</span></div>
+          <div><span class="num">02</span><span class="tx">Look at your words. <b>Which of them could you measure?</b></span></div>
         </div>
-        <aside class="nt">About five minutes. Ask the room, out loud and in plain language: what actually happens when someone taps a key quickly several times? Collect their words on the board; students can add their own on their laptops. The chips already on the slide are the words people say every year. Then press Find the measurable thing: the words about time light up. "Close together" is already pointing at data: close together in time. We haven't written any code, but we've found the thing worth capturing. That move, plain description first and then spotting the measurable thing inside it, is what we do twice today.</aside>
+        <aside class="nt">About five minutes, all out loud. Ask question 1 and collect the room's words on the whiteboard. Every year people say things like "fast", "lots of times", "close together", "again and again", "one after another". Then ask question 2: which of these words could you measure? Circle them. Lead towards time: "fast", "close together" and "one after another" are all about time. "Close together" is already pointing at data: close together in time. We haven't written any code, but we've found the thing worth capturing. That move, plain description first and then spotting the measurable thing inside it, is what we do twice today.</aside>
       </section>
 
       <!-- 06 THE CHOICE -->
@@ -1022,39 +1004,6 @@
           box.appendChild(row);
         });
       }
-
-      /* ---------- 05 describe it in words ---------- */
-      (function () {
-        var SEED = ["fast", "lots of times", "close together", "the same key", "again and again", "one after another"];
-        var TIME = /fast|quick|close|rapid|rhythm|after|time|speed|slow|second|apart|often|gap|pause|tempo|beat|hurr|frantic/i;
-        var mine = [], found = false;
-        try { mine = JSON.parse(sget("words") || "[]") } catch (e) { mine = [] }
-        if (!Array.isArray(mine)) mine = [];
-        function render() {
-          var box = $("#dw-words"); box.innerHTML = "";
-          SEED.map(function (w) { return [w, false] }).concat(mine.map(function (w) { return [w, true] })).forEach(function (w) {
-            var s = document.createElement("span");
-            var hit = TIME.test(w[0]);
-            s.className = "word" + (w[1] ? " mine" : "") + (found ? (hit ? " hit" : " dim") : "");
-            s.textContent = w[0]; box.appendChild(s);
-          });
-        }
-        function add() {
-          var v = $("#dw-in").value.trim();
-          if (!v) return;
-          if (mine.length >= 8) mine.shift();
-          mine.push(v); sset("words", JSON.stringify(mine)); $("#dw-in").value = ""; render();
-        }
-        $("#dw-add").addEventListener("click", add);
-        $("#dw-in").addEventListener("keydown", function (e) { e.stopPropagation(); if (e.key === "Enter") add() });
-        $("#dw-find").addEventListener("click", function () {
-          found = !found; render();
-          this.textContent = found ? "Show all words" : "Find the measurable thing";
-          $("#dw-dir").innerHTML = found ? "Fast, close together, one after another: they're all about <b>time</b>. Close together <i>in time</i>. Time is something we can measure, and a program can hold." : "Say it out loud first. Then add your own words: they appear with a dashed outline.";
-        });
-        $("#dw-clear").addEventListener("click", function () { mine = []; sset("words", "[]"); render() });
-        render();
-      })();
 
       /* ---------- 06 three ways to store it ---------- */
       (function () {
