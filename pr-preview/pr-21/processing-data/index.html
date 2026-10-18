@@ -162,7 +162,7 @@
         <div style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
           <div class="m" style="font-size:17px;color:var(--ink-200)">KD402D Programming · Processing data · Mon 19 Oct</div>
         </div>
-        <aside class="nt">10:15. Welcome back. Keys: arrows to move, I for the slide index, N for these notes, E to jump to the next exercise. Students open the same link on their laptops: every "Your turn" slide works on its own screen, and today's code runs in the editors on the slides (VS Code is for the afternoon exercises). Headphones: there is a little sound. The one-line plan: this lecture is hard every year, and the hard part isn't the syntax. It's the leap from "a person is doing a thing" to "here is the data that stands for that thing." We take that leap slowly, twice.</aside>
+        <aside class="nt">10:15. Welcome back. Keys: arrows to move, I for the slide index, N for these notes, E to jump to the next exercise. Students open the same link on their laptops: every "Your turn" slide works on its own screen, and today's code runs in the editors on the slides (VS Code is for the afternoon exercises). The one-line plan: this lecture is hard every year, and the hard part isn't the syntax. It's the leap from "a person is doing a thing" to "here is the data that stands for that thing." We take that leap slowly, twice.</aside>
       </section>
 
       <!-- 02 RUNNING ORDER -->
@@ -179,7 +179,7 @@
           <div><span class="num">06</span><span class="nm">Wrap-up<small>The one move we made twice, and what's next</small></span></div>
         </div>
         <p class="dir" style="margin-top:16px">A break after the first example.</p>
-        <aside class="nt">Timings for you only (not on the slide): framing 10:15–10:30, Example 1 10:30–11:00, break 11:00–11:10, where variables live 11:10–11:25, Example 2 11:25–11:47, describe-then-represent activity 11:47–11:55 (eight minutes, down from the plan's fifteen to make room for scope and destructuring), wrap-up 11:55–12:00. The framing section has no code at all. Code starts in Example 1, after "a tap is a moment in time" has been motivated.</aside>
+        <aside class="nt">Timings for you only (not on the slide): framing 10:15–10:30, Example 1 10:30–11:00, break 11:00–11:10, where variables live 11:10–11:25, Example 2 11:25–11:40 (shortened: describe a swipe, position from the row array, predict), describe-then-represent activity 11:40–11:55, wrap-up 11:55–12:00. The framing section has no code at all. Code starts in Example 1, after "a tap is a moment in time" has been motivated.</aside>
       </section>
 
       <!-- 03 OBJECTIVES -->
@@ -472,7 +472,7 @@
           <h2 class="hero md">Why is taps at the top?</h2>
           <p class="lede">In the tap code, <code>taps</code> sits above the function and <code>gap</code> sits inside it. Where a variable is made decides how long it lasts, and who can see it.</p>
         </div>
-        <aside class="nt">11:10, about fifteen minutes for this section, before the swipe. These two ideas were moved here from Friday's Objects lecture, and the tap code we just wrote is the reason they matter: one variable has to remember every tap, the other only matters for one tap. Scope first, then destructuring as its first payoff. Timing knock-on: Example 2 runs 11:25–11:47 and the paper activity gets eight minutes instead of fifteen.</aside>
+        <aside class="nt">11:10, about fifteen minutes for this section, before the swipe. These two ideas were moved here from Friday's Objects lecture, and the tap code we just wrote is the reason they matter: one variable has to remember every tap, the other only matters for one tap. Scope first, then destructuring as its first payoff. Timing knock-on: Example 2 is shortened to 11:25–11:40, so the paper activity keeps its fifteen minutes.</aside>
       </section>
 
       <!-- WHY FORGET -->
@@ -579,7 +579,7 @@
         <p class="lede" style="margin-bottom:8px">For each variable from today's code: does it need to remember between key presses?</p>
         <div class="rows quiz sw" id="sk"></div>
         <div class="fb" id="sk-fb" style="margin-top:10px"></div>
-        <aside class="nt">One question decides it: does this value have to survive from one key press to the next? taps and swipe collect across many presses, so they live at the top. gap, rate and position are worked out fresh for each press, so they live inside the function. row never changes; it could live in either place, but it belongs at the top so it's made once and every function can use it. The swipe preview is deliberate: swipe is the same idea as taps.</aside>
+        <aside class="nt">One question decides it: does this value have to survive from one key press to the next? taps and swipe collect across many presses, so they live at the top. gap, rate and position are worked out fresh for each press, so they live inside the function. row never changes; it could live in either place, but it belongs at the top so it's made once and every function can use it. swipe is a preview: it comes back in the afternoon exercises, and it is the same idea as taps.</aside>
       </section>
 
       <!-- DESTRUCTURING -->
@@ -695,68 +695,6 @@
         <aside class="nt">Predict before the demo, on laptops first. q is at 0 and p at 9, so moving from q towards p the positions climb. Right to left, they fall. That's the whole trick: direction is whether the positions rise or fall.</aside>
       </section>
 
-      <!-- 21 RISING OR FALLING -->
-      <section class="slide" id="swipe-live" data-sec="Example 2: swiping across the keys" data-demo="Rising or falling">
-        <span class="turn try">Try it</span>
-        <div class="billing">Example 2: swiping across the keys · Which way</div>
-        <hr class="rule">
-        <h2 class="h1 tight">Rising or falling?</h2>
-        <div class="cols wide-r">
-          <div class="stack">
-            <div class="panel">
-              <div class="bar"><span>when the swipe ends</span></div>
-              <pre class="code" id="sl-code" style="font-size:16px"></pre>
-            </div>
-            <p class="dir" style="font-size:19px">Only the first and the last position: real swipes double keys and skip them, but where it started and where it ended still say which way.</p>
-          </div>
-          <div class="stack">
-            <div id="sl-row"></div>
-            <div><div class="small muted" style="margin-bottom:6px">swipe: the positions, in the order they came</div><div class="line sm" id="sl-line"></div></div>
-            <div class="verdict" id="sl-v"></div>
-          </div>
-        </div>
-        <aside class="nt">Click the row, then drag a finger along the top row of the keyboard, one way and then the other. As each key comes in, its position is pushed onto swipe. When a key comes up, the swipe ends: compare the first and last position. Last bigger than first: left to right, and it plays a rising phrase. Smaller: right to left, falling. This is exactly the "look at how consecutive values change" move from the gaps, on position instead of time. Real drags often press two keys at once or skip one: keep that as a talking point (real input is noisy), not a bug to fix live. If you lift your finger between keys, every key is a swipe of one: nothing to compare. The afternoon code ends a swipe the same way, at the first key that comes up.</aside>
-      </section>
-
-      <!-- 22 REAL INPUT IS NOISY -->
-      <section class="slide" id="messy" data-sec="Example 2: swiping across the keys" data-ex="Which way did it go?">
-        <span class="turn">Your turn</span>
-        <div class="billing">Example 2: swiping across the keys · Noisy input</div>
-        <hr class="rule">
-        <h2 class="h1 tight">Real input is noisy</h2>
-        <p class="lede" style="margin-bottom:8px">Six real swipes. For each one: what does comparing the first and the last position say?</p>
-        <div class="rows quiz sw" id="ms"></div>
-        <div class="fb" id="ms-fb" style="margin-top:10px"></div>
-        <aside class="nt">Students work through these on their own laptops; then go through the last two together. Doubled keys (1, 1) and skipped keys (from 4 to 6) don't change the answer: first and last still say which way. One key on its own has no direction. The last two are the talking points: 0, 1, 2, 3, 2, 1, 0 ends where it started, so first and last say neither, though the finger clearly moved. And 1, 2, 3, 4, 3, 2 says left to right, though the finger came back most of the way. First-and-last is a choice: simple and good enough for today, and blind to turning around. The purple track this afternoon handles swipes that turn around.</aside>
-      </section>
-
-      <!-- 23 SWIPE IN CODE -->
-      <section class="slide" id="swipe-code" data-sec="Example 2: swiping across the keys" data-demo="Swipe direction in code">
-        <span class="turn try">Try it</span>
-        <div class="billing">Example 2: swiping across the keys · All together</div>
-        <hr class="rule">
-        <h2 class="h1 tight">Swipe direction, all together</h2>
-        <div class="cols wide-l pg" style="flex:1;min-height:0">
-          <div class="panel">
-            <div class="bar"><span>swipe.js</span><span>Ctrl / ⌘ + Enter runs</span></div><textarea class="code-ed pg-ed" id="sc-ed" spellcheck="false" aria-label="Code editor"></textarea>
-          </div>
-          <div class="stack" style="gap:10px">
-            <div class="row"><button class="btn" id="sc-run">Run</button><button class="btn ghost" id="sc-reset">Reset</button></div>
-            <div class="pad" id="sc-pad" tabindex="0" aria-label="Keyboard pad"></div>
-            <div class="panel">
-              <div class="bar y"><span>console</span></div>
-              <div class="console con-s" id="sc-con" style="max-height:120px;min-height:80px"></div>
-            </div>
-            <ol class="plain tasks">
-              <li>Predict, then swipe q to p, and p to q. Which line runs?</li>
-              <li>Why does <code>swipe = []</code> come at the end of <code>keyUp</code>?</li>
-              <li>Swipe slowly, lifting your finger. What happens, and why?</li>
-            </ol>
-          </div>
-        </div>
-        <aside class="nt">The whole of Example 2 in one program: the row, the swipe list, push on keydown, compare first and last on keyup. Run it, click the pad, drag along the top row. Task 2: so the next swipe starts fresh; without it, every swipe would start where the very first one did. Task 3: a swipe ends at the first keyup, so lifting between keys makes swipes of one key, and nothing plays. That's a choice too, and slow swipes break it. The afternoon's block 3 builds this up step by step.</aside>
-      </section>
-
       <!-- 24 THE SHARED SHAPE -->
       <section class="slide" id="quiz-shape" data-sec="Example 2: swiping across the keys" data-ex="The shared shape">
         <span class="turn">Your turn</span>
@@ -815,7 +753,7 @@
             <p class="dir" style="font-size:20px">On paper, no code. Then compare with a neighbour: did you choose the same thing to store?</p>
           </div>
         </div>
-        <aside class="nt">11:47, eight minutes (the plan's fifteen, shortened for the scope section). Students pick an action (their own, or from the list) and work the four steps on paper. No code in this activity: fifteen minutes is only enough for the representation thinking, and that's the point. After about five minutes, pairs compare: did you choose the same representation? Different choices are the interesting part: ask a pair who chose differently to explain both. The next slide has an optional card for anyone who'd rather type; it's saved in their own browser only. Their action comes back as block 4 this afternoon.</aside>
+        <aside class="nt">11:40, fifteen minutes. Students pick an action (their own, or from the list) and work the four steps on paper. No code in this activity: fifteen minutes is only enough for the representation thinking, and that's the point. After about ten minutes, pairs compare: did you choose the same representation? Different choices are the interesting part: ask a pair who chose differently to explain both. The next slide has an optional card for anyone who'd rather type; it's saved in their own browser only. Their action comes back as block 4 this afternoon.</aside>
       </section>
 
       <!-- 26 THE CARD -->
@@ -847,7 +785,7 @@
           <div class="billing">Wrap-up</div>
           <h2 class="hero md">Describe it. Store a list. Watch it change.</h2>
           <p class="lede">Plain words first, then the measurable thing inside them, then a list of it, then the change from one value to the next.</p>
-          <div class="terms" style="max-width:740px"><span>Date.now()</span><span>taps.push(…)</span><span>event.repeat</span><span>taps[i] - taps[i - 1]</span><span>1000 / gap</span><span>row.indexOf(key)</span><span>swipe[0]</span><span>swipe[swipe.length - 1]</span><span>const { key } = event</span></div>
+          <div class="terms" style="max-width:740px"><span>Date.now()</span><span>taps.push(…)</span><span>event.repeat</span><span>taps[i] - taps[i - 1]</span><span>1000 / gap</span><span>row.indexOf(key)</span><span>const { key } = event</span></div>
         </div>
         <aside class="nt">11:55. Summarise the one transferable skill: describe the real thing in plain words, find the measurable thing inside it, choose a data structure to hold a list of it, then look at how each value changes from the one before. Taps: moments, then gaps. Swipe: positions, then rising or falling. Both times, the representation was a choice we made, and we checked it against the real action (held keys, noisy swipes). And in between: a variable made inside braces is made fresh each call, so anything that must remember between events lives at the top; const { key } = event takes an object apart into plain variables. Back to the six objectives.</aside>
       </section>
@@ -877,7 +815,6 @@
 
   <script src="../shared/deck.js"></script>
   <script src="../shared/workspace.js"></script>
-  <script src="../shared/vendor/tone.min.js"></script>
   <script>
     (function () {
       "use strict";
@@ -887,16 +824,6 @@
 
       /* ============ sound helpers ============ */
       function audioOn() { try { if (T && T.getContext().state !== "running") T.start() } catch (e) { } }
-      var synthObj = null;
-      function syn() {
-        if (!T) return null;
-        if (!synthObj) { synthObj = new T.PolySynth(T.Synth).toDestination(); synthObj.volume.value = -10 }
-        return synthObj;
-      }
-      function playAt(note, dur, later) {
-        audioOn(); var s = syn(); if (!s || !note) return;
-        try { s.triggerAttackRelease(note, dur || "16n", T.now() + (later || 0)) } catch (e) { }
-      }
 
       /* ============ a row of boxes (an array) ============
          Shows the last `max` values; a dashed box counts the ones before. */
@@ -1405,60 +1332,12 @@
         ["They stay the same", false, "Each key in a swipe is a different key, at a different place in the row. Look up q and then w."]
       ]);
 
-      /* ---------- 21 rising or falling ---------- */
-      (function () {
-        var SRC = 'let first = swipe[0];\nlet last = swipe[swipe.length - 1];\n\nif (last > first) {\n  console.log("left to right");\n} else if (last < first) {\n  console.log("right to left");\n}\nswipe = [];';
-        var swipe = [], keys = [], ended = false;
-        code($("#sl-code"), SRC);
-        function render() { lineView($("#sl-line"), swipe, { max: 8, idx: false }) }
-        function verdict(t) { var v = $("#sl-v"); v.innerHTML = t; v.classList.remove("flashbg"); void v.offsetWidth; v.classList.add("flashbg") }
-        var K = keyRow($("#sl-row"), {
-          idle: "<b>Click the row</b>, then drag a finger along q to p.", live: "<b>Listening.</b> Drag a finger along the top row. Esc to stop.",
-          down: function (e) {
-            if (e.repeat) return;
-            if (ended) { swipe = []; keys = []; ended = false; K.clear(); verdict(""); code($("#sl-code"), SRC) }
-            var k = e.key.length === 1 ? e.key.toLowerCase() : e.key, p = ROW.indexOf(k);
-            if (p === -1) return;
-            swipe.push(p); keys.push(k); K.set(k, "on", true); render();
-          },
-          up: function (e) {
-            var k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
-            K.set(k, "on", false); K.set(k, "was", true);
-            if (ended || !swipe.length) return;
-            ended = true;
-            if (swipe.length < 2) { verdict("One key: nothing to compare."); code($("#sl-code"), SRC, [8]); return }
-            var first = swipe[0], last = swipe[swipe.length - 1];
-            if (last > first) { verdict("left to right · " + first + " → " + last); code($("#sl-code"), SRC, [3, 4]); ["C4", "E4", "G4"].forEach(function (n, i) { playAt(n, "16n", i * 0.12) }) }
-            else if (last < first) { verdict("right to left · " + first + " → " + last); code($("#sl-code"), SRC, [5, 6]); ["G4", "E4", "C4"].forEach(function (n, i) { playAt(n, "16n", i * 0.12) }) }
-            else { verdict("Started and ended at " + first + ": neither."); code($("#sl-code"), SRC, [0, 1]) }
-          }
-        });
-        render();
-      })();
-
-      /* ---------- 22 real input is noisy ---------- */
-      (function () {
-        function keysOf(p) { return p.map(function (i) { return ROW[i] }).join(" ") }
-        var S = [
-          [[0, 1, 1, 3, 4, 6], 0, "A doubled key and a skipped one, but it starts at 0 and ends at 6."],
-          [[9, 7, 7, 6, 4, 3], 1, "From 9 down to 3. The doubled 7 changes nothing."],
-          [[2, 3, 2, 4, 5], 0, "It wobbled back once, but 2 to 5 is still left to right."],
-          [[4], 2, "One key on its own: nothing to compare it with."],
-          [[0, 1, 2, 3, 2, 1, 0], 2, "It ends where it started, so first and last say neither, though the finger clearly moved. First and last can't see a turn."],
-          [[1, 2, 3, 4, 3, 2], 0, "First and last say left to right, but the finger came back most of the way. Simple, and blind to turning around."]
-        ];
-        quiz($("#ms"), $("#ms-fb"), S.map(function (s) { return ["[" + s[0].join(", ") + "]<span>" + keysOf(s[0]) + "</span>", s[1], s[2]] }), ["Left to right", "Right to left", "Neither"], "Only two numbers matter: the first and the last. Which is bigger?");
-      })();
-
-      /* ---------- 23 swipe direction in code ---------- */
-      playground("sc", '// ---------- State ----------\nconst row = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"];\nlet swipe = [];\n\n// ---------- Controls ----------\nfunction keyDown(event) {\n  if (event.repeat === false) {\n    let position = row.indexOf(event.key);\n    if (position !== -1) {\n      swipe.push(position);\n      console.log(swipe);\n    }\n  }\n}\n\nfunction keyUp(event) {\n  if (swipe.length > 1) {\n    let first = swipe[0];\n    let last = swipe[swipe.length - 1];\n    if (last > first) {\n      console.log("left to right");\n    } else if (last < first) {\n      console.log("right to left");\n    }\n  }\n  swipe = [];\n}\n\n// ---------- Setup ----------\nwindow.addEventListener("keydown", keyDown);\nwindow.addEventListener("keyup", keyUp);\n');
-
       /* ---------- 24 the shared shape ---------- */
       mcq($("#qs-opts"), $("#qs-fb"), [
         ["Both store the names of the keys", false, "The taps store moments, not key names. Look at the \"stored\" line in each."],
         ["Both capture a list of events, then look at how each value changes from the one before", true, "Correct. Taps: the change is the gap in time. Swipe: the change is the step in position. Same shape, different measurable thing."],
         ["Both use <code>Date.now()</code>", false, "Only the taps need the time. The swipe stores positions from <code>row.indexOf</code>."],
-        ["Both need a loop that starts at 0", false, "The gaps loop starts at 1, and the swipe only looks at the first and last. Look at the \"change\" line in each."]
+        ["Both need a loop that starts at 0", false, "The gaps loop starts at 1, so not even the taps do. Look at the \"change\" line in each."]
       ]);
 
       /* ---------- 26 the activity card ---------- */
