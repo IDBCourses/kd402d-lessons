@@ -164,12 +164,12 @@
         <h2 class="h1 tight">What A3 asks for</h2>
         <div class="rows lab mid">
           <div><span class="num">01</span><span class="tx"><b>The pointer shapes the sound.</b> Pointer events, and the pointer's position and movement keep changing the sound: pitch, volume, filter, tempo.</span></div>
-          <div><span class="num">02</span><span class="tx"><b>One more layer.</b> Keys that trigger or switch the sound, <em>or</em> shapes on the page that move with the pointer's movement.</span></div>
+          <div><span class="num">02</span><span class="tx"><b>Shapes that follow the movement.</b> Visual elements on the page whose behaviour comes from how the pointer moves over time.</span></div>
           <div><span class="num">03</span><span class="tx"><b>Data processed over time.</b> Speed, direction, distance travelled, where it has been. Not one reading.</span></div>
-          <div><span class="num">04</span><span class="tx"><b>Required in the code:</b> an object or an array, a loop, a <code>const</code>, an event handler. Settings and state; setup, update and use.</span></div>
-          <div><span class="num">05</span><span class="tx"><b>Only JavaScript and Tone.js.</b> No other libraries, no CSS transitions or animations. Runs without errors.</span></div>
+          <div><span class="num">04</span><span class="tx"><b>In the code, at least:</b> an object or an array, a loop, a <code>const</code>, an event handler. Settings and state; setup, update and use.</span></div>
+          <div><span class="num">05</span><span class="tx"><b>JavaScript, Tone.js and shape.js.</b> No other libraries, no CSS transitions or animations. Editing the HTML and CSS is allowed, not needed.</span></div>
         </div>
-        <aside class="nt">The brief in five rows. Stress 03: it's the one people miss. 02: no visuals are required; if you take the keyboard path, a plain page that makes sound is a complete submission. 05: "runs without errors" means locally and on the github.io page, so check the console on the live page before you hand in.</aside>
+        <aside class="nt">The brief in five rows, from the updated A3 page. Stress 03: it's the one people miss, and it applies to the visuals in 02 too: a shape that sits where the pointer is doesn't count, a shape whose size, colour or motion comes from speed or direction does. 05: shape.js is the second allowed library, and everything moving is done in JavaScript. They may edit index.html and style.css if they already know how, but the project can be done without it. The program must run without errors locally and on the github.io page, so check the console on the live page before handing in.</aside>
       </section>
 
       <!-- 08 ONE READING OR OVER TIME -->
@@ -232,17 +232,43 @@
         <h2 class="h1 tight">Due Monday 2 November, 17:00</h2>
         <div class="cols">
           <div class="rows lab mid">
-            <div><span class="num">01</span><span class="tx"><b>Your own repo,</b> made from the A3 template. Same files as A1: <code>script.js</code>, <code>index.html</code>, <code>style.css</code>, plus <code>shape.js</code>.</span></div>
+            <div><span class="num">01</span><span class="tx"><b>Your repo,</b> made for you by David. Same files as A1: <code>script.js</code>, <code>index.html</code>, <code>style.css</code>, plus <code>shape.js</code>.</span></div>
             <div><span class="num">02</span><span class="tx"><b>A README</b> that says how to play it: what the pointer does, and which keys do what.</span></div>
             <div><span class="num">03</span><span class="tx"><b>The A2 oral exam</b> asks about this code. Understand every line you hand in.</span></div>
           </div>
           <div class="rows lab mid">
             <div><span class="num">04</span><span class="tx"><b>Code on Canvas:</b> a <code>.zip</code> of <code>main</code>, and the link to your github.io page.</span></div>
-            <div><span class="num">05</span><span class="tx"><b>A reflection on Canvas:</b> a <code>.pdf</code>, 250 words (±10%). What it does, which concepts you used, what was hard.</span></div>
+            <div><span class="num">05</span><span class="tx"><b>A reflection on Canvas:</b> a <code>.pdf</code>, 250 words (±10%), on one moment your code talked back. What? So what? Now what?</span></div>
             <div><span class="num">06</span><span class="tx"><b>Stuck?</b> The debugging checklist first, then a classmate, then a TA or David.</span></div>
           </div>
         </div>
-        <aside class="nt">The practical side. It's individual: one repo each, made from the A3 template in the course GitHub organisation. No pull-request reviews needed this time, but keep committing small and often and pushing to GitHub. The link to the live page goes in the Canvas submission comment and at the top of the README. 03 matters: the oral exam examines this code, so don't hand in a line you can't explain. Due Monday 2 November at 17:00.</aside>
+        <aside class="nt">The practical side. It's individual: one repo each, which you make for them (next slide). No pull-request reviews needed this time, but keep committing small and often and pushing to GitHub. The link to the live page goes in the Canvas submission comment and at the top of the README. 03 matters: the oral exam examines this code, so don't hand in a line you can't explain. 05: the reflection works like the A1 individual reflection: one specific moment when the code talked back (the flood of pointermove events, the jittery speed, the silence until a click, the mapping that works but feels wrong), with evidence, through What? So what? Now what? Not a list of what the program does. Due Monday 2 November at 17:00.</aside>
+      </section>
+
+      <!-- 12 YOUR REPO -->
+      <section class="slide" id="your-repo" data-sec="A3: Functional Prototype">
+        <div class="billing">A3: Functional Prototype · Your repo</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Don't make a new repo</h2>
+        <p class="lede">David makes a repo for each of you on GitHub, in the IDBCourses organisation, named with your MAU ID. All of your A3 work happens there.</p>
+        <div class="cols">
+          <div class="rows lab mid">
+            <div><span class="num">01</span><span class="tx"><b>Find it</b> on GitHub under IDBCourses: the repo with your MAU ID in its name.</span></div>
+            <div><span class="num">02</span><span class="tx"><b>Clone it</b> in VS Code, the same way as your A1 repo.</span></div>
+            <div><span class="num">03</span><span class="tx"><b>Commit and push</b> to that repo only. That's what we look at.</span></div>
+          </div>
+          <div class="panel">
+            <div class="bar m"><span>don't</span></div>
+            <ol class="plain">
+              <li>× Make a new repo of your own</li>
+              <li>× Fork the A3 template</li>
+              <li>× Click "Use this template" on GitHub</li>
+              <li>× Work in your A1 group repo</li>
+            </ol>
+          </div>
+        </div>
+        <p class="small muted" style="margin-top:14px">Can't find yours, or can't push to it? Tell David or a TA. Don't make a new one to get started.</p>
+        <aside class="nt">Say it plainly and say it twice: nobody makes their own A3 repo. You create one for each student in the IDBCourses organisation, named with their MAU ID, already set up from the A3 template. They clone that one and push to it; that's the repo you'll look at when grading and in the oral exam. A repo they made themselves (a new repo, a fork, "Use this template") is outside the organisation and won't be seen. If someone already made one, they copy their script.js into the right repo and carry on there.</aside>
       </section>
 
       <!-- 12 BREAK -->
@@ -267,7 +293,7 @@
         <div class="inner">
           <div class="billing">Guided build with shape.js</div>
           <h2 class="hero md">A shape that sounds when you touch it.</h2>
-          <p class="lede">Five steps, in your own A3 repo. Each step works before we go on to the next.</p>
+          <p class="lede">Five steps, in your A3 repo. Each step works before we go on to the next.</p>
         </div>
         <aside class="nt">11:15–11:50. Everyone codes along in VS Code, in script.js of their own A3 repo, with the page open and the console showing. You type on the projector, they type with you. Each step slide has a pad that does what the code should do: show it first so they know what they're aiming for. Pause after every step until most hands say it works. When something breaks on your screen (it will), read the console out loud before fixing it.</aside>
       </section>
