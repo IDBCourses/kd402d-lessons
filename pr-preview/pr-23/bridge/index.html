@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Bridge workshop: from A1 to A3 · KD402D Programming</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/deck.css">
+  <style>
+    /* styles used only by this lecture */
+    .order>div{grid-template-columns:72px 1fr;align-items:center;padding:8px 0}
+    .order .nm{font-size:23px;color:var(--ink-900);font-weight:500}
+    .order .nm small{display:block;font-size:16px;color:var(--ink-500);font-weight:400}
+    .h1.tight{margin-bottom:14px}
+    .lab .tx code{background:var(--spot-200);color:var(--ink-900);padding:0 4px;border-radius:2px}
+    .lab.mid>div{padding:10px 0}
+    .lab.mid .tx{font-size:21px;line-height:1.4}
+    .lab.mid .tx b{color:var(--ink-900)}
+    pre.code.xs{font-size:15px;line-height:1.55;padding:10px 14px}
+
+    /* a pad with one shape on it, like the page in the A3 template */
+    .spad{position:relative;border:2px dashed var(--ink-300);background:var(--paper-200);border-radius:2px;overflow:hidden;touch-action:none;height:210px;user-select:none;-webkit-user-select:none}
+    .spad.tall{height:260px}
+    .spad .blob{position:absolute;left:50%;top:50%;width:120px;height:120px;transform:translate(-50%,-50%);border:2px solid var(--ink-900);border-radius:50%;box-shadow:3px 3px 0 var(--ink-900);background:hsl(200,80%,50%);cursor:pointer}
+    .spad .hint{position:absolute;left:12px;bottom:8px;font-size:15px;color:var(--ink-500);pointer-events:none}
+    .con-s{font-size:15px;line-height:1.5;min-height:0;height:106px;overflow:hidden;padding:8px 14px}
+
+    /* sliders for step 1 */
+    .sl{display:grid;grid-template-columns:150px 1fr 54px;gap:12px;align-items:center;font-size:17px;color:var(--ink-900)}
+    .sl input{accent-color:var(--curtain-600);width:100%}
+    .sl .v{font-family:var(--font-mono);font-weight:700;font-size:16px;text-align:right}
+    .sl .m{font-size:15px}
+
+    /* the pointer events, one row each */
+    .evs>div{grid-template-columns:180px 1fr 64px;gap:16px;padding:8px 6px;align-items:center}
+    .evs .en{font-family:var(--font-mono);font-weight:700;font-size:17px;color:var(--ink-900)}
+    .evs .ed{font-size:17px;color:var(--ink-700);line-height:1.35}
+    .evs .ct{font-family:var(--font-mono);font-weight:700;font-size:20px;color:var(--ink-900);text-align:right;font-variant-numeric:tabular-nums}
+    .evs .on{animation:flashlite .6s ease}
+
+    /* one reading or over time */
+    .quiz.ot>div{grid-template-columns:1fr 290px;padding:8px 0}
+    .quiz.ot .sc{font-size:19px;color:var(--ink-900)}
+    .quiz.ot .chip{font-size:14px;padding:6px 12px}
+
+    /* speed meter */
+    .meter{height:28px;border:2px solid var(--ink-900);background:var(--paper-000);border-radius:2px;position:relative;overflow:hidden}
+    .meter i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--spot-400);border-right:2px solid var(--ink-900)}
+    .meter.vol i{background:var(--cyan-400)}
+    .mlab{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:14px;font-weight:700;color:var(--ink-500);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
+    .mlab b{color:var(--ink-900);font-variant-numeric:tabular-nums}
+
+    /* errors and what to check */
+    .reveal.dbg>div{grid-template-columns:470px 1fr}
+    .reveal.dbg .opt{font-family:var(--font-mono);font-weight:700;font-size:15px;letter-spacing:0;line-height:1.35}
+    .reveal.dbg .ans{font-size:18px;line-height:1.4}
+    .reveal.dbg .ans code{background:var(--spot-200);color:var(--ink-900);padding:0 4px;border-radius:2px}
+
+    /* the idea card */
+    textarea.idea{font-family:var(--font-ui);font-size:19px;line-height:1.4;resize:none;height:150px}
+    ul.prompts{list-style:none;margin:0;padding:6px 18px}
+    ul.prompts li{padding:8px 0;border-bottom:1px solid var(--paper-300);font-size:19px;color:var(--ink-900)}
+    ul.prompts li:last-child{border-bottom:0}
+  </style>
+</head>
+
+<body data-lecture="bridge" data-home="../">
+  <main id="stage">
+    <div id="deck">
+
+      <!-- 01 COVER -->
+      <section class="slide stage" id="cover" data-sec="Opening">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">KD402D Programming · Week 43</div>
+          <h1 class="hero">From keys to the pointer.</h1>
+          <p class="lede">A1 was played with the keyboard, together. A3 is played with the pointer, on your own. Today we build the first steps of it.</p>
+        </div>
+        <div style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
+          <div class="m" style="font-size:17px;color:var(--ink-200)">KD402D Programming · Bridge workshop · Thu 22 Oct</div>
+        </div>
+        <aside class="nt">10:15. Welcome. Keys: arrows to move, I for the slide index, N for these notes, E to jump to the next exercise. Students can open the same link on their laptops: the pads on the build slides work on their own screens, but today's real coding happens in VS Code, in their own A3 repo. The shape of the morning: half an hour reading one group's A1 code together, then A3 and a game to look at, a break, and a guided build with shape.js.</aside>
+      </section>
+
+      <!-- 02 RUNNING ORDER -->
+      <section class="slide" id="running-order" data-sec="Opening">
+        <div class="billing">Today</div>
+        <hr class="rule">
+        <h2 class="h1">What we'll do today</h2>
+        <div class="rows order">
+          <div><span class="num">01</span><span class="nm">A1 code review<small>Reading one group's instrument together, out loud</small></span></div>
+          <div><span class="num">02</span><span class="nm">A3: Functional Prototype<small>The brief, a game to look at, and what "over time" means</small></span></div>
+          <div><span class="num">03</span><span class="nm">Break</span></div>
+          <div><span class="num">04</span><span class="nm">Guided build with shape.js<small>A shape that makes sound when the pointer touches it, in five steps</small></span></div>
+          <div><span class="num">05</span><span class="nm">Share and what's next<small>Show one thing, and a look at Friday</small></span></div>
+        </div>
+        <aside class="nt">Timings for you only (not on the slide): A1 code review 10:15–10:45, A3 introduction and Beat Surfer 10:45–11:00, break 11:00–11:15, guided build 11:15–11:50, share and preview 11:50–12:00. Code appears from the start today: the review is code, and the build is code.</aside>
+      </section>
+
+      <!-- 03 OBJECTIVES -->
+      <section class="slide" id="objectives" data-sec="Opening">
+        <div class="billing">By lunch you can</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Five things to take home</h2>
+        <div class="rows lab">
+          <div><span class="num">01</span><span class="tx">Say what A3 asks for, and tell a single reading apart from data processed over time.</span></div>
+          <div><span class="num">02</span><span class="tx">Make a shape with <code>shape.js</code>, and place, size and colour it.</span></div>
+          <div><span class="num">03</span><span class="tx">Listen for pointer events on <code>shape.element</code>, and play a sound when they happen.</span></div>
+          <div><span class="num">04</span><span class="tx">Hold a note with <code>triggerAttack</code> and <code>triggerRelease</code>, without leaving notes that never stop.</span></div>
+          <div><span class="num">05</span><span class="tx">Read an error in the console, and know where to look next.</span></div>
+        </div>
+        <aside class="nt">The session's objectives from the course plan, rewritten for the revised plan (shape.js instead of raw createElement and appendChild). 01 is the A3 introduction, 02 to 04 are the guided build, 05 runs through all of it: every time something breaks today, we read the console out loud before touching the code. Come back to these at the end.</aside>
+      </section>
+
+      <!-- 04 A1 REVIEW: BAND -->
+      <section class="slide stage" id="review-band" data-sec="A1 code review">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">A1 code review</div>
+          <h2 class="hero md">Reading Group 2's instrument.</h2>
+          <p class="lede">Their code, on the screen, read together. What does each part do, and how can you tell?</p>
+        </div>
+        <aside class="nt">10:15–10:45. Done live, no prep: open Group 2's A1 repo in VS Code on the projector, play the instrument first, then read the code. Thank the group before you start and make it clear this is about reading code, not grading it. Keep the next slide up on a second screen if you have one, or flip back to it when the room runs out of things to say.</aside>
+      </section>
+
+      <!-- 05 A1 REVIEW: WHAT TO LOOK FOR -->
+      <section class="slide" id="review-guide" data-sec="A1 code review">
+        <div class="billing">A1 code review · What to look for</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Reading code you didn't write</h2>
+        <div class="rows lab mid">
+          <div><span class="num">01</span><span class="tx"><b>Play it first.</b> What does it do? Then find the line that makes that happen.</span></div>
+          <div><span class="num">02</span><span class="tx"><b>Settings and state.</b> What stays fixed, what changes, and where does each live?</span></div>
+          <div><span class="num">03</span><span class="tx"><b>Listeners.</b> Which events does it listen for, and which function does each one call?</span></div>
+          <div><span class="num">04</span><span class="tx"><b>Update and use.</b> What changes the state, and what turns the state into sound?</span></div>
+          <div><span class="num">05</span><span class="tx"><b>Names and comments.</b> Could you follow this without the group in the room?</span></div>
+          <div><span class="num">06</span><span class="tx"><b>One thing to borrow, one thing to change.</b> For your own A3.</span></div>
+        </div>
+        <aside class="nt">The order to walk through their code. 01: play it, ask the room to describe it, then ask "where in the code is that?" and let them find it. 02 and 04 are the structure A3 is graded on (settings/state, setup/update/use). 03 leads straight into today's build: keydown becomes pointerenter. If you find a bug, read the console together before fixing it: this is where the old debugging lecture lives now. Finish with 06 from two or three students.</aside>
+      </section>
+
+      <!-- 06 A3: BAND -->
+      <section class="slide stage" id="a3-band" data-sec="A3: Functional Prototype">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">A3: Functional Prototype</div>
+          <h2 class="hero md">One person. One instrument. The pointer.</h2>
+          <p class="lede">You keep Tone.js and the code structure from A1. What's new is the input: a mouse, a trackpad, a finger or a pen.</p>
+        </div>
+        <aside class="nt">10:45. A1 was a group instrument played with the keyboard. A3 is an individual instrument played with the pointer. A key press happens or it doesn't. The pointer gives you a stream of positions, all the time, and how it moves (fast, slow, round and round, back and forth) is information your program can use.</aside>
+      </section>
+
+      <!-- 07 A3: THE BRIEF -->
+      <section class="slide" id="a3-brief" data-sec="A3: Functional Prototype">
+        <div class="billing">A3: Functional Prototype · The brief</div>
+        <hr class="rule">
+        <h2 class="h1 tight">What A3 asks for</h2>
+        <div class="rows lab mid">
+          <div><span class="num">01</span><span class="tx"><b>The pointer shapes the sound.</b> Pointer events, and the pointer's position and movement keep changing the sound: pitch, volume, filter, tempo.</span></div>
+          <div><span class="num">02</span><span class="tx"><b>One more layer.</b> Keys that trigger or switch the sound, <em>or</em> shapes on the page that move with the pointer's movement.</span></div>
+          <div><span class="num">03</span><span class="tx"><b>Data processed over time.</b> Speed, direction, distance travelled, where it has been. Not one reading.</span></div>
+          <div><span class="num">04</span><span class="tx"><b>Required in the code:</b> an object or an array, a loop, a <code>const</code>, an event handler. Settings and state; setup, update and use.</span></div>
+          <div><span class="num">05</span><span class="tx"><b>Only JavaScript and Tone.js.</b> No other libraries, no CSS transitions or animations. Runs without errors.</span></div>
+        </div>
+        <aside class="nt">The brief in five rows. Stress 03: it's the one people miss. 02: no visuals are required; if you take the keyboard path, a plain page that makes sound is a complete submission. 05: "runs without errors" means locally and on the github.io page, so check the console on the live page before you hand in.</aside>
+      </section>
+
+      <!-- 08 ONE READING OR OVER TIME -->
+      <section class="slide" id="over-time" data-sec="A3: Functional Prototype" data-ex="One reading or over time?">
+        <span class="turn">Your turn</span>
+        <div class="billing">A3: Functional Prototype · Over time</div>
+        <hr class="rule">
+        <h2 class="h1 tight">One reading, or over time?</h2>
+        <p class="lede" style="margin-bottom:10px">"Pointer x sets the pitch" isn't enough for A3. Sort each idea: does it read the pointer once, or need data from many events?</p>
+        <div class="rows quiz ot" id="ot-rows"></div>
+        <div class="fb" id="ot-fb" style="margin-top:10px"></div>
+        <aside class="nt">Give them a minute on their own laptops, then go through it on the projector. The test: could you answer it from one pointer event alone? Position: yes, so it's one reading. Speed needs this position and the one before, plus the time between them. Direction needs two positions. Distance travelled adds up every move. Shaking needs a history of directions. Hovering on the shape is one event. The last row is the interesting one: hovering is fine as a starting point (it's step 2 today), but on its own it doesn't meet criterion 3.</aside>
+      </section>
+
+      <!-- 09 BEAT SURFER -->
+      <section class="slide stage" id="beat-surfer" data-sec="A3: Functional Prototype">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">A3: Functional Prototype · Something to play</div>
+          <h2 class="hero md">Watch what the pointer does.</h2>
+          <p class="lede">Beat Surfer. Where is your finger, what is it doing, and what does that movement control?</p>
+        </div>
+        <aside class="nt">Demo Beat Surfer (App Store) from your phone on the projector. A provocation: the pointer doesn't only point at things here. Your movement moves the player, and the game moves you back in ways you didn't expect. Ask while it plays: what's being measured? Position, or something about the movement? Which parts would be data over time? The goal is to push them past "a shape follows the mouse" before they plan their own A3.</aside>
+      </section>
+
+      <!-- 10 MORE THAN FOLLOWING -->
+      <section class="slide" id="past-follow" data-sec="A3: Functional Prototype" data-ex="More than following">
+        <span class="turn">Your turn</span>
+        <div class="billing">A3: Functional Prototype · In pairs</div>
+        <hr class="rule">
+        <h2 class="h1 tight">More than following the mouse</h2>
+        <div class="cols">
+          <div class="stack">
+            <p class="lede" style="margin:0">With the person next to you: one pointer interaction that's more than "the shape follows the mouse". Say what you do, and what you hear.</p>
+            <div class="panel">
+              <div class="bar p"><span>if you're stuck, start from</span></div>
+              <ul class="prompts">
+                <li>What if moving faster…</li>
+                <li>What if going round in circles…</li>
+                <li>What if the shape doesn't want to be touched…</li>
+                <li>What if stopping completely…</li>
+              </ul>
+            </div>
+          </div>
+          <div class="stack">
+            <label class="f">Your idea, in plain words<textarea class="t idea" id="idea" spellcheck="true" placeholder="When I… the sound…"></textarea></label>
+            <p class="small muted" style="margin:0" id="idea-note">Saved on this computer only.</p>
+            <p class="dir">Then: which part of it is data over time?</p>
+          </div>
+        </div>
+        <aside class="nt">Three minutes, in pairs, no code. They write it in plain words in the box (saved in their own browser, nothing sent anywhere). Collect two or three out loud and ask the question at the bottom each time: which part is data over time? If time is short, skip this slide: the share at the end covers the same ground.</aside>
+      </section>
+
+      <!-- 11 A3: PRACTICAL -->
+      <section class="slide" id="a3-practical" data-sec="A3: Functional Prototype">
+        <div class="billing">A3: Functional Prototype · Hand-in</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Due Monday 2 November, 17:00</h2>
+        <div class="cols">
+          <div class="rows lab mid">
+            <div><span class="num">01</span><span class="tx"><b>Your own repo,</b> made from the A3 template. Same files as A1: <code>script.js</code>, <code>index.html</code>, <code>style.css</code>, plus <code>shape.js</code>.</span></div>
+            <div><span class="num">02</span><span class="tx"><b>A README</b> that says how to play it: what the pointer does, and which keys do what.</span></div>
+            <div><span class="num">03</span><span class="tx"><b>The A2 oral exam</b> asks about this code. Understand every line you hand in.</span></div>
+          </div>
+          <div class="rows lab mid">
+            <div><span class="num">04</span><span class="tx"><b>Code on Canvas:</b> a <code>.zip</code> of <code>main</code>, and the link to your github.io page.</span></div>
+            <div><span class="num">05</span><span class="tx"><b>A reflection on Canvas:</b> a <code>.pdf</code>, 250 words (±10%). What it does, which concepts you used, what was hard.</span></div>
+            <div><span class="num">06</span><span class="tx"><b>Stuck?</b> The debugging checklist first, then a classmate, then a TA or David.</span></div>
+          </div>
+        </div>
+        <aside class="nt">The practical side. It's individual: one repo each, made from the A3 template in the course GitHub organisation. No pull-request reviews needed this time, but keep committing small and often and pushing to GitHub. The link to the live page goes in the Canvas submission comment and at the top of the README. 03 matters: the oral exam examines this code, so don't hand in a line you can't explain. Due Monday 2 November at 17:00.</aside>
+      </section>
+
+      <!-- 12 BREAK -->
+      <section class="slide stage" id="break" data-sec="Break">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">Break</div>
+          <div class="timer" id="tm" aria-live="off">15:00</div>
+          <p class="lede" id="tm-msg" style="margin-top:22px">Stretch, refill. After the break: open your A3 repo in VS Code and run it with Live Preview.</p>
+          <div class="row" style="margin-top:20px"><button class="btn alt" id="tm-go">Start</button><button class="btn ghost" id="tm-reset">Reset</button></div>
+        </div>
+        <aside class="nt">11:00–11:15, fifteen minutes. Press Start for the countdown. Ask everyone to have their A3 repo open in VS Code and running in the browser with the console open when they come back, so the build starts on time. Anyone without a repo yet: pair with a neighbour for today and sort it out with a TA in the afternoon.</aside>
+      </section>
+
+      <!-- 13 BUILD: BAND -->
+      <section class="slide stage" id="build-band" data-sec="Guided build with shape.js">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">Guided build with shape.js</div>
+          <h2 class="hero md">A shape that sounds when you touch it.</h2>
+          <p class="lede">Five steps, in your own A3 repo. Each step works before we go on to the next.</p>
+        </div>
+        <aside class="nt">11:15–11:50. Everyone codes along in VS Code, in script.js of their own A3 repo, with the page open and the console showing. You type on the projector, they type with you. Each step slide has a pad that does what the code should do: show it first so they know what they're aiming for. Pause after every step until most hands say it works. When something breaks on your screen (it will), read the console out loud before fixing it.</aside>
+      </section>
+
+      <!-- 14 WHAT'S IN SHAPE.JS -->
+      <section class="slide" id="shape-file" data-sec="Guided build with shape.js">
+        <div class="billing">Guided build with shape.js · The file</div>
+        <hr class="rule">
+        <h2 class="h1 tight">What's in shape.js</h2>
+        <div class="cols wide-r">
+          <div class="stack">
+            <p class="lede" style="margin:0"><code>shape.js</code> makes a box on the page and gives you an object to control it with. <code>script.js</code> already brings it in at the top.</p>
+            <div class="panel">
+              <div class="bar"><span>script.js · top</span></div>
+              <pre class="code xs" id="sf-import"></pre>
+            </div>
+            <p class="dir">A shape is an object. Its <code>element</code> is the real thing on the page: that's what you listen to.</p>
+          </div>
+          <table class="io">
+            <thead><tr><th>Write</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Util.createShape("pad")</td><td style="font-family:var(--font-ui)">Makes a new shape</td></tr>
+              <tr><td>shape.setPosition(x, y)</td><td style="font-family:var(--font-ui)">Place it: 0 to 1 across, 0 to 1 down</td></tr>
+              <tr><td>shape.setSize(w, h)</td><td style="font-family:var(--font-ui)">Size in pixels; one number for a square</td></tr>
+              <tr><td>shape.setColour(h, s, l)</td><td style="font-family:var(--font-ui)">Hue 0–360, then saturation and lightness in %</td></tr>
+              <tr><td>shape.setRoundedness(r)</td><td style="font-family:var(--font-ui)">0 is square, 1 is round</td></tr>
+              <tr><td>shape.setRotation(deg)</td><td style="font-family:var(--font-ui)">Turn it, in degrees</td></tr>
+              <tr><td>shape.element</td><td style="font-family:var(--font-ui)">The element on the page</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <aside class="nt">Open shape.js on the projector for a moment and scroll through it: they don't need to understand all of it (it uses a class, which we haven't covered), only what's in this table. The methods are the shape's own functions, called with a dot, like synth.triggerAttackRelease. They can be chained: shape.setSize(100).setRoundedness(1). The important line is the last one: shape.element is the HTML element. Events happen to elements, so listeners go on shape.element, not on shape.</aside>
+      </section>
+
+      <!-- 15 STEP 1 -->
+      <section class="slide" id="step1" data-sec="Guided build with shape.js" data-ex="Step 1: make a shape">
+        <span class="turn">Your turn</span>
+        <div class="billing">Guided build with shape.js · Step 1</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Step 1: make a shape</h2>
+        <div class="cols">
+          <div class="stack">
+            <div class="panel">
+              <div class="bar"><span>script.js</span><span>type along</span></div>
+              <pre class="code xs" id="s1-code"></pre>
+            </div>
+            <p class="small" style="margin:0">Delete <code>let s = Util.createShape("test");</code> from <code>setup()</code>: our shape is made once, at the top, so every function can reach it.</p>
+          </div>
+          <div class="stack" style="gap:12px">
+            <div class="spad" id="s1-pad"></div>
+            <div class="sl"><span class="m">setColour</span><input type="range" id="s1-h" min="0" max="360" value="200" aria-label="Hue"><span class="v" id="s1-hv">200</span></div>
+            <div class="sl"><span class="m">setSize</span><input type="range" id="s1-s" min="60" max="190" value="160" aria-label="Size"><span class="v" id="s1-sv">160</span></div>
+            <div class="sl"><span class="m">setRoundedness</span><input type="range" id="s1-r" min="0" max="10" value="5" aria-label="Roundedness"><span class="v" id="s1-rv">0.5</span></div>
+          </div>
+        </div>
+        <aside class="nt">Type it on the projector while they type along. The const shape line goes in the State section: it's a constant (one of the required elements) and it lives at the top, outside any function, for the same reason taps did on Monday: everything that has to be reached from more than one function lives at the top. setup() styles it. Try the sliders on the right: the code on the left changes with them. Ask them to pick their own numbers. Check: save, the page reloads, a shape appears. If nothing appears: console first.</aside>
+      </section>
+
+      <!-- 16 THE POINTER EVENTS -->
+      <section class="slide" id="pointer-events" data-sec="Guided build with shape.js" data-demo="Pointer events">
+        <span class="turn try">Try it</span>
+        <div class="billing">Guided build with shape.js · Events</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Five things the pointer tells you</h2>
+        <div class="cols wide-r">
+          <div class="stack" style="gap:12px">
+            <div class="spad tall" id="pe-pad"></div>
+            <button class="btn ghost" id="pe-reset" style="align-self:flex-start">Count again</button>
+          </div>
+          <div class="rows evs" id="pe-rows">
+            <div data-ev="pointerenter"><span class="en">pointerenter</span><span class="ed">The pointer comes onto the shape</span><span class="ct">0</span></div>
+            <div data-ev="pointerleave"><span class="en">pointerleave</span><span class="ed">The pointer goes off it</span><span class="ct">0</span></div>
+            <div data-ev="pointerdown"><span class="en">pointerdown</span><span class="ed">A button or a finger goes down on it</span><span class="ct">0</span></div>
+            <div data-ev="pointerup"><span class="en">pointerup</span><span class="ed">The button or finger comes up again</span><span class="ct">0</span></div>
+            <div data-ev="pointermove"><span class="en">pointermove</span><span class="ed">Every small move over it</span><span class="ct">0</span></div>
+          </div>
+        </div>
+        <aside class="nt">Move onto the shape, off it, click it, hold, let go, and wiggle. Watch the counts. The first four are like keydown and keyup: one event per thing that happens. pointermove is different: dozens of events a second. That stream is where speed and direction come from, which is Friday. Ask: which would you use to start a note? To stop it? Try pressing on the shape, dragging off, and letting go outside: pointerup doesn't count, because it happened somewhere else. Remember that for step 4.</aside>
+      </section>
+
+      <!-- 17 STEP 2 -->
+      <section class="slide" id="step2" data-sec="Guided build with shape.js" data-ex="Step 2: a sound on enter">
+        <span class="turn">Your turn</span>
+        <div class="billing">Guided build with shape.js · Step 2</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Step 2: a sound when you arrive</h2>
+        <div class="cols">
+          <div class="panel">
+            <div class="bar"><span>script.js · controls</span><span>type along</span></div>
+            <pre class="code xs" id="s2-code"></pre>
+          </div>
+          <div class="stack" style="gap:12px">
+            <div class="panel">
+              <div class="bar"><span>script.js · inside setup()</span></div>
+              <pre class="code xs" id="s2-setup"></pre>
+            </div>
+            <div class="spad" id="s2-pad"></div>
+            <div class="console con-s" id="s2-con"></div>
+          </div>
+        </div>
+        <aside class="nt">Show the pad first: move onto the shape before clicking anywhere. The colour changes, but no sound. Then click once and try again. Browsers only allow sound after the person has clicked or pressed a key on the page, and arriving with the pointer doesn't count. In A1 that was Tone.start() in keyDown; here startSound does the same job on pointerdown anywhere in the window. Then they type: the two functions in Controls, the three lines in setup(), under the shape's styling. The synth is the one already in the template's Sound section. Leave sound optional: a different note on leave.</aside>
+      </section>
+
+      <!-- 18 STEP 3 -->
+      <section class="slide" id="step3" data-sec="Guided build with shape.js" data-ex="Step 3: hold the note">
+        <span class="turn">Your turn</span>
+        <div class="billing">Guided build with shape.js · Step 3</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Step 3: hold a note while you're on it</h2>
+        <div class="cols">
+          <div class="stack" style="gap:12px">
+            <div class="panel">
+              <div class="bar"><span>script.js · controls</span><span>change two lines</span></div>
+              <pre class="code xs" id="s3-code"></pre>
+            </div>
+            <p class="dir"><code>triggerAttack</code> starts a note and keeps it going. Only <code>triggerRelease</code> stops it.</p>
+          </div>
+          <div class="stack" style="gap:12px">
+            <div class="spad tall" id="s3-pad"></div>
+            <div class="console con-s" id="s3-con"></div>
+          </div>
+        </div>
+        <aside class="nt">Two lines change: triggerAttackRelease becomes triggerAttack on enter and triggerRelease on leave. The template's synth is a PolySynth, which can play several notes at once, so triggerRelease needs to know which note: the same "C4". This is the same pair as keydown and keyup in the User input lecture: start on one event, stop on its partner. Now the time you spend on the shape is the length of the note.</aside>
+      </section>
+
+      <!-- 19 CHECK -->
+      <section class="slide" id="check" data-sec="Guided build with shape.js" data-ex="What went wrong?">
+        <span class="turn">Your turn</span>
+        <div class="billing">Guided build with shape.js · Check</div>
+        <hr class="rule">
+        <h2 class="h1 tight">What went wrong?</h2>
+        <div class="cols">
+          <div class="stack" style="gap:8px">
+            <p class="prompt" style="font-size:21px;margin:0 0 4px;color:var(--ink-900)">You move onto the shape. It changes colour, but there's no sound and no error. Why?</p>
+            <div class="stack" id="ck1-opts" style="gap:8px"></div>
+            <div class="fb" id="ck1-fb"></div>
+          </div>
+          <div class="stack" style="gap:8px">
+            <p class="prompt" style="font-size:21px;margin:0 0 4px;color:var(--ink-900)">You wrote <code>triggerAttack</code> on enter, but forgot the <code>pointerleave</code> listener. You move off. What happens?</p>
+            <div class="stack" id="ck2-opts" style="gap:8px"></div>
+            <div class="fb" id="ck2-fb"></div>
+          </div>
+        </div>
+        <aside class="nt">Two bugs every year. Left: sound hasn't been allowed yet, because nobody has clicked. The colour changed, so the function ran; the code is fine. Right: the note plays forever. Nothing is wrong as far as JavaScript knows, so there's no error to read. That's the hardest kind of bug: the console is quiet. A console.log("leave") in the function you think is running tells you whether it is.</aside>
+      </section>
+
+      <!-- 20 STEP 4 -->
+      <section class="slide" id="step4" data-sec="Guided build with shape.js" data-ex="Step 4: press to play">
+        <span class="turn">Your turn</span>
+        <div class="billing">Guided build with shape.js · Step 4</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Step 4: press to play instead</h2>
+        <div class="cols">
+          <div class="stack" style="gap:12px">
+            <div class="panel">
+              <div class="bar"><span>script.js · controls</span><span>type along</span></div>
+              <pre class="code xs" id="s4-code"></pre>
+            </div>
+            <div class="panel">
+              <div class="bar"><span>script.js · inside setup()</span></div>
+              <pre class="code xs" id="s4-setup"></pre>
+            </div>
+          </div>
+          <div class="stack" style="gap:12px">
+            <div class="spad" id="s4-pad"></div>
+            <div class="row"><span class="small">Stop the note on</span>
+              <div class="seg" id="s4-mode"><button class="btn ghost sel" data-m="up">pointerup</button><button class="btn ghost" data-m="both">up or leave</button></div>
+            </div>
+            <div class="console con-s" id="s4-con"></div>
+          </div>
+        </div>
+        <aside class="nt">Same idea with pointerdown and pointerup. Ask before typing: which feels more like an instrument, hover or press? Pressing is a deliberate act, and it counts as a click, so Tone.start() can go straight in pointerDown. Then the trap: press on the shape, drag off, let go outside. pointerup happened somewhere else, so the note never stops. Switch the pad to "up or leave" to show the fix: also listen for pointerleave and call pointerUp. That's the commented line at the bottom of the setup panel.</aside>
+      </section>
+
+      <!-- 21 STEP 5 PREVIEW -->
+      <section class="slide" id="step5" data-sec="Guided build with shape.js" data-demo="Faster is louder">
+        <span class="turn try">Try it</span>
+        <div class="billing">Guided build with shape.js · Step 5, a preview</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Step 5: move faster, play louder</h2>
+        <div class="cols wide-r">
+          <div class="stack">
+            <p class="lede" style="margin:0">This is data over time. One <code>pointermove</code> only tells you where the pointer is. Speed needs two.</p>
+            <div class="panel">
+              <div class="bar p"><span>in words</span></div>
+              <ol class="plain">
+                <li>Keep where the pointer was last time, and when.</li>
+                <li>On the next move: how far did it go, and how long did it take?</li>
+                <li>Speed is the distance divided by the time.</li>
+                <li>Turn speed into volume.</li>
+              </ol>
+            </div>
+            <p class="dir">How to keep the history and work out speed: Friday.</p>
+          </div>
+          <div class="stack" style="gap:12px">
+            <div class="spad tall" id="s5-pad"></div>
+            <div><div class="mlab"><span>Speed</span><b id="s5-sv">0</b></div><div class="meter" id="s5-sp"><i></i></div></div>
+            <div><div class="mlab"><span>Volume</span><b id="s5-vv">quiet</b></div><div class="meter vol" id="s5-vol"><i></i></div></div>
+            <button class="btn alt" id="s5-snd" style="align-self:flex-start">Sound on</button>
+          </div>
+        </div>
+        <aside class="nt">A preview, no code today: the techniques (keeping the last position and time, working out speed) are Friday's lecture, Processing Data II: Pointers. Press Sound on, then move slowly across the pad, then fast. The note gets louder with speed and fades when you stop. Point out that this is exactly what criterion 3 means: the volume comes from two events and the time between them, not from where the pointer is. The four steps on the left are the plan for Friday.</aside>
+      </section>
+
+      <!-- 22 WHEN IT BREAKS -->
+      <section class="slide" id="debug" data-sec="Guided build with shape.js" data-demo="When it breaks">
+        <span class="turn try">Try it</span>
+        <div class="billing">Guided build with shape.js · Debugging</div>
+        <hr class="rule">
+        <h2 class="h1 tight">When it doesn't work</h2>
+        <div class="rows reveal dbg" id="dbg-rows"></div>
+        <p class="small" style="margin-top:12px">Keep the console open while you work. More in the <a href="https://mau.instructure.com/courses/22858/pages/debugging-checklist" target="_blank" rel="noopener">debugging checklist</a> on Canvas.</p>
+        <aside class="nt">The errors that came up most in A1, plus the two new ones from today. Click each one and ask the room first: where would you look? Row 1 is today's classic: listening on the shape object instead of its element. Row 4 is the silent bug: no error, so the console can't tell you; you have to ask it with console.log. Row 5: right-click the shape → Inspect shows its element and the styles shape.js gave it. Use this slide whenever a bug comes up in the build, not only at the end.</aside>
+      </section>
+
+      <!-- 23 SHARE -->
+      <section class="slide stage" id="share" data-sec="Share and what's next">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">Share and what's next</div>
+          <h2 class="hero md">Show us one thing.</h2>
+          <p class="lede">Two or three of you: what does your shape do, and what surprised you on the way?</p>
+        </div>
+        <aside class="nt">11:50. Still to be decided on the day. Ask two or three people to plug in or share their screen and play it for ten seconds. Connect each one to A3: what you just built is the start of a prototype. What would make it data over time?</aside>
+      </section>
+
+      <!-- 24 NEXT -->
+      <section class="slide" id="next" data-sec="Share and what's next">
+        <div class="billing">Share and what's next · Friday</div>
+        <hr class="rule">
+        <h2 class="h1">What's next</h2>
+        <div class="cols">
+          <div class="stack">
+            <p class="lede" style="margin:0">Friday: Processing data II: pointers. Keeping a history of positions, and working out speed and direction from it: step 5, for real.</p>
+            <p class="lede" style="margin:0">Before then: commit and push today's code to your A3 repo, and try one change of your own.</p>
+          </div>
+          <div class="rows lab" style="border-top:1px solid var(--ink-900)">
+            <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://mau.instructure.com/courses/22858/assignments/160962" target="_blank" rel="noopener">Canvas: A3: Functional Prototype</a></span></div>
+            <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://mau.instructure.com/courses/22858/modules/137088" target="_blank" rel="noopener">Canvas: Data processing (II) module</a></span></div>
+            <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://mau.instructure.com/courses/22858/pages/debugging-checklist" target="_blank" rel="noopener">Canvas: Debugging checklist</a></span></div>
+            <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://github.com/IDBCourses/kd402d-a3-template" target="_blank" rel="noopener">GitHub: the A3 template</a></span></div>
+            <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events" target="_blank" rel="noopener">MDN: Pointer events</a></span></div>
+            <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://tonejs.github.io/docs/15.1.22/" target="_blank" rel="noopener">Tone.js documentation</a></span></div>
+          </div>
+        </div>
+        <aside class="nt">11:55. Friday's lecture picks up exactly where step 5 stopped: a list of positions and times, the gap between two of them, speed and direction. Ask them to push what they have today so it's in their repo, and to try one change on their own: a different note, a second shape, a colour that follows the event. Back to the five objectives if there's time.</aside>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="../shared/vendor/tone.min.js"></script>
+  <script src="../shared/deck.js"></script>
+  <script>
+    (function () {
+      "use strict";
+      var D = Deck, $ = D.$, $$ = D.$$, esc = D.esc, code = D.code, flash = D.flash, fb = D.fb;
+      var T = window.Tone, synth = null;
+
+      /* ============ sound ============
+         One PolySynth, like the template. Sound starts only after a click on the page. */
+      function audioOn() { try { if (T && T.getContext().state !== "running") T.start() } catch (e) { } }
+      function audioReady() { try { return !!T && T.getContext().state === "running" } catch (e) { return false } }
+      function poly() { if (!T) return null; if (!synth) synth = new T.PolySynth(T.Synth).toDestination(); return synth }
+      var stoppers = [];
+      function hush() { if (synth) { try { synth.releaseAll() } catch (e) { } } stoppers.forEach(function (f) { f() }) }
+      /* leaving a slide stops whatever it was playing */
+      if (window.MutationObserver) {
+        var mo = new MutationObserver(function (ms) { ms.forEach(function (m) { if (m.target.hidden) hush() }) });
+        $$("#deck .slide").forEach(function (s) { mo.observe(s, { attributes: true, attributeFilter: ["hidden"] }) });
+      }
+
+      /* ============ a pad with one shape on it ============ */
+      function shapePad(host, hint) {
+        host.innerHTML = '<div class="blob"></div><div class="hint"></div>';
+        host.lastChild.textContent = hint || "";
+        host.addEventListener("pointerdown", audioOn);
+        return host.firstChild;
+      }
+      function colour(blob, h, s, l) { blob.style.background = "hsl(" + h + "," + s + "%," + l + "%)" }
+      /* a small console that keeps the last few lines */
+      function logger(con) {
+        return function (cls, t) {
+          var s = document.createElement("span"); if (cls) s.className = cls; s.textContent = t;
+          if (con.childNodes.length) con.appendChild(document.createTextNode("\n"));
+          con.appendChild(s);
+          while (con.querySelectorAll("span").length > 4) { con.removeChild(con.firstChild); con.removeChild(con.firstChild) }
+        };
+      }
+      var NO_SOUND = "no sound yet: click the page once first";
+
+      /* ---------- shape.js: the import ---------- */
+      code($("#sf-import"), 'import * as Util from "./shape.js";\n\n// ---------- State ----------\nconst shape = Util.createShape("pad");');
+
+      /* ---------- step 1: make a shape ---------- */
+      (function () {
+        var blob = shapePad($("#s1-pad"), "your shape"), h = $("#s1-h"), s = $("#s1-s"), r = $("#s1-r");
+        function src() {
+          return '// ---------- State ----------\nconst shape = Util.createShape("pad");\n\n// ---------- Setup ----------\nfunction setup() {\n  shape.setSize(' + s.value + ');\n  shape.setRoundedness(' + (r.value / 10) + ');\n  shape.setColour(' + h.value + ', 80, 50);\n  shape.setPosition(0.3, 0.3);\n\n  // …update(), use() and the listeners\n}';
+        }
+        function show(line) {
+          $("#s1-hv").textContent = h.value; $("#s1-sv").textContent = s.value; $("#s1-rv").textContent = String(r.value / 10);
+          blob.style.width = blob.style.height = s.value + "px";
+          blob.style.borderRadius = (r.value * 10) + "%";
+          colour(blob, h.value, 80, 50);
+          code($("#s1-code"), src(), line === undefined ? [] : [line]);
+        }
+        h.addEventListener("input", function () { show(7) });
+        s.addEventListener("input", function () { show(5) });
+        r.addEventListener("input", function () { show(6) });
+        show();
+      })();
+
+      /* ---------- the pointer events ---------- */
+      (function () {
+        var blob = shapePad($("#pe-pad"), "move onto the shape, click it, wiggle"), counts = {};
+        $$("#pe-rows>div").forEach(function (row) {
+          var ev = row.dataset.ev, ct = row.querySelector(".ct"), last = 0;
+          counts[ev] = 0;
+          blob.addEventListener(ev, function (e) {
+            counts[ev]++; ct.textContent = counts[ev];
+            if (ev === "pointerenter" || ev === "pointerdown") colour(blob, 50, 100, 60);
+            if (ev === "pointerleave" || ev === "pointerup") colour(blob, 200, 80, 50);
+            var now = Date.now();
+            if (now - last > 250) { last = now; row.classList.remove("on"); void row.offsetWidth; row.classList.add("on") }
+          });
+        });
+        $("#pe-reset").addEventListener("click", function () {
+          Object.keys(counts).forEach(function (k) { counts[k] = 0 });
+          $$("#pe-rows .ct").forEach(function (c) { c.textContent = "0" });
+        });
+      })();
+
+      /* ---------- step 2: a sound on enter ---------- */
+      code($("#s2-code"), 'function startSound(event) {\n  Tone.start(); // sound is allowed after a click\n}\n\nfunction pointerEnter(event) {\n  synth.triggerAttackRelease("C4", "8n");\n  shape.setColour(50, 100, 60);\n}\n\nfunction pointerLeave(event) {\n  synth.triggerAttackRelease("G3", "8n");\n  shape.setColour(200, 80, 50);\n}');
+      code($("#s2-setup"), 'window.addEventListener("pointerdown", startSound);\nshape.element.addEventListener("pointerenter", pointerEnter);\nshape.element.addEventListener("pointerleave", pointerLeave);');
+      (function () {
+        var blob = shapePad($("#s2-pad"), "move onto the shape"), out = logger($("#s2-con"));
+        function play(name, note) {
+          if (!audioReady()) { out("dim", name + ": " + NO_SOUND); return }
+          poly().triggerAttackRelease(note, "8n"); out("", name + " → " + note);
+          flash($("#s2-code"), name === "pointerenter" ? [5] : [10]);
+        }
+        blob.addEventListener("pointerenter", function () { colour(blob, 50, 100, 60); play("pointerenter", "C4") });
+        blob.addEventListener("pointerleave", function () { colour(blob, 200, 80, 50); play("pointerleave", "G3") });
+        out("dim", "Move onto the shape. Then click once, and try again.");
+      })();
+
+      /* ---------- step 3: hold the note ---------- */
+      code($("#s3-code"), 'function pointerEnter(event) {\n  synth.triggerAttack("C4"); // start, keep going\n  shape.setColour(50, 100, 60);\n}\n\nfunction pointerLeave(event) {\n  synth.triggerRelease("C4"); // stop that note\n  shape.setColour(200, 80, 50);\n}', [1, 6]);
+      (function () {
+        var blob = shapePad($("#s3-pad"), "stay on the shape: the note lasts as long as you do"), out = logger($("#s3-con")), t0 = 0;
+        blob.addEventListener("pointerenter", function () {
+          colour(blob, 50, 100, 60);
+          if (!audioReady()) { out("dim", "pointerenter: " + NO_SOUND); return }
+          poly().triggerAttack("C4"); t0 = Date.now(); out("", "pointerenter → start C4");
+        });
+        blob.addEventListener("pointerleave", function () {
+          colour(blob, 200, 80, 50);
+          if (!t0) return;
+          poly().triggerRelease("C4"); out("", "pointerleave → stop C4 (" + ((Date.now() - t0) / 1000).toFixed(1) + " s long)"); t0 = 0;
+        });
+        stoppers.push(function () { t0 = 0 });
+        out("dim", "Click the page once, then move onto the shape and stay.");
+      })();
+
+      /* ---------- check: what went wrong? ---------- */
+      function mcq(box, fbEl, O) {
+        var answered = false;
+        O.forEach(function (o) {
+          var b = document.createElement("button"); b.className = "opt"; b.innerHTML = o[0];
+          b.addEventListener("click", function () {
+            if (answered) return;
+            if (o[1]) { b.classList.add("right"); answered = true; fb(fbEl, "pass", o[2]) }
+            else { b.classList.add("wrong"); fb(fbEl, "note", o[2]) }
+          });
+          box.appendChild(b);
+        });
+      }
+      mcq($("#ck1-opts"), $("#ck1-fb"), [
+        ["<code class=\"m\">pointerenter</code> doesn't work with a mouse.", false, "It does: the colour changed, so <code>pointerEnter</code> ran. What does the browser need before it makes any sound?"],
+        ["Nobody has clicked the page yet.", true, "Right. Browsers only allow sound after a click or a key press, and arriving with the pointer doesn't count. That's what <code>startSound</code> is for."],
+        ["<code class=\"m\">triggerAttackRelease</code> needs a third value.", false, "A note and a length are enough. The function ran: the colour changed. So the code is fine. What else stops sound?"]
+      ]);
+      mcq($("#ck2-opts"), $("#ck2-fb"), [
+        ["An error appears in the console.", false, "As far as JavaScript knows, nothing is wrong: no line failed. So what would the synth do with a note nobody stops?"],
+        ["The note fades out after a while.", false, "That's <code>triggerAttackRelease</code>, which has a length. <code>triggerAttack</code> has no length."],
+        ["The note keeps playing.", true, "Right, forever. Nothing told it to stop, and there's no error to read. Every <code>triggerAttack</code> needs a <code>triggerRelease</code> somewhere."]
+      ]);
+
+      /* ---------- step 4: press to play ---------- */
+      code($("#s4-code"), 'function pointerDown(event) {\n  Tone.start(); // pressing counts as a click\n  synth.triggerAttack("C4");\n  shape.setColour(50, 100, 60);\n}\n\nfunction pointerUp(event) {\n  synth.triggerRelease("C4");\n  shape.setColour(200, 80, 50);\n}');
+      code($("#s4-setup"), 'shape.element.addEventListener("pointerdown", pointerDown);\nshape.element.addEventListener("pointerup", pointerUp);\n// shape.element.addEventListener("pointerleave", pointerUp);');
+      (function () {
+        var blob = shapePad($("#s4-pad"), "press on the shape, drag off, let go outside"), out = logger($("#s4-con")), on = false, mode = "up";
+        function stop(why) {
+          if (!on) return;
+          on = false; colour(blob, 200, 80, 50);
+          try { poly().triggerRelease("C4") } catch (e) { }
+          out("", why + " → stop C4");
+        }
+        blob.addEventListener("pointerdown", function (e) {
+          audioOn();
+          if (e.pointerType !== "mouse" && blob.hasPointerCapture(e.pointerId)) blob.releasePointerCapture(e.pointerId); /* touch: let the finger leave, like a mouse */
+          on = true; colour(blob, 50, 100, 60);
+          var p = poly(); if (p) p.triggerAttack("C4"); out("", "pointerdown → start C4");
+        });
+        blob.addEventListener("pointerup", function () { stop("pointerup") });
+        blob.addEventListener("pointerleave", function () {
+          if (!on) return;
+          if (mode === "both") stop("pointerleave");
+          else out("bad", "pointerleave: nobody listening. C4 is still playing.");
+        });
+        $("#s4-pad").addEventListener("pointerdown", function (e) { if (e.target !== blob && on) { stop("click on the pad") } });
+        $$("#s4-mode .btn").forEach(function (b) {
+          b.addEventListener("click", function () {
+            mode = b.dataset.m;
+            $$("#s4-mode .btn").forEach(function (x) { x.classList.toggle("sel", x === b) });
+            code($("#s4-setup"), 'shape.element.addEventListener("pointerdown", pointerDown);\nshape.element.addEventListener("pointerup", pointerUp);\n' + (mode === "both" ? 'shape.element.addEventListener("pointerleave", pointerUp);' : '// shape.element.addEventListener("pointerleave", pointerUp);'), mode === "both" ? [2] : []);
+            if (mode === "both") { flash($("#s4-setup"), [2]); stop("switched") }
+          });
+        });
+        stoppers.push(function () { on = false; colour(blob, 200, 80, 50) });
+        out("dim", "Press on the shape. A stuck note? Click the pad to stop it.");
+      })();
+
+      /* ---------- step 5: faster is louder (a preview, simulated) ---------- */
+      (function () {
+        var pad = $("#s5-pad"), mono = null, playing = false, speed = 0, last = null, raf = null, lastMove = 0;
+        var MAX = 2500; /* slide pixels per second that count as "as fast as it goes" */
+        pad.innerHTML = '<div class="hint">move across the pad: slowly, then fast</div>';
+        function show() {
+          var k = Math.min(1, speed / MAX);
+          $("#s5-sv").textContent = Math.round(speed) + " px/s";
+          $("#s5-sp i").style.width = (k * 100) + "%";
+          $("#s5-vol i").style.width = (k * 100) + "%";
+          $("#s5-vv").textContent = k < 0.05 ? "quiet" : (-40 + 34 * k).toFixed(0) + " dB";
+          if (mono && playing) { try { mono.volume.rampTo(-40 + 34 * k, 0.05) } catch (e) { } }
+        }
+        function tick() {
+          if (Date.now() - lastMove > 60) speed *= 0.9;
+          if (speed < 1) speed = 0;
+          show();
+          raf = speed > 0 ? requestAnimationFrame(tick) : null;
+        }
+        pad.addEventListener("pointermove", function (e) {
+          var k = pad.getBoundingClientRect().width / pad.offsetWidth || 1;
+          var p = { x: e.clientX / k, y: e.clientY / k, t: e.timeStamp };
+          if (last && p.t > last.t) {
+            var raw = Math.sqrt((p.x - last.x) * (p.x - last.x) + (p.y - last.y) * (p.y - last.y)) / (p.t - last.t) * 1000;
+            speed += (raw - speed) * 0.3;
+            lastMove = Date.now();
+            if (!raf) raf = requestAnimationFrame(tick);
+          }
+          last = p;
+        });
+        pad.addEventListener("pointerleave", function () { last = null });
+        function off() {
+          playing = false; $("#s5-snd").textContent = "Sound on";
+          if (mono) { try { mono.triggerRelease() } catch (e) { } }
+        }
+        $("#s5-snd").addEventListener("click", function () {
+          if (playing) { off(); return }
+          audioOn();
+          if (!T) return;
+          if (!mono) mono = new T.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.05, release: 0.4 } }).toDestination();
+          mono.volume.value = -40; mono.triggerAttack("C3");
+          playing = true; this.textContent = "Sound off";
+        });
+        stoppers.push(off);
+        show();
+      })();
+
+      /* ---------- when it doesn't work ---------- */
+      (function () {
+        var R = [
+          ["TypeError: shape.addEventListener is not a function", "Listen on <code>shape.element</code>, not <code>shape</code>. The shape is our object; its element is the thing on the page."],
+          ["ReferenceError: Tone is not defined", "Tone.js didn't load. Is its <code>&lt;script&gt;</code> above <code>script.js</code> in <code>index.html</code>? Are you online?"],
+          ["The AudioContext was not allowed to start.", "Sound needs a click first. Is <code>Tone.start()</code> in a <code>pointerdown</code> or <code>keydown</code> listener?"],
+          ["Nothing happens, and no error", "Put <code>console.log(\"enter\")</code> in the function. No line in the console? The listener isn't attached: check the event's spelling."],
+          ["The shape isn't where you expect", "Right-click it → Inspect. The Elements tab shows the element and the styles <code>shape.js</code> gave it."]
+        ];
+        R.forEach(function (r) {
+          var row = document.createElement("div");
+          row.innerHTML = '<button class="opt">' + esc(r[0]) + '</button><span class="ans" hidden>' + r[1] + '</span>';
+          row.querySelector(".opt").addEventListener("click", function () { var a = row.querySelector(".ans"); a.hidden = !a.hidden });
+          $("#dbg-rows").appendChild(row);
+        });
+      })();
+
+      /* ---------- one reading or over time ---------- */
+      (function () {
+        var Q = [
+          ["The pointer's x position sets the pitch.", "one", "Where the pointer is right now: one event is enough."],
+          ["Moving faster makes it louder.", "time", "Speed needs where it was before, and how long ago."],
+          ["Going round clockwise raises the pitch.", "time", "Direction needs at least two positions, one after the other."],
+          ["The further you've travelled, the brighter it gets.", "time", "Distance travelled adds up every move since the start."],
+          ["The pointer's y position sets the volume.", "one", "Like x: one reading, right now."],
+          ["Hovering on the shape plays a note.", "one", "One event: <code>pointerenter</code>. A good start, but not data over time on its own."]
+        ], done = 0;
+        Q.forEach(function (q) {
+          var row = document.createElement("div"), answered = false;
+          row.innerHTML = '<span class="sc">' + q[0] + '</span><span class="ch"></span>';
+          [["One reading", "one"], ["Over time", "time"]].forEach(function (c) {
+            var b = document.createElement("button"); b.className = "chip"; b.textContent = c[0];
+            b.addEventListener("click", function () {
+              if (answered) return;
+              if (c[1] === q[1]) {
+                b.classList.add("right"); answered = true; done++;
+                fb($("#ot-fb"), done === Q.length ? "pass" : "note", done === Q.length ? "All six. Anything that needs more than one event is data over time: speed, direction, distance, history." : "Right. " + q[2]);
+              } else { b.classList.add("wrong"); fb($("#ot-fb"), "note", "Could you answer it from a single pointer event? " + (q[1] === "one" ? "Here you could." : "Here you'd need more than one.")) }
+            });
+            row.querySelector(".ch").appendChild(b);
+          });
+          $("#ot-rows").appendChild(row);
+        });
+      })();
+
+      /* ---------- your idea (saved per viewer) ---------- */
+      (function () {
+        var ta = $("#idea");
+        ta.value = D.store.get("idea") || "";
+        ta.addEventListener("input", function () { D.store.set("idea", ta.value) });
+        ta.addEventListener("keydown", function (e) { e.stopPropagation() });
+      })();
+
+      /* ---------- break timer ---------- */
+      (function () {
+        var total = 15 * 60, left = total, t = null, BRK = "Stretch, refill. After the break: open your A3 repo in VS Code and run it with Live Preview.";
+        function show() { var m = Math.floor(left / 60), s = left % 60; $("#tm").textContent = m + ":" + (s < 10 ? "0" : "") + s; if (left === 0) { $("#tm-msg").textContent = "Time's up. Back to your seats, VS Code open."; stop() } }
+        function stop() { clearInterval(t); t = null; $("#tm-go").textContent = left === 0 ? "Start" : "Resume" }
+        $("#tm-go").addEventListener("click", function () {
+          if (t) { stop(); return }
+          if (left === 0) left = total;
+          $("#tm-msg").textContent = BRK;
+          t = setInterval(function () { left = Math.max(0, left - 1); show() }, 1000); this.textContent = "Pause";
+        });
+        $("#tm-reset").addEventListener("click", function () { stop(); left = total; show(); $("#tm-go").textContent = "Start"; $("#tm-msg").textContent = BRK });
+      })();
+    })();
+  </script>
+</body>
+
+</html>
