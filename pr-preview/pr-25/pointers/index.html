@@ -104,7 +104,21 @@
     .trace polyline{fill:none;stroke-width:3;stroke-linejoin:round}
     .trace .raw{stroke:var(--ink-300)}
     .trace .sm{stroke:var(--curtain-600);stroke-width:4}
-    .trace text{font-family:var(--font-mono);font-size:13px;font-weight:700;fill:var(--ink-500)}
+    .trace text,.mem text,.span text{font-family:var(--font-mono);font-size:13px;font-weight:700;fill:var(--ink-500)}
+    /* every stored speed, by age */
+    .mem{display:block;width:100%;height:auto;background:var(--paper-000);border:2px solid var(--ink-900);box-shadow:3px 3px 0 var(--ink-900);border-radius:2px}
+    .mem .ax{stroke:var(--ink-300);stroke-width:1.5}
+    .mem rect.u{fill:var(--curtain-600)}
+    .mem rect.n{fill:var(--ink-200)}
+    .mem .avg{stroke:var(--cyan-600);stroke-width:3}
+    .mem text{paint-order:stroke;stroke:var(--paper-000);stroke-width:5px;stroke-linejoin:round}
+    .mem text.avgt{fill:var(--cyan-600);font-size:15px}
+    .mem .win{stroke:var(--ink-500);stroke-width:2;stroke-dasharray:6 5}
+    /* the range of cents the screen is stretched onto */
+    .span{display:block;width:100%;height:auto}
+    .span .ax,.span .tk{stroke:var(--ink-900);stroke-width:2}
+    .span .band{fill:var(--spot-400);stroke:var(--ink-900);stroke-width:2}
+    .span .cur{stroke:var(--curtain-600);stroke-width:4}
 
     /* a row of boxes: an array */
     .line{display:flex;gap:6px;flex-wrap:nowrap;align-items:flex-start;min-height:48px}
@@ -155,7 +169,7 @@
         <div style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
           <div class="m" style="font-size:17px;color:var(--ink-200)">KD402D Programming · Processing data II: pointers · Fri 23 Oct</div>
         </div>
-        <aside class="nt">10:15. Welcome back. Keys: arrows to move, I for the slide index, N for these notes, E to jump to the next exercise. Students open the same link on their laptops: the demos read their own pointer, so everyone can move and listen on their own screen (headphones help). Today's code runs on the slides; the activity can be done here or in VS Code in the pointers/ folder. Thursday was slides only, no coding, so nobody should be assumed to have written pointer code yet. The two threads today: pointer input, and the processing pipeline (normalise, interpolate, smooth) that turns any raw value into something usable. The pipeline is new today; Monday didn't cover it.</aside>
+        <aside class="nt">10:15. Welcome back. Keys: arrows to move, I for the slide index, N for these notes, E to jump to the next exercise. Students open the same link on their laptops: the demos read their own pointer, so everyone can move and listen on their own screen (headphones help). Today's code runs on the slides; the activity can be done here or in VS Code in the pointers/ folder. Thursday was slides only, no coding, so nobody should be assumed to have written pointer code yet. Today is three moves on pointer data: normalise the position so it means the same on any screen, work out speed, and average it over time so it isn't choppy. All three end up bending a note with detune.</aside>
       </section>
 
       <!-- 02 RUNNING ORDER -->
@@ -165,13 +179,14 @@
         <h2 class="h1">What we'll do today</h2>
         <div class="rows order">
           <div><span class="num">01</span><span class="nm">Recap and a new kind of input<small>Monday's taps and swipes, Thursday's shape, and what makes a pointer different</small></span></div>
-          <div><span class="num">02</span><span class="nm">Part 1: Pointer events and position<small>Read where the pointer is, then fix that number: normalise, interpolate</small></span></div>
-          <div><span class="num">03</span><span class="nm">Part 2: Movement as data<small>Work out speed from two moves, and smooth it with a moving average</small></span></div>
-          <div><span class="num">04</span><span class="nm">Add a pointer pipeline<small>Your own instrument, played with the pointer</small></span></div>
-          <div><span class="num">05</span><span class="nm">Wrap-up<small>What stays the same whatever the input, and this afternoon</small></span></div>
+          <div><span class="num">02</span><span class="nm">Move 1: Normalise<small>How far left or right, on any screen, stretched onto a sound</small></span></div>
+          <div><span class="num">03</span><span class="nm">Move 2: Speed<small>How much of the screen per second</small></span></div>
+          <div><span class="num">04</span><span class="nm">Move 3: Average over time<small>Four ways to smooth out a choppy value, and why three of them fail</small></span></div>
+          <div><span class="num">05</span><span class="nm">Add a pointer pipeline<small>Your own instrument, bent by the pointer</small></span></div>
+          <div><span class="num">06</span><span class="nm">Wrap-up<small>Three moves, and this afternoon</small></span></div>
         </div>
-        <p class="dir" style="margin-top:16px">A break between the two parts.</p>
-        <aside class="nt">Timings for you only (not on the slide). The plan's own section times read 08:15 to 10:00; the calendar entry is 10:15 to 12:00 Stockholm time, so these are shifted by two hours: recap and motivation 10:15–10:30, Part 1 10:30–10:55 (including the five-minute live-coded pitch bend), break 10:55–11:05, Part 2 11:05–11:30, activity 11:30–11:50, wrap-up 11:50–12:00. No code until the "a stream, not a moment" slide at the end of the recap: the difference between a key and a pointer is felt first, then named, then confirmed with the event mechanics.</aside>
+        <p class="dir" style="margin-top:16px">A break after Move 1.</p>
+        <aside class="nt">Timings for you only (not on the slide). The plan's own section times read 08:15 to 10:00; the calendar entry is 10:15 to 12:00 Stockholm time, so these are shifted by two hours: recap and motivation 10:15–10:30, Move 1 (normalise) 10:30–10:55, break 10:55–11:05, Move 2 (speed) 11:05–11:15, Move 3 (average over time) 11:15–11:35, activity 11:35–11:50, wrap-up 11:50–12:00. No code until the "a stream, not a moment" slide at the end of the recap.</aside>
       </section>
 
       <!-- 03 OBJECTIVES -->
@@ -181,13 +196,13 @@
         <h2 class="h1 tight">Six things to take home</h2>
         <div class="rows lab">
           <div><span class="num">01</span><span class="tx">Describe a pointer as input, process, output, with position and movement as the raw data instead of a key.</span></div>
-          <div><span class="num">02</span><span class="tx">Tell <b>absolute</b> position (where it is) apart from <b>relative</b> movement (how far or fast it moved).</span></div>
-          <div><span class="num">03</span><span class="tx">Listen for <code>pointermove</code>, <code>pointerdown</code> and <code>pointerup</code>: one set of listeners for mouse, trackpad, touch and pen.</span></div>
-          <div><span class="num">04</span><span class="tx">Normalise a position against the window size, and interpolate it onto a sound.</span></div>
-          <div><span class="num">05</span><span class="tx">Work out speed from two positions, and use it as a second, separate value.</span></div>
-          <div><span class="num">06</span><span class="tx">Smooth a jumpy value with a moving average, and keep an array to a fixed length.</span></div>
+          <div><span class="num">02</span><span class="tx">Say why a raw pixel position means little, and <b>normalise</b> it to 0 to 1 against the window.</span></div>
+          <div><span class="num">03</span><span class="tx">Stretch or squeeze a 0 to 1 value onto <code>synth.detune</code>.</span></div>
+          <div><span class="num">04</span><span class="tx">Work out <b>speed</b> in screens per second from two moves.</span></div>
+          <div><span class="num">05</span><span class="tx">Smooth a choppy value with an <b>average over time</b>, and say why averaging everything fails.</span></div>
+          <div><span class="num">06</span><span class="tx">Keep an array short: a fixed number of items with <code>shift</code>, or a fixed time with <code>setTimeout</code>.</span></div>
         </div>
-        <aside class="nt">The session's learning objectives from the course plan, in plain words. 01 and 02 are the conceptual ones; 03 to 06 are practical. The plan's third conceptual objective (a click is a discrete trigger, the pointer's keydown) is folded into 03. Come back to these at the end.</aside>
+        <aside class="nt">The session's learning objectives, as restructured on 22 Oct: three moves (normalise, speed, average over time). 01 is conceptual; 02 to 06 follow the three moves. Come back to these at the end.</aside>
       </section>
 
       <!-- 04 MONDAY RECAP -->
@@ -284,53 +299,51 @@
             <div class="row"><button class="btn ghost" id="st-reset">Count again</button></div>
           </div>
         </div>
-        <aside class="nt">Only now, after they've felt the difference, name it: pointer input. Then the mechanics, as confirmation of what they already sensed. They know keydown from the User input lecture: one event when the key goes down. Click the pad and press a key once: one keydown. Hold it: repeats, but still one per press otherwise. Now move the pointer over the pad for a second: the pointermove count climbs by dozens. A stream, because a pointer is always somewhere and the movement is the information. One more line before Part 1: a stream of raw positions is a new kind of raw value, and raw values are rarely usable as they are. That's the second thread of today.</aside>
+        <aside class="nt">Only now, after they've felt the difference, name it: pointer input. Then the mechanics, as confirmation of what they already sensed. They know keydown from the User input lecture: one event when the key goes down. Click the pad and press a key once: one keydown. Hold it: repeats, but still one per press otherwise. Now move the pointer over the pad for a second: the pointermove count climbs by dozens. A stream, because a pointer is always somewhere and the movement is the information. One more line before Move 1: a stream of raw positions is a new kind of raw value, and raw values are rarely usable as they are. Today: three moves to make them usable.</aside>
       </section>
 
-      <!-- 09 PART 1: BAND -->
-      <section class="slide stage" id="part1-band" data-sec="Part 1: Pointer events and position">
+      <!-- MOVE 1: BAND -->
+      <section class="slide stage" id="move1-band" data-sec="Move 1: Normalise">
         <div class="beam y"></div>
         <div class="beam m"></div>
         <div class="scan"></div>
         <div class="inner">
-          <div class="billing">Part 1: Pointer events and position</div>
-          <h2 class="hero md">Where is the pointer? And is that number any use?</h2>
-          <p class="lede">We read the raw position off the event. Then each problem it gives us gets a fix, and each fix gets a name.</p>
+          <div class="billing">Move 1: Normalise</div>
+          <h2 class="hero md">How far left or right are you?</h2>
+          <p class="lede">Every screen is a different size. What we care about is how far across someone is. So we turn the position into a number from 0 to 1.</p>
         </div>
-        <aside class="nt">10:30, 25 minutes for Part 1. The processing pipeline is taught here for the first time. Don't present it as a list of three tools: let each step arrive as the fix to a problem the pointer data just handed us, the same way the gaps surfaced on Monday because raw timestamps were meaningless. Part 2 adds one more step, smoothing, once movement over time gives us a jumpy value to smooth.</aside>
+        <aside class="nt">10:30, 25 minutes for Move 1. Today has three moves, and this is the first: make position mean the same thing on any screen, then stretch or squeeze it onto something the sound uses. Let normalising arrive as the fix to a problem the pointer hands us (the resize), not as a definition.</aside>
       </section>
 
-      <!-- 10 ONE SET OF LISTENERS -->
-      <section class="slide" id="pointer-api" data-sec="Part 1: Pointer events and position" data-demo="One set of listeners">
+      <!-- READ THE RAW VALUE -->
+      <section class="slide" id="pointer-api" data-sec="Move 1: Normalise" data-demo="Read the position">
         <span class="turn try">Try it</span>
-        <div class="billing">Part 1: Pointer events and position</div>
+        <div class="billing">Move 1: Normalise · The raw value</div>
         <hr class="rule">
-        <h2 class="h1 tight">One set of listeners for every pointer</h2>
+        <h2 class="h1 tight">Where is the pointer?</h2>
         <div class="cols">
           <div class="stack">
             <div class="panel">
               <div class="bar"><span>pointer.js</span></div>
-              <pre class="code xs" id="pa-code"></pre>
+              <pre class="code" id="pa-code" style="font-size:17px"></pre>
             </div>
-            <p class="dir" style="font-size:19px">Mouse, trackpad, finger or pen: the same three listeners hear them all. <code>event.pointerType</code> says which, if you ever need to know.</p>
+            <p class="dir" style="font-size:19px">Mouse, trackpad, finger or pen: the same listener hears them all.</p>
           </div>
           <div class="stack">
             <div class="rows read">
-              <div><span class="k">event.type</span><span class="v sm" id="pa-type">–</span></div>
-              <div><span class="k">event.pointerType</span><span class="v sm" id="pa-pt">–</span></div>
               <div><span class="k">event.clientX</span><span class="v" id="pa-x">–</span></div>
               <div><span class="k">event.clientY</span><span class="v" id="pa-y">–</span></div>
             </div>
-            <p class="small muted" style="margin:0">Move anywhere in this window. Press and let go, too.</p>
+            <p class="small muted" style="margin:0">Move anywhere in this window.</p>
           </div>
         </div>
-        <aside class="nt">The Pointer Events API: pointermove, pointerdown, pointerup replace separate mouse and touch handlers. The readout is live and real: these are the actual numbers your browser hands the code, for the whole window. clientX counts pixels from the left edge of the window, clientY from the top. Ask: where is 0, 0? (Top left.) Which way does clientY grow? (Down, which surprises people.) Students: move on your own laptop and watch the same names with your own numbers. If a phone is at hand, the same page shows "touch".</aside>
+        <aside class="nt">The readout is live and real: these are the numbers your browser hands the code, for the whole window. clientX counts pixels from the left edge of the window, clientY from the top. Ask: where is 0, 0? (Top left.) Which way does clientY grow? (Down, which surprises people.) Students: move on your own laptop and watch your own numbers.</aside>
       </section>
 
-      <!-- 11 IS THE RAW VALUE USEFUL? -->
-      <section class="slide" id="raw-x" data-sec="Part 1: Pointer events and position" data-demo="The raw number">
+      <!-- IS THE RAW VALUE USEFUL? -->
+      <section class="slide" id="raw-x" data-sec="Move 1: Normalise" data-demo="The raw number">
         <span class="turn try">Try it</span>
-        <div class="billing">Part 1: Pointer events and position · The raw value</div>
+        <div class="billing">Move 1: Normalise · The problem</div>
         <hr class="rule">
         <h2 class="h1 tight">Is this number useful?</h2>
         <div class="cols wide-r">
@@ -350,13 +363,13 @@
             <div><div class="small muted" style="margin-bottom:4px">Each width you've tried</div><div class="hist" id="rx-hist"></div></div>
           </div>
         </div>
-        <aside class="nt">Make the problem physical. Put the pointer somewhere and ask: clientX is, say, 847. Is that useful? Then resize the window live (leave full screen first: F or Esc). The same spot on the slide now reads a different number, and the far-right edge maxes out at a different value depending on the window's width. The list on the right keeps each width and what the right edge read at that width. The raw pixel means nothing on its own, because it depends on the size of the screen and the window. Don't fix it yet: next slide. Students can try the same on their laptops.</aside>
+        <aside class="nt">Make the problem physical. Ask: clientX is, say, 847. Is that useful? Then resize the window live (leave full screen first: F or Esc). The same spot reads a different number, and the right edge maxes out at a different value for each width. The list on the right keeps each width and what the right edge read there. On a phone, a laptop and the projector, "far right" is three different numbers. What we actually want to know is how far to the left or right someone is. Don't fix it yet: next slide.</aside>
       </section>
 
-      <!-- 12 NORMALISE -->
-      <section class="slide" id="normalise" data-sec="Part 1: Pointer events and position" data-demo="Normalise">
+      <!-- NORMALISE -->
+      <section class="slide" id="normalise" data-sec="Move 1: Normalise" data-demo="Normalise">
         <span class="turn try">Try it</span>
-        <div class="billing">Part 1: Pointer events and position · Normalise</div>
+        <div class="billing">Move 1: Normalise · The fix</div>
         <hr class="rule">
         <h2 class="h1 tight">Divide by the width: 0 to 1</h2>
         <div class="cols wide-r">
@@ -374,163 +387,63 @@
             <div class="named" style="margin:0"><div class="nm">Normalise</div><div class="rl">Turn a raw value into 0 to 1, so it means the same thing on any screen.</div></div>
           </div>
         </div>
-        <aside class="nt">The fix: divide by the window's width. Now the value runs 0 to 1, left to right, and means the same thing on any screen. Resize again to prove it: the far-right edge now reads 1.00 whatever the width (strictly 0.999, because the last pixel is innerWidth minus 1). The resize that broke the raw number is the same resize that shows the fix working. Only now name it: normalise. Step one of the pipeline. It's the same move as dividing the swipe position by the last index, which is coming in a few slides.</aside>
+        <aside class="nt">The fix: divide by the window's width. 0 is the left edge, 1 is the right edge, 0.5 is the middle, on any screen. Resize again to prove it: the right edge reads 1.00 whatever the width (strictly 0.999, because the last pixel is innerWidth minus 1). The resize that broke the raw number shows the fix working. Only now name it: normalise. The same works for y with window.innerHeight; it comes back in Move 2.</aside>
       </section>
 
-      <!-- 13 PREDICT THE PITCH -->
-      <section class="slide" id="predict-pitch" data-sec="Part 1: Pointer events and position" data-ex="Rise or fall?">
+      <!-- PREDICT DETUNE -->
+      <section class="slide" id="predict-detune" data-sec="Move 1: Normalise" data-ex="Left to right?">
         <span class="turn">Your turn</span>
-        <div class="billing">Part 1: Pointer events and position · Predict</div>
+        <div class="billing">Move 1: Normalise · Predict</div>
         <hr class="rule">
-        <h2 class="h1">Left to right: does the pitch rise or fall?</h2>
+        <h2 class="h1 tight">Left to right: what do you hear?</h2>
         <div class="cols wide-l">
           <div class="stack">
-            <p class="lede" style="margin:0">Nothing wants a pitch of 0.3. So we put the 0 to 1 onto a range of notes. With this line, you move the pointer from left to right. What happens?</p>
-            <div class="stack" id="pp-opts" style="gap:10px"></div>
-            <div class="fb" id="pp-fb"></div>
+            <p class="lede" style="margin:0">Nothing in a synth wants a 0.3. So we stretch the 0 to 1 onto something it does use. A note is playing, and you move the pointer from left to right. What do you hear?</p>
+            <div class="stack" id="pd-opts" style="gap:10px"></div>
+            <div class="fb" id="pd-fb"></div>
           </div>
           <div class="stack">
             <div class="panel">
-              <div class="bar p"><span>a range of notes</span></div>
-              <pre class="code lg" id="pp-code"></pre>
+              <div class="bar p"><span>normX → detune</span></div>
+              <pre class="code lg" id="pd-code"></pre>
             </div>
             <div class="panel">
-              <div class="bar p"><span>what's MIDI?</span></div>
-              <div class="pbody" style="font-size:17px;line-height:1.45">MIDI is the shared language electronic instruments and computers use for notes. It numbers the keys of a piano: <b>60 is middle C</b>, and each step of 1 is the next key, black keys included. 12 steps make an octave: 48 is C3, 72 is C5.</div>
+              <div class="bar p"><span>what's detune?</span></div>
+              <div class="pbody" style="font-size:17px;line-height:1.45">A shift in a note's pitch, counted in <b>cents</b>. 100 cents is one key on the piano. 1200 cents is an octave. 0 is the note as it is.</div>
             </div>
           </div>
         </div>
-        <aside class="nt">Predict before the demo: everyone picks on their own laptop first, then a show of hands. The numbers are MIDI note numbers: 48 is C3, 60 is middle C (C4), 72 is C5. normX 0 gives 48, normX 1 gives 72, so left to right the pitch rises across two octaves. Wrong answers get a hint, not the answer. Next slide: hear it.</aside>
+        <aside class="nt">Predict on laptops first. detune is new: it bends the note that's playing, without starting a new one. normX 0 gives 0 cents (the note as it is); normX 1 gives 1200 cents, an octave higher; the middle gives 600, half an octave. So left to right, the pitch slides up smoothly, one octave in total. Wrong answers get a hint. Next slide: hear it, and change the 1200.</aside>
       </section>
 
-      <!-- 14 INTERPOLATE -->
-      <section class="slide" id="interpolate" data-sec="Part 1: Pointer events and position" data-demo="Interpolate">
+      <!-- STRETCH OR SQUEEZE -->
+      <section class="slide" id="stretch" data-sec="Move 1: Normalise" data-demo="Stretch or squeeze">
         <span class="turn try">Try it</span>
-        <div class="billing">Part 1: Pointer events and position · Interpolate</div>
+        <div class="billing">Move 1: Normalise · A new range</div>
         <hr class="rule">
-        <h2 class="h1 tight">From 0 to 1, onto two octaves</h2>
+        <h2 class="h1 tight">Stretch it, or squeeze it</h2>
         <div class="cols">
           <div class="stack">
+            <div class="row"><span class="small">Range</span><div class="seg" id="sr-seg"><button class="btn ghost" data-k="100">× 100</button><button class="btn ghost sel" data-k="1200">× 1200</button><button class="btn ghost" data-k="2400">× 2400</button><button class="btn ghost" data-k="mid">Middle</button></div></div>
             <div class="panel">
-              <div class="bar"><span>pitch.js</span></div>
-              <pre class="code xs" id="ip-code"></pre>
+              <div class="bar"><span>bend.js</span></div>
+              <pre class="code xs" id="sr-code"></pre>
             </div>
-            <p class="dir" style="font-size:18px"><code>Tone.Frequency(note, "midi")</code> reads a MIDI number. <code>toNote()</code> gives its name. <code>setNote</code> changes the pitch of a note that's already playing.</p>
-          </div>
-          <div class="stack">
-            <div class="snd"><button class="btn alt" id="ip-snd">Sound on</button><span class="small" id="ip-sm">Then move across the window.</span></div>
-            <div class="rows read">
-              <div><span class="k">normX</span><span class="v" id="ip-n">–</span></div>
-              <div><span class="k">note</span><span class="v" id="ip-note">–</span></div>
-              <div><span class="k">its name</span><span class="v" id="ip-name">–</span></div>
-            </div>
-            <div><div class="meter mk" id="ip-m"><i></i></div><div class="meter-ax"><span>48 · C3</span><span>60 · C4</span><span>72 · C5</span></div></div>
-            <div class="named" style="margin:0"><div class="nm">Interpolate</div><div class="rl">Put a 0 to 1 value onto the range something actually uses.</div></div>
-          </div>
-        </div>
-        <aside class="nt">Press Sound on: a note starts and holds. Move left to right: it climbs from C3 to C5, as predicted. The normalised value is portable but not musical. 48 + normX * 24 maps it onto a range the synth uses. Name it: interpolate, step two of the pipeline, again arriving from a need rather than a definition. Try another range out loud: what would 60 + normX * 12 do? (One octave from middle C.) The note number has decimals; toNote rounds it to the nearest note, which is why it steps instead of sliding. setNote is new: it changes the pitch of the note that's playing, without starting a new one.</aside>
-      </section>
-
-      <!-- 15 TWO AXES -->
-      <section class="slide" id="two-axes" data-sec="Part 1: Pointer events and position" data-demo="Two axes">
-        <span class="turn try">Try it</span>
-        <div class="billing">Part 1: Pointer events and position · Two axes</div>
-        <hr class="rule">
-        <h2 class="h1 tight">Same pipeline, second axis</h2>
-        <div class="cols">
-          <div class="stack">
-            <div class="panel">
-              <div class="bar"><span>pitch.js · plus volume</span></div>
-              <pre class="code xs" id="ax-code"></pre>
-            </div>
-            <p class="dir" style="font-size:18px"><code>clientY</code> counts down from the top, so <code>1 - normY</code> makes the top loud and the bottom quiet.</p>
-          </div>
-          <div class="stack">
-            <div class="snd"><button class="btn alt" id="ax-snd">Sound on</button><span class="small">Then move anywhere: across and up.</span></div>
-            <div><div class="mlab"><span>x → pitch</span><b id="ax-pv">–</b></div><div class="meter" id="ax-p"><i></i></div></div>
-            <div><div class="mlab"><span>y → volume</span><b id="ax-vv">–</b></div><div class="meter cy" id="ax-v"><i></i></div></div>
-            <p class="lede" style="margin:0">Two raw values, the same two steps each, two things in the sound changing independently.</p>
-          </div>
-        </div>
-        <aside class="nt">Run the same normalise and interpolate on clientY and put it onto volume, in decibels: -30 is quiet, 0 is full. Ask first: if I map normY straight on, which edge is loud? (The bottom, because clientY grows downwards.) That's why the line says 1 - normY: it flips the 0 to 1 round. Move diagonally: pitch and volume change together but independently. Point out that they just reused the whole pipeline on a different raw value. That reusability is the point.</aside>
-      </section>
-
-      <!-- 16 SWAP THE SOURCE -->
-      <section class="slide" id="swap-source" data-sec="Part 1: Pointer events and position" data-demo="Swap the source">
-        <span class="turn try">Try it</span>
-        <div class="billing">Part 1: Pointer events and position · Swap the source</div>
-        <hr class="rule">
-        <h2 class="h1 tight">What if the source were a swipe?</h2>
-        <div class="cols wide-l">
-          <div class="stack" style="gap:10px">
-            <div class="row"><span class="small">Source</span><div class="seg" id="sw-seg"><button class="btn ghost sel" data-m="ptr">The pointer</button><button class="btn ghost" data-m="key">A swipe on q to p</button></div></div>
-            <div class="rows pipe">
-              <div><span class="st">raw value</span><pre class="code" id="sw-raw"></pre></div>
-              <div><span class="st">normalise</span><pre class="code" id="sw-norm"></pre></div>
-              <div><span class="st">interpolate<br><span class="same">the same</span></span><pre class="code" id="sw-int"></pre></div>
-              <div><span class="st">destination<br><span class="same">the same</span></span><pre class="code" id="sw-dst"></pre></div>
-            </div>
+            <p class="dir" style="font-size:18px" id="sr-dir"></p>
           </div>
           <div class="stack" style="gap:12px">
-            <div class="snd"><button class="btn alt" id="sw-snd">Sound on</button></div>
-            <div id="sw-src"></div>
+            <div class="snd"><button class="btn alt" id="sr-snd">Sound on</button><span class="small">Then move across the window.</span></div>
+            <div><div class="mlab"><span>normX</span><b id="sr-n">–</b></div><div class="meter mk" id="sr-m1"><i></i></div><div class="meter-ax"><span>0</span><span>1</span></div></div>
+            <svg class="span" id="sr-svg" viewBox="0 0 500 96" aria-label="The range of detune the screen is stretched onto"></svg>
             <div class="rows read">
-              <div><span class="k">0 to 1</span><span class="v" id="sw-n">–</span></div>
-              <div><span class="k">note</span><span class="v" id="sw-note">–</span></div>
+              <div><span class="k">synth.detune.value</span><span class="v" id="sr-c">–<small>cents</small></span></div>
             </div>
           </div>
         </div>
-        <aside class="nt">Keep this conceptual; don't re-derive Monday's swipe mechanics. Pose it as a question first: we drove pitch with the pointer. What if the source were a keyboard swipe instead? Then switch the source. The one idea that must land: a key's place along the row is an index, 0 to 9, and dividing by the last index (row.length - 1) turns it into the same 0 to 1 value the pointer gave us. So it feeds the exact same interpolate line, untouched: the green tags. Click the key row and drag a finger along it with Sound on. Same destination, a completely different source, and the swap cost one line. The pipeline has a socket for a source and a socket for a destination; it's not a pointer trick.</aside>
+        <aside class="nt">Sound on, then move left to right with each range. × 1200: the whole screen is one octave. × 100: squeezed into a single key, a gentle wobble. × 2400: stretched over two octaves, so a small move makes a big bend. Middle: -1200 + normX * 2400 shifts the range so the note itself is in the middle of the screen, an octave down at the left and up at the right. The same 0 to 1 every time; only the range it's stretched onto changes. That's the second half of the move: once a value is 0 to 1, you can put it onto any range you like.</aside>
       </section>
 
-      <!-- 17 NORMALISE OR INTERPOLATE? -->
-      <section class="slide" id="which-step" data-sec="Part 1: Pointer events and position" data-ex="Normalise or interpolate?">
-        <span class="turn">Your turn</span>
-        <div class="billing">Part 1: Pointer events and position · Check</div>
-        <hr class="rule">
-        <h2 class="h1 tight">Normalise or interpolate?</h2>
-        <p class="lede" style="margin-bottom:8px">For each line: is it turning a raw value into 0 to 1, or putting 0 to 1 onto a useful range?</p>
-        <div class="rows quiz sw" id="ws"></div>
-        <div class="fb" id="ws-fb" style="margin-top:10px"></div>
-        <aside class="nt">Each student answers on their own laptop. The tell: normalise divides a raw value by its largest possible value, and the answer is 0 to 1. Interpolate starts from a 0 to 1 value, multiplies it by the size of a range and adds where the range starts. Line 5 is the hold-time example from Monday's afternoon: Math.min clamps it, so holding longer than a second still gives 1. Common mistake to name: doing them in the wrong order, interpolating the raw pixel (48 + clientX * 24 is a note in the tens of thousands).</aside>
-      </section>
-
-      <!-- 18 CLICKS AS TRIGGERS -->
-      <section class="slide" id="clicks" data-sec="Part 1: Pointer events and position" data-demo="Press decides when">
-        <span class="turn try">Try it</span>
-        <div class="billing">Part 1: Pointer events and position · Clicks</div>
-        <hr class="rule">
-        <h2 class="h1 tight">The press decides when. Where decides which.</h2>
-        <div class="cols">
-          <div class="stack">
-            <div class="panel">
-              <div class="bar"><span>press.js</span></div>
-              <pre class="code xs" id="cl-code"></pre>
-            </div>
-          </div>
-          <div class="stack">
-            <p class="lede" style="margin:0"><code>pointerdown</code> and <code>pointerup</code> are the pointer's <code>keydown</code> and <code>keyup</code>: moments, not a stream.</p>
-            <div class="big md" id="cl-note">–<small>Press anywhere on this slide. Hold, then let go.</small></div>
-            <div class="console con-s" id="cl-con" style="min-height:96px"></div>
-          </div>
-        </div>
-        <aside class="nt">Keep this short: they saw the same pattern on Thursday's shape, and on keys before that. pointerdown calls Tone.start() (a press counts as a click, so sound is allowed) and starts a note; pointerup stops it. That's last week's triggerAttack and triggerRelease, now on a press instead of a key. The new idea is the combination: the press decides when a note plays, and the position decides which note. Press on the left and on the right. This synth is a plain Tone.Synth, which plays one note at a time, so triggerRelease needs no note; Thursday's PolySynth needed one. Spend the time saved on the live coding next.</aside>
-      </section>
-
-      <!-- 19 LIVE CODE: PITCH BEND -->
-      <section class="slide stage" id="bend-live" data-sec="Part 1: Pointer events and position">
-        <div class="beam y"></div>
-        <div class="beam m"></div>
-        <div class="scan"></div>
-        <div class="inner">
-          <div class="billing">Part 1: Pointer events and position · Together</div>
-          <h2 class="hero md">Press, then drag to bend.</h2>
-          <p class="lede">Written live: the press starts a note, the drag bends it, letting go stops it. Before we run it: press in the middle and drag left. Up or down? And from the far right edge, can you still bend up?</p>
-        </div>
-        <aside class="nt">About five minutes, live-coded in your editor, listeners on window, no shapes. pointerdown: Tone.start(), dragging = true, remember startX = event.clientX, synth.triggerAttack("C4"). pointermove: if (!dragging) return; let bend = (event.clientX - startX) / window.innerWidth (normalise); bend = Math.max(-1, Math.min(1, bend)) (clamp to -1..1); synth.detune.value = bend * 1200 (interpolate: plus or minus one octave in cents). pointerup: dragging = false, triggerRelease(), detune back to 0. Predictions: dragging left bends down; from the far right edge you can't bend up, because there's no room left to move. Why this demo: the press decides when, the drag decides how much. And it quietly previews Part 2: the bend comes from how far you moved since pressing, not from where you are. It's relative, and its range is -1 to 1, not 0 to 1. ±1200 cents is exaggerated so the room can hear it; a real pitch-bend wheel is usually ±200. Device notes in passing: on a trackpad, dragging means press and hold (or three-finger drag): same code, different body. On touch, the page scrolls instead unless document.body.style.touchAction = "none". If the pointer leaves the window mid-drag, pointerup can be missed; event.target.setPointerCapture(event.pointerId) on pointerdown fixes it (optional). The reference sketch is in the Notion plan and the pointers/ folder.</aside>
-      </section>
-
-      <!-- 20 BREAK -->
+      <!-- BREAK -->
       <section class="slide stage" id="break" data-sec="Break">
         <div class="beam y"></div>
         <div class="beam m"></div>
@@ -538,29 +451,29 @@
         <div class="inner">
           <div class="billing">Break</div>
           <div class="timer" id="tm" aria-live="off">10:00</div>
-          <p class="lede" id="tm-msg" style="margin-top:22px">Stretch, refill. After the break: movement itself as data.</p>
+          <p class="lede" id="tm-msg" style="margin-top:22px">Stretch, refill. After the break: how fast the pointer moves.</p>
           <div class="row" style="margin-top:20px"><button class="btn alt" id="tm-go">Start</button><button class="btn ghost" id="tm-reset">Reset</button></div>
         </div>
         <aside class="nt">10:55–11:05, ten minutes. Press Start for the countdown.</aside>
       </section>
 
-      <!-- 21 PART 2: BAND -->
-      <section class="slide stage" id="part2-band" data-sec="Part 2: Movement as data">
+      <!-- MOVE 2: BAND -->
+      <section class="slide stage" id="move2-band" data-sec="Move 2: Speed">
         <div class="beam y"></div>
         <div class="beam m"></div>
         <div class="scan"></div>
         <div class="inner">
-          <div class="billing">Part 2: Movement as data</div>
-          <h2 class="hero md">Speed isn't on the event.</h2>
-          <p class="lede">The event says where the pointer is. How fast it's going, we work out ourselves, from two of them.</p>
+          <div class="billing">Move 2: Speed</div>
+          <h2 class="hero md">How much of the screen per second?</h2>
+          <p class="lede">The event says where the pointer is. How fast it's going, we work out from two of them. In screens, not pixels, so it means the same on any screen.</p>
         </div>
-        <aside class="nt">11:05, 25 minutes. Position alone misses something the opening showed: the movement itself. A fast swipe and a slow drift can end at the same spot. Speed is a new raw value, but it's not read off the event: we derive it, the way Monday derived the gaps from the moments. Same move: keep the last one, compare with this one.</aside>
+        <aside class="nt">11:05, about ten minutes. Speed isn't on the event: we derive it, the way Monday derived the gaps from the moments. Keep the last one, compare with this one. And we stay in normalised coordinates from Move 1: a speed of 1 means crossing the whole screen in one second, on a phone or a projector.</aside>
       </section>
 
-      <!-- 22 DERIVE SPEED -->
-      <section class="slide" id="speed" data-sec="Part 2: Movement as data" data-demo="Work out speed">
+      <!-- DERIVE SPEED -->
+      <section class="slide" id="speed" data-sec="Move 2: Speed" data-demo="Work out speed">
         <span class="turn try">Try it</span>
-        <div class="billing">Part 2: Movement as data</div>
+        <div class="billing">Move 2: Speed</div>
         <hr class="rule">
         <h2 class="h1 tight">Keep the last one. Compare.</h2>
         <div class="cols">
@@ -569,203 +482,197 @@
               <div class="bar"><span>speed.js</span><span>Math.hypot is new</span></div>
               <pre class="code xs" id="sp-code"></pre>
             </div>
-            <p class="dir" style="font-size:18px"><code>Math.hypot(dx, dy)</code> gives the straight-line distance between two points: Pythagoras, done for you.</p>
+            <p class="dir" style="font-size:17px"><code>Math.hypot(dx, dy)</code> gives the straight-line distance between two points: Pythagoras, done for you.</p>
           </div>
           <div class="stack">
             <div class="rows read">
-              <div><span class="k">distance</span><span class="v" id="sp-d">–<small>pixels</small></span></div>
-              <div><span class="k">now - lastTime</span><span class="v" id="sp-t">–<small>ms</small></span></div>
-              <div><span class="k">speed</span><span class="v" id="sp-s">–<small>pixels per ms</small></span></div>
+              <div><span class="k">distance</span><span class="v" id="sp-d">–<small>screens</small></span></div>
+              <div><span class="k">seconds</span><span class="v" id="sp-t">–<small>s</small></span></div>
+              <div><span class="k">speed</span><span class="v" id="sp-s">–<small>screens per second</small></span></div>
             </div>
-            <div><div class="small muted" style="margin-bottom:4px">The last few speeds, newest on the right</div><div class="hist" id="sp-hist"></div></div>
+            <svg class="trace" id="sp-svg" viewBox="0 0 500 140" aria-label="The last speeds"></svg>
             <p class="small muted" style="margin:0">Move anywhere: slowly, then a fast flick.</p>
           </div>
         </div>
-        <aside class="nt">Same shape as Monday's gaps: keep the previous position and time at the top (they have to survive between events, so State), and on each pointermove compare the new one with them. Distance over time is speed, in pixels per millisecond. Move slowly: speeds well under 1. Flick: several pixels per millisecond. Point at the history: raw speed is jumpy, even when your hand feels smooth. Two honest edge cases worth a sentence: the very first move compares against 0, 0 at time 0, so it's nonsense (tiny); and if two moves arrive in the same millisecond, the time is 0 and speed is Infinity. Clamping on the next slide catches both. Also: when you stop, no event arrives, so speed keeps its last value. Data only arrives with events.</aside>
+        <aside class="nt">Same shape as Monday's gaps: the last position and time live at the top (they have to survive between events, so State), and each pointermove compares the new one with them. Both positions are normalised, so the distance is in screens: 0.1 is a tenth of the screen. Divide by the time in seconds and speed is in screens per second. Move slowly: well under 1. Flick across: 3, 4, 5. Point at the trace: even a smooth hand gives a jumpy line, because each event is one tiny movement. Two honest edge cases: the very first move compares against 0, 0 at time 0, so it's nonsense (tiny); and if two moves arrive in the same millisecond, seconds is 0 and speed is Infinity. The demos skip those.</aside>
       </section>
 
-      <!-- PREDICT DETUNE -->
-      <section class="slide" id="predict-detune" data-sec="Part 2: Movement as data" data-ex="Higher or lower?">
+      <!-- PREDICT SPEED -->
+      <section class="slide" id="predict-speed" data-sec="Move 2: Speed" data-ex="What speed?">
         <span class="turn">Your turn</span>
-        <div class="billing">Part 2: Movement as data · Predict</div>
+        <div class="billing">Move 2: Speed · Check</div>
         <hr class="rule">
-        <h2 class="h1 tight">A fast flick: higher or lower?</h2>
+        <h2 class="h1">Edge to edge in half a second</h2>
         <div class="cols wide-l">
           <div class="stack">
-            <p class="lede" style="margin:0">Speed goes through the same two steps, onto <code>detune</code>: how far a note is pushed up from its pitch. You hold a note and flick the pointer across the screen. What do you hear?</p>
-            <div class="stack" id="pd-opts" style="gap:10px"></div>
-            <div class="fb" id="pd-fb"></div>
+            <p class="lede" style="margin:0">You move the pointer straight across, from the left edge to the right edge, in half a second. What is <code>speed</code>?</p>
+            <div class="stack" id="ps-opts" style="gap:10px"></div>
+            <div class="fb" id="ps-fb"></div>
           </div>
-          <div class="stack">
-            <div class="panel">
-              <div class="bar p"><span>speed → detune</span></div>
-              <pre class="code" id="pd-code" style="font-size:16px"></pre>
-            </div>
-            <div class="panel">
-              <div class="bar p"><span>what's detune?</span></div>
-              <div class="pbody" style="font-size:17px;line-height:1.45">A shift in pitch, counted in <b>cents</b>. 100 cents is one key on the piano, one MIDI step. 1200 cents is an octave. 0 is the note as it is.</div>
-            </div>
+          <div class="panel">
+            <div class="bar p"><span>speed.js</span></div>
+            <pre class="code" id="ps-code" style="font-size:17px"></pre>
           </div>
         </div>
-        <aside class="nt">Everyone predicts first. Detune is new but easy to hear: it pushes the note that's playing up (or down, with negative cents) without starting a new one. It connects to the MIDI box from Part 1: 100 cents is one MIDI step. A fast flick gives a big speed, so normSpeed is near 1 (and clamped at 1 for anything faster than maxSpeed), so the note bends up towards a whole octave. A slow drift stays near the note itself. Math.min here is the clamp: speed has no natural maximum, unlike the window width, so we choose one. That choice is the next slide.</aside>
+        <aside class="nt">Everyone answers on their laptop. Left edge to right edge is the whole screen: a distance of 1. Half a second: 0.5. 1 / 0.5 = 2 screens per second. 0.5 is the common slip (dividing the wrong way round). 960 is what you'd get in pixels per ms on a 1920-wide screen, which is exactly the number we got rid of. In real code the distance comes in many small pieces, one per event, but the speed works out the same.</aside>
       </section>
 
       <!-- SPEED → DETUNE -->
-      <section class="slide" id="speed-sound" data-sec="Part 2: Movement as data" data-demo="Faster is higher">
+      <section class="slide" id="speed-detune" data-sec="Move 2: Speed" data-demo="Faster is higher">
         <span class="turn try">Try it</span>
-        <div class="billing">Part 2: Movement as data · Hear it</div>
+        <div class="billing">Move 2: Speed · Hear it</div>
         <hr class="rule">
-        <h2 class="h1 tight">Faster is higher. But how fast is fast?</h2>
+        <h2 class="h1 tight">Faster is higher. And choppy.</h2>
         <div class="cols">
           <div class="stack">
             <div class="panel">
               <div class="bar"><span>speed.js · inside pointerMove</span></div>
-              <pre class="code xs" id="ss-code"></pre>
+              <pre class="code lg" id="sd-code"></pre>
             </div>
-            <div class="sl"><span>maxSpeed</span><input type="range" id="ss-max" min="0.5" max="10" step="0.5" value="3" aria-label="maxSpeed"><span class="v" id="ss-mv">3</span></div>
-            <p class="dir" style="font-size:18px">There is no right edge for speed. You pick the maximum, by testing on the device you have.</p>
+            <p class="dir" style="font-size:18px">A speed of 4 screens per second bends the note 1200 cents: an octave.</p>
           </div>
-          <div class="stack">
-            <div class="snd"><button class="btn alt" id="ss-snd">Sound on</button><span class="small">Then move: drift, then flick.</span></div>
-            <div><div class="mlab"><span>speed</span><b id="ss-sv">–</b></div><div class="meter" id="ss-sp"><i></i></div></div>
-            <div><div class="mlab"><span>normSpeed → detune</span><b id="ss-fv">–</b></div><div class="meter cy" id="ss-f"><i></i></div></div>
+          <div class="stack" style="gap:12px">
+            <div class="snd"><button class="btn alt" id="sd-snd">Sound on</button><span class="small">Then move: drift, then flick.</span></div>
+            <svg class="trace" id="sd-svg" viewBox="0 0 500 140" aria-label="The last speeds"></svg>
             <div class="rows read">
-              <div><span class="k">fastest so far</span><span class="v" id="ss-top">–<small>pixels per ms</small></span></div>
+              <div><span class="k">synth.detune.value</span><span class="v" id="sd-c">–<small>cents</small></span></div>
             </div>
-            <div class="row"><button class="btn ghost" id="ss-reset">Start again</button></div>
           </div>
         </div>
-        <aside class="nt">Press Sound on: a held note. Drift slowly: it stays near the note. Flick: it bends up, as far as an octave. Then the design decision. Run it with a mouse, then with a trackpad (or ask a student with each to call out their "fastest so far"). The same code works for both, but the speeds differ: trackpad flicks, acceleration settings, screen size. With maxSpeed too low, every movement bends the full octave; too high, it barely moves. So the maximum used to normalise speed is chosen by testing against real data on the device you actually have, not a magic number. Then listen to a steady movement: the pitch wobbles, because raw speed jumps from one event to the next. That wobble is the next problem. Also: it stays bent when you stop dead, because no move means no event and no new speed.</aside>
+        <aside class="nt">Sound on. Drift slowly: the note stays near itself. Flick: it jumps up. Now move at a steady pace and listen: it warbles, because every event's speed is a little different, and the detune follows each one. That choppiness is the problem Move 3 solves. If the room's trackpads give much smaller speeds than your mouse, the 300 can go up: it's a choice, tested on the device you have. Also note: stop dead and it stays where it was. No move, no event, no new speed. Keep that in mind for later.</aside>
       </section>
 
-      <!-- MOVING AVERAGE, VERSION 1 -->
-      <section class="slide" id="avg-last" data-sec="Part 2: Movement as data" data-demo="Average the last 10">
+      <!-- MOVE 3: BAND -->
+      <section class="slide stage" id="move3-band" data-sec="Move 3: Average over time">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">Move 3: Average over time</div>
+          <h2 class="hero md">Don't trust one move. Average several.</h2>
+          <p class="lede">Four ways to keep a history of speeds and average it. Each one fixes the last one's problem.</p>
+        </div>
+        <aside class="nt">11:15, about twenty minutes. One movement is a tiny, jumpy piece of data. Averaging several cancels out the jumps. The question is which several: all of them, the last ten, or the ones from the last half second. Every slide in this move has the same picture: each stored speed is a bar, placed by how long ago it arrived, newest on the right. Bars that count towards the average are coloured; the line across is the average. Watch which bars count.</aside>
+      </section>
+
+      <!-- 3a: THE WHOLE ARRAY -->
+      <section class="slide" id="avg-all" data-sec="Move 3: Average over time" data-demo="Average everything">
         <span class="turn try">Try it</span>
-        <div class="billing">Part 2: Movement as data · Smoothing</div>
+        <div class="billing">Move 3: Average over time · Version 1</div>
         <hr class="rule">
-        <h2 class="h1 tight">Smooth it: average the last 10</h2>
+        <h2 class="h1 tight">Average every speed so far</h2>
         <div class="cols">
           <div class="stack">
             <div class="panel">
-              <div class="bar"><span>smooth.js</span><span>keep every speed</span></div>
+              <div class="bar"><span>average.js</span></div>
+              <pre class="code xs" id="aa-code"></pre>
+            </div>
+          </div>
+          <div class="stack" style="gap:10px">
+            <div class="row"><div class="snd"><button class="btn alt" id="aa-snd">Sound on</button></div><button class="btn ghost" id="aa-min">Add a minute of drifting</button><button class="btn ghost" id="aa-reset">Start again</button></div>
+            <svg class="mem" id="aa-svg" viewBox="0 0 500 170" aria-label="Stored speeds by age"></svg>
+            <div class="row" style="gap:36px;align-items:flex-start">
+              <div class="big md" id="aa-n">0<small>speeds.length</small></div>
+              <div class="big md" id="aa-w">–<small>one new speed counts for</small></div>
+            </div>
+          </div>
+        </div>
+        <aside class="nt">The simplest idea: keep every speed in an array, and average all of it. Move steadily with Sound on: smooth, nice. Flick: it still reacts a bit. Now press Add a minute of drifting: that's what a minute of normal use puts in the array, around 3600 slow speeds. Flick again. The line barely moves. Each new speed counts for one part in speeds.length; after a minute, one in thousands. The longer the program runs, the less it responds. Everything is coloured in the picture, because everything counts, even what happened a minute ago (the "older" label).</aside>
+      </section>
+
+      <!-- 3b: THE LAST 10 -->
+      <section class="slide" id="avg-last" data-sec="Move 3: Average over time" data-demo="The last 10">
+        <span class="turn try">Try it</span>
+        <div class="billing">Move 3: Average over time · Version 2</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Average only the last 10</h2>
+        <div class="cols">
+          <div class="stack">
+            <div class="panel">
+              <div class="bar"><span>average.js</span></div>
               <pre class="code xs" id="al-code"></pre>
             </div>
           </div>
-          <div class="stack" style="gap:12px">
-            <div class="row"><div class="snd"><button class="btn alt" id="al-snd">Sound on</button></div><span class="small">Detune follows</span><div class="seg" id="al-seg"><button class="btn ghost" data-m="raw">Raw</button><button class="btn ghost sel" data-m="avg">Average</button></div></div>
-            <svg class="trace" id="al-svg" viewBox="0 0 500 200" aria-label="Raw speed and its moving average"></svg>
-            <div class="key3"><span><i style="background:var(--ink-300)"></i>each normSpeed</span><span><i style="background:var(--curtain-600)"></i>average of the last 10</span></div>
-            <div class="big md" id="al-n">0<small>speeds.length</small></div>
+          <div class="stack" style="gap:10px">
+            <div class="row"><div class="snd"><button class="btn alt" id="al-snd">Sound on</button></div><button class="btn ghost" id="al-reset">Start again</button></div>
+            <svg class="mem" id="al-svg" viewBox="0 0 500 170" aria-label="Stored speeds by age"></svg>
+            <div class="row" style="gap:36px;align-items:flex-start">
+              <div class="big md" id="al-n">0<small>speeds.length</small></div>
+              <div class="big md">10<small>speeds used</small></div>
+            </div>
           </div>
         </div>
-        <aside class="nt">The wobble comes from single events. The fix: don't trust one value, average several. Keep every normalised speed in an array (at the top, so it survives between events, like Monday's taps), and use the average of the last 10. Each new value now counts for one tenth, so one jumpy value can't throw the pitch around. The for loop starts at speeds.length - 10: the same "count back from the end" as Monday's gaps. The if is there because with fewer than 10 values, i would start below 0. Move steadily: the grey line jumps, the magenta line follows smoothly. Switch Detune follows between Raw and Average and listen. Then point at speeds.length, still growing. Next slide asks about it.</aside>
+        <aside class="nt">Recent history is what matters. Same array, but the loop only visits the last 10: it starts at speeds.length - 10, the same "count back from the end" as Monday's gaps. The if is there because with fewer than 10 speeds, i would start below 0. Move and flick: responsive again, but still smoother than raw. In the picture only the ten newest bars are coloured; everything older is grey. And look at speeds.length: still climbing. We keep thousands of speeds and only ever look at ten.</aside>
       </section>
 
-      <!-- PREDICT: HOW LONG? -->
-      <section class="slide" id="predict-length" data-sec="Part 2: Movement as data" data-ex="How long is speeds?">
-        <span class="turn">Your turn</span>
-        <div class="billing">Part 2: Movement as data · Predict</div>
-        <hr class="rule">
-        <h2 class="h1 tight">A minute later: how long is speeds?</h2>
-        <div class="cols wide-l">
-          <div class="stack">
-            <p class="lede" style="margin:0"><code>pointermove</code> fires about 60 times a second while you move. Every time, we push one speed onto the list. We only ever use the last 10.</p>
-            <div class="stack" id="pl-opts" style="gap:10px"></div>
-            <div class="fb" id="pl-fb"></div>
-          </div>
-          <div class="panel">
-            <div class="bar p"><span>smooth.js</span></div>
-            <pre class="code" id="pl-code" style="font-size:16px"></pre>
-          </div>
-        </div>
-        <aside class="nt">Everyone predicts first. Nothing in the code ever takes a value out, so the list grows by about 60 a second: around 3600 after a minute, tens of thousands after a class session of playing. The program keeps all of them and uses ten. On a laptop that won't crash anything soon, but it's waste, and in an installation that runs all day it adds up. Ask: what would we rather do? Lead towards "only keep the 10 we need".</aside>
-      </section>
-
-      <!-- MOVING AVERAGE, VERSION 2 -->
-      <section class="slide" id="keep-ten" data-sec="Part 2: Movement as data" data-demo="Keep only 10">
+      <!-- 3c: KEEP ONLY 10 -->
+      <section class="slide" id="keep-ten" data-sec="Move 3: Average over time" data-demo="Keep only 10">
         <span class="turn try">Try it</span>
-        <div class="billing">Part 2: Movement as data · Smoothing</div>
+        <div class="billing">Move 3: Average over time · Version 3</div>
         <hr class="rule">
-        <h2 class="h1 tight">Only keep the last 10</h2>
+        <h2 class="h1 tight">Only keep 10 in the array</h2>
         <div class="cols">
           <div class="stack">
             <div class="panel">
-              <div class="bar"><span>smooth.js</span><span>shift is new</span></div>
+              <div class="bar"><span>average.js</span><span>shift is new</span></div>
               <pre class="code xs" id="kt-code"></pre>
             </div>
-            <p class="dir" style="font-size:18px"><code>push</code> adds to the end. <code>shift()</code> takes the first item out: the oldest one. In at the back, out at the front, like a queue.</p>
+            <p class="dir" style="font-size:17px"><code>push</code> adds to the end. <code>shift()</code> takes the first item out: the oldest. (<code>pop()</code> would take the newest.)</p>
           </div>
-          <div class="stack" style="gap:12px">
-            <div class="row"><div class="snd"><button class="btn alt" id="kt-snd">Sound on</button></div><span class="small">Keep</span><div class="seg" id="kt-seg"><button class="btn ghost" data-n="3">3</button><button class="btn ghost sel" data-n="10">10</button><button class="btn ghost" data-n="30">30</button></div></div>
+          <div class="stack" style="gap:10px">
+            <div class="row"><div class="snd"><button class="btn alt" id="kt-snd">Sound on</button></div></div>
+            <svg class="mem" id="kt-svg" viewBox="0 0 500 170" aria-label="Stored speeds by age"></svg>
             <div><div class="small muted" style="margin-bottom:6px">speeds, newest on the right</div><div class="line sm" id="kt-line"></div></div>
-            <div class="row" style="gap:40px;align-items:flex-start">
-              <div class="big md" id="kt-n">0<small>speeds.length</small></div>
-              <div class="big md" id="kt-avg">–<small>average</small></div>
-            </div>
-            <div><div class="mlab"><span>average → detune</span><b id="kt-dv">–</b></div><div class="meter cy" id="kt-m"><i></i></div></div>
+            <div class="big md" id="kt-n">0<small>speeds.length</small></div>
           </div>
         </div>
-        <aside class="nt">Version 2: the list itself only ever holds the last 10. After each push, if it's longer than 10, shift() removes the oldest from the front. New: shift. Then the average is of the whole list, so the loop is the plain 0 to length loop they know, and dividing by speeds.length means no special case while it's still filling up. Move and watch the boxes slide along: one in at the right, one out at the left, length stuck at 10. Then try Keep 3 and Keep 30 and listen: 3 follows fast but still wobbles; 30 is very smooth but lags behind your hand. How many to keep is a design choice, judged by ear, like maxSpeed. Act it out if there's time: ten students in a line hold cards with numbers; a new card joins at one end, the person at the far end sits down, someone reads out the average.</aside>
+        <aside class="nt">The easier way to get the last 10: never keep more than 10. After each push, if the array is longer than 10, shift() takes the oldest off the front. In at the back, out at the front, like a queue. Now the average is over the whole array, so the loop is the plain 0 to length one, and dividing by speeds.length means no special case while it fills up. Move: the boxes slide along, one in at the right, one out at the left, length stuck at 10. Same sound as version 2, a fraction of the memory. pop() would remove the newest, which is the opposite of what we want. Then: flick fast, and stop dead. Keep your hand still and watch the picture before going on.</aside>
       </section>
 
-      <!-- 25 ABSOLUTE AND RELATIVE -->
-      <section class="slide" id="abs-rel" data-sec="Part 2: Movement as data">
-        <div class="billing">Part 2: Movement as data · Two kinds of value</div>
+      <!-- 3d: THE STOP PROBLEM -->
+      <section class="slide" id="stop-problem" data-sec="Move 3: Average over time" data-ex="Flick, then stop">
+        <span class="turn">Your turn</span>
+        <div class="billing">Move 3: Average over time · Predict</div>
         <hr class="rule">
-        <h2 class="h1">Absolute and relative</h2>
-        <div class="two">
-          <div>
-            <h3>Absolute</h3>
-            <p><b>Where you are</b>, right now. One event is enough to know it.</p>
-            <p><code>event.clientX</code>, <code>event.clientY</code>, <code>normX</code></p>
-            <p class="ex">"The pointer is two thirds of the way across."</p>
+        <h2 class="h1 tight">Flick fast, then stop dead</h2>
+        <div class="cols wide-l">
+          <div class="stack">
+            <p class="lede" style="margin:0">With version 3, you flick the pointer fast across the screen, then hold your hand completely still. What does the average do?</p>
+            <div class="stack" id="sp2-opts" style="gap:10px"></div>
+            <div class="fb" id="sp2-fb"></div>
           </div>
-          <div>
-            <h3>Relative</h3>
-            <p><b>How much changed</b> since some earlier moment. Needs at least two.</p>
-            <p><code>speed</code>, the distance since the last move, the bend since you pressed</p>
-            <p class="ex">"It moved 40 pixels in the last 10 milliseconds."</p>
+          <div class="panel">
+            <div class="bar p"><span>remember</span></div>
+            <pre class="code" id="sp2-code" style="font-size:16px"></pre>
           </div>
         </div>
-        <aside class="nt">Name the distinction explicitly. Same device, two different kinds of raw value. Absolute: where you are; one reading is enough. Relative: how much changed since last time, or since some starting point; it needs history, which is why lastX and lastTime live at the top. Refer back to the pitch bend before the break: it came from how far you dragged since pressing, so it was relative, even though it used clientX. This is also exactly A3's "data processed over time": relative values are the ones that need more than one event.</aside>
+        <aside class="nt">Everyone predicts. Most people expect it to drop to 0, because the pointer stopped. But nothing in the code runs when the pointer is still: no movement, no pointermove, no new speed, no shift. The last ten speeds were all fast, they stay in the array, so the average stays high and the note stays bent, forever, until you move again. Show it on the previous slide if anyone doubts it: the bars just slide left and stay coloured. A second, quieter problem: moving slowly gives fewer events, so ten speeds cover a longer stretch of time than ten fast ones. "The last 10" isn't a fixed amount of time.</aside>
       </section>
 
-      <!-- 28 TOUCH AND PEN (OPTIONAL) -->
-      <section class="slide" id="touch-pen" data-sec="Part 2: Movement as data" data-demo="Touch and pen">
+      <!-- 3e: FORGET BY TIME -->
+      <section class="slide" id="forget" data-sec="Move 3: Average over time" data-demo="Forget by time">
         <span class="turn try">Try it</span>
-        <div class="billing">Part 2: Movement as data · Touch and pen</div>
+        <div class="billing">Move 3: Average over time · Version 4</div>
         <hr class="rule">
-        <h2 class="h1 tight">A finger or a pen: no extra code</h2>
+        <h2 class="h1 tight">Let each speed expire</h2>
         <div class="cols">
           <div class="stack">
-            <p class="lede" style="margin:0">Everything today already works with a finger on a phone or a pen on a tablet. The same listeners fire.</p>
             <div class="panel">
-              <div class="bar p"><span>if you need to know</span></div>
-              <pre class="code" id="tp-code" style="font-size:16px"></pre>
+              <div class="bar"><span>average.js</span><span>setTimeout is new</span></div>
+              <pre class="code xs" id="fg-code" style="font-size:13.5px;line-height:1.45"></pre>
             </div>
-            <p class="small muted" style="margin:0">Optional. You don't need a touch screen or a pen for anything in this course.</p>
           </div>
-          <div class="stack">
-            <div class="spad" id="tp-pad"><div class="hint">touch, draw or move here</div></div>
-            <div class="rows read">
-              <div><span class="k">event.pointerType</span><span class="v sm" id="tp-t">–</span></div>
-              <div><span class="k">event.pressure</span><span class="v sm" id="tp-p">–</span></div>
+          <div class="stack" style="gap:10px">
+            <div class="row"><div class="snd"><button class="btn alt" id="fg-snd">Sound on</button></div><div class="seg" id="fg-seg"><button class="btn ghost" data-m="ten">Keep 10</button><button class="btn ghost sel" data-m="time">Half a second</button></div></div>
+            <svg class="mem" id="fg-svg" viewBox="0 0 500 170" aria-label="Stored speeds by age"></svg>
+            <div class="row" style="gap:36px;align-items:flex-start">
+              <div class="big md" id="fg-n">0<small>speeds.length</small></div>
+              <div class="big md" id="fg-a">–<small>average</small></div>
             </div>
+            <p class="dir" style="font-size:17px;margin:0"><code>setTimeout(forgetOldest, 500)</code>: call <code>forgetOldest</code> once, half a second from now.</p>
           </div>
         </div>
-        <aside class="nt">One minute, and only if a phone, tablet or stylus is at hand: open this slide on it (same link, #touch-pen) and show it working unchanged. pointerType says "mouse", "touch" or "pen", for when behaviour has to differ by device. pressure is a bonus raw value on a pen: 0 to 1, how hard you press. A mouse reports 0.5 while a button is down and 0 otherwise. Not required for anyone.</aside>
-      </section>
-
-      <!-- 29 QUIZ: ABSOLUTE OR RELATIVE -->
-      <section class="slide" id="quiz-abs-rel" data-sec="Part 2: Movement as data" data-ex="Absolute or relative?">
-        <span class="turn">Your turn</span>
-        <div class="billing">Part 2: Movement as data · Check</div>
-        <hr class="rule">
-        <h2 class="h1 tight">Absolute or relative?</h2>
-        <p class="lede" style="margin-bottom:8px">For each value: is it where something is right now, or how much changed since an earlier moment?</p>
-        <div class="rows quiz sw" id="ar"></div>
-        <div class="fb" id="ar-fb" style="margin-top:10px"></div>
-        <aside class="nt">Answer on laptops, then discuss as a class. The pointer's x position is absolute. Speed and distance since the last event are relative: both compare with the previous event. Key hold time is relative too: it's the difference between the keydown moment and the keyup moment, like Monday's gaps. The pitch bend is the interesting one: it uses clientX, but measured from where you pressed, so it's relative. Ask whoever got it wrong to explain their reasoning; it's usually a good one.</aside>
+        <aside class="nt">The fix: every speed stays for half a second, then leaves. Each push also sets a timer: setTimeout(forgetOldest, 500) asks the browser to call forgetOldest once, 500 ms later. New: setTimeout. It's like addEventListener, but the event is "half a second has passed". Every speed has the same lifetime and they arrive in order, so the one leaving is always the oldest, at the front: shift. Because speeds now also leave when nothing moves, both functions call useAverage, which works out the average and sets the detune. When the array is empty, the average is 0. Flick and stop with Half a second: the bars cross the dashed line and disappear, the average falls to 0, the note returns. Switch to Keep 10 and do the same: the bars stay, the note stays bent. Moving slowly or quickly, the average now always covers the same half second. Act it out if there's time: students hold speed cards and each one sits down half a second after standing up.</aside>
       </section>
 
       <!-- 30 ACTIVITY: BRIEF -->
@@ -775,23 +682,23 @@
         <h2 class="h1 tight">Play your instrument with the pointer</h2>
         <div class="cols wide-l">
           <div class="rows lab">
-            <div><span class="num">01</span><span class="tx"><b>Everyone:</b> a press plays a note whose pitch comes from <code>clientX</code>. Normalise, then interpolate.</span></div>
-            <div><span class="num">02</span><span class="tx">Make it yours: choose the raw value, the range and what in the sound it changes.</span></div>
-            <div><span class="num">03</span><span class="tx"><b>Step up:</b> work out speed, smooth it, and let it detune a note.</span></div>
-            <div><span class="num">04</span><span class="tx">Compare with a neighbour: same raw value, different choices?</span></div>
+            <div><span class="num">01</span><span class="tx"><b>Everyone:</b> normalise <code>clientX</code> and stretch it onto <code>synth.detune</code>. Play keys and move.</span></div>
+            <div><span class="num">02</span><span class="tx">Make it yours: choose the range. Squeeze it, stretch it, or put the note in the middle.</span></div>
+            <div><span class="num">03</span><span class="tx"><b>Step up:</b> work out speed in screens per second, and let that bend the note instead.</span></div>
+            <div><span class="num">04</span><span class="tx"><b>Step up again:</b> average it over time. Keep 10, or let each speed expire.</span></div>
           </div>
           <div class="stack">
             <div class="panel">
               <div class="bar p"><span>where to write it</span></div>
               <div class="pbody">
-                <p style="margin:0 0 10px;font-size:19px">On the next slide: the keyboard instrument from the User input lecture, with an empty pointer section.</p>
+                <p style="margin:0 0 10px;font-size:19px">On the next slide: the keyboard instrument from the User input lecture, on a plain <code>Tone.Synth</code>, with an empty pointer section.</p>
                 <p style="margin:0;font-size:19px">Or in VS Code: the <code>pointers/</code> folder in the exercises repo. Sync your fork first.</p>
               </div>
             </div>
             <p class="dir" style="font-size:19px">Get the baseline working first. This afternoon builds on it.</p>
           </div>
         </div>
-        <aside class="nt">11:30, twenty minutes. Since Thursday had no coding, this is the first pointer code most students write this week. Set the baseline as position to pitch for everyone: normalise and interpolate on clientX, played on pointerdown. Speed with a moving average is the step up; touch or a pen is an optional extra. Circulate first to the students who are unsure about the starter, not to the fast finishers: everyone at a working baseline matters more than variety, because the afternoon builds on it. Last three minutes: pairs compare. Same raw value, different mapping choices? Ask one pair to play theirs.</aside>
+        <aside class="nt">11:35, about fifteen minutes. Since Thursday had no coding, this is the first pointer code most students write this week. Baseline for everyone: normalise clientX and stretch it onto synth.detune, so their keyboard instrument bends as they move. Speed is the step up; averaging is the next. Circulate first to the students who are unsure about the starter, not to the fast finishers: everyone at a working baseline matters more than variety, because the afternoon builds on it. Last few minutes: pairs compare ranges.</aside>
       </section>
 
       <!-- 31 ACTIVITY: PLAYGROUND -->
@@ -814,7 +721,7 @@
             <p class="small muted" style="margin:0">Here the pad stands in for the window: <code>clientX</code> is measured from its left edge, <code>window.innerWidth</code> is its width.</p>
           </div>
         </div>
-        <aside class="nt">The starter is the keyboard instrument from the User input lecture (a to j play notes) with an empty pointer section and the three pointer listeners already connected. Students fill in pointerDown first: normalise clientX, interpolate onto a MIDI note, triggerAttack on the lead synth; pointerUp releases it. The pad is the "window" in this editor, so their code works unchanged in VS Code, where it's the real window. Saved in their browser. A finished baseline: let normX = event.clientX / window.innerWidth; let note = 48 + normX * 24; lead.triggerAttack(Tone.Frequency(note, "midi").toNote()); and lead.triggerRelease() in pointerUp. Step up: lastX, lastY, lastTime at the top, speed in pointerMove, normalise it, keep the last 10 in a speeds array with push and shift, and set lead.detune.value = average * 1200 so the held note bends while it moves. Common mistakes: forgetting to clamp speed, interpolating before normalising, thresholds that never or always fire.</aside>
+        <aside class="nt">The starter is the keyboard instrument from the User input lecture (a to j play notes), switched to a plain Tone.Synth so detune is synth.detune.value, with an empty pointerMove already connected. A plain Synth plays one note at a time, so stopNote calls triggerRelease() with no note. The pad is the "window" in this editor, so their code works unchanged in VS Code, where it's the real window. Saved in their browser. A finished baseline: let normX = event.clientX / window.innerWidth; synth.detune.value = normX * 1200; then hold a key and move. Step up: lastX, lastY, lastTime at the top, speed with Math.hypot on normalised coordinates, synth.detune.value = speed * 300. Step up again: a speeds array with push and shift, or setTimeout(forgetOldest, 500). Common mistakes: dividing clientX by innerHeight, forgetting to update lastX and lastTime, and an average of an empty array (NaN).</aside>
       </section>
 
       <!-- 32 WRAP-UP -->
@@ -824,11 +731,11 @@
         <div class="scan"></div>
         <div class="inner">
           <div class="billing">Wrap-up</div>
-          <h2 class="hero md">New raw data. The same pipeline.</h2>
-          <p class="lede">Position is absolute and always there. Speed is relative, worked out from two moves. A press is a moment, like a key. Normalise, interpolate, smooth: whatever the source.</p>
-          <div class="terms" style="max-width:800px"><span>pointermove</span><span>event.clientX</span><span>clientX / window.innerWidth</span><span>48 + normX * 24</span><span>Math.hypot(…)</span><span>distance / time</span><span>speeds.shift()</span><span>pointerdown</span></div>
+          <h2 class="hero md">Normalise. Speed. Average over time.</h2>
+          <p class="lede">0 to 1 means the same on any screen, and stretches onto whatever the sound needs. Speed is worked out from two moves. An average over a short, recent window smooths it, and lets it settle when you stop.</p>
+          <div class="terms" style="max-width:820px"><span>clientX / window.innerWidth</span><span>normX * 1200</span><span>Math.hypot(…)</span><span>distance / seconds</span><span>speeds.push(speed)</span><span>speeds.shift()</span><span>setTimeout(forgetOldest, 500)</span></div>
         </div>
-        <aside class="nt">11:50. Summarise: pointer position is absolute, continuous, and already there before any press. Movement derived from it is a second raw value, relative. Clicks are discrete triggers, the same shape as a key press. The pipeline (normalise, interpolate, smooth, or a threshold for a pattern, as in the afternoon) doesn't change with the input device; only the raw data feeding it does. Back to the six objectives if there's time.</aside>
+        <aside class="nt">11:50. The three moves. Normalise: divide by the window size so 0 is one edge and 1 the other, then stretch or squeeze that onto the range the sound needs. Speed: compare this position with the last one, in screens per second. Average over time: one move is choppy; averaging all of history gets sluggish; the last 10 is better; keeping only 10 is simpler; letting each value expire after half a second also settles when the pointer stops. Back to the six objectives if there's time.</aside>
       </section>
 
       <!-- 33 NEXT -->
@@ -848,7 +755,7 @@
             <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://tonejs.github.io/" target="_blank" rel="noopener">Tone.js documentation</a></span></div>
           </div>
         </div>
-        <aside class="nt">Link back to Thursday's Bridge workshop slides: the speed derived today is exactly what step 5 of the guided build previewed. The afternoon starts with the guided build as a hands-on catch-up (steps 1 to 4 with shape.js), then step 5 with today's speed pipeline; then the normalise, interpolate, easing and threshold exercises moved from Monday. Remind them: the A1 individual reflection is due today at 17:00 on Canvas.</aside>
+        <aside class="nt">Link back to Thursday's Bridge workshop slides: the speed derived today is exactly what step 5 of the guided build previewed. The afternoon starts with the guided build as a hands-on catch-up (steps 1 to 4 with shape.js), then step 5 with today's speed pipeline; then the exercises moved from Monday (the afternoon page still lists easing and filters, which this lecture no longer covers). Remind them: the A1 individual reflection is due today at 17:00 on Canvas.</aside>
       </section>
 
     </div>
@@ -872,8 +779,6 @@
         var mo = new MutationObserver(function (ms) { ms.forEach(function (m) { if (m.target.hidden) hush() }) });
         $$("#deck .slide").forEach(function (s) { mo.observe(s, { attributes: true, attributeFilter: ["hidden"] }) });
       }
-      function midiName(n) { try { return T.Frequency(n, "midi").toNote() } catch (e) { return "" } }
-      function hz(n) { try { return T.Frequency(n, "midi").toFrequency() } catch (e) { return 440 } }
 
       /* A held note that a slide can turn on and off with a button.
          opt.make() builds the instrument; the button reads Sound on / Sound off. */
@@ -1012,19 +917,10 @@
         show();
       })();
 
-      /* ---------- 10 one set of listeners ---------- */
+      /* ---------- read the raw value ---------- */
       (function () {
-        var SRC = 'function pointerMove(event) {\n  console.log(event.pointerType, event.clientX, event.clientY);\n}\n\nwindow.addEventListener("pointermove", pointerMove);\nwindow.addEventListener("pointerdown", pointerDown);\nwindow.addEventListener("pointerup", pointerUp);';
-        code($("#pa-code"), SRC);
-        var lastLine = -1;
-        function show(e, line) {
-          $("#pa-type").textContent = e.type; $("#pa-pt").textContent = JSON.stringify(e.pointerType || "");
-          $("#pa-x").textContent = Math.round(e.clientX); $("#pa-y").textContent = Math.round(e.clientY);
-          if (line !== lastLine) { lastLine = line; code($("#pa-code"), SRC, [line]) }
-        }
-        onWin(moveFns, "pointer-api", function (e) { show(e, 4) });
-        onWin(downFns, "pointer-api", function (e) { show(e, 5) });
-        onWin(upFns, "pointer-api", function (e) { show(e, 6) });
+        code($("#pa-code"), 'function pointerMove(event) {\n  console.log(event.clientX, event.clientY);\n}\n\nwindow.addEventListener("pointermove", pointerMove);');
+        onWin(moveFns, "pointer-api", function (e) { $("#pa-x").textContent = Math.round(e.clientX); $("#pa-y").textContent = Math.round(e.clientY) });
       })();
 
       /* ---------- 11 the raw value ---------- */
@@ -1054,142 +950,58 @@
         });
       })();
 
-      /* ---------- 13 predict the pitch ---------- */
-      code($("#pp-code"), 'let note = 48 + normX * 24;');
-      mcq($("#pp-opts"), $("#pp-fb"), [
-        ["It rises", true, "Correct. At the left edge normX is 0, so the note is 48 (C3). At the right edge it's 1, so 48 + 24 = 72 (C5). Next slide: hear it."],
-        ["It falls", false, "Work out both ends. What is the note when normX is 0? And when normX is 1?"],
-        ["It stays the same", false, "The note depends on normX. Does normX change as you move left to right?"]
+      /* ============ a held note, bent by detune ============ */
+      function pitchInst() { var s = new T.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.02, release: 0.4 } }).toDestination(); s.volume.value = -8; return { synth: s } }
+      function bend(inst, cents) { if (inst) { try { inst.synth.detune.rampTo(cents, 0.03) } catch (e) { } } }
+      function noteHolder(btn) { return holder(btn, { make: pitchInst, note: function () { return "A3" } }) }
+
+      /* ---------- predict: detune ---------- */
+      code($("#pd-code"), 'synth.detune.value =\n  normX * 1200;');
+      mcq($("#pd-opts"), $("#pd-fb"), [
+        ["It slides up, as far as an octave", true, "Correct. At the left edge normX is 0: 0 cents, the note as it is. At the right edge it's 1: 1200 cents, an octave up. In the middle, half an octave."],
+        ["It slides down", false, "Work out both ends. What is the detune when normX is 0? And when it's 1? Is 1200 cents up or down?"],
+        ["It jumps from note to note", false, "normX changes smoothly as you move, so normX * 1200 does too. Does anything here round it to whole notes?"]
       ]);
 
-      /* ---------- 14 interpolate, 15 two axes ---------- */
-      function pitchInst() { var s = new T.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.02, release: 0.4 } }).toDestination(); s.volume.value = -8; return { synth: s } }
+      /* ---------- stretch or squeeze ---------- */
       (function () {
-        var SRC = 'const synth = new Tone.Synth().toDestination();\n\nfunction pointerMove(event) {\n  let normX = event.clientX / window.innerWidth;\n  let note = 48 + normX * 24;\n  synth.setNote(Tone.Frequency(note, "midi").toNote());\n}\n\nwindow.addEventListener("pointermove", pointerMove);';
-        code($("#ip-code"), SRC, [3, 4]);
-        var lastName = "C4", flashT = 0;
-        var H = holder($("#ip-snd"), { make: pitchInst, note: function () { return lastName } });
-        onWin(moveFns, "interpolate", function (e) {
-          var n = e.clientX / window.innerWidth, note = 48 + n * 24, name = midiName(note);
-          $("#ip-n").textContent = f2(n); $("#ip-note").textContent = (Math.round(note * 10) / 10).toFixed(1); $("#ip-name").textContent = name;
-          meter($("#ip-m"), n);
-          var inst = H.get();
-          if (inst && name !== lastName) { try { inst.synth.setNote(name) } catch (er) { } }
-          if (name !== lastName && Date.now() - flashT > 300) { flashT = Date.now(); flash($("#ip-code"), [5]) }
-          lastName = name;
-        });
-      })();
-      (function () {
-        var SRC = 'function pointerMove(event) {\n  let normX = event.clientX / window.innerWidth;\n  let note = 48 + normX * 24;\n  synth.setNote(Tone.Frequency(note, "midi").toNote());\n\n  let normY = event.clientY / window.innerHeight;\n  synth.volume.value = -30 + (1 - normY) * 30;\n}';
-        code($("#ax-code"), SRC, [5, 6]);
-        var lastName = "C4";
-        var H = holder($("#ax-snd"), { make: pitchInst, note: function () { return lastName }, onOff: function () { } });
-        onWin(moveFns, "two-axes", function (e) {
-          var nx = e.clientX / window.innerWidth, ny = e.clientY / window.innerHeight, note = 48 + nx * 24, name = midiName(note), vol = -30 + (1 - ny) * 30;
-          meter($("#ax-p"), nx); meter($("#ax-v"), 1 - ny);
-          $("#ax-pv").textContent = "normX " + f2(nx) + " → " + name;
-          $("#ax-vv").textContent = "normY " + f2(ny) + " → " + Math.round(vol) + " dB";
-          var inst = H.get();
-          if (inst) { try { if (name !== lastName) inst.synth.setNote(name); inst.synth.volume.rampTo(vol, 0.05) } catch (er) { } }
-          lastName = name;
-        });
-      })();
-
-      /* ---------- 16 swap the source ---------- */
-      (function () {
-        var ROW = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"], mode = "ptr", lastName = "C4";
-        var H = holder($("#sw-snd"), { make: pitchInst, note: function () { return lastName } });
-        var INT = 'let note = 48 + norm * 24;', DST = 'synth.setNote(\n  Tone.Frequency(note, "midi").toNote());';
-        function render() {
-          if (mode === "ptr") {
-            code($("#sw-raw"), 'event.clientX');
-            code($("#sw-norm"), 'let norm = event.clientX / window.innerWidth;');
-            $("#sw-src").innerHTML = '<div class="mlab"><span>the pointer, across the window</span><b id="sw-x">move anywhere</b></div><div class="meter mk" id="sw-m"><i></i></div>';
-          } else {
-            code($("#sw-raw"), 'row.indexOf(event.key)   // 0 to 9');
-            code($("#sw-norm"), 'let norm = position / (row.length - 1);');
-            $("#sw-src").innerHTML = "";
-            keyRow($("#sw-src"));
-          }
-          code($("#sw-int"), INT); code($("#sw-dst"), DST);
-          flash($("#sw-raw"), [0]); flash($("#sw-norm"), [0]);
-          $("#sw-n").textContent = "–"; $("#sw-note").textContent = "–";
+        var M = {
+          "100": { lo: 0, hi: 100, ex: "normX * 100", d: "Squeezed: the whole screen is one key." },
+          "1200": { lo: 0, hi: 1200, ex: "normX * 1200", d: "The whole screen is one octave." },
+          "2400": { lo: 0, hi: 2400, ex: "normX * 2400", d: "Stretched: two octaves, so a small move makes a big bend." },
+          mid: { lo: -1200, hi: 1200, ex: "-1200 + normX * 2400", d: "Shifted: an octave down at the left, the note itself in the middle, an octave up at the right." }
+        }, mode = "1200", cents = 0;
+        var H = noteHolder($("#sr-snd"));
+        function src() { return 'function pointerMove(event) {\n  let normX = event.clientX / window.innerWidth;\n  synth.detune.value = ' + M[mode].ex + ';\n}' }
+        function x(c) { return 30 + (c + 1200) / 3600 * 440 }
+        function draw() {
+          var m = M[mode], h = '<line class="ax" x1="30" y1="40" x2="470" y2="40"/>';
+          h += '<rect class="band" x="' + x(m.lo) + '" y="28" width="' + Math.max(3, x(m.hi) - x(m.lo)) + '" height="24"/>';
+          [-1200, 0, 1200, 2400].forEach(function (c) { h += '<line class="tk" x1="' + x(c) + '" y1="56" x2="' + x(c) + '" y2="64"/><text x="' + x(c) + '" y="84" text-anchor="middle">' + c + '</text>' });
+          h += '<text x="30" y="16">cents</text><line class="cur" x1="' + x(cents) + '" y1="20" x2="' + x(cents) + '" y2="60"/>';
+          $("#sr-svg").innerHTML = h;
         }
-        function use(norm) {
-          var note = 48 + norm * 24, name = midiName(note);
-          $("#sw-n").textContent = f2(norm); $("#sw-note").textContent = (Math.round(note * 10) / 10).toFixed(1) + " · " + name;
-          var inst = H.get();
-          if (inst && name !== lastName) { try { inst.synth.setNote(name) } catch (er) { } }
-          lastName = name;
-        }
-        function keyRow(host) {
-          host.innerHTML = '<div class="krow" tabindex="0" aria-label="Top row of keys"><div class="ks"></div><div class="hint"></div></div>';
-          var kr = host.firstChild, ks = kr.firstChild, hint = kr.lastChild, keys = {};
-          ROW.forEach(function (k, i) { var d = document.createElement("div"); d.className = "key"; d.innerHTML = '<span class="c">' + k + '</span><span class="i">' + i + '</span>'; ks.appendChild(d); keys[k] = d });
-          function txt() { hint.innerHTML = document.activeElement === kr ? "<b>Listening.</b> Drag a finger along q to p." : "<b>Click the row</b>, then swipe along q to p." }
-          kr.addEventListener("focus", txt); kr.addEventListener("blur", txt); txt();
-          capture(kr, function (e) {
-            var k = e.key.length === 1 ? e.key.toLowerCase() : e.key, p = ROW.indexOf(k);
-            if (p === -1) return;
-            ROW.forEach(function (x) { keys[x].classList.toggle("on", x === k) });
-            use(p / (ROW.length - 1));
-          });
-        }
-        onWin(moveFns, "swap-source", function (e) {
-          if (mode !== "ptr") return;
-          var n = e.clientX / window.innerWidth;
-          meter($("#sw-m"), n); $("#sw-x").textContent = "clientX " + Math.round(e.clientX);
-          use(n);
+        function show() { code($("#sr-code"), src(), [2]); $("#sr-dir").textContent = M[mode].d; draw() }
+        onWin(moveFns, "stretch", function (e) {
+          var n = e.clientX / window.innerWidth, m = M[mode];
+          cents = m.lo + n * (m.hi - m.lo);
+          meter($("#sr-m1"), n); $("#sr-n").textContent = f2(n);
+          $("#sr-c").innerHTML = Math.round(cents) + "<small>cents</small>";
+          bend(H.get(), cents); draw();
         });
-        $$("#sw-seg .btn").forEach(function (b) {
+        $$("#sr-seg .btn").forEach(function (b) {
           b.addEventListener("click", function () {
-            mode = b.dataset.m;
-            $$("#sw-seg .btn").forEach(function (x) { x.classList.toggle("sel", x === b) });
-            render();
+            mode = b.dataset.k;
+            $$("#sr-seg .btn").forEach(function (y) { y.classList.toggle("sel", y === b) });
+            show(); flash($("#sr-code"), [2]);
           });
         });
-        render();
+        show();
       })();
 
-      /* ---------- 17 normalise or interpolate ---------- */
-      quiz($("#ws"), $("#ws-fb"), [
-        ["let normX = event.clientX / window.innerWidth;", 0, "A raw pixel divided by its largest value gives 0 to 1."],
-        ["let note = 48 + normX * 24;", 1, "It starts from 0 to 1 and puts it onto the notes 48 to 72."],
-        ["let norm = position / (row.length - 1);", 0, "An index 0 to 9, divided by the last index: 0 to 1."],
-        ["synth.volume.value = -30 + normY * 30;", 1, "From 0 to 1 onto -30 to 0 decibels."],
-        ["let normHold = Math.min(holdTime / 1000, 1);", 0, "A hold time in ms, divided by the longest we care about, clamped so it never goes past 1."]
-      ], ["Normalise", "Interpolate"], "Look at what goes in. A raw value (pixels, an index, ms)? Or something that's already 0 to 1?");
-
-      /* ---------- 18 clicks as triggers ---------- */
+      /* ---------- break timer ---------- */
       (function () {
-        var SRC = 'function pointerDown(event) {\n  Tone.start();\n  let normX = event.clientX / window.innerWidth;\n  let note = 48 + normX * 24;\n  synth.triggerAttack(Tone.Frequency(note, "midi").toNote());\n}\n\nfunction pointerUp(event) {\n  synth.triggerRelease();\n}\n\nwindow.addEventListener("pointerdown", pointerDown);\nwindow.addEventListener("pointerup", pointerUp);';
-        code($("#cl-code"), SRC);
-        var inst = null, on = false, lines = [{ c: "dim", t: "Press anywhere on the slide." }];
-        function log(l) { lines.push(l); if (lines.length > 4) lines.shift(); conLines($("#cl-con"), lines) }
-        conLines($("#cl-con"), lines);
-        function stop() { if (!on) return; on = false; try { inst.synth.triggerRelease() } catch (e) { } }
-        onWin(downFns, "clicks", function (e) {
-          audioOn(); if (!T) return;
-          if (!inst) inst = pitchInst();
-          var n = e.clientX / window.innerWidth, name = midiName(48 + n * 24);
-          inst.synth.triggerAttack(name); on = true;
-          if (lines[0] && lines[0].c === "dim") lines = [];
-          log("pointerdown at " + f2(n) + " → start " + name);
-          $("#cl-note").innerHTML = esc(name) + "<small>playing, while you hold</small>";
-          code($("#cl-code"), SRC, [4]);
-        });
-        onWin(upFns, "clicks", function () {
-          if (!on) return; stop();
-          log("pointerup → stop");
-          $("#cl-note").innerHTML = "–<small>Press anywhere on this slide. Hold, then let go.</small>";
-          code($("#cl-code"), SRC, [8]);
-        });
-        stoppers.push(stop);
-      })();
-
-      /* ---------- 20 break timer ---------- */
-      (function () {
-        var total = 10 * 60, left = total, t = null, BRK = "Stretch, refill. After the break: movement itself as data.";
+        var total = 10 * 60, left = total, t = null, BRK = "Stretch, refill. After the break: how fast the pointer moves.";
         function show() { var m = Math.floor(left / 60), s = left % 60; $("#tm").textContent = m + ":" + (s < 10 ? "0" : "") + s; if (left === 0) { $("#tm-msg").textContent = "Time's up. Back to your seats."; stop() } }
         function stop() { clearInterval(t); t = null; $("#tm-go").textContent = left === 0 ? "Start" : "Resume" }
         $("#tm-go").addEventListener("click", function () {
@@ -1201,158 +1013,186 @@
         $("#tm-reset").addEventListener("click", function () { stop(); left = total; show(); $("#tm-go").textContent = "Start"; $("#tm-msg").textContent = BRK });
       })();
 
-      /* ============ speed, exactly as the slide's code works it out ============ */
+      /* ============ speed in screens per second, as the slide's code works it out ============
+         ok is false for the nonsense first move, a long pause, or two moves in the same millisecond. */
       function speedReader() {
         var lastX = 0, lastY = 0, lastTime = 0;
         return function (e) {
-          var now = Date.now();
-          var distance = Math.hypot(e.clientX - lastX, e.clientY - lastY);
-          var time = now - lastTime, speed = distance / time;
-          lastX = e.clientX; lastY = e.clientY; lastTime = now;
-          return { distance: distance, time: time, speed: speed };
+          var normX = e.clientX / window.innerWidth, normY = e.clientY / window.innerHeight, now = Date.now();
+          var distance = Math.hypot(normX - lastX, normY - lastY), seconds = (now - lastTime) / 1000, speed = distance / seconds;
+          lastX = normX; lastY = normY; lastTime = now;
+          return { distance: distance, seconds: seconds, speed: speed, ok: seconds > 0 && seconds < 0.25 && isFinite(speed) };
         };
       }
-      function spd(v) { return isFinite(v) ? (Math.round(v * 100) / 100).toFixed(2) : String(v) }
+      var VMAX = 6; /* screens per second at the top of the pictures */
 
-      /* ---------- 22 work out speed ---------- */
+      /* the last 60 speeds as a line */
+      function trace(svg, vals) {
+        var n = vals.length, pts = vals.map(function (v, i) { return (496 - (n - 1 - i) * (492 / 59)).toFixed(1) + "," + (132 - Math.min(v, VMAX) / VMAX * 118).toFixed(1) }).join(" ");
+        svg.innerHTML = '<line class="ax" x1="0" y1="132" x2="500" y2="132"/><text x="4" y="14">' + VMAX + ' screens/s</text><text x="4" y="128">0</text>' + (n ? '<polyline class="raw" points="' + pts + '"/>' : "");
+      }
+
+      /* ---------- work out speed ---------- */
       (function () {
-        var SRC = '// ---------- State ----------\nlet lastX = 0;\nlet lastY = 0;\nlet lastTime = 0;\n\n// ---------- Controls ----------\nfunction pointerMove(event) {\n  let now = Date.now();\n  let distance = Math.hypot(event.clientX - lastX,\n                            event.clientY - lastY);\n  let speed = distance / (now - lastTime);\n  lastX = event.clientX;\n  lastY = event.clientY;\n  lastTime = now;\n}';
-        code($("#sp-code"), SRC, [10]);
-        var read = speedReader(), hist = [];
+        code($("#sp-code"), '// ---------- State ----------\nlet lastX = 0;\nlet lastY = 0;\nlet lastTime = 0;\n\n// ---------- Controls ----------\nfunction pointerMove(event) {\n  let normX = event.clientX / window.innerWidth;\n  let normY = event.clientY / window.innerHeight;\n  let now = Date.now();\n  let distance = Math.hypot(normX - lastX, normY - lastY);\n  let seconds = (now - lastTime) / 1000;\n  let speed = distance / seconds;\n  lastX = normX;\n  lastY = normY;\n  lastTime = now;\n}', [12]);
+        var read = speedReader(), vals = [];
         onWin(moveFns, "speed", function (e) {
-          var r = read(e);
-          $("#sp-d").innerHTML = Math.round(r.distance) + "<small>pixels</small>";
-          $("#sp-t").innerHTML = r.time + "<small>ms</small>";
-          $("#sp-s").innerHTML = spd(r.speed) + "<small>pixels per ms</small>";
-          hist.push(spd(r.speed)); if (hist.length > 8) hist.shift();
-          $("#sp-hist").textContent = hist.join("   ");
+          var r = read(e); if (!r.ok) return;
+          $("#sp-d").innerHTML = r.distance.toFixed(3) + "<small>screens</small>";
+          $("#sp-t").innerHTML = r.seconds.toFixed(3) + "<small>s</small>";
+          $("#sp-s").innerHTML = f2(r.speed) + "<small>screens per second</small>";
+          vals.push(r.speed); if (vals.length > 60) vals.shift(); trace($("#sp-svg"), vals);
         });
+        trace($("#sp-svg"), vals);
       })();
 
-      /* ---------- predict: detune ---------- */
-      code($("#pd-code"), 'let maxSpeed = 3;\nlet normSpeed = Math.min(speed / maxSpeed, 1);\nsynth.detune.value = normSpeed * 1200;');
-      mcq($("#pd-opts"), $("#pd-fb"), [
-        ["Higher", true, "Correct. A fast flick gives a big speed, so normSpeed is near 1 and detune is near 1200 cents: up to an octave higher. A slow drift stays near 0: the note as it is."],
-        ["Lower", false, "Work it through: a fast flick is a big speed. Is normSpeed then near 0 or near 1? And is the detune then positive or negative?"],
-        ["No change: speed is too jumpy to use", false, "It is jumpy. But follow the numbers: does a fast flick give a bigger normSpeed than a slow drift?"]
+      /* ---------- predict: what speed? ---------- */
+      code($("#ps-code"), 'let distance = 1;   // the whole screen\nlet seconds = 0.5;\nlet speed = distance / seconds;');
+      mcq($("#ps-opts"), $("#ps-fb"), [
+        ["0.5", false, "Which way round is the division? Speed is distance divided by time: how much screen per second."],
+        ["1", false, "That's crossing the whole screen in one second. This took half as long, so is it faster or slower than 1?"],
+        ["2", true, "Correct. A whole screen in half a second is two screens per second, on any screen size."],
+        ["960", false, "That would be pixels per millisecond on a 1920-pixel screen: the kind of number we normalised away. Distance here is in screens."]
       ]);
-
-      /* a held note whose detune follows a 0 to 1 value */
-      function setDetune(inst, k) { if (inst) { try { inst.synth.detune.rampTo(k * 1200, 0.03) } catch (e) { } } }
-      function resetDetune(inst) { if (inst) { try { inst.synth.detune.value = 0 } catch (e) { } } }
-      function norm(speed, max) { var k = Math.min(speed / max, 1); return isNaN(k) ? 0 : k }
 
       /* ---------- speed → detune ---------- */
       (function () {
-        var max = 3, top = 0, read = speedReader();
-        function src() { return 'let maxSpeed = ' + max + ';\nlet normSpeed = Math.min(speed / maxSpeed, 1);\nsynth.detune.value = normSpeed * 1200;' }
-        code($("#ss-code"), src());
-        var H = holder($("#ss-snd"), { make: pitchInst, note: function () { return "A3" } });
-        $("#ss-max").addEventListener("input", function () { max = +this.value; $("#ss-mv").textContent = max; code($("#ss-code"), src(), [0]) });
-        onWin(moveFns, "speed-sound", function (e) {
-          var r = read(e);
-          if (isFinite(r.speed) && r.time < 200 && r.speed > top) { top = r.speed; $("#ss-top").innerHTML = spd(top) + "<small>pixels per ms</small>" }
-          var k = norm(r.speed, max);
-          meter($("#ss-sp"), Math.min(r.speed / 10, 1)); meter($("#ss-f"), k);
-          $("#ss-sv").textContent = spd(r.speed) + " px/ms";
-          $("#ss-fv").textContent = f2(k) + " → " + Math.round(k * 1200) + " cents";
-          setDetune(H.get(), k);
+        code($("#sd-code"), 'synth.detune.value =\n  speed * 300;');
+        var read = speedReader(), vals = [], H = noteHolder($("#sd-snd"));
+        onWin(moveFns, "speed-detune", function (e) {
+          var r = read(e); if (!r.ok) return;
+          var c = r.speed * 300;
+          $("#sd-c").innerHTML = Math.round(c) + "<small>cents</small>";
+          bend(H.get(), c);
+          vals.push(r.speed); if (vals.length > 60) vals.shift(); trace($("#sd-svg"), vals);
         });
-        $("#ss-reset").addEventListener("click", function () { top = 0; $("#ss-top").innerHTML = "–<small>pixels per ms</small>"; resetDetune(H.get()) });
+        trace($("#sd-svg"), vals);
       })();
 
-      /* a trace of the last values: raw in grey, the average in magenta */
-      function trace(svg, raw, avg) {
-        function pts(a) { var n = a.length; return a.map(function (v, i) { return (500 - (n - 1 - i) * (500 / 59)).toFixed(1) + "," + (190 - (v === null ? 0 : v) * 175).toFixed(1) }).join(" ") }
-        var ap = avg.map(function (v, i) { return v === null ? null : (500 - (avg.length - 1 - i) * (500 / 59)).toFixed(1) + "," + (190 - v * 175).toFixed(1) }).filter(function (x) { return x }).join(" ");
-        svg.innerHTML = '<line class="ax" x1="0" y1="190" x2="500" y2="190"/><text x="4" y="14">1</text><text x="4" y="186">0</text>' +
-          '<polyline class="raw" points="' + pts(raw) + '"/>' + (ap ? '<polyline class="sm" points="' + ap + '"/>' : "");
+      /* ============ the memory picture ============
+         Every stored speed is a bar, placed by how long ago it arrived (newest on the right).
+         Bars that count towards the average are coloured; the line across is the average.
+         Redrawn every frame while its slide shows, so bars keep ageing when nothing moves. */
+      var SPAN = 3000, strips = [];
+      function memory(slideId, svg, state) { strips.push({ id: slideId, svg: svg, st: state }) }
+      function drawMemory(svg, st) {
+        var now = Date.now(), items = st.items(), used = st.used(), h = "", older = 0;
+        var y0 = 150, H = 128;
+        function xa(age) { return 494 - age / SPAN * 470 }
+        h += '<line class="ax" x1="20" y1="' + y0 + '" x2="500" y2="' + y0 + '"/>';
+        h += '<text x="494" y="166" text-anchor="end">now</text><text x="24" y="166">3 s ago</text>';
+        if (st.window) h += '<line class="win" x1="' + xa(st.window) + '" y1="14" x2="' + xa(st.window) + '" y2="' + y0 + '"/><text x="' + (xa(st.window) - 6) + '" y="24" text-anchor="end">half a second</text>';
+        for (var i = 0; i < items.length; i++) {
+          var age = now - items[i].t;
+          if (age > SPAN) { older++; continue }
+          var hh = Math.max(2, Math.min(items[i].v, VMAX) / VMAX * H);
+          h += '<rect class="' + (used(i, items.length) ? "u" : "n") + '" x="' + (xa(age) - 2).toFixed(1) + '" y="' + (y0 - hh).toFixed(1) + '" width="4" height="' + hh.toFixed(1) + '"/>';
+        }
+        if (older) h += '<text x="24" y="16">+ ' + older + ' older</text>';
+        var a = st.avg();
+        if (a !== null) { var ya = y0 - Math.min(a, VMAX) / VMAX * H; h += '<line class="avg" x1="20" y1="' + ya.toFixed(1) + '" x2="500" y2="' + ya.toFixed(1) + '"/><text class="avgt" x="494" y="' + (ya - 6).toFixed(1) + '" text-anchor="end">average ' + f2(a) + '</text>' }
+        svg.innerHTML = h;
+      }
+      (function frame() {
+        strips.forEach(function (s) { if (shown(s.id)) drawMemory(s.svg, s.st) });
+        requestAnimationFrame(frame);
+      })();
+      function mean(arr, from) { var t = 0; for (var i = from; i < arr.length; i++) t += arr[i].v; return arr.length - from > 0 ? t / (arr.length - from) : null }
+
+      /* ---------- 3a: average every speed so far ---------- */
+      (function () {
+        code($("#aa-code"), '// ---------- State ----------\nlet speeds = [];\n\n// ---------- inside pointerMove, after speed ----------\nspeeds.push(speed);\n\nlet total = 0;\nfor (let i = 0; i < speeds.length; i++) {\n  total = total + speeds[i];\n}\nlet average = total / speeds.length;\nsynth.detune.value = average * 300;');
+        var items = [], sum = 0, read = speedReader(), H = noteHolder($("#aa-snd"));
+        function avg() { return items.length ? sum / items.length : null }
+        function show() {
+          $("#aa-n").innerHTML = items.length + "<small>speeds.length</small>";
+          $("#aa-w").innerHTML = (items.length ? "1/" + items.length : "–") + "<small>one new speed counts for</small>";
+          var a = avg(); if (a !== null) bend(H.get(), a * 300);
+        }
+        memory("avg-all", $("#aa-svg"), { items: function () { return items }, used: function () { return function () { return true } }, avg: avg });
+        onWin(moveFns, "avg-all", function (e) { var r = read(e); if (!r.ok) return; items.push({ v: r.speed, t: Date.now() }); sum += r.speed; show() });
+        $("#aa-min").addEventListener("click", function () {
+          var now = Date.now(), add = [];
+          for (var i = 0; i < 3600; i++) { var v = 0.15 + Math.random() * 0.35; add.push({ v: v, t: now - 63000 + i * 16 }); sum += v }
+          items = add.concat(items); show();
+        });
+        $("#aa-reset").addEventListener("click", function () { items = []; sum = 0; show() });
+        show();
+      })();
+
+      /* ---------- 3b: average only the last 10 ---------- */
+      (function () {
+        code($("#al-code"), '// ---------- inside pointerMove, after speed ----------\nspeeds.push(speed);\n\nif (speeds.length >= 10) {\n  let total = 0;\n  for (let i = speeds.length - 10; i < speeds.length; i++) {\n    total = total + speeds[i];\n  }\n  let average = total / 10;\n  synth.detune.value = average * 300;\n}', [5]);
+        var items = [], read = speedReader(), H = noteHolder($("#al-snd"));
+        function avg() { return items.length >= 10 ? mean(items, items.length - 10) : null }
+        memory("avg-last", $("#al-svg"), { items: function () { return items }, used: function () { return function (i, n) { return i >= n - 10 } }, avg: avg });
+        onWin(moveFns, "avg-last", function (e) {
+          var r = read(e); if (!r.ok) return;
+          items.push({ v: r.speed, t: Date.now() });
+          $("#al-n").innerHTML = items.length + "<small>speeds.length</small>";
+          var a = avg(); if (a !== null) bend(H.get(), a * 300);
+        });
+        $("#al-reset").addEventListener("click", function () { items = []; $("#al-n").innerHTML = "0<small>speeds.length</small>" });
+      })();
+
+      /* a row of boxes: the values in an array, newest highlighted */
+      function lineView(host, vals) {
+        host.innerHTML = vals.length ? vals.map(function (v, i) { return '<div class="cell' + (i === vals.length - 1 ? " hi" : "") + '"><div class="v">' + esc(v) + '</div></div>' }).join("") : '<span class="small muted">Empty. Move the pointer.</span>';
       }
 
-      /* ---------- moving average, version 1: keep every speed, average the last 10 ---------- */
+      /* ---------- 3c: only keep 10 ---------- */
       (function () {
-        var SRC = '// ---------- State ----------\nlet speeds = [];\n\n// ---------- inside pointerMove ----------\nlet normSpeed = Math.min(speed / maxSpeed, 1);\nspeeds.push(normSpeed);\n\nif (speeds.length >= 10) {\n  let total = 0;\n  for (let i = speeds.length - 10; i < speeds.length; i++) {\n    total = total + speeds[i];\n  }\n  let average = total / 10;\n  synth.detune.value = average * 1200;\n}';
-        code($("#al-code"), SRC);
-        var speeds = [], raw = [], avg = [], mode = "avg", read = speedReader(), shown = 0;
-        var H = holder($("#al-snd"), { make: pitchInst, note: function () { return "A3" } });
-        function render() { trace($("#al-svg"), raw, avg); $("#al-n").innerHTML = speeds.length + "<small>speeds.length</small>" }
-        onWin(moveFns, "avg-last", function (e) {
-          var k = norm(read(e).speed, 3), a = null;
-          speeds.push(k);
-          if (speeds.length >= 10) { var t = 0; for (var i = speeds.length - 10; i < speeds.length; i++) t += speeds[i]; a = t / 10 }
-          raw.push(k); avg.push(a); if (raw.length > 60) { raw.shift(); avg.shift() }
-          setDetune(H.get(), mode === "raw" ? k : (a === null ? 0 : a));
-          render();
-          if (Date.now() - shown > 500) { shown = Date.now(); code($("#al-code"), SRC, a === null ? [5] : [12, 13]) }
+        code($("#kt-code"), '// ---------- inside pointerMove, after speed ----------\nspeeds.push(speed);\nif (speeds.length > 10) {\n  speeds.shift(); // take out the oldest\n}\n\nlet total = 0;\nfor (let i = 0; i < speeds.length; i++) {\n  total = total + speeds[i];\n}\nlet average = total / speeds.length;\nsynth.detune.value = average * 300;', [2, 3, 4]);
+        var items = [], read = speedReader(), H = noteHolder($("#kt-snd"));
+        function avg() { return mean(items, 0) }
+        memory("keep-ten", $("#kt-svg"), { items: function () { return items }, used: function () { return function () { return true } }, avg: avg });
+        onWin(moveFns, "keep-ten", function (e) {
+          var r = read(e); if (!r.ok) return;
+          items.push({ v: r.speed, t: Date.now() }); if (items.length > 10) items.shift();
+          lineView($("#kt-line"), items.map(function (it) { return f2(it.v) }));
+          $("#kt-n").innerHTML = items.length + "<small>speeds.length</small>";
+          bend(H.get(), avg() * 300);
         });
-        $$("#al-seg .btn").forEach(function (b) {
-          b.addEventListener("click", function () { mode = b.dataset.m; $$("#al-seg .btn").forEach(function (x) { x.classList.toggle("sel", x === b) }) });
-        });
-        render();
+        lineView($("#kt-line"), []);
       })();
 
-      /* ---------- predict: how long is speeds? ---------- */
-      code($("#pl-code"), 'let speeds = [];\n\n// every pointermove:\nspeeds.push(normSpeed);\n\n// then use the last 10');
-      mcq($("#pl-opts"), $("#pl-fb"), [
-        ["10", false, "We only use 10. But look at the code: does anything ever take a speed out of the list?"],
-        ["Thousands, and still growing", true, "Correct. About 60 a second, so around 3600 after a minute, and nothing ever leaves. We keep them all and use ten."],
-        ["It empties itself when you stop moving", false, "Is there a line that empties it? When you stop, no events come, so nothing happens to the list at all."]
+      /* ---------- 3d: flick, then stop ---------- */
+      code($("#sp2-code"), 'speeds.push(speed);\nif (speeds.length > 10) {\n  speeds.shift();\n}\n\n// all of this runs inside pointerMove:\n// only when the pointer moves');
+      mcq($("#sp2-opts"), $("#sp2-fb"), [
+        ["It drops to 0", false, "Which line would make it drop? Look at when this code runs. Does anything run while your hand is still?"],
+        ["It stays where it was", true, "Correct. No movement, no pointermove, so nothing is pushed and nothing is shifted. The last ten fast speeds stay in the array, and the note stays bent until you move again."],
+        ["It slowly fades to 0", false, "Fading would need code that runs while you're still. This code only runs inside pointerMove. What calls pointerMove?"]
       ]);
 
-      /* ---------- moving average, version 2: only keep the last n ---------- */
+      /* ---------- 3e: forget by time ---------- */
       (function () {
-        var n = 10, speeds = [], read = speedReader();
-        function src() { return '// ---------- inside pointerMove ----------\nspeeds.push(normSpeed);\nif (speeds.length > ' + n + ') {\n  speeds.shift(); // take out the oldest\n}\n\nlet total = 0;\nfor (let i = 0; i < speeds.length; i++) {\n  total = total + speeds[i];\n}\nlet average = total / speeds.length;\nsynth.detune.value = average * 1200;' }
-        code($("#kt-code"), src());
-        var H = holder($("#kt-snd"), { make: pitchInst, note: function () { return "A3" } });
-        function render() {
-          var shown = speeds.slice(-10).map(f2);
-          lineView($("#kt-line"), shown, speeds.length > 10 ? speeds.length - 10 : 0, shown.length - 1);
-          $("#kt-n").innerHTML = speeds.length + "<small>speeds.length</small>";
+        code($("#fg-code"), 'function pointerMove(event) {\n  // …work out speed, as before…\n  speeds.push(speed);\n  setTimeout(forgetOldest, 500);\n  useAverage();\n}\n\nfunction forgetOldest() {\n  speeds.shift();\n  useAverage();\n}\n\nfunction useAverage() {\n  let total = 0;\n  for (let i = 0; i < speeds.length; i++) {\n    total = total + speeds[i];\n  }\n  let average = 0;\n  if (speeds.length > 0) {\n    average = total / speeds.length;\n  }\n  synth.detune.value = average * 300;\n}', [3, 8]);
+        var items = [], mode = "time", gen = 0, read = speedReader(), H = noteHolder($("#fg-snd"));
+        function avg() { return items.length ? mean(items, 0) : 0 }
+        function use() {
+          var a = avg();
+          $("#fg-n").innerHTML = items.length + "<small>speeds.length</small>";
+          $("#fg-a").innerHTML = f2(a) + "<small>average</small>";
+          bend(H.get(), a * 300);
         }
-        onWin(moveFns, "keep-ten", function (e) {
-          var k = norm(read(e).speed, 3);
-          speeds.push(k); if (speeds.length > n) speeds.shift();
-          var t = 0; for (var i = 0; i < speeds.length; i++) t += speeds[i];
-          var a = t / speeds.length;
-          $("#kt-avg").innerHTML = f2(a) + "<small>average</small>";
-          $("#kt-dv").textContent = Math.round(a * 1200) + " cents"; meter($("#kt-m"), a);
-          setDetune(H.get(), a);
-          render();
+        var st = { items: function () { return items }, used: function () { return function () { return true } }, avg: avg, window: 500 };
+        memory("forget", $("#fg-svg"), st);
+        onWin(moveFns, "forget", function (e) {
+          var r = read(e); if (!r.ok) return;
+          items.push({ v: r.speed, t: Date.now() });
+          if (mode === "time") { var g = gen; setTimeout(function () { if (g === gen) { items.shift(); use() } }, 500) }
+          else if (items.length > 10) items.shift();
+          use();
         });
-        $$("#kt-seg .btn").forEach(function (b) {
+        $$("#fg-seg .btn").forEach(function (b) {
           b.addEventListener("click", function () {
-            n = +b.dataset.n; while (speeds.length > n) speeds.shift();
-            $$("#kt-seg .btn").forEach(function (x) { x.classList.toggle("sel", x === b) });
-            code($("#kt-code"), src(), [2]); flash($("#kt-code"), [2]); render();
+            mode = b.dataset.m; gen++; items = []; st.window = mode === "time" ? 500 : 0;
+            $$("#fg-seg .btn").forEach(function (y) { y.classList.toggle("sel", y === b) });
+            use();
           });
         });
-        render();
+        use();
       })();
-
-      /* a row of boxes: the newest values of an array; a dashed box counts the ones before */
-      function lineView(host, vals, before, hi) {
-        var h = before > 0 ? '<div class="cell more"><div class="v">' + before + ' more</div></div>' : "";
-        vals.forEach(function (v, i) { h += '<div class="cell' + (i === hi ? " hi" : "") + '"><div class="v">' + esc(v) + '</div></div>' });
-        host.innerHTML = h || '<span class="small muted">Empty. Move the pointer.</span>';
-      }
-
-      /* ---------- 28 touch and pen ---------- */
-      (function () {
-        code($("#tp-code"), 'if (event.pointerType === "pen") {\n  let pressure = event.pressure;  // 0 to 1\n}');
-        var p = $("#tp-pad"); noSwipe(p);
-        function show(e) { $("#tp-t").textContent = JSON.stringify(e.pointerType || ""); $("#tp-p").textContent = f2(e.pressure || 0) }
-        ["pointermove", "pointerdown", "pointerup"].forEach(function (t) { p.addEventListener(t, show) });
-      })();
-
-      /* ---------- 29 absolute or relative ---------- */
-      quiz($("#ar"), $("#ar-fb"), [
-        ["The pointer's x position", 0, "Where it is right now: one event is enough."],
-        ["The pointer's speed", 1, "It compares this move with the last one: distance over time."],
-        ["The distance moved since the last event", 1, "It needs the last position as well as this one."],
-        ["How long a key was held down", 1, "The keyup moment minus the keydown moment, like Monday's gaps."],
-        ["How far you've dragged since you pressed", 1, "It uses clientX, but measured from the press: the pitch bend."]
-      ], ["Absolute", "Relative"], "Ask: could one single event tell you this? Or do you need an earlier moment to compare with?", true);
 
       /* ============ playground: student code + a pad that stands in for the window ============
          The code sees a stand-in window/document: its key listeners hear the focused pad,
@@ -1362,7 +1202,7 @@
       var CTORS = ["Synth", "PolySynth", "FMSynth", "AMSynth", "MonoSynth", "DuoSynth", "MembraneSynth", "MetalSynth", "PluckSynth", "NoiseSynth", "Distortion", "Reverb", "FeedbackDelay", "Chorus", "Filter", "Tremolo", "Vibrato", "BitCrusher", "Loop"];
       function playground(id, start) {
         var ed = $("#" + id + "-ed"), con = $("#" + id + "-con"), el = $("#" + id + "-pad");
-        var listeners = [], made = [], ran = false, KEY = "pg:" + id;
+        var listeners = [], made = [], ran = false, KEY = "pg2:" + id;
         el.innerHTML = '<div class="hint"></div><div class="dot"></div><div class="pk"></div><div class="xy"></div>';
         var hint = el.querySelector(".hint"), dot = el.querySelector(".dot"), pk = el.querySelector(".pk"), xy = el.querySelector(".xy");
         function txt() { hint.innerHTML = document.activeElement === el ? "<b>Listening.</b> Keys a to j, and the pointer: move, press, let go." : "<b>Click here</b>, then use the pointer and the keys." }
@@ -1444,7 +1284,7 @@
       }
 
       /* ---------- 31 the activity ---------- */
-      playground("ac", '// ---------- Sound ----------\nconst synth = new Tone.PolySynth().toDestination();\nconst lead = new Tone.Synth().toDestination();\n\n// ---------- State ----------\nlet octave = 4;\n\n// ---------- Keyboard (from the User input lecture) ----------\nfunction noteFor(key) {\n  if (key === "a") {\n    return "C" + octave;\n  } else if (key === "s") {\n    return "D" + octave;\n  } else if (key === "d") {\n    return "E" + octave;\n  } else if (key === "f") {\n    return "F" + octave;\n  } else if (key === "g") {\n    return "G" + octave;\n  } else if (key === "h") {\n    return "A" + octave;\n  } else if (key === "j") {\n    return "B" + octave;\n  }\n  return "";\n}\n\nfunction startNote(event) {\n  if (event.repeat) {\n    return;\n  }\n  const note = noteFor(event.key);\n  if (note !== "") {\n    synth.triggerAttack(note);\n  }\n}\n\nfunction stopNote(event) {\n  const note = noteFor(event.key);\n  if (note !== "") {\n    synth.triggerRelease(note);\n  }\n}\n\n// ---------- Pointer: your pipeline ----------\nfunction pointerDown(event) {\n  Tone.start();\n  // 1. normalise: event.clientX / window.innerWidth\n  // 2. interpolate: onto a range of MIDI notes\n  // 3. lead.triggerAttack(Tone.Frequency(note, "midi").toNote());\n}\n\nfunction pointerUp(event) {\n  lead.triggerRelease();\n}\n\nfunction pointerMove(event) {\n  // Step up: work out speed, smooth it\n  // with a moving average, and use it\n  // for lead.detune.value\n}\n\n// ---------- Setup ----------\ndocument.addEventListener("keydown", startNote);\ndocument.addEventListener("keyup", stopNote);\nwindow.addEventListener("pointerdown", pointerDown);\nwindow.addEventListener("pointerup", pointerUp);\nwindow.addEventListener("pointermove", pointerMove);\n');
+      playground("ac", '// ---------- Sound ----------\nconst synth = new Tone.Synth().toDestination();\n\n// ---------- State ----------\nlet octave = 4;\n\n// ---------- Keyboard (from the User input lecture) ----------\nfunction noteFor(key) {\n  if (key === "a") {\n    return "C" + octave;\n  } else if (key === "s") {\n    return "D" + octave;\n  } else if (key === "d") {\n    return "E" + octave;\n  } else if (key === "f") {\n    return "F" + octave;\n  } else if (key === "g") {\n    return "G" + octave;\n  } else if (key === "h") {\n    return "A" + octave;\n  } else if (key === "j") {\n    return "B" + octave;\n  }\n  return "";\n}\n\nfunction startNote(event) {\n  if (event.repeat) {\n    return;\n  }\n  const note = noteFor(event.key);\n  if (note !== "") {\n    synth.triggerAttack(note);\n  }\n}\n\nfunction stopNote(event) {\n  if (noteFor(event.key) !== "") {\n    synth.triggerRelease();\n  }\n}\n\n// ---------- Pointer: your pipeline ----------\nfunction pointerMove(event) {\n  // 1. normalise: event.clientX / window.innerWidth\n  // 2. stretch it onto synth.detune.value (in cents)\n  // Step up: speed in screens per second\n  // Step up again: average it over time\n}\n\n// ---------- Setup ----------\ndocument.addEventListener("keydown", startNote);\ndocument.addEventListener("keyup", stopNote);\nwindow.addEventListener("pointermove", pointerMove);\n');
     })();
   </script>
 </body>
