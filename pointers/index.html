@@ -406,7 +406,11 @@
               <div class="bar"><span>pitch.js</span></div>
               <pre class="code xs" id="ip-code"></pre>
             </div>
-            <p class="dir" style="font-size:18px"><code>Tone.Frequency(note, "midi")</code> reads a MIDI number. <code>toNote()</code> gives its name. <code>setNote</code> changes the pitch of a note that's already playing.</p>
+            <div class="panel">
+              <div class="bar p"><span>what's MIDI?</span></div>
+              <div class="pbody" style="font-size:17px;line-height:1.45">MIDI is the shared language electronic instruments and computers use for notes. It numbers the keys of a piano: <b>60 is middle C</b>, and each step of 1 is the next key, black keys included. 12 steps make an octave: 48 is C3, 72 is C5.</div>
+            </div>
+            <p class="dir" style="font-size:17px;margin:0"><code>toNote()</code> turns the number into a name. <code>setNote</code> changes the note that's playing.</p>
           </div>
           <div class="stack">
             <div class="snd"><button class="btn alt" id="ip-snd">Sound on</button><span class="small" id="ip-sm">Then move across the window.</span></div>
