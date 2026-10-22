@@ -315,7 +315,7 @@
           <table class="io">
             <thead><tr><th>Write</th><th>What it does</th></tr></thead>
             <tbody>
-              <tr><td>Util.createShape("pad")</td><td style="font-family:var(--font-ui)">Makes a new shape</td></tr>
+              <tr><td>createShape()</td><td style="font-family:var(--font-ui)">Makes a new shape (an id is optional)</td></tr>
               <tr><td>shape.setPosition(x, y)</td><td style="font-family:var(--font-ui)">Place it: 0 to 1 across, 0 to 1 down</td></tr>
               <tr><td>shape.setSize(w, h)</td><td style="font-family:var(--font-ui)">Size in pixels; one number for a square</td></tr>
               <tr><td>shape.setColour(h, s, l)</td><td style="font-family:var(--font-ui)">Hue 0–360, then saturation and lightness in %</td></tr>
@@ -340,7 +340,7 @@
               <div class="bar"><span>script.js</span><span>type along</span></div>
               <pre class="code xs" id="s1-code"></pre>
             </div>
-            <p class="small" style="margin:0">Delete <code>let s = Util.createShape("test");</code> from <code>setup()</code>: our shape is made once, at the top, so every function can reach it.</p>
+            <p class="small" style="margin:0">Replace the <code>example</code> shape in <code>setup()</code> with this one: our shape is made once, at the top, so every function can reach it.</p>
           </div>
           <div class="stack" style="gap:12px">
             <div class="spad" id="s1-pad"></div>
@@ -588,13 +588,13 @@
       var NO_SOUND = "no sound yet: click the page once first";
 
       /* ---------- shape.js: the import ---------- */
-      code($("#sf-import"), 'import * as Util from "./shape.js";\n\n// ---------- State ----------\nconst shape = Util.createShape("pad");');
+      code($("#sf-import"), 'import { createShape } from "./shape.js";\n\n// ---------- State ----------\nconst shape = createShape();');
 
       /* ---------- step 1: make a shape ---------- */
       (function () {
         var blob = shapePad($("#s1-pad"), "your shape"), h = $("#s1-h"), s = $("#s1-s"), r = $("#s1-r");
         function src() {
-          return '// ---------- State ----------\nconst shape = Util.createShape("pad");\n\n// ---------- Setup ----------\nfunction setup() {\n  shape.setSize(' + s.value + ');\n  shape.setRoundedness(' + (r.value / 10) + ');\n  shape.setColour(' + h.value + ', 80, 50);\n  shape.setPosition(0.3, 0.3);\n\n  // …update(), use() and the listeners\n}';
+          return '// ---------- State ----------\nconst shape = createShape();\n\n// ---------- Setup ----------\nfunction setup() {\n  shape.setSize(' + s.value + ');\n  shape.setRoundedness(' + (r.value / 10) + ');\n  shape.setColour(' + h.value + ', 80, 50);\n  shape.setPosition(0.3, 0.3);\n\n  // …update(), use() and the listeners\n}';
         }
         function show(line) {
           $("#s1-hv").textContent = h.value; $("#s1-sv").textContent = s.value; $("#s1-rv").textContent = String(r.value / 10);
