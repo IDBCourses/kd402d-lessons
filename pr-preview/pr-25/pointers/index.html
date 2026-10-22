@@ -386,9 +386,15 @@
             <div class="stack" id="pp-opts" style="gap:10px"></div>
             <div class="fb" id="pp-fb"></div>
           </div>
-          <div class="panel">
-            <div class="bar p"><span>a range of notes</span></div>
-            <pre class="code lg" id="pp-code"></pre>
+          <div class="stack">
+            <div class="panel">
+              <div class="bar p"><span>a range of notes</span></div>
+              <pre class="code lg" id="pp-code"></pre>
+            </div>
+            <div class="panel">
+              <div class="bar p"><span>what's MIDI?</span></div>
+              <div class="pbody" style="font-size:17px;line-height:1.45">MIDI is the shared language electronic instruments and computers use for notes. It numbers the keys of a piano: <b>60 is middle C</b>, and each step of 1 is the next key, black keys included. 12 steps make an octave: 48 is C3, 72 is C5.</div>
+            </div>
           </div>
         </div>
         <aside class="nt">Predict before the demo: everyone picks on their own laptop first, then a show of hands. The numbers are MIDI note numbers: 48 is C3, 60 is middle C (C4), 72 is C5. normX 0 gives 48, normX 1 gives 72, so left to right the pitch rises across two octaves. Wrong answers get a hint, not the answer. Next slide: hear it.</aside>
@@ -406,11 +412,7 @@
               <div class="bar"><span>pitch.js</span></div>
               <pre class="code xs" id="ip-code"></pre>
             </div>
-            <div class="panel">
-              <div class="bar p"><span>what's MIDI?</span></div>
-              <div class="pbody" style="font-size:17px;line-height:1.45">MIDI is the shared language electronic instruments and computers use for notes. It numbers the keys of a piano: <b>60 is middle C</b>, and each step of 1 is the next key, black keys included. 12 steps make an octave: 48 is C3, 72 is C5.</div>
-            </div>
-            <p class="dir" style="font-size:17px;margin:0"><code>toNote()</code> turns the number into a name. <code>setNote</code> changes the note that's playing.</p>
+            <p class="dir" style="font-size:18px"><code>Tone.Frequency(note, "midi")</code> reads a MIDI number. <code>toNote()</code> gives its name. <code>setNote</code> changes the pitch of a note that's already playing.</p>
           </div>
           <div class="stack">
             <div class="snd"><button class="btn alt" id="ip-snd">Sound on</button><span class="small" id="ip-sm">Then move across the window.</span></div>
@@ -462,8 +464,8 @@
             <div class="rows pipe">
               <div><span class="st">raw value</span><pre class="code" id="sw-raw"></pre></div>
               <div><span class="st">normalise</span><pre class="code" id="sw-norm"></pre></div>
-              <div><span class="st">interpolate</span><pre class="code" id="sw-int"></pre></div>
-              <div><span class="st">destination</span><pre class="code" id="sw-dst"></pre></div>
+              <div><span class="st">interpolate<br><span class="same">the same</span></span><pre class="code" id="sw-int"></pre></div>
+              <div><span class="st">destination<br><span class="same">the same</span></span><pre class="code" id="sw-dst"></pre></div>
             </div>
           </div>
           <div class="stack" style="gap:12px">
@@ -1023,7 +1025,7 @@
       })();
 
       /* ---------- 13 predict the pitch ---------- */
-      code($("#pp-code"), 'let note = 48 + normX * 24;\n\n// 48 is C3\n// 60 is C4\n// 72 is C5');
+      code($("#pp-code"), 'let note = 48 + normX * 24;');
       mcq($("#pp-opts"), $("#pp-fb"), [
         ["It rises", true, "Correct. At the left edge normX is 0, so the note is 48 (C3). At the right edge it's 1, so 48 + 24 = 72 (C5). Next slide: hear it."],
         ["It falls", false, "Work out both ends. What is the note when normX is 0? And when normX is 1?"],
@@ -1068,7 +1070,6 @@
         var ROW = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"], mode = "ptr", lastName = "C4";
         var H = holder($("#sw-snd"), { make: pitchInst, note: function () { return lastName } });
         var INT = 'let note = 48 + norm * 24;', DST = 'synth.setNote(\n  Tone.Frequency(note, "midi").toNote());';
-        var SAME = '<span class="same">the same</span>';
         function render() {
           if (mode === "ptr") {
             code($("#sw-raw"), 'event.clientX');
@@ -1082,9 +1083,6 @@
           }
           code($("#sw-int"), INT); code($("#sw-dst"), DST);
           flash($("#sw-raw"), [0]); flash($("#sw-norm"), [0]);
-          $$("#swap-source .same").forEach(function (s) { s.parentNode.removeChild(s) });
-          $("#sw-int").parentNode.querySelector(".st").insertAdjacentHTML("beforeend", "<br>" + SAME);
-          $("#sw-dst").parentNode.querySelector(".st").insertAdjacentHTML("beforeend", "<br>" + SAME);
           $("#sw-n").textContent = "–"; $("#sw-note").textContent = "–";
         }
         function use(norm) {
