@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>New concepts · KD402D Programming</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<link rel="stylesheet" href="../shared/deck.css">
+<style>
+/* styles used only by this lecture */
+.why>div{grid-template-columns:1fr;padding:18px 0}
+.why .tx{font-size:24px;line-height:1.45;color:var(--ink-700)}
+.pair{align-items:start}
+.pair pre.code{min-height:372px}
+.pair+.dir{margin-top:22px;max-width:70ch}
+</style>
+</head>
+<body data-lecture="new-concepts" data-home="../">
+<main id="stage">
+<div id="deck">
+
+<!-- ============ OPENING ============ -->
+
+<section class="slide stage" id="cover" data-sec="Opening">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">KD402D Programming · Week 44</div>
+    <h1 class="hero md">A few more tools for your code.</h1>
+    <p class="lede">while, break and continue, arrow functions, callbacks, and the ternary operator.</p>
+  </div>
+  <div style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
+    <div class="m" style="font-size:17px;color:var(--ink-200)">KD402D Programming · Thu 29 Oct · Live demos</div>
+  </div>
+  <aside class="nt">Part of code review day. These are short live demos of things students will meet in each other's A1 code and in examples online. Every concept gets two slides: why it exists, then the code they already know beside the new way of writing the same thing. Nothing here is required for A3. Each one is another way to write something they can already do. Keys: arrows to move, I for the slide index, N for these notes.</aside>
+</section>
+
+<!-- ============ WHILE ============ -->
+
+<section class="slide" id="while-why" data-sec="while loops">
+  <div class="billing">while loops · Why</div><hr class="rule">
+  <h2 class="h1">Keep going until it's done</h2>
+  <div class="rows why">
+    <div><span class="tx">A <code>for</code> loop is for when you know how many times to go round: once per note in the melody.</span></div>
+    <div><span class="tx">A <code>while</code> loop is for when you don't know in advance. You only know when to stop.</span></div>
+    <div><span class="tx">For example: keep rolling until you get a six, keep adding notes until the melody is 4 seconds long, or keep asking until the input is valid.</span></div>
+  </div>
+  <aside class="nt">Ask first: "When do you know in advance how many times something will happen, and when don't you?" Take two or three answers. The dice example works well acted out: one student rolls and says the number aloud, the room calls "again" until it's a six. Nobody could have said beforehand how many rolls it would take. That's a while loop.</aside>
+</section>
+
+<section class="slide" id="while-how" data-sec="while loops">
+  <div class="billing">while loops · How</div><hr class="rule">
+  <div class="cols pair">
+    <div class="panel"><div class="bar y"><span>What you already know</span></div>
+<pre class="code sm" data-src>// we know how many: 8 notes
+let notes = [];
+
+for (let i = 0; i &lt; 8; i++) {
+  notes.push("C4");
+}</pre></div>
+    <div class="panel"><div class="bar"><span>The new way</span></div>
+<pre class="code sm" data-src>// we only know when to stop
+let time = 0;
+let notes = [];
+
+while (time &lt; 4) {
+  notes.push("C4");
+  time = time + 0.5;
+}</pre></div>
+  </div>
+  <p class="dir">Check the condition, run the body, then check again. If nothing in the body changes the condition, the loop never ends.</p>
+  <aside class="nt">Read the while loop aloud with the room: "while time is less than 4, add a note, add half a second, go back and check." Have one student hold the value of time and update it out loud each pass. Count the passes together: 8, the same as the for loop. Common mistake: forgetting to change time in the body, which freezes the tab. Delete that line live and ask what would happen (don't run it).</aside>
+</section>
+
+<!-- ============ BREAK & CONTINUE ============ -->
+
+<section class="slide" id="break-why" data-sec="break and continue">
+  <div class="billing">break and continue · Why</div><hr class="rule">
+  <h2 class="h1">Leave early, or skip a turn</h2>
+  <div class="rows why">
+    <div><span class="tx">Sometimes you find what you're looking for halfway through the line, and there's no point walking the rest.</span></div>
+    <div><span class="tx"><code>break</code> leaves the loop straight away.</span></div>
+    <div><span class="tx"><code>continue</code> skips the rest of this pass and goes on to the next item, for example to skip rests or empty steps in a pattern.</span></div>
+  </div>
+  <aside class="nt">Act it out: line up five or six students, each holding a card with a note name, one "rest" and one "STOP". One person walks the line and sings each note. At "rest" they step past without singing (continue). At "STOP" they walk away from the line (break). Ask: what happened to the people after STOP?</aside>
+</section>
+
+<section class="slide" id="break-how" data-sec="break and continue">
+  <div class="billing">break and continue · How</div><hr class="rule">
+  <div class="cols pair">
+    <div class="panel"><div class="bar y"><span>What you already know</span></div>
+<pre class="code sm" data-src>let stopped = false;
+
+for (let i = 0; i &lt; melody.length; i++) {
+  if (melody[i] === "STOP") {
+    stopped = true;
+  }
+  if (!stopped &amp;&amp; melody[i] !== "rest") {
+    synth.triggerAttackRelease(melody[i], "8n");
+  }
+}</pre></div>
+    <div class="panel"><div class="bar"><span>The new way</span></div>
+<pre class="code sm" data-src>for (let i = 0; i &lt; melody.length; i++) {
+  if (melody[i] === "rest") {
+    continue;   // skip this one
+  }
+  if (melody[i] === "STOP") {
+    break;      // leave the loop
+  }
+  synth.triggerAttackRelease(melody[i], "8n");
+}</pre></div>
+  </div>
+  <p class="dir">Same result, but the new version stops walking the line at STOP, and you don't need an extra variable to remember that you've stopped.</p>
+  <aside class="nt">Point out the left version still visits every item after STOP; it only skips playing them. Ask the room which version reads more clearly aloud. Common mistake: putting continue or break outside a loop, which gives a SyntaxError. Another: putting the play line before the checks, so the rest still plays.</aside>
+</section>
+
+<!-- ============ ARROW FUNCTIONS ============ -->
+
+<section class="slide" id="arrow-why" data-sec="Arrow functions">
+  <div class="billing">Anonymous and arrow functions · Why</div><hr class="rule">
+  <h2 class="h1">Functions without a name</h2>
+  <div class="rows why">
+    <div><span class="tx">Some functions are only used once, in one place, and handed straight to something else. Giving them a name only adds noise.</span></div>
+    <div><span class="tx">An anonymous function is a function with no name. An arrow function is a shorter way of writing one.</span></div>
+    <div><span class="tx">You'll see them all over modern JavaScript, especially with event listeners and array methods.</span></div>
+  </div>
+  <aside class="nt">Link back to the Functions lecture: a function is a named process. Today's twist is that the name is optional when you only use it once. Students will meet arrow functions in almost every example online and from AI tools, so the point is mainly to read them, not to switch everything over.</aside>
+</section>
+
+<section class="slide" id="arrow-how" data-sec="Arrow functions">
+  <div class="billing">Anonymous and arrow functions · How</div><hr class="rule">
+  <div class="cols pair">
+    <div class="panel"><div class="bar y"><span>What you already know</span></div>
+<pre class="code sm" data-src>function double(n) {
+  return n * 2;
+}
+
+double(4); // 8</pre></div>
+    <div class="panel"><div class="bar"><span>The new way</span></div>
+<pre class="code sm" data-src>// anonymous function in a variable
+const double = function (n) {
+  return n * 2;
+};
+
+// arrow function
+const double = (n) =&gt; {
+  return n * 2;
+};
+
+// one expression: drop braces and return
+const double = n =&gt; n * 2;</pre></div>
+  </div>
+  <p class="dir">All of these do the same job; pick one, you can't declare <code>double</code> three times in real code. The arrow version is the one you'll read most in other people's code.</p>
+  <aside class="nt">Morph the left version into each right version step by step: take the name off and store the function in a variable; swap the word function for an arrow; drop the braces and return. Read the last one aloud: "double is: take n, give back n times 2." Common mistake: keeping the braces but dropping return, which gives undefined.</aside>
+</section>
+
+<!-- ============ CALLBACKS ============ -->
+
+<section class="slide" id="callback-why" data-sec="Callbacks">
+  <div class="billing">Callbacks · Why</div><hr class="rule">
+  <h2 class="h1">Hand over a function for later</h2>
+  <div class="rows why">
+    <div><span class="tx">A callback is a function you pass to another function, so it can call it at the right moment.</span></div>
+    <div><span class="tx">You already do this! <code>addEventListener</code> takes a function and calls it when the key is pressed.</span></div>
+    <div><span class="tx">Arrays have methods that take callbacks too: <code>forEach</code> runs your function once for every item, with no counter to get off by one.</span></div>
+  </div>
+  <aside class="nt">Act it out: one student is the browser and another is playC. Hand the browser a role card that says "play C4". The browser waits. When someone claps (the click), the browser reads the card and plays the note. The function was handed over, and the browser decided when to call it.</aside>
+</section>
+
+<section class="slide" id="callback-how" data-sec="Callbacks">
+  <div class="billing">Callbacks · How</div><hr class="rule">
+  <div class="cols pair">
+    <div class="panel"><div class="bar y"><span>What you already know</span></div>
+<pre class="code sm" data-src>function playC() {
+  synth.triggerAttackRelease("C4", "8n");
+}
+button.addEventListener("click", playC);
+
+for (let i = 0; i &lt; melody.length; i++) {
+  synth.triggerAttackRelease(
+    melody[i], "8n", Tone.now() + i * 0.4);
+}</pre></div>
+    <div class="panel"><div class="bar"><span>The new way</span></div>
+<pre class="code sm" data-src>button.addEventListener("click", () =&gt; {
+  synth.triggerAttackRelease("C4", "8n");
+});
+
+melody.forEach((note, i) =&gt; {
+  synth.triggerAttackRelease(
+    note, "8n", Tone.now() + i * 0.4);
+});</pre></div>
+  </div>
+  <p class="dir"><code>playC</code> was already a callback. Notice there are no brackets after it: you hand the function over, and the browser calls it later.</p>
+  <aside class="nt">The most common bug here, and one that turns up in A1 code: writing playC() inside addEventListener. That calls it immediately and hands over its result (undefined). Show that version and ask what would happen. For forEach, point out that the callback gets the item and its position, so there's no i to manage.</aside>
+</section>
+
+<!-- ============ MAP & FILTER ============ -->
+
+<section class="slide" id="map-why" data-sec="map and filter (bonus)">
+  <div class="billing">map and filter (bonus) · Why</div><hr class="rule">
+  <h2 class="h1">Make a new array from an old one</h2>
+  <div class="rows why">
+    <div><span class="tx">Very often, a loop does nothing but build a new array: every note transposed, or only the loud notes kept.</span></div>
+    <div><span class="tx"><code>map</code> transforms every item and gives back a new array of the same length.</span></div>
+    <div><span class="tx"><code>filter</code> keeps only the items where your callback returns true.</span></div>
+  </div>
+  <aside class="nt">Bonus: skip this pair if time is short. Act out map: a row of students each holding a volume number; one student is the callback and multiplies each by 100, writing the answer on a new card. Filter: the callback says yes or no, and only the yes cards move to the new row.</aside>
+</section>
+
+<section class="slide" id="map-how" data-sec="map and filter (bonus)">
+  <div class="billing">map and filter (bonus) · How</div><hr class="rule">
+  <div class="cols pair">
+    <div class="panel"><div class="bar y"><span>What you already know</span></div>
+<pre class="code sm" data-src>let percent = [];
+for (let i = 0; i &lt; volumes.length; i++) {
+  percent.push(volumes[i] * 100);
+}
+
+let loud = [];
+for (let i = 0; i &lt; volumes.length; i++) {
+  if (volumes[i] &gt; 0.6) {
+    loud.push(volumes[i]);
+  }
+}</pre></div>
+    <div class="panel"><div class="bar"><span>The new way</span></div>
+<pre class="code sm" data-src>let volumes = [0.2, 0.9, 0.5, 1.0];
+
+// map: transform every item
+let percent = volumes.map(v =&gt; v * 100);
+// [20, 90, 50, 100]
+
+// filter: keep only some items
+let loud = volumes.filter(v =&gt; v &gt; 0.6);
+// [0.9, 1.0]</pre></div>
+  </div>
+  <p class="dir">Neither one changes the original array. Each gives you back a new array.</p>
+  <aside class="nt">Ask the room to predict the results before revealing the comments. Common mistake: forgetting that map's callback must return a value. With braces and no return, you get an array full of undefined. Note that 1.0 shows as 1 in the console.</aside>
+</section>
+
+<!-- ============ TERNARY ============ -->
+
+<section class="slide" id="ternary-why" data-sec="The ternary operator">
+  <div class="billing">The ternary operator · Why</div><hr class="rule">
+  <h2 class="h1">A choice in one line</h2>
+  <div class="rows why">
+    <div><span class="tx">Often an if/else exists only to pick between two values.</span></div>
+    <div><span class="tx">The ternary operator, <code>condition ? a : b</code>, picks the value in a single expression.</span></div>
+    <div><span class="tx">It's handy when setting a variable, or a label or colour on the page.</span></div>
+  </div>
+  <aside class="nt">Ask for examples from their A1 projects where an if/else only picks a label, colour or sound. A play/stop button is the classic one. Keep it short: it's a reading skill more than a writing one.</aside>
+</section>
+
+<section class="slide" id="ternary-how" data-sec="The ternary operator">
+  <div class="billing">The ternary operator · How</div><hr class="rule">
+  <div class="cols pair">
+    <div class="panel"><div class="bar y"><span>What you already know</span></div>
+<pre class="code sm" data-src>let label;
+
+if (isPlaying) {
+  label = "Stop";
+} else {
+  label = "Play";
+}
+
+button.textContent = label;</pre></div>
+    <div class="panel"><div class="bar"><span>The new way</span></div>
+<pre class="code sm" data-src>let label = isPlaying ? "Stop" : "Play";
+
+button.textContent = label;
+
+// or straight into the page
+button.textContent = isPlaying ? "Stop" : "Play";</pre></div>
+  </div>
+  <p class="dir">Read it aloud: "is it playing? then Stop, otherwise Play." If it doesn't fit comfortably on one line, go back to if/else.</p>
+  <aside class="nt">Have the whole room read the line aloud as a question and answer. Warn against nesting ternaries: technically allowed, almost always harder to read than if/else. This ties back to the code review theme: the clearest version wins.</aside>
+</section>
+
+<!-- ============ WRAP-UP ============ -->
+
+<section class="slide stage" id="recap-end" data-sec="Wrap-up">
+  <div class="beam y"></div><div class="beam m"></div><div class="scan"></div>
+  <div class="inner">
+    <div class="billing">Wrap-up</div>
+    <h2 class="hero md">Pick the tool that reads most clearly aloud.</h2>
+    <div class="terms"><span>while</span><span>break</span><span>continue</span><span>=&gt;</span><span>forEach</span><span>map</span><span>filter</span><span>? :</span></div>
+  </div>
+  <aside class="nt">None of these are required. They are other ways to write what students can already do. The test is the one from this morning's code review: read it aloud to a partner. If the new way reads more clearly, use it; if not, the version you already know is fine. Point to the Canvas module for today: <a href="https://mau.instructure.com/courses/22858/modules/137090" target="_blank" rel="noopener">Code review and refactoring</a>.</aside>
+</section>
+
+</div>
+</main>
+
+<script src="../shared/deck.js"></script>
+<script>
+(function(){
+"use strict";
+var D=Deck;
+/* code panels: highlight the code written in the markup */
+D.$$("pre.code[data-src]").forEach(function(el){D.code(el,el.textContent)});
+})();
+</script>
+</body>
+</html>
