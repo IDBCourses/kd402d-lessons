@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Objects and arrays · KD402D Programming</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="../shared/deck.css">
+  <style>
+    /* styles used only by this lecture */
+    .order>div{grid-template-columns:72px 1fr;align-items:center;padding:10px 0}
+    .order .nm{font-size:23px;color:var(--ink-900);font-weight:500}
+    .order .nm small{display:block;font-size:16px;color:var(--ink-500);font-weight:400}
+    .prompt{font-family:var(--font-display);font-weight:700;font-size:30px;letter-spacing:-.025em;color:var(--ink-900);line-height:1.15;margin:0}
+    .h1.tight{margin-bottom:14px}
+    @keyframes flashpk{0%{background:var(--spot-400)}100%{background:var(--paper-000)}}
+
+    /* the four-step ladder: idea → strategy → plan → code */
+    .ladder{border-top:1px solid var(--ink-900)}
+    .rung{display:grid;grid-template-columns:132px 1fr;gap:16px;padding:7px 0;border-bottom:1px solid var(--paper-300);align-items:start;transition:background .2s}
+    .rung .rl{font-family:var(--font-display);font-weight:700;font-size:27px;letter-spacing:-.02em;color:var(--ink-900);line-height:1.05}
+    .rung .rl small{display:block;font-family:var(--font-ui);font-weight:500;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-500);margin-top:4px}
+    .rung .rc{font-size:19px;line-height:1.4;color:var(--ink-700);min-height:28px}
+    .rung.off .rl,.rung.off .rl small{color:var(--paper-400)}
+    .rung.off .rc{visibility:hidden}
+    .rung.on{background:var(--spot-200);box-shadow:inset 4px 0 0 var(--spot-400)}
+    .rung.on .rl{padding-left:10px}
+    .rung ol{margin:0;padding:0;list-style:none;counter-reset:pl}
+    .rung ol li{counter-increment:pl;padding:1px 0 1px 30px;position:relative;cursor:pointer;border-radius:2px}
+    .rung ol li::before{content:counter(pl);position:absolute;left:4px;font-family:var(--font-mono);font-weight:700;font-size:16px;color:var(--curtain-600);top:2px}
+    .rung ol li:hover,.rung ol li.sel{background:var(--paper-200)}
+    .rung pre.code{font-size:15px;line-height:1.5;padding:8px 14px}
+    .shape{display:inline-block;font-family:var(--font-mono);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--cyan-400);color:var(--ink-900);border:2px solid var(--ink-900);border-radius:999px;padding:1px 10px;margin-left:8px;vertical-align:2px}
+    .gated{position:relative}
+    .gated>*{visibility:hidden}
+    .gated::before{content:"Climb to the code step to try it here.";position:absolute;left:0;top:0;right:0;padding:18px 20px;border:2px dashed var(--paper-400);border-radius:2px;font-family:var(--font-display);font-style:italic;font-weight:500;font-size:20px;color:var(--ink-500)}
+    .lnav{display:flex;gap:10px;align-items:center;margin-top:12px}
+    .lnav .small{margin-left:6px}
+    #steps-build .rung pre.code{font-size:14px;line-height:1.35;padding:6px 14px}
+
+    /* a row of boxes: an array */
+    .line{display:flex;gap:10px;flex-wrap:nowrap;align-items:flex-start;min-height:92px}
+    .cell{display:flex;flex-direction:column;align-items:center;gap:5px}
+    .cell .v{min-width:70px;height:58px;padding:0 8px;border:2px solid var(--ink-900);background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900);border-radius:2px;font-family:var(--font-mono);font-weight:700;font-size:20px;color:var(--ink-900);display:flex;align-items:center;justify-content:center;cursor:default}
+    .cell .i{font-family:var(--font-mono);font-size:14px;font-weight:700;color:var(--ink-500)}
+    .cell.hi .v{background:var(--spot-400)}
+    .line.click .cell .v{cursor:pointer}
+    .line.click .cell .v:hover{background:var(--paper-200)}
+    .line.click .cell.hi .v:hover{background:var(--spot-400)}
+
+    /* one object, its labelled parts */
+    .obj{border:2px solid var(--ink-900);background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900);border-radius:2px;min-width:300px}
+    .obj .on{font-family:var(--font-mono);font-weight:700;font-size:15px;letter-spacing:.06em;padding:6px 14px;border-bottom:2px solid var(--ink-900);background:var(--paper-200);color:var(--ink-900)}
+    .obj .pr{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:8px 14px;border-bottom:1px solid var(--paper-300);align-items:center}
+    .obj .pr:last-child{border-bottom:0}
+    .obj .pk{font-family:var(--font-mono);font-size:17px;color:var(--ink-500);font-weight:700}
+    .obj .pv{font-family:var(--font-mono);font-size:20px;color:var(--ink-900);font-weight:700}
+    .obj .pr.hi{background:var(--spot-200)}
+    .obj .pr.flash{animation:flashlite .9s ease}
+    .obj.click .pr{cursor:pointer}
+    .obj.click .pr:hover{background:var(--paper-200)}
+    .obj.click .pr.hi:hover{background:var(--spot-200)}
+    .obj.sm{min-width:0;width:200px}
+    .obj.sm .pr{padding:4px 10px;grid-template-columns:86px 1fr}
+    .obj.sm .pk{font-size:14px}
+    .obj.sm .pv{font-size:16px}
+    .obj.sm .on{font-size:12px;padding:3px 10px}
+    .obj.sm.hi{box-shadow:3px 3px 0 var(--curtain-600);border-color:var(--curtain-600)}
+
+    /* a practice student card (opening) */
+    .pcard{border:2px solid var(--ink-900);background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900);border-radius:10px;overflow:hidden;width:420px}
+    .pcard .top{background:var(--blue-600);color:var(--paper-000);font-family:var(--font-mono);font-weight:700;font-size:13px;letter-spacing:.06em;padding:10px 18px}
+    .pcard .fld{padding:10px 18px;border-bottom:1px solid var(--paper-300);cursor:pointer}
+    .pcard .fld:last-child{border-bottom:0}
+    .pcard .fld:hover{background:var(--paper-200)}
+    .pcard .fld.hi{background:var(--spot-200)}
+    .pcard .fld b{display:block;font-size:13px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;color:var(--ink-500)}
+    .pcard .fld span{font-family:var(--font-display);font-weight:700;font-size:30px;color:var(--ink-900);letter-spacing:-.02em}
+
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:40px;border-top:1px solid var(--ink-900);padding-top:18px}
+    .two h3{font-family:var(--font-display);font-weight:700;font-size:40px;letter-spacing:-.03em;color:var(--ink-900);margin:0 0 10px;line-height:1.05}
+    .two p{margin:0 0 10px;font-size:21px}
+    .two .ex{font-family:var(--font-display);font-style:italic;font-weight:500;color:var(--ink-500);font-size:20px}
+    .reveal-word{font-family:var(--font-display);font-weight:700;font-size:30px;letter-spacing:-.02em;color:var(--curtain-600)}
+    .count{font-family:var(--font-display);font-weight:700;font-size:40px;color:var(--curtain-600);letter-spacing:-.03em;line-height:1}
+
+    /* rows of code, each with a button or answer chips */
+    .fnq>div{grid-template-columns:1fr auto;gap:16px;padding:9px 0;align-items:center}
+    .fnq code{font-size:17px}
+    .fnq .ch{display:flex;gap:8px}
+    .fnq .chip{text-transform:none;letter-spacing:0}
+    .path{font-family:var(--font-mono);font-weight:700;font-size:22px;color:var(--ink-900);background:var(--paper-000);border:2px solid var(--ink-900);padding:8px 14px;border-radius:2px;min-height:48px}
+    .path .pv{color:var(--curtain-600)}
+
+    /* playground: student code + a pad */
+    .pad{border:2px dashed var(--ink-300);background:var(--paper-200);border-radius:2px;padding:10px 16px;display:grid;grid-template-columns:90px 1fr;gap:14px;align-items:center;cursor:pointer;min-height:84px;transition:background .16s,border-color .16s}
+    .pad:focus{outline:none;border:2px solid var(--curtain-600);background:var(--spot-200)}
+    .pad:focus-visible{outline:2px solid var(--curtain-600);outline-offset:2px}
+    .pad .pk{font-family:var(--font-mono);font-weight:700;font-size:34px;color:var(--ink-900);text-align:center;border:2px solid var(--ink-900);background:var(--paper-000);box-shadow:3px 3px 0 var(--ink-900);border-radius:2px;padding:6px 0;min-height:60px;line-height:44px;white-space:nowrap;overflow:hidden}
+    .pad .pk.flash{animation:flashpk .5s ease}
+    .pad .ph{font-size:17px;color:var(--ink-700);line-height:1.4}
+    .pad .ph b{color:var(--ink-900)}
+    .cols.pg{align-items:stretch}
+    .cols.pg>.panel{display:flex;flex-direction:column;min-height:0}
+    textarea.pg-ed{flex:1;min-height:0;font-size:15px;white-space:pre;overflow:auto}
+    .con-s{max-height:130px;overflow:auto;font-size:16px;min-height:80px}
+    ol.plain.tasks{padding:0}
+    ol.plain.tasks li{font-size:17px;padding:5px 0;line-height:1.4}
+
+    /* clickable code parts */
+    .part{border-radius:2px;cursor:pointer;transition:background .16s,box-shadow .16s}
+    .part:hover{background:rgba(255,255,255,.12)}
+    .part.hit{background:rgba(19,203,132,.28);box-shadow:0 0 0 2px var(--applause-500)}
+    .part.miss{background:rgba(255,45,114,.28)}
+
+    /* the loop, pass by pass */
+    table.passes td,table.passes th{padding:5px 10px;white-space:nowrap}
+    table.passes td{font-size:17px}
+    table.passes th{text-transform:none;letter-spacing:0;font-family:var(--font-mono);font-weight:700}
+    table.passes tr.on td{background:var(--spot-200)}
+    table.passes td.no{color:var(--error-ink)}
+
+    /* three things on the synth */
+    .three>div{grid-template-columns:292px 1fr;gap:14px;padding:8px 0;align-items:center}
+    .three .btn{text-transform:none;letter-spacing:0;font-size:15px;justify-self:start;padding-left:12px;padding-right:12px}
+    .three .ex{font-size:17px;line-height:1.35;color:var(--ink-700)}
+    .three .ex[hidden]{display:block;visibility:hidden}
+
+    /* a short reference list */
+    .docs>div{grid-template-columns:110px 1fr;gap:14px;padding:8px 0;align-items:baseline}
+    .docs code{font-size:17px;font-weight:700;color:var(--ink-900)}
+    .docs span{font-size:17px;line-height:1.35}
+  </style>
+</head>
+
+<body data-lecture="objects-arrays" data-home="../">
+  <main id="stage">
+    <div id="deck">
+
+      <!-- 01 COVER -->
+      <section class="slide stage" id="cover" data-sec="Opening">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">KD402D Programming · Week 42</div>
+          <h1 class="hero">One thing. Labelled parts.</h1>
+          <p class="lede">Objects keep the facts about one thing together, reached by label. Put them in an array and you have position and label at once.</p>
+        </div>
+        <div style="position:absolute;left:80px;width:640px;bottom:44px;border-top:1px solid var(--ink-300);padding-top:18px">
+          <div class="m" style="font-size:17px;color:var(--ink-200)">KD402D Programming · Objects and arrays · Fri 16 Oct</div>
+        </div>
+        <aside class="nt">10:15. Welcome back. Keys: arrows to move, I for the slide index, N for these notes, E to jump to the next exercise. Students open the same link on their laptops: every "Your turn" slide works on its own screen, and today all the coding happens in the editors on the slides (VS Code is for the afternoon exercises). Headphones: there is sound. The plan in one line: yesterday was position, today is label, and after the break the two together.</aside>
+      </section>
+
+      <!-- 02 RUNNING ORDER -->
+      <section class="slide" id="running-order" data-sec="Opening">
+        <div class="billing">Today</div>
+        <hr class="rule">
+        <h2 class="h1">What we'll do today</h2>
+        <div class="rows order">
+          <div><span class="num">01</span><span class="nm">One thing, many parts<small>Yesterday's line, a student card, and the problem objects solve</small></span></div>
+          <div><span class="num">02</span><span class="nm">Objects<small>Make one, read and change it by label, and find the objects you've used all week</small></span></div>
+          <div><span class="num">03</span><span class="nm">Arrays of objects<small>Position, then label: a melody where every note has its own length</small></span></div>
+          <div><span class="num">04</span><span class="nm">Look it up<small>The event object you've used since Tuesday, and where to find what's in any object: MDN and the Tone.js docs</small></span></div>
+        </div>
+        <p class="dir" style="margin-top:16px">A break after objects.</p>
+        <aside class="nt">Timings for you only (not on the slide): recap and opening 10:15–10:35, Part 1 objects 10:35–11:15, break 11:15–11:25, Part 2 arrays of objects 11:25–11:50, the event object and looking things up 11:50–12:00 (the song quiz only if there's time). The opening is plain language: yesterday's arrays and plain variables are fine to show, but no curly braces until Part 1.</aside>
+      </section>
+
+      <!-- 03 OBJECTIVES -->
+      <section class="slide" id="objectives" data-sec="Opening">
+        <div class="billing">By lunch you can</div>
+        <hr class="rule">
+        <h2 class="h1">Five things to take home</h2>
+        <div class="rows lab">
+          <div><span class="num">01</span><span class="tx">Make an object and get its properties out.</span></div>
+          <div><span class="num">02</span><span class="tx">Read and write a property with a dot, <code>tone.note</code>, or with brackets, <code>tone["note"]</code>.</span></div>
+          <div><span class="num">03</span><span class="tx">Add a property, change one, and say which a line of code does.</span></div>
+          <div><span class="num">04</span><span class="tx">Choose between an array and an object: position or label?</span></div>
+          <div><span class="num">05</span><span class="tx">Reach into an array of objects by position and label, and look up an object's properties on MDN and in the Tone.js docs.</span></div>
+        </div>
+        <aside class="nt">The session's learning objectives from the course plan. Come back to them at the end. Number 04 is the decision the whole morning hangs on; number 05 ends with a habit: when an object isn't yours, look up its properties.</aside>
+      </section>
+
+      <!-- 04 RECAP -->
+      <section class="slide" id="recap" data-sec="One thing, many parts" data-demo="Yesterday's melody">
+        <span class="turn try">Try it</span>
+        <div class="billing">One thing, many parts · Recap</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Yesterday: a line, and a walk</h2>
+        <div class="cols wide-l">
+          <div class="stack">
+            <div class="panel">
+              <div class="bar"><span>melody.js · yesterday</span></div>
+              <pre class="code" id="rc-code" style="font-size:16px"></pre>
+            </div>
+            <p class="dir" style="font-size:20px;margin:0">Start, test, step, body: the loop reaches each note by its position.</p>
+          </div>
+          <div class="stack">
+            <div class="line" id="rc-line"></div>
+            <div class="row"><button class="btn" id="rc-play">Play it</button></div>
+            <p style="margin:0;font-size:20px">Many of the same kind, in order, reached by <b>where it sits</b>.</p>
+            <p class="dir" style="font-size:20px">Not everything is a line. Some things are one thing with several facts.</p>
+          </div>
+        </div>
+        <aside class="nt">10:15. Two minutes of recap. Yesterday: an array keeps many of a kind in order, reached by position, and a for loop walks it for us: start, test, step, body. Press Play: the boxes light up as the loop reaches each position. Ask someone to read the for line aloud. Then turn the corner: everything we've stored so far was either one value or a line of the same kind of value. What about one thing that has several different facts about it?</aside>
+      </section>
+
+      <!-- 05 ONE STUDENT -->
+      <section class="slide" id="id-card" data-sec="One thing, many parts" data-demo="One student">
+        <span class="turn try">Try it</span>
+        <div class="billing">One thing, many parts · The student card</div>
+        <hr class="rule">
+        <h2 class="h1 tight">One student, three variables</h2>
+        <div class="cols" style="gap:40px">
+          <div class="stack">
+            <div class="pcard" id="ic-card"></div>
+            <p class="small muted" style="margin:0">A practice card. Click a field.</p>
+          </div>
+          <div class="stack">
+            <div class="panel">
+              <div class="bar"><span>student.js</span></div>
+              <pre class="code" id="ic-code" style="font-size:16px"></pre>
+            </div>
+            <div class="row"><button class="btn" id="ic-run">Run it</button></div>
+            <div class="panel">
+              <div class="bar y"><span>console</span></div>
+              <div class="console" id="ic-con" style="min-height:44px"></div>
+            </div>
+          </div>
+        </div>
+        <aside class="nt">Callback to the student card from the Data lecture: the labels stayed, the values changed. One student, three facts, three variables. Click a field on the card: its line of code lights up. Run it: the console prints the card. Say it plainly: for one person, this works fine. Nothing new here, and that's the point: let them feel comfortable before the next slide breaks it.</aside>
+      </section>
+
+      <!-- 06 IT SPRAWLS -->
+      <section class="slide" id="sprawl" data-sec="One thing, many parts" data-demo="More students">
+        <span class="turn try">Try it</span>
+        <div class="billing">One thing, many parts · The problem</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Two students, three… it sprawls</h2>
+        <div class="cols wide-l" style="gap:30px">
+          <div class="panel">
+            <div class="bar m"><span>students.js</span><span>variables: <b id="sp-n">3</b></span></div>
+            <pre class="code sm" id="sp-code" style="font-size:15px;line-height:1.42;padding:8px 18px;min-height:120px"></pre>
+          </div>
+          <div class="stack" style="gap:14px">
+            <div class="row"><button class="btn" id="sp-add">Add a student</button><button class="btn ghost" id="sp-reset">Start over</button></div>
+            <ol class="plain" style="padding:0">
+              <li style="font-size:18px">Which lines are all about Grace?</li>
+              <li style="font-size:18px">What tells JavaScript that <code>person2FirstName</code> and <code>person2LastName</code> belong together?</li>
+              <li style="font-size:18px">To hand one whole student to a function, how many things do you pass?</li>
+            </ol>
+            <p class="dir" id="sp-dir" style="font-size:20px">Press Add a student.</p>
+          </div>
+        </div>
+        <aside class="nt">Now break it. Press Add a student: the plain names don't work for two people, so everything gets a person1… or person2… in front. Keep pressing: three facts per person, and the pile grows by three each time. Question 1: Grace is person3; you find her by reading the names. Question 2: nothing. Only the names we typed by hand group them, and JavaScript doesn't read names for meaning. Question 3: three, one per fact, and nothing stops you mixing person2FirstName with person1LastName. Let the mess land, then ask the room: wouldn't it be good if one variable could hold all of one person's facts, and keep them together?</aside>
+      </section>
+
+      <!-- 07 BAND -->
+      <section class="slide stage" id="one-var-band" data-sec="One thing, many parts">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">One thing, many parts</div>
+          <h2 class="hero md">One variable that holds a whole person.</h2>
+          <p class="lede">That wish has a name. Plain words first: the code comes after we've decided what we want.</p>
+        </div>
+        <aside class="nt">The wish from the last slide, said out loud: person1, one variable, holding firstName, lastName and studentNumber together. Don't name it yet and don't write braces: the next slide draws it first.</aside>
+      </section>
+
+      <!-- 08 LABELLED PARTS -->
+      <section class="slide" id="labelled" data-sec="One thing, many parts" data-demo="Position or label">
+        <span class="turn try">Try it</span>
+        <div class="billing">One thing, many parts · Labelled parts</div>
+        <hr class="rule">
+        <h2 class="h1 tight">One thing, with labelled parts</h2>
+        <div class="cols" style="gap:40px">
+          <div class="stack" style="gap:10px">
+            <span class="small muted">yesterday · many notes, in a line</span>
+            <div class="line click" id="lb-line"></div>
+            <span class="small muted" style="margin-top:6px">today · one person, three labelled facts</span>
+            <div id="lb-obj"></div>
+          </div>
+          <div class="stack" style="gap:14px">
+            <p class="prompt" id="lb-say" style="font-size:26px;min-height:96px">Click a box, or one of person1's facts.</p>
+            <div class="row"><button class="btn ghost" id="lb-second">person1's second fact?</button></div>
+            <p style="margin:0;font-size:20px"><b>One thing</b>, not many. Its parts are different kinds of fact. There's no first or second: you reach a part by <b>what it's called</b>.</p>
+            <p class="row" style="gap:14px;margin:0"><button class="btn alt" id="lb-name">What's it called?</button><span class="reveal-word" id="lb-word" hidden>An object. Its labels are properties.</span></p>
+          </div>
+        </div>
+        <aside class="nt">The wish, drawn: person1 as one thing with labelled slots, next to yesterday's line of boxes. Click a box: "position 2, the third note". Click a fact: "the lastName of person1". Then ask: what's person1's second fact? Press the button. Is studentNumber second? Is lastName? The question means nothing: position is meaningless here. The win is grouping: the facts that belong to one person now travel as a unit. Only after they have that, press "What's it called?": an object, and the labels are its properties. Concept first, vocabulary second.</aside>
+      </section>
+
+      <!-- 09 THE DECISION -->
+      <section class="slide" id="position-or-label" data-sec="One thing, many parts">
+        <div class="billing">One thing, many parts · The decision</div>
+        <hr class="rule">
+        <h2 class="h1">Position or label: that's the decision</h2>
+        <div class="two">
+          <div>
+            <h3>A line → array</h3>
+            <p>Many things of the same kind, in order.</p>
+            <p>You reach one by <b>where it sits</b>.</p>
+            <p class="ex">the notes of a melody · the steps of a pattern · a playlist</p>
+          </div>
+          <div>
+            <h3>Labelled parts → object</h3>
+            <p>One thing, described by several facts.</p>
+            <p>You reach a part by <b>what it's called</b>.</p>
+            <p class="ex">one student · one sound · a drum machine's settings</p>
+          </div>
+        </div>
+        <p class="dir" style="margin-top:auto">Ask "is there a first one?" If yes, it's a line. If the question makes no sense, it's labelled parts.</p>
+        <aside class="nt">The throughline for the morning: many of a kind, by position; or one thing, many labelled parts, by label. Everything after this is notation for these two ideas. The "is there a first one?" test is a handy rule of thumb for the quiz on the next slide.</aside>
+      </section>
+
+      <!-- 10 QUIZ 1 -->
+      <section class="slide" id="quiz-pos-label" data-sec="One thing, many parts" data-ex="Position or label?">
+        <span class="turn">Your turn</span>
+        <div class="billing">One thing, many parts · Check</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Position or label?</h2>
+        <p style="margin:0 0 10px;font-size:19px">For each one: do you naturally reach its parts by position, like a list, or by label, like an object?</p>
+        <div class="rows quiz" id="q1"></div>
+        <div class="fb" id="q1-fb" style="margin-top:14px"></div>
+        <aside class="nt">On their own laptops, then discuss the answers together. Yesterday's opening quiz asked "is it a line?"; now they have a word for the other side too. Then open it up to the room (not on the slide): what else in life is one thing with labelled parts, and what is a list in order? A contact in your phone, a recipe (labelled: name, time, serves… with a list of steps inside), a bus timetable, a queue at the café. Let them surface and sort their own examples. This leads straight into Part 1.</aside>
+      </section>
+
+      <!-- 11 FROM THREE VARIABLES TO ONE -->
+      <section class="slide" id="person-object" data-sec="Objects" data-demo="From three variables to one">
+        <span class="turn try">Try it</span>
+        <div class="billing">Objects</div>
+        <hr class="rule">
+        <h2 class="h1 tight">From three variables to one</h2>
+        <div class="cols" style="gap:30px">
+          <div class="stack" style="gap:10px">
+            <div class="panel">
+              <div class="bar m"><span>before · three variables</span></div>
+              <pre class="code sm" id="po-a" style="font-size:15px;padding:8px 18px"></pre>
+            </div>
+            <div class="panel">
+              <div class="bar"><span>after · one object</span></div>
+              <pre class="code" id="po-b" style="font-size:17px"></pre>
+            </div>
+            <div class="panel">
+              <div class="bar y"><span>console</span></div>
+              <div class="console" id="po-con" style="min-height:44px;font-size:15px"></div>
+            </div>
+          </div>
+          <div class="stack" style="gap:10px">
+            <span class="small muted">Predict each line, then run it. In order.</span>
+            <div class="rows fnq" id="po-rows"></div>
+            <div class="row" style="align-items:flex-start;gap:16px">
+              <div id="po-obj"></div>
+              <button class="btn ghost" id="po-reset">Start over</button>
+            </div>
+          </div>
+        </div>
+        <aside class="nt">10:35. The payoff the opening set up. Show the loose version one more time, then the object: curly braces, and inside each fact written label colon value, with commas between. Three facts that belong to one person now travel together as one variable. Then the four lines, one at a time, and ask for a prediction before every Run. person1.firstName: reading is asking by label, with a dot. There is no first or second property. person1.lastName = "Byron": change a part by assigning to it, the same reach with = after it. person1.program = "IDB": there was no program label, so now there is. An object grows by naming a new part (no push: there's no end to add at). console.log(person1) shows the whole thing.</aside>
+      </section>
+
+      <!-- 12 OBJECT PARTS -->
+      <section class="slide" id="object-parts" data-sec="Objects" data-ex="Name the parts">
+        <span class="turn">Your turn</span>
+        <div class="billing">Objects · The parts</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Name the parts</h2>
+        <div class="cols wide-l">
+          <div class="stack">
+            <div class="panel">
+              <div class="bar"><span>person.js</span><span>click the code</span></div>
+              <pre class="code lg" id="op-code" style="font-size:19px"><span class="k">let</span> <span class="pl">person1</span> = <span class="part" data-part="open">{</span>
+  <span class="part" data-part="label"><span class="pl">firstName</span></span><span class="part" data-part="colon">:</span> <span class="part" data-part="value"><span class="s">"Ada"</span></span><span class="part" data-part="comma">,</span>
+  <span class="part" data-part="label"><span class="pl">lastName</span></span><span class="part" data-part="colon">:</span> <span class="part" data-part="value2"><span class="s">"Lovelace"</span></span>
+<span class="part" data-part="open">}</span>;
+
+<span class="pl">console</span>.<span class="fn">log</span>(<span class="part" data-part="read"><span class="pl">person1</span>.<span class="pl">firstName</span></span>);</pre>
+            </div>
+            <p class="dir" style="font-size:19px">Read it aloud: "person1 is an object: firstName is Ada, lastName is Lovelace."</p>
+          </div>
+          <div class="stack">
+            <div class="small muted" id="op-step">1 of 6</div>
+            <div class="prompt" id="op-q" style="font-size:28px"></div>
+            <div class="fb" id="op-fb"></div>
+            <div class="row"><button class="btn" id="op-next" hidden>Next part</button></div>
+          </div>
+        </div>
+        <aside class="nt">On their own laptops. Six parts, one at a time. The colon and the comma are where most typos happen: = instead of : inside the braces, or a missing comma between properties (SyntaxError: Unexpected identifier). Contrast with the array: square brackets and positions there; curly braces and labels here. Labels have no quotes: they're names, like a variable's.</aside>
+      </section>
+
+      <!-- 13 ONE SOUND -->
+      <section class="slide" id="one-sound" data-sec="Objects" data-demo="Describe one sound">
+        <span class="turn try">Try it</span>
+        <div class="billing">Objects · From idea to code</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Describe one sound, then play it</h2>
+        <div class="cols wide-l" style="gap:30px">
+          <div>
+            <div class="ladder" id="lo-lad"></div>
+            <div class="lnav" id="lo-nav"></div>
+          </div>
+          <div class="stack" id="lo-try" style="gap:12px">
+            <div id="lo-obj"></div>
+            <div class="row" id="lo-btns" style="gap:8px"></div>
+            <div class="panel">
+              <div class="bar y"><span>console</span></div>
+              <div class="console con-s" id="lo-con"></div>
+            </div>
+          </div>
+        </div>
+        <aside class="nt">Into sound, with the same four steps as yesterday: idea, strategy, plan, code. Strategy is where the opening pays off: one thing, parts with no order, so labels, so an object. No new Tone: notes as strings, durations like "8n", triggerAttackRelease. Only a tidier way to hold values they already use. At the code step, read each part with the buttons, play it, then run tone.note = "E4" and play again: the link from property to sound is audible. tone.volume gives undefined: there's no part with that label. Careful: tone with a small t is our sound; Tone with a capital T is the library. JavaScript sees two different names.</aside>
+      </section>
+
+      <!-- 14 BRACKETS -->
+      <section class="slide" id="brackets" data-sec="Objects">
+        <div class="billing">Objects · Bracket notation</div>
+        <hr class="rule">
+        <h2 class="h1 tight">The same reach, two ways</h2>
+        <div class="cols">
+          <div class="stack">
+            <div class="panel">
+              <div class="bar"><span>today</span></div>
+              <pre class="code" id="br-a" style="font-size:18px"></pre>
+            </div>
+            <p style="margin:0;font-size:20px">Both give back <code>"C4"</code>, and both can change it. With brackets, the label is a string, in quotes.</p>
+          </div>
+          <div class="stack">
+            <div class="panel">
+              <div class="bar p"><span>later · when only the program knows the label</span></div>
+              <pre class="code" id="br-b" style="font-size:18px"></pre>
+            </div>
+            <p style="margin:0;font-size:20px">When the label is in a variable, only brackets work. The dot looks for a label literally called <code>part</code>.</p>
+          </div>
+        </div>
+        <p class="dir" style="margin-top:auto">Use the dot when you know the label as you write. Keep the brackets in mind for later.</p>
+        <aside class="nt">Keep it light: the same reach, different syntax, and move on. Why it earns its place now: later, when the label isn't known until the program runs (which key was pressed, which setting the player picked), the dot can't do it and brackets are the only way. Seeing it now means it won't come out of nowhere then. Arrays use the same square brackets with a number: notes[0]. That's not a coincidence.</aside>
+      </section>
+
+      <!-- 15 QUIZ: READ THE PROPERTY -->
+      <section class="slide" id="quiz-read" data-sec="Objects" data-ex="Read the property">
+        <span class="turn">Your turn</span>
+        <div class="billing">Objects · Check</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Read the property</h2>
+        <div class="cols wide-r">
+          <div class="stack">
+            <div class="panel">
+              <div class="bar"><span>kick.js</span><span>runs top to bottom</span></div>
+              <pre class="code" id="qr-code" style="font-size:17px"></pre>
+            </div>
+            <p class="small muted" style="margin:0">Lines 2 and 3 have run by the last question.</p>
+          </div>
+          <div class="stack" style="gap:10px">
+            <div class="rows fnq" id="qr-q"></div>
+            <div class="fb" id="qr-fb"></div>
+          </div>
+        </div>
+        <aside class="nt">On their own laptops, then discuss. The first two are the dot and the brackets giving the same reach. The third is the one to talk about: line 2 changes volume, which was already there; line 3 adds swing, which wasn't. The code looks exactly the same: whether it adds or changes depends on what the object already has. Last one: after line 2, volume is -3, not -6.</aside>
+      </section>
+
+      <!-- 16 SOUND EDITOR -->
+      <section class="slide" id="sound-code" data-sec="Objects" data-ex="A sound you can change">
+        <span class="turn">Your turn</span>
+        <div class="billing">Objects · Write it</div>
+        <hr class="rule">
+        <h2 class="h1 tight">A sound you can play and change</h2>
+        <div class="cols wide-l pg" style="flex:1;min-height:0">
+          <div class="panel">
+            <div class="bar"><span>sound.js</span><span>Ctrl / ⌘ + Enter runs</span></div><textarea class="code-ed pg-ed" id="sc-ed" spellcheck="false" aria-label="Code editor"></textarea>
+          </div>
+          <div class="stack" style="gap:10px">
+            <div class="row"><button class="btn" id="sc-run">Run</button><button class="btn ghost" id="sc-reset">Reset</button></div>
+            <div class="pad" id="sc-pad" tabindex="0" aria-label="Keyboard pad"></div>
+            <div class="panel">
+              <div class="bar y"><span>console</span></div>
+              <div class="console con-s" id="sc-con" style="max-height:100px;min-height:64px"></div>
+            </div>
+            <ol class="plain tasks">
+              <li>Press <b>t</b>, then <b>e</b>, then <b>t</b>. What changed, and where?</li>
+              <li>Make <b>y</b> change the duration to <code>"2n"</code> and log <code>tone</code>.</li>
+              <li>Add <code>velocity: 0.3</code> to <code>tone</code>. Pass <code>tone.velocity</code> to the synth as a fourth value, after <code>Tone.now()</code>.</li>
+            </ol>
+          </div>
+        </div>
+        <aside class="nt">Everyone, on their own laptop, in the editor on the slide (the code is saved in their browser). Run, click the pad, press keys. Task 1: e changes a property, so the next t plays E4; the log shows the whole object. Task 2: one more else if with tone.duration = "2n" and console.log(tone). Task 3: velocity: 0.3 inside the braces (watch the comma), then synth.triggerAttackRelease(tone.note, tone.duration, Tone.now(), tone.velocity): quieter. Common mistakes: = instead of : inside the braces; a missing comma; Tone.note instead of tone.note (undefined: the library has no note).</aside>
+      </section>
+
+      <!-- 17 THE SYNTH IS AN OBJECT -->
+      <section class="slide" id="synth-object" data-sec="Objects" data-demo="The synth is an object">
+        <span class="turn try">Try it</span>
+        <div class="billing">Objects · All week</div>
+        <hr class="rule">
+        <h2 class="h1 tight">You've been using objects all week</h2>
+        <div class="cols wide-r" style="gap:28px">
+          <div class="stack" style="gap:12px">
+            <div class="panel">
+              <div class="bar"><span>synth.js</span></div>
+              <pre class="code" id="so-code" style="font-size:16px"></pre>
+            </div>
+            <div class="seg" role="group" aria-label="Wave shape" id="so-seg"></div>
+            <div class="panel">
+              <div class="bar y"><span>console</span></div>
+              <div class="console" id="so-con" style="min-height:44px;font-size:15px"></div>
+            </div>
+          </div>
+          <div class="stack" style="gap:6px">
+            <p style="margin:0 0 4px;font-size:19px"><code>synth</code> is an object. Click each part.</p>
+            <div class="rows three" id="so-rows"></div>
+            <p class="dir" style="font-size:19px;margin-top:8px">A property's value can be a string, another object, or an action.</p>
+          </div>
+        </div>
+        <aside class="nt">The reveal that reframes the week: the synth they've played since the first group session is itself an object. Three things, in order, and the contrast between them. synth.oscillator: a property whose value is another object, which is why it's synth.oscillator.type: two dots, two hops. One line only; don't unpack the audio graph. synth.oscillator.type: a plain string you can read and change, exactly like person1.program = "IDB". Click the wave shapes: each one runs that assignment for real and plays, so the sound shifts. synth.triggerAttackRelease: a property whose value is an action, not a value. That's a method, and they've been calling one all week. This is the one new idea: a property's value can be a function. Note: this is a plain Tone.Synth. The PolySynth in the A1 template plays several notes at once and has no single oscillator to point at (there it's synth.set({ oscillator: { type: "square" } })). Destructuring and scope are Monday's.</aside>
+      </section>
+
+      <!-- 18 BREAK -->
+      <section class="slide stage" id="break" data-sec="Break">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">Break</div>
+          <h2 class="hero">Break.</h2>
+          <p class="lede">Stretch, refill. After the break: yesterday's line and today's labels, together.</p>
+        </div>
+        <aside class="nt">11:15–11:25, ten minutes. The slide doesn't show the length or the time; tell the room when to be back.</aside>
+      </section>
+
+      <!-- 19 BAND -->
+      <section class="slide stage" id="aoo-band" data-sec="Arrays of objects">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">Arrays of objects</div>
+          <h2 class="hero md">Position, then label.</h2>
+          <p class="lede">A melody is a line. Each note in it is one thing with labelled parts. So: a line of objects.</p>
+        </div>
+        <aside class="nt">11:25. The payoff that brings the three sessions together: arrays, the loop, and objects. Each element of an array is now a whole labelled thing.</aside>
+      </section>
+
+      <!-- 20 LADDER: A LIST OF STEPS -->
+      <section class="slide" id="steps-build" data-sec="Arrays of objects" data-demo="Position, then label">
+        <span class="turn try">Try it</span>
+        <div class="billing">Arrays of objects · From idea to code</div>
+        <hr class="rule">
+        <h2 class="h1 tight">A melody where each note has a length</h2>
+        <div class="cols wide-l" style="gap:30px">
+          <div>
+            <div class="ladder" id="sb-lad"></div>
+            <div class="lnav" id="sb-nav"></div>
+          </div>
+          <div class="stack" id="sb-try" style="gap:10px">
+            <div class="line" id="sb-line" style="gap:8px"></div>
+            <div class="row" style="gap:8px"><span class="small muted" style="width:76px">position</span><button class="chip" data-i="0">[0]</button><button class="chip" data-i="1">[1]</button><button class="chip" data-i="2">[2]</button><button class="chip" data-i="3">[3]</button></div>
+            <div class="row" style="gap:8px"><span class="small muted" style="width:76px">label</span><button class="chip" data-k="note">.note</button><button class="chip" data-k="duration">.duration</button><span style="flex:1"></span><button class="btn" id="sb-play">Play this step</button></div>
+            <div class="path" id="sb-path">steps</div>
+          </div>
+        </div>
+        <aside class="nt">Build it up from what they know: a step in a sequence isn't only a note, it's a note and a duration, one labelled thing. So the strategy is a list of objects. Reaching in takes two moves; name each out loud: steps[0] is position, the first step; steps[0].note is label, that step's note. Click a position, then a label: the path shows the code and what it gives back. Ask: what's steps[3]? (undefined: there are three steps, at 0, 1, 2.) And steps.note? (Not on the slide on purpose: steps is the line; a line has positions, not labels.)</aside>
+      </section>
+
+      <!-- 21 QUIZ: REACH IN -->
+      <section class="slide" id="quiz-reach" data-sec="Arrays of objects" data-ex="Which value comes back?">
+        <span class="turn">Your turn</span>
+        <div class="billing">Arrays of objects · Check</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Which value comes back?</h2>
+        <div class="cols wide-r">
+          <div class="stack">
+            <div class="panel">
+              <div class="bar"><span>steps.js</span></div>
+              <pre class="code" id="qa-code" style="font-size:17px"></pre>
+            </div>
+            <p class="small muted" style="margin:0">Position first, then label. Count from zero.</p>
+          </div>
+          <div class="stack" style="gap:10px">
+            <div class="rows fnq" id="qa-q"></div>
+            <div class="fb" id="qa-fb"></div>
+          </div>
+        </div>
+        <aside class="nt">Students predict, then click. A right answer plays the step when there's one to play. The two that catch people: steps[2] is the whole third step, an object, not a note; and steps.note is undefined, because steps is the list and a list has positions, not labels. That's the most common mistake in the afternoon exercises: reaching for a label before choosing a position.</aside>
+      </section>
+
+      <!-- 22 WALK IT WITH A LOOP -->
+      <section class="slide" id="steps-loop" data-sec="Arrays of objects" data-demo="Walk the steps">
+        <span class="turn try">Try it</span>
+        <div class="billing">Arrays of objects · The loop again</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Walk it with the same loop</h2>
+        <div class="cols wide-l" style="gap:28px">
+          <div class="stack" style="gap:12px">
+            <div class="panel">
+              <div class="bar"><span>steps.js</span></div>
+              <pre class="code" id="sl-code" style="font-size:16px"></pre>
+            </div>
+            <p class="dir" style="font-size:20px;margin:0">The loop reaches by position: <code>steps[i]</code>. The dot reaches by label: <code>.note</code>, <code>.duration</code>.</p>
+          </div>
+          <div class="stack" style="gap:12px">
+            <p class="prompt" style="font-size:24px">Predict: how many notes? Does each keep its own length?</p>
+            <table class="io passes"><thead><tr><th>i</th><th>i &lt; 3</th><th>.note</th><th>.duration</th><th>starts</th></tr></thead><tbody id="sl-rows"></tbody></table>
+            <div class="row"><button class="btn" id="sl-next">Run the next pass</button><button class="btn ghost" id="sl-play">Play it</button><button class="btn ghost" id="sl-reset">Start again</button></div>
+          </div>
+        </div>
+        <aside class="nt">Ties Part 2 back to yesterday's loop: nothing in the for line is new. Ask for predictions first: three notes, and yes, each carries its own duration now: the E4 in the middle is longer. Step through the passes: each row is one trip round, the fourth check (3 &lt; 3) is false, so the loop stops. Then Play it and listen for the long middle note. Draw the throughline explicitly: steps[i] is position, .note and .duration are label. That's the whole week in one expression. The triggerAttackRelease call is split over several lines only so it fits; it's one call.</aside>
+      </section>
+
+      <!-- 23 STEPS EDITOR -->
+      <section class="slide" id="steps-code" data-sec="Arrays of objects" data-ex="Steps of your own">
+        <span class="turn">Your turn</span>
+        <div class="billing">Arrays of objects · Write it</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Steps of your own</h2>
+        <div class="cols wide-l pg" style="flex:1;min-height:0">
+          <div class="panel">
+            <div class="bar"><span>steps.js</span><span>Ctrl / ⌘ + Enter runs</span></div><textarea class="code-ed pg-ed" id="st-ed" spellcheck="false" aria-label="Code editor"></textarea>
+          </div>
+          <div class="stack" style="gap:10px">
+            <div class="row"><button class="btn" id="st-run">Run</button><button class="btn ghost" id="st-reset">Reset</button></div>
+            <div class="pad" id="st-pad" tabindex="0" aria-label="Keyboard pad"></div>
+            <div class="panel">
+              <div class="bar y"><span>console</span></div>
+              <div class="console con-s" id="st-con" style="max-height:90px;min-height:56px"></div>
+            </div>
+            <ol class="plain tasks">
+              <li>Make the last step long: <code>"2n"</code>.</li>
+              <li>Add a fourth step with <code>push</code>, under the list. Do you need to change the loop?</li>
+              <li>Give every step a <code>velocity</code>, and pass <code>steps[i].velocity</code> to the synth, after the start time.</li>
+            </ol>
+          </div>
+        </div>
+        <aside class="nt">On their own laptops, in the slide editor. Any key plays all the steps. Task 1: change one property inside the list. Task 2: steps.push({ note: "C5", duration: "4n" }); the loop doesn't change, because it asks steps.length every time. Task 3: velocity in each object (0.2 to 1), and a fourth value in the call. A step without a velocity gives undefined, which Tone treats as full volume: worth noticing. Common mistakes: steps.note or steps.duration (undefined: steps is the list); a missing comma between two objects in the list; steps(i) with round brackets (TypeError: steps is not a function).</aside>
+      </section>
+
+      <!-- 24 THE EVENT IS AN OBJECT -->
+      <section class="slide" id="event-object" data-sec="Look it up" data-ex="What's in the event?">
+        <span class="turn">Your turn</span>
+        <div class="billing">Look it up</div>
+        <hr class="rule">
+        <h2 class="h1 tight">The event is an object too</h2>
+        <div class="cols wide-l" style="gap:36px">
+          <div class="stack" style="gap:14px">
+            <div class="panel">
+              <div class="bar"><span>keyboard.js · Tuesday</span></div>
+              <pre class="code" id="ev-code" style="font-size:16px"></pre>
+            </div>
+            <div class="pad" id="ev-pad" tabindex="0" aria-label="Keyboard pad"></div>
+            <ol class="plain tasks">
+              <li>Press <b>a</b>, then hold <b>Shift</b> and press <b>a</b>. Which properties change? Which stay the same?</li>
+              <li>Hold a key down. What does <code>repeat</code> do?</li>
+              <li>Where would you find out what <code>code</code> means?</li>
+            </ol>
+          </div>
+          <div class="stack" style="gap:10px">
+            <div id="ev-obj"></div>
+            <p class="dir" id="ev-dir" style="font-size:19px;margin:0">Click the pad and press a key. This is the real object the browser hands to <code>keyDown</code>.</p>
+          </div>
+        </div>
+        <aside class="nt">11:50. The objects so far were ones we wrote. Since Tuesday, students have been handed one every time a key goes down: event. They've used event.key and event.repeat (and event.shiftKey in the group session). Each key press shows the real object's parts on the right. On their own laptops. Task 1: with Shift, key goes from "a" to "A", code stays "KeyA", shiftKey turns true. key is what the key produced; code is which key it was. Task 2: repeat is true while the key is held, which is why Tuesday's code checks it. Task 3 is the bridge: none of us remembers all of these; there's a place where the full list lives. (Ctrl and ⌘ combinations are left to the browser, so the pad doesn't see them; Alt and Shift work.)</aside>
+      </section>
+
+      <!-- 25 LOOK IT UP: MDN -->
+      <section class="slide" id="look-mdn" data-sec="Look it up">
+        <div class="billing">Look it up · MDN</div>
+        <hr class="rule">
+        <h2 class="h1 tight">The browser's objects: MDN</h2>
+        <div class="cols" style="gap:36px">
+          <div class="stack" style="gap:14px">
+            <div class="rows lab">
+              <div style="padding:9px 0"><span class="num">1</span><span class="tx" style="font-size:20px">Search for <b>mdn keyboardevent</b>. MDN is the reference for everything the browser gives you.</span></div>
+              <div style="padding:9px 0"><span class="num">2</span><span class="tx" style="font-size:20px">Skip down to <b>Instance properties</b>: every label the object has.</span></div>
+              <div style="padding:9px 0"><span class="num">3</span><span class="tx" style="font-size:20px">Read the name and the first sentence. Follow the link only if you need more.</span></div>
+              <div style="padding:9px 0"><span class="num">4</span><span class="tx" style="font-size:20px">Try it: log it, press keys, see if it does what you read.</span></div>
+            </div>
+            <div class="row"><a class="btn alt" href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent" target="_blank" rel="noopener" style="text-decoration:none">Open KeyboardEvent on MDN</a></div>
+          </div>
+          <div class="panel">
+            <div class="bar p"><span>KeyboardEvent · Instance properties</span><span>in short</span></div>
+            <div class="pbody">
+              <div class="rows docs">
+                <div><code>key</code><span>the character the key typed, or its name: <code>"a"</code>, <code>"A"</code>, <code>"Enter"</code></span></div>
+                <div><code>code</code><span>which physical key it was, whatever it typed: <code>"KeyA"</code></span></div>
+                <div><code>repeat</code><span><code>true</code> while the key is held down</span></div>
+                <div><code>shiftKey</code><span><code>true</code> if Shift was held. Also <code>altKey</code>, <code>ctrlKey</code>, <code>metaKey</code></span></div>
+                <div><code>location</code><span>where on the keyboard: left, right, number pad</span></div>
+              </div>
+              <p class="small muted" style="margin:10px 0 0">…plus what every event has, such as <code>type</code> and <code>timeStamp</code>.</p>
+            </div>
+          </div>
+        </div>
+        <aside class="nt">Open MDN live on the projector and do the four steps out loud: search, scroll to Instance properties, read one entry, try it. The panel on the right is our short version, not MDN's words: the real page has more (isComposing, and the deprecated ones like keyCode and charCode, marked with a warning: show students that marker and tell them to skip those). Point out that KeyboardEvent "inherits" from Event: type and timeStamp are on a parent page. The habit to build: when you meet an object you didn't write, look up its properties instead of guessing.</aside>
+      </section>
+
+      <!-- 26 LOOK IT UP: TONE.JS -->
+      <section class="slide" id="look-tone" data-sec="Look it up" data-demo="Read it, then try it">
+        <span class="turn try">Try it</span>
+        <div class="billing">Look it up · Tone.js</div>
+        <hr class="rule">
+        <h2 class="h1 tight">A library's objects: its own docs</h2>
+        <div class="cols" style="gap:36px">
+          <div class="stack" style="gap:14px">
+            <div class="rows lab">
+              <div style="padding:9px 0"><span class="num">1</span><span class="tx" style="font-size:20px">Open the Tone.js docs for <b>our version</b>, 15.1.22, and find <b>Synth</b>.</span></div>
+              <div style="padding:9px 0"><span class="num">2</span><span class="tx" style="font-size:20px"><b>Properties</b>: <code>oscillator</code>, <code>envelope</code>, <code>volume</code>… <b>Methods</b>: <code>triggerAttackRelease</code>…</span></div>
+              <div style="padding:9px 0"><span class="num">3</span><span class="tx" style="font-size:20px"><code>envelope</code> is another object. Click through: <code>attack</code>, <code>decay</code>, <code>sustain</code>, <code>release</code>.</span></div>
+            </div>
+            <div class="row"><a class="btn alt" href="https://tonejs.github.io/docs/15.1.22/classes/Synth.html" target="_blank" rel="noopener" style="text-decoration:none">Open Synth in the Tone.js docs</a></div>
+          </div>
+          <div class="stack" style="gap:12px">
+            <div class="panel">
+              <div class="bar"><span>synth.js</span></div>
+              <pre class="code" id="lt-code" style="font-size:17px"></pre>
+            </div>
+            <div class="row" style="gap:10px"><span class="small muted" style="width:70px">release</span><div class="seg" role="group" aria-label="Release" id="lt-rel"></div></div>
+            <div class="row" style="gap:10px"><span class="small muted" style="width:70px">attack</span><div class="seg" role="group" aria-label="Attack" id="lt-att"></div><span style="flex:1"></span><button class="btn" id="lt-play">Play</button></div>
+            <p class="dir" style="font-size:19px;margin:0">Two dots, two hops: the synth, its envelope, the envelope's release.</p>
+          </div>
+        </div>
+        <aside class="nt">Same habit, for a library. Open the Synth page live. Make sure it's the 15.1.22 docs: Tone's pages for other versions differ, and search engines often land on old ones. Properties are labels holding values or other objects (oscillator, which we met before the break; envelope); methods are the actions (triggerAttackRelease). Click envelope: it's an AmplitudeEnvelope, another object with its own page: attack, decay, sustain, release, in seconds. Then on the right: set release and attack and play. These run for real: synth.envelope.release = 3 lets the note ring on. That's the loop to teach: read the docs, then try it and listen.</aside>
+      </section>
+
+      <!-- 27 LOOK IT UP: EDITOR -->
+      <section class="slide" id="lookup-code" data-sec="Look it up" data-ex="Look it up, then use it">
+        <span class="turn">Your turn</span>
+        <div class="billing">Look it up · Write it</div>
+        <hr class="rule">
+        <h2 class="h1 tight">Look it up, then use it</h2>
+        <div class="cols wide-l pg" style="flex:1;min-height:0">
+          <div class="panel">
+            <div class="bar"><span>keys.js</span><span>Ctrl / ⌘ + Enter runs</span></div><textarea class="code-ed pg-ed" id="lk-ed" spellcheck="false" aria-label="Code editor"></textarea>
+          </div>
+          <div class="stack" style="gap:10px">
+            <div class="row"><button class="btn" id="lk-run">Run</button><button class="btn ghost" id="lk-reset">Reset</button></div>
+            <div class="pad" id="lk-pad" tabindex="0" aria-label="Keyboard pad"></div>
+            <div class="panel">
+              <div class="bar y"><span>console</span></div>
+              <div class="console con-s" id="lk-con" style="max-height:90px;min-height:56px"></div>
+            </div>
+            <ol class="plain tasks">
+              <li>Hold <b>Shift</b> and press <b>a</b>: silence. Why? Log <code>event.code</code> as well.</li>
+              <li>On MDN, read about <code>shiftKey</code>. Make Shift + <b>a</b> play <code>"C5"</code>.</li>
+              <li>On the Tone.js Synth page, find <code>envelope</code>. Make every note ring longer.</li>
+            </ol>
+          </div>
+        </div>
+        <aside class="nt">On their own laptops, with MDN and the Tone.js docs open in another tab. Task 1: with Shift, event.key is "A", not "a", so the if doesn't match; event.code is "KeyA" either way. Task 2: one way is an else if with event.key === "A" (or event.code === "KeyA" and event.shiftKey) playing "C5"; accept anything that works and ask them where they found the name. Task 3: synth.envelope.release = 2 under the synth line (or attack for a slow start). If someone types synth.release, it gives no error and no change: an object happily takes a new label it doesn't use. That's exactly why we look things up. The afternoon exercises continue from here.</aside>
+      </section>
+
+      <!-- 28 QUIZ: A SONG -->
+      <section class="slide" id="quiz-song" data-sec="Wrap-up" data-ex="A song, part by part">
+        <span class="turn">Your turn</span>
+        <div class="billing">Wrap-up · Check</div>
+        <hr class="rule">
+        <h2 class="h1 tight">A song, part by part</h2>
+        <p style="margin:0 0 10px;font-size:19px">Is each part a list of things (array), a labelled part (property), or both?</p>
+        <div class="rows quiz" id="q2"></div>
+        <div class="fb" id="q2-fb" style="margin-top:14px"></div>
+        <aside class="nt">If there's time; skip it if the look-it-up tasks ran long (it works on their own laptops after class too). The last row is the one to talk about: a whole song is one thing with labelled parts (title, tempo), one of those parts is a list (sections), and each section is labelled parts again. Real data nests.</aside>
+      </section>
+
+      <!-- 29 WRAP-UP -->
+      <section class="slide stage" id="wrap-up" data-sec="Wrap-up">
+        <div class="beam y"></div>
+        <div class="beam m"></div>
+        <div class="scan"></div>
+        <div class="inner">
+          <div class="billing">Wrap-up</div>
+          <h2 class="hero md">By position, or by label.</h2>
+          <p class="lede">Array: many of a kind, reached by position. Object: one thing, reached by label. An array of objects: position, then label.</p>
+          <div class="terms" style="max-width:720px"><span>{ }</span><span>person1.firstName</span><span>tone["note"]</span><span>person1.program = "IDB"</span><span>synth.oscillator.type</span><span>steps[0].note</span><span>steps[i].duration</span><span>event.code</span><span>synth.envelope.release</span></div>
+        </div>
+        <aside class="nt">Summarise: an object groups the facts about one thing and you reach them by label, with a dot or with brackets; assigning to a label changes it, or adds it if it wasn't there; a property's value can be another object or an action (a method); an array of objects puts position and label together; and for objects we didn't write (the event, the synth) MDN and the Tone.js docs list their properties. Back to the five objectives.</aside>
+      </section>
+
+      <!-- 30 NEXT -->
+      <section class="slide" id="next" data-sec="Wrap-up">
+        <div class="billing">Next · Exercises and Monday</div>
+        <hr class="rule">
+        <h2 class="h1">What's next</h2>
+        <div class="cols">
+          <div class="stack">
+            <p class="lede" style="margin:0">This afternoon: exercises on objects and arrays of objects, in VS Code. Sync your fork of the exercises repo first.</p>
+            <p class="lede" style="margin:0">Monday: working through data. Taking objects apart into variables, and where a variable can be seen.</p>
+          </div>
+          <div class="rows lab" style="border-top:1px solid var(--ink-900)">
+            <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://eloquentjavascript.net/04_data.html" target="_blank" rel="noopener">Eloquent JavaScript, chapter 4: Data structures</a></span></div>
+            <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent" target="_blank" rel="noopener">MDN: KeyboardEvent</a></span></div>
+            <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://tonejs.github.io/docs/15.1.22/classes/Synth.html" target="_blank" rel="noopener">Tone.js 15.1.22: Synth</a></span></div>
+            <div style="grid-template-columns:1fr"><span class="tx" style="font-size:20px"><a href="https://mau.instructure.com/courses/22858/modules/137084" target="_blank" rel="noopener">Canvas: Objects and arrays module</a></span></div>
+          </div>
+        </div>
+        <aside class="nt">Preview the afternoon exercises: reach in, loop, and look things up. Sync fork on GitHub, then Pull in VS Code. Eloquent JavaScript chapter 4 is the reading: it covers arrays, objects and methods in more depth than today. Monday is data processing: destructuring (taking an object apart into variables) and scope moved there from today.</aside>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="../shared/deck.js"></script>
+  <script src="../shared/workspace.js"></script>
+  <script src="../shared/vendor/tone.min.js"></script>
+  <script>
+    (function () {
+      "use strict";
+      var D = Deck, $ = D.$, $$ = D.$$, esc = D.esc, code = D.code, flash = D.flash, fb = D.fb, conLines = D.conLines;
+      var sget = D.store.get, sset = D.store.set;
+      var T = window.Tone;
+
+      /* ============ sound helpers ============ */
+      function audioOn() { try { if (T && T.getContext().state !== "running") T.start() } catch (e) { } }
+      var synthObj = null;
+      function syn() {
+        if (!T) return null;
+        if (!synthObj) { synthObj = new T.PolySynth(T.Synth).toDestination(); synthObj.volume.value = -8 }
+        return synthObj;
+      }
+      function playAt(note, dur, later, vel) {
+        audioOn(); var s = syn(); if (!s || !note) return;
+        try { s.triggerAttackRelease(note, dur || "8n", T.now() + (later || 0), vel === undefined ? 1 : vel) } catch (e) { }
+      }
+      function play(note, dur, vel) { playAt(note, dur, 0, vel) }
+
+      /* ============ a row of boxes (an array) ============ */
+      function lineView(host, arr, opt) {
+        opt = opt || {};
+        host.innerHTML = "";
+        arr.forEach(function (v, i) {
+          var c = document.createElement("div");
+          c.className = "cell" + (opt.hi === i ? " hi" : "");
+          c.innerHTML = '<div class="v">' + esc(v) + '</div>' + (opt.idx === false ? "" : '<div class="i">' + i + '</div>');
+          if (opt.click) c.querySelector(".v").addEventListener("click", function () { opt.click(i) });
+          host.appendChild(c);
+        });
+      }
+      /* ============ one object, its labelled parts ============ */
+      function val(v) { return typeof v === "string" ? JSON.stringify(v) : D.fmt(v) }
+      function objView(host, name, obj, opt) {
+        opt = opt || {};
+        var h = '<div class="obj' + (opt.sm ? " sm" : "") + (opt.hiAll ? " hi" : "") + (opt.click ? " click" : "") + '"><div class="on">' + esc(name) + '</div>';
+        Object.keys(obj).forEach(function (k) {
+          h += '<div class="pr' + (opt.hi === k ? " hi" : "") + (opt.flash === k || (Array.isArray(opt.flash) && opt.flash.indexOf(k) > -1) ? " flash" : "") + '" data-k="' + esc(k) + '"><span class="pk">' + esc(k) + '</span><span class="pv">' + esc(val(obj[k])) + '</span></div>';
+        });
+        host.innerHTML = h + '</div>';
+        if (opt.click) $$(".pr", host).forEach(function (r) { r.addEventListener("click", function () { opt.click(r.dataset.k) }) });
+      }
+      function showObj(o) { return "{ " + Object.keys(o).map(function (k) { return k + ": " + val(o[k]) }).join(", ") + " }" }
+
+      /* ============ the ladder: idea → strategy → plan → code ============
+         data: {idea, strat, shape, plan:[[html, [code lines]]], code, onStep(i)} */
+      var RUNGS = [["Idea", "in plain words"], ["Strategy", "which shape, and why"], ["Plan", "the steps"], ["Code", "JavaScript"]];
+      function ladder(id, data) {
+        var host = $("#" + id + "-lad"), nav = $("#" + id + "-nav"), i = 0, pre;
+        nav.innerHTML = '<button class="btn ghost">Back</button><button class="btn">Next step</button><span class="small muted"></span>';
+        var back = nav.children[0], next = nav.children[1], lbl = nav.children[2];
+        function build() {
+          host.innerHTML = RUNGS.map(function (r, j) { return '<div class="rung" data-r="' + j + '"><span class="rl">' + r[0] + '<small>' + r[1] + '</small></span><div class="rc"></div></div>' }).join("");
+          var rc = $$(".rc", host);
+          rc[0].innerHTML = data.idea;
+          rc[1].innerHTML = data.strat + (data.shape ? '<span class="shape">' + data.shape + '</span>' : "");
+          rc[2].innerHTML = '<ol>' + data.plan.map(function (p, j) { return '<li data-p="' + j + '">' + p[0] + '</li>' }).join("") + '</ol>';
+          rc[3].innerHTML = '<pre class="code"></pre>'; pre = rc[3].firstChild; code(pre, data.code);
+          $$("li", rc[2]).forEach(function (li) {
+            li.addEventListener("click", function () {
+              var p = data.plan[+li.dataset.p];
+              $$("li", rc[2]).forEach(function (x) { x.classList.toggle("sel", x === li) });
+              if (i < 3) { i = 3; render() }
+              code(pre, data.code, p[1]); flash(pre, p[1]);
+            })
+          });
+        }
+        function render() {
+          $$(".rung", host).forEach(function (r, j) { r.classList.toggle("off", j > i); r.classList.toggle("on", j === i) });
+          back.disabled = i === 0; next.disabled = i === 3;
+          lbl.textContent = (i + 1) + " of 4" + (i === 2 ? " · click a step" : "");
+          if (i < 3) $$(".rung li", host).forEach(function (x) { x.classList.remove("sel") });
+          if (data.onStep) data.onStep(i);
+        }
+        back.addEventListener("click", function () { if (i > 0) { i--; render() } });
+        next.addEventListener("click", function () { if (i < 3) { i++; render() } });
+        build(); render();
+        return { pre: function () { return pre } };
+      }
+      /* the "try it" side of a ladder is greyed until the code step */
+      function gate(el, on) { el.classList.toggle("gated", !on); el.setAttribute("aria-hidden", on ? "false" : "true") }
+
+      /* ============ key capture + pad (as in the User input lecture) ============ */
+      function capture(el, onDown, onUp, onBlur) {
+        function ok(e) { return !(e.key === "Escape" || e.key === "Tab" || e.metaKey || e.ctrlKey || e.altKey) }
+        el.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") { el.blur(); return }
+          if (!ok(e)) return;
+          e.preventDefault(); e.stopPropagation(); audioOn(); onDown(e);
+        });
+        el.addEventListener("keyup", function (e) { if (!ok(e)) return; e.preventDefault(); e.stopPropagation(); if (onUp) onUp(e) });
+        el.addEventListener("mousedown", function () { setTimeout(function () { el.focus() }, 0) });
+        el.addEventListener("blur", function () { if (onBlur) onBlur() });
+      }
+      function pad(el, idle, live) {
+        el.innerHTML = '<div class="pk">&nbsp;</div><div class="ph"></div>';
+        var pk = el.querySelector(".pk"), ph = el.querySelector(".ph");
+        function txt() { ph.innerHTML = document.activeElement === el ? live : idle }
+        el.addEventListener("focus", txt); el.addEventListener("blur", txt); txt();
+        return { show: function (k) { var t = k === " " ? "space" : k; pk.textContent = t; pk.style.fontSize = t.length > 6 ? "16px" : t.length > 2 ? "22px" : ""; pk.classList.remove("flash"); void pk.offsetWidth; pk.classList.add("flash") } };
+      }
+      var IDLE = "<b>Click here</b>, then press keys.", LIVE = "<b>Listening.</b> Press keys. Esc or click elsewhere to stop.";
+
+      /* ============ playground: student code + a pad ============
+         The code sees a stand-in window/document whose listeners only hear this pad,
+         a Tone whose instruments are cleaned up on every run, and a console that prints here. */
+      var CTORS = ["Synth", "PolySynth", "FMSynth", "AMSynth", "MonoSynth", "DuoSynth", "MembraneSynth", "MetalSynth", "PluckSynth", "NoiseSynth", "Distortion", "Reverb", "FeedbackDelay", "Chorus", "Filter", "Tremolo", "Vibrato", "BitCrusher", "Loop"];
+      function playground(id, start) {
+        var ed = $("#" + id + "-ed"), con = $("#" + id + "-con"), padEl = $("#" + id + "-pad");
+        var P = pad(padEl, IDLE, LIVE), listeners = [], made = [], ran = false, KEY = "pg:" + id;
+        ed.value = sget(KEY) || start;
+        ed.addEventListener("input", function () { sset(KEY, ed.value) });
+        function out(cls, t) {
+          var s = document.createElement("span"); if (cls) s.className = cls; s.textContent = t;
+          if (con.dataset.fresh) { con.innerHTML = ""; delete con.dataset.fresh }
+          else if (con.childNodes.length) con.appendChild(document.createTextNode("\n"));
+          con.appendChild(s);
+          while (con.childNodes.length > 80) con.removeChild(con.firstChild);
+          con.scrollTop = con.scrollHeight;
+        }
+        var lg = function () { out("", Array.prototype.map.call(arguments, D.fmt).join(" ")) };
+        var cons = { log: lg, info: lg, warn: lg, error: lg };
+        var fakeWin = {
+          addEventListener: function (type, fn) { if (typeof fn === "function") listeners.push({ type: String(type), fn: fn }) },
+          removeEventListener: function (type, fn) { listeners = listeners.filter(function (l) { return !(l.type === type && l.fn === fn) }) }
+        };
+        function toneEnv() {
+          if (!T) return undefined;
+          var W = {};
+          Object.keys(T).forEach(function (k) { if (CTORS.indexOf(k) < 0) Object.defineProperty(W, k, { enumerable: true, get: function () { return T[k] } }) });
+          CTORS.forEach(function (n) {
+            var C = T[n]; if (!C) return;
+            var f = function () {
+              var a = Array.prototype.slice.call(arguments).map(function (x) { return x && x.__orig ? x.__orig : x });
+              var o = new (Function.prototype.bind.apply(C, [null].concat(a)))(); made.push(o); return o;
+            };
+            f.__orig = C; Object.defineProperty(W, n, { enumerable: true, value: f });
+          });
+          return W;
+        }
+        function silence() { made.forEach(function (o) { try { if (o.releaseAll) o.releaseAll(); else if (o.triggerRelease) o.triggerRelease() } catch (e) { } }) }
+        function cleanup() { silence(); var old = made; made = []; setTimeout(function () { old.forEach(function (o) { try { o.dispose() } catch (e) { } }) }, 1500) }
+        function runIt() {
+          audioOn(); cleanup(); listeners = []; con.innerHTML = "";
+          var r = D.run(ed.value, null, { window: fakeWin, document: fakeWin, Tone: toneEnv(), console: cons });
+          ran = true;
+          if (r.error) { out(r.blocked ? "dim" : "bad", r.blocked ? r.error.message : "The code stopped: " + (r.error.name || "Error") + ": " + r.error.message); return }
+          if (!listeners.length) out("dim", "(ran, but nothing is listening. Is addEventListener still at the bottom?)");
+          else out("in", "listening. Click the pad and press keys.");
+        }
+        function fire(e) {
+          P.show(e.key);
+          if (!ran) runIt();
+          listeners.forEach(function (l) {
+            if (l.type !== e.type) return;
+            try { l.fn(e) } catch (err) { out("bad", "The code stopped: " + (err.name || "Error") + ": " + err.message) }
+          });
+        }
+        capture(padEl, fire, fire, silence);
+        D.edKeys(ed, runIt);
+        $("#" + id + "-run").addEventListener("click", runIt);
+        var armed = false;
+        $("#" + id + "-reset").addEventListener("click", function () {
+          var b = this;
+          if (!armed) { armed = true; b.textContent = "Sure? Click again"; setTimeout(function () { if (armed) { armed = false; b.textContent = "Reset" } }, 2500); return }
+          armed = false; b.textContent = "Reset";
+          ed.value = start; sset(KEY, start); cleanup(); listeners = []; ran = false; con.innerHTML = ""; out("dim", "Back to the start. Press Run."); con.dataset.fresh = "1";
+        });
+        out("dim", "Press Run, then click the pad and press keys."); con.dataset.fresh = "1";
+      }
+
+      /* ============ quiz rows: one set of choices for every row ============ */
+      function quiz(box, fbEl, Q, choices, hint) {
+        var done = 0;
+        Q.forEach(function (q) {
+          var row = document.createElement("div");
+          row.innerHTML = '<span class="sc">' + q[0] + '</span><span class="ch"></span>';
+          var ch = row.querySelector(".ch"), answered = false;
+          choices.forEach(function (c, j) {
+            var b = document.createElement("button"); b.className = "chip"; b.textContent = c;
+            b.addEventListener("click", function () {
+              if (answered) return;
+              if (j === q[1]) { b.classList.add("right"); answered = true; done++; fb(fbEl, "pass", "Correct. " + q[2] + (done === Q.length ? " That's all of them." : "")) }
+              else { b.classList.add("wrong"); fb(fbEl, "note", hint) }
+            });
+            ch.appendChild(b);
+          });
+          box.appendChild(row);
+        });
+      }
+      /* ============ pick rows: each row has its own choices ============
+         Q: [{q: html, c: [choice text], a: index, ok: html, hint: html, then: fn}] */
+      function pick(box, fbEl, Q) {
+        var done = 0;
+        Q.forEach(function (q) {
+          var row = document.createElement("div");
+          row.innerHTML = '<span>' + q.q + '</span><span class="ch"></span>';
+          var ch = row.querySelector(".ch"), answered = false;
+          q.c.forEach(function (c, j) {
+            var b = document.createElement("button"); b.className = "chip"; b.textContent = c;
+            b.addEventListener("click", function () {
+              if (answered) return;
+              if (j === q.a) { b.classList.add("right"); answered = true; done++; fb(fbEl, "pass", "Correct. " + q.ok + (done === Q.length ? " That's all of them." : "")); if (q.then) q.then() }
+              else { b.classList.add("wrong"); fb(fbEl, "note", q.hint) }
+            });
+            ch.appendChild(b);
+          });
+          box.appendChild(row);
+        });
+      }
+
+      var MELODY = ["C4", "E4", "G4", "B4"];
+      var STEPS = [{ note: "C4", duration: "8n" }, { note: "E4", duration: "4n" }, { note: "G4", duration: "8n" }];
+      var STEPS_SRC = 'let steps = [\n  { note: "C4", duration: "8n" },\n  { note: "E4", duration: "4n" },\n  { note: "G4", duration: "8n" }\n];';
+
+      /* ---------- 04 recap ---------- */
+      (function () {
+        var SRC = 'let melody = ["C4", "E4", "G4", "B4"];\n\nfor (let i = 0; i < melody.length; i++) {\n  synth.triggerAttackRelease(melody[i], "8n", Tone.now() + i * 0.4);\n}';
+        code($("#rc-code"), SRC);
+        var timers = [];
+        lineView($("#rc-line"), MELODY);
+        $("#rc-play").addEventListener("click", function () {
+          timers.forEach(clearTimeout); timers = [];
+          MELODY.forEach(function (n, i) {
+            playAt(n, "8n", i * 0.4);
+            timers.push(setTimeout(function () { lineView($("#rc-line"), MELODY, { hi: i }); code($("#rc-code"), SRC, [3]) }, i * 400));
+          });
+          timers.push(setTimeout(function () { lineView($("#rc-line"), MELODY); code($("#rc-code"), SRC) }, MELODY.length * 400 + 300));
+        });
+      })();
+
+      /* ---------- 05 one student ---------- */
+      (function () {
+        var F = [["firstName", "First name", "Ada"], ["lastName", "Last name", "Lovelace"], ["studentNumber", "Student number", "mau-1815"]];
+        var SRC = 'let firstName = "Ada";\nlet lastName = "Lovelace";\nlet studentNumber = "mau-1815";\n\nconsole.log(firstName + " " + lastName + " · " + studentNumber);';
+        var card = $("#ic-card");
+        card.innerHTML = '<div class="top">STUDENT CARD · PRACTICE</div>' + F.map(function (f, i) { return '<div class="fld" data-i="' + i + '"><b>' + f[1] + '</b><span>' + esc(f[2]) + '</span></div>' }).join("");
+        code($("#ic-code"), SRC);
+        $$(".fld", card).forEach(function (el) {
+          el.addEventListener("click", function () {
+            var i = +el.dataset.i;
+            $$(".fld", card).forEach(function (x) { x.classList.toggle("hi", x === el) });
+            code($("#ic-code"), SRC, [i]); flash($("#ic-code"), [i]);
+          });
+        });
+        $("#ic-run").addEventListener("click", function () {
+          code($("#ic-code"), SRC, [4]);
+          conLines($("#ic-con"), [{ c: "in", t: "run student.js" }, "Ada Lovelace · mau-1815"]);
+        });
+        conLines($("#ic-con"), [{ c: "dim", t: "Press Run it." }]);
+      })();
+
+      /* ---------- 06 it sprawls ---------- */
+      (function () {
+        var P = [["Ada", "Lovelace", "mau-1815"], ["Alan", "Turing", "mau-1912"], ["Grace", "Hopper", "mau-1906"], ["Katherine", "Johnson", "mau-1918"]], n = 1;
+        var DIR = ["Press Add a student.", "Two people: the plain names clash, so every name gets person1 or person2 in front.", "Nine variables. Only the names we typed say which facts go together.", "Twelve variables for four people. Now imagine a class of sixty."];
+        function render() {
+          var src;
+          if (n === 1) src = 'let firstName = "Ada";\nlet lastName = "Lovelace";\nlet studentNumber = "mau-1815";';
+          else src = P.slice(0, n).map(function (p, i) {
+            var k = "person" + (i + 1);
+            return 'let ' + k + 'FirstName = "' + p[0] + '";\nlet ' + k + 'LastName = "' + p[1] + '";\nlet ' + k + 'StudentNumber = "' + p[2] + '";';
+          }).join("\n\n");
+          var lastLines = n === 1 ? [] : [(n - 1) * 4, (n - 1) * 4 + 1, (n - 1) * 4 + 2];
+          code($("#sp-code"), src, lastLines); flash($("#sp-code"), lastLines);
+          $("#sp-n").textContent = n * 3;
+          $("#sp-dir").textContent = DIR[n - 1];
+          $("#sp-add").disabled = n >= P.length;
+        }
+        $("#sp-add").addEventListener("click", function () { if (n < P.length) { n++; render() } });
+        $("#sp-reset").addEventListener("click", function () { n = 1; render() });
+        render();
+      })();
+
+      /* ---------- 08 labelled parts ---------- */
+      (function () {
+        var person = { firstName: "Ada", lastName: "Lovelace", studentNumber: "mau-1815" };
+        var ORD = ["first", "second", "third", "fourth"];
+        function say(t) { $("#lb-say").textContent = t }
+        function render(hiCell, hiKey) {
+          lineView($("#lb-line"), MELODY, { hi: hiCell, click: function (i) { render(i, null); play(MELODY[i]); say("Position " + i + ": the " + ORD[i] + ' note, "' + MELODY[i] + '".') } });
+          objView($("#lb-obj"), "person1", person, { hi: hiKey, click: function (k) { render(null, k); say("The " + k + ' of person1: "' + person[k] + '". No position needed.') } });
+        }
+        $("#lb-second").addEventListener("click", function () { render(null, null); say("Is it lastName? studentNumber? The question means nothing: these facts have labels, not places.") });
+        $("#lb-name").addEventListener("click", function () { $("#lb-word").hidden = false; this.hidden = true });
+        render(null, null);
+      })();
+
+      /* ---------- 10 quiz: position or label ---------- */
+      quiz($("#q1"), $("#q1-fb"), [
+        ["The notes in a C major scale", 0, "Many notes of one kind, in order: C, D, E… The third note of the scale is E."],
+        ["A drum machine's current settings: tempo, volume, pattern name", 1, "One machine, described by several facts. Which is the first setting? The question makes no sense."],
+        ["The songs in a playlist", 0, "Many songs, in an order you chose. \"Play the next one\" only works because there's an order."]
+      ], ["by position", "by label"], "Ask: is there a first one? Does swapping two of them change it?");
+
+      /* ---------- 11 from three variables to one ---------- */
+      (function () {
+        code($("#po-a"), 'let firstName = "Ada";\nlet lastName = "Lovelace";\nlet studentNumber = "mau-1815";');
+        code($("#po-b"), 'let person1 = {\n  firstName: "Ada",\n  lastName: "Lovelace",\n  studentNumber: "mau-1815"\n};');
+        var person, next;
+        var L = [
+          { t: 'person1.firstName', run: function () { return [{ c: "in", t: "person1.firstName" }, '"' + person.firstName + '"'] }, hi: "firstName" },
+          { t: 'person1.lastName = "Byron";', run: function () { person.lastName = "Byron"; return [{ c: "in", t: 'person1.lastName = "Byron";' }, { c: "dim", t: "(changed: lastName was already there)" }] }, hi: "lastName" },
+          { t: 'person1.program = "IDB";', run: function () { person.program = "IDB"; return [{ c: "in", t: 'person1.program = "IDB";' }, { c: "dim", t: "(added: there was no program label before)" }] }, hi: "program" },
+          { t: 'console.log(person1);', run: function () { return [{ c: "in", t: "console.log(person1);" }, showObj(person)] }, hi: null }
+        ];
+        var box = $("#po-rows");
+        L.forEach(function (l, i) {
+          var r = document.createElement("div"); r.innerHTML = '<code>' + esc(l.t) + '</code><button class="btn cy">Run</button>';
+          r.querySelector("button").addEventListener("click", function () {
+            if (i !== next) return;
+            conLines($("#po-con"), l.run());
+            objView($("#po-obj"), "person1", person, { hi: l.hi, flash: l.hi });
+            next++; lock();
+          });
+          box.appendChild(r);
+        });
+        function lock() { $$("#po-rows button").forEach(function (b, i) { b.disabled = i !== next }) }
+        function reset() {
+          person = { firstName: "Ada", lastName: "Lovelace", studentNumber: "mau-1815" }; next = 0;
+          objView($("#po-obj"), "person1", person);
+          conLines($("#po-con"), [{ c: "dim", t: "Predict first, then press Run." }]); lock();
+        }
+        $("#po-reset").addEventListener("click", reset);
+        reset();
+      })();
+
+      /* ---------- 12 object parts ---------- */
+      (function () {
+        var Q = [
+          { p: "open", q: "Click what makes this an object.", ok: "The curly braces <code>{ }</code> wrap the whole object. An array uses square ones." },
+          { p: "label", q: "Click a label: a property's name.", ok: "<code>firstName</code> and <code>lastName</code> are labels. No quotes: they're names, like a variable's." },
+          { p: "colon", q: "Click what sits between a label and its value.", ok: "A colon. Inside an object it's <code>:</code>, never <code>=</code>." },
+          { p: "value", q: "Click the value labelled firstName.", ok: "<code>\"Ada\"</code>: a string, like any value you've stored before." },
+          { p: "comma", q: "Click what separates two properties.", ok: "A comma between each label-and-value pair. Forget it and you get a SyntaxError." },
+          { p: "read", q: "Click where a part is read back by its label.", ok: "<code>person1.firstName</code>: the object's name, a dot, the label. It gives back <code>\"Ada\"</code>." }
+        ], i = 0, done = false;
+        function ask() { $("#op-q").textContent = Q[i].q; $("#op-step").textContent = (i + 1) + " of " + Q.length; $("#op-next").hidden = true; done = false }
+        $$("#op-code .part").forEach(function (p) {
+          p.addEventListener("click", function (e) {
+            e.stopPropagation(); if (done || i >= Q.length) return;
+            if (p.dataset.part === Q[i].p) { $$('#op-code .part[data-part="' + Q[i].p + '"]').forEach(function (x) { x.classList.add("hit") }); done = true; fb($("#op-fb"), "pass", Q[i].ok); if (i < Q.length - 1) $("#op-next").hidden = false; else $("#op-step").textContent = "All six found." }
+            else { p.classList.add("miss"); setTimeout(function () { p.classList.remove("miss") }, 600); fb($("#op-fb"), "note", "Not that one. Read the code aloud, slowly: what goes where?") }
+          })
+        });
+        $("#op-next").addEventListener("click", function () { i++; fb($("#op-fb")); ask() });
+        ask();
+      })();
+
+      /* ---------- 13 ladder: one sound ---------- */
+      (function () {
+        var tone, tryEl = $("#lo-try");
+        function log(l) { conLines($("#lo-con"), l) }
+        ladder("lo", {
+          idea: "One sound: the note C4, played short.",
+          strat: "It's <b>one</b> thing, not many. Its parts are different kinds and have no order, so give each a <b>label</b> and reach it by name.", shape: "object",
+          plan: [["Make one sound with two labelled parts: a note and a duration.", [0, 1]], ["Reach each part by its label.", [2, 3]], ["Hand both parts to the synth.", [3]]],
+          code: '// 1. one sound, two labelled parts\nlet tone = { note: "C4", duration: "8n" };\n// 2. and 3. reach each part by label\nsynth.triggerAttackRelease(tone.note, tone.duration);',
+          onStep: function (i) { gate(tryEl, i === 3) }
+        });
+        function reset() { tone = { note: "C4", duration: "8n" }; objView($("#lo-obj"), "tone", tone); log([{ c: "dim", t: "Click a button to reach a part." }]) }
+        [["tone.note", "note"], ["tone.duration", "duration"], ["tone.volume", "volume"]].forEach(function (x) {
+          var b = document.createElement("button"); b.className = "btn cy"; b.textContent = x[0]; b.style.textTransform = "none";
+          b.addEventListener("click", function () {
+            objView($("#lo-obj"), "tone", tone, { hi: x[1] });
+            var v = tone[x[1]]; log([{ c: "in", t: x[0] }, v === undefined ? "undefined  · there's no part labelled volume" : JSON.stringify(v)]);
+          });
+          $("#lo-btns").appendChild(b);
+        });
+        var cb = document.createElement("button"); cb.className = "btn cy"; cb.textContent = 'tone.note = "E4"'; cb.style.textTransform = "none";
+        cb.addEventListener("click", function () { tone.note = "E4"; objView($("#lo-obj"), "tone", tone, { hi: "note", flash: "note" }); log([{ c: "in", t: 'tone.note = "E4";' }, { c: "dim", t: "(changed. Play it again.)" }]) });
+        $("#lo-btns").appendChild(cb);
+        var pb = document.createElement("button"); pb.className = "btn"; pb.textContent = "Play tone";
+        pb.addEventListener("click", function () { play(tone.note, tone.duration); log([{ c: "in", t: "synth.triggerAttackRelease(tone.note, tone.duration);" }, "plays " + tone.note + " for an eighth note"]) });
+        $("#lo-btns").appendChild(pb);
+        var rb = document.createElement("button"); rb.className = "btn ghost"; rb.textContent = "Start over"; rb.addEventListener("click", reset);
+        $("#lo-btns").appendChild(rb);
+        reset();
+      })();
+
+      /* ---------- 14 brackets ---------- */
+      code($("#br-a"), 'tone.note          // "C4"\ntone["note"]       // "C4"\n\ntone["note"] = "E4";');
+      code($("#br-b"), 'let part = "duration";\n\ntone[part]         // "8n"\ntone.part          // undefined');
+
+      /* ---------- 15 quiz: read the property ---------- */
+      code($("#qr-code"), 'let kick = { note: "C2", duration: "8n", volume: -6 };\nkick.volume = -3;\nkick.swing = 0.2;');
+      pick($("#qr-q"), $("#qr-fb"), [
+        { q: '<code>kick.note</code>', c: ['"C2"', '"note"', 'undefined'], a: 0, ok: "The dot asks for the part labelled note.", hint: "The dot reaches a part by its label. What's stored under note?" },
+        { q: '<code>kick["duration"]</code>', c: ['"8n"', 'duration', 'an error'], a: 0, ok: "Same reach as <code>kick.duration</code>, written with brackets.", hint: "Brackets with a label in quotes do the same as the dot." },
+        { q: 'Which line <b>adds</b> a new property?', c: ['line 2', 'line 3'], a: 1, ok: "<code>swing</code> wasn't there, so line 3 adds it. Line 2 changes <code>volume</code>, which was.", hint: "Both lines look alike. Which label was already in the object on line 1?" },
+        { q: 'After all three lines: <code>kick.volume</code>', c: ['-6', '-3', 'undefined'], a: 1, ok: "Line 2 changed it from -6 to -3.", hint: "The code runs top to bottom. What did line 2 do to volume?" }
+      ]);
+
+      /* ---------- 16 sound editor ---------- */
+      playground("sc", '// ---------- State ----------\nlet tone = { note: "C4", duration: "8n" };\n\n// ---------- Sound ----------\nconst synth = new Tone.Synth().toDestination();\n\n// ---------- Controls ----------\nfunction keyDown(event) {\n  Tone.start();\n  if (event.repeat === false) {\n    if (event.key === "t") {\n      synth.triggerAttackRelease(tone.note, tone.duration);\n    } else if (event.key === "e") {\n      tone.note = "E4";\n      console.log(tone);\n    }\n  }\n}\n\n// ---------- Setup ----------\nwindow.addEventListener("keydown", keyDown);\n');
+
+      /* ---------- 17 the synth is an object ---------- */
+      (function () {
+        var ws = null, wave = "triangle", WAVES = ["sine", "triangle", "square", "sawtooth"];
+        function wsyn() { if (!T) return null; if (!ws) { ws = new T.Synth().toDestination(); ws.volume.value = -10 } return ws }
+        function src() { return 'const synth = new Tone.Synth().toDestination();\n\nsynth.oscillator\nsynth.oscillator.type\nsynth.oscillator.type = "' + wave + '";\nsynth.triggerAttackRelease("C4", "8n");' }
+        function show(on) { code($("#so-code"), src(), on); if (on) flash($("#so-code"), on) }
+        var R = [
+          { b: "synth.oscillator", l: [2], ex: "An object inside the synth. That's why the next line has two dots: two hops.", out: function () { return ["{ type: \"" + (wsyn() ? wsyn().oscillator.type : wave) + "\", … }", { c: "dim", t: "(an object: it has parts of its own)" }] } },
+          { b: "synth.oscillator.type", l: [3, 4], ex: "A plain string you can read and change, like <code>person1.program</code>. Pick a wave shape below.", out: function () { return ['"' + (wsyn() ? wsyn().oscillator.type : wave) + '"'] } },
+          { b: "synth.triggerAttackRelease", l: [5], ex: "A property whose value is an action. That's a <b>method</b>: you call it with brackets.", out: function () { return ["function", { c: "dim", t: "(a method: call it with ( ) to make it do something)" }] } }
+        ];
+        R.forEach(function (r) {
+          var row = document.createElement("div");
+          row.innerHTML = '<button class="btn cy">' + esc(r.b) + '</button><span class="ex ans" hidden>' + r.ex + '</span>';
+          row.querySelector("button").addEventListener("click", function () {
+            row.querySelector(".ex").hidden = false; show(r.l);
+            conLines($("#so-con"), [{ c: "in", t: r.b }].concat(r.out()));
+            if (r.b === "synth.triggerAttackRelease") { var s = wsyn(); audioOn(); if (s) try { s.triggerAttackRelease("C4", "8n") } catch (e) { } }
+          });
+          $("#so-rows").appendChild(row);
+        });
+        WAVES.forEach(function (w) {
+          var b = document.createElement("button"); b.className = "btn ghost" + (w === wave ? " sel" : ""); b.textContent = w; b.style.textTransform = "none";
+          b.addEventListener("click", function () {
+            wave = w; $$("#so-seg .btn").forEach(function (x) { x.classList.toggle("sel", x === b); x.setAttribute("aria-pressed", x === b) });
+            audioOn(); var s = wsyn();
+            if (s) { try { s.oscillator.type = w; s.triggerAttackRelease("C4", "8n") } catch (e) { } }
+            show([4, 5]);
+            conLines($("#so-con"), [{ c: "in", t: 'synth.oscillator.type = "' + w + '";' }, { c: "dim", t: "(changed. Same synth, same note, a different sound.)" }]);
+          });
+          $("#so-seg").appendChild(b);
+        });
+        show(); conLines($("#so-con"), [{ c: "dim", t: "Click a part on the right, or a wave shape." }]);
+      })();
+
+      /* ---------- 20 ladder: a list of steps ---------- */
+      (function () {
+        var pi = null, pk = null, tryEl = $("#sb-try");
+        ladder("sb", {
+          idea: "A short melody where every note has its own length.",
+          strat: "The melody is a line: a <b>list</b>. Each note in it is one thing with labelled parts: an <b>object</b>. So, a list of objects.", shape: "array of objects",
+          plan: [["Make a list of steps, each with a note and a duration.", [0, 1, 2, 3, 4, 5]], ["Reach a step by its position.", [6, 8]], ["Then reach its parts by label.", [7, 8]]],
+          code: '// 1. a list of steps, each with labels\n' + STEPS_SRC + '\n// 2. first by position,\n// 3. then by label\nsynth.triggerAttackRelease(steps[0].note, steps[0].duration);',
+          onStep: function (i) { gate(tryEl, i === 3) }
+        });
+        function render() {
+          var host = $("#sb-line"); host.innerHTML = "";
+          STEPS.forEach(function (s, i) {
+            var c = document.createElement("div"); c.className = "cell";
+            var o = document.createElement("div"); objView(o, "steps[" + i + "]", s, { sm: true, hiAll: pi === i, hi: pi === i ? pk : null });
+            o.firstChild.style.width = "150px";
+            c.appendChild(o.firstChild); var ix = document.createElement("div"); ix.className = "i"; ix.textContent = i; c.appendChild(ix); host.appendChild(c);
+          });
+          var expr = "steps", v;
+          if (pi !== null) { expr += "[" + pi + "]"; v = STEPS[pi]; if (pk !== null) { expr += "." + pk; v = v === undefined ? "error" : v[pk] } }
+          var out = pi === null ? "" : v === "error" ? "TypeError: Cannot read properties of undefined" : v === undefined ? "undefined  · no step " + pi : typeof v === "object" ? showObj(v) : JSON.stringify(v);
+          $("#sb-path").innerHTML = esc(expr) + (out ? ' <span class="muted">→</span> <span class="pv">' + esc(out) + '</span>' : "");
+          $$("#sb-try .chip[data-i]").forEach(function (b) { b.classList.toggle("right", +b.dataset.i === pi) });
+          $$("#sb-try .chip[data-k]").forEach(function (b) { b.classList.toggle("right", b.dataset.k === pk); b.disabled = pi === null });
+          $("#sb-play").disabled = pi === null || pi >= STEPS.length;
+        }
+        $$("#sb-try .chip[data-i]").forEach(function (b) { b.addEventListener("click", function () { pi = +b.dataset.i; pk = null; render() }) });
+        $$("#sb-try .chip[data-k]").forEach(function (b) { b.addEventListener("click", function () { if (pi === null) return; pk = b.dataset.k; render() }) });
+        $("#sb-play").addEventListener("click", function () { var s = STEPS[pi]; if (s) play(s.note, s.duration) });
+        render();
+      })();
+
+      /* ---------- 21 quiz: reach in ---------- */
+      code($("#qa-code"), STEPS_SRC);
+      pick($("#qa-q"), $("#qa-fb"), [
+        { q: '<code>steps[1].duration</code>', c: ['"8n"', '"4n"', 'undefined'], a: 1, ok: "Position 1 is the second step, E4. Its duration is <code>\"4n\"</code>.", hint: "Count from zero: which step sits at position 1?", then: function () { play("E4", "4n") } },
+        { q: '<code>steps[2]</code>', c: ['"G4"', 'the whole third step', 'undefined'], a: 1, ok: "<code>{ note: \"G4\", duration: \"8n\" }</code>: a position gives back the whole object. Add a label to get one part.", hint: "There's no label after the position. What sits at position 2?", then: function () { play("G4", "8n") } },
+        { q: '<code>steps.length</code>', c: ['2', '3', '6'], a: 1, ok: "Three steps. <code>.length</code> counts the objects in the line, not their parts.", hint: "How many objects are in the list? Their parts don't count." },
+        { q: '<code>steps.note</code>', c: ['"C4"', 'undefined', 'all three notes'], a: 1, ok: "<code>steps</code> is the list, and a list has positions, not labels. Choose a step first: <code>steps[0].note</code>.", hint: "Which comes first: position or label? Is <code>note</code> a label of the list itself?" }
+      ]);
+
+      /* ---------- 22 walk it with the same loop ---------- */
+      (function () {
+        var SRC = STEPS_SRC + '\n\nfor (let i = 0; i < steps.length; i++) {\n  synth.triggerAttackRelease(\n    steps[i].note,\n    steps[i].duration,\n    Tone.now() + i * 0.4\n  );\n}';
+        var k = 0, timers = [];
+        code($("#sl-code"), SRC);
+        function row(j) {
+          var ok = j < STEPS.length, tr = document.createElement("tr");
+          tr.innerHTML = '<td>' + j + '</td><td class="' + (ok ? "" : "no") + '">' + ok + '</td><td>' + (ok ? esc(JSON.stringify(STEPS[j].note)) : "loop stops") + '</td><td>' + (ok ? esc(JSON.stringify(STEPS[j].duration)) : "") + '</td><td>' + (ok ? "+" + (j * 0.4).toFixed(1) + " s" : "") + '</td>';
+          return tr;
+        }
+        function reset() { timers.forEach(clearTimeout); timers = []; k = 0; $("#sl-rows").innerHTML = ""; $("#sl-next").disabled = false; code($("#sl-code"), SRC) }
+        $("#sl-next").addEventListener("click", function () {
+          if (k > STEPS.length) return;
+          $$("#sl-rows tr").forEach(function (r) { r.classList.remove("on") });
+          var tr = row(k); tr.classList.add("on"); $("#sl-rows").appendChild(tr);
+          if (k < STEPS.length) { code($("#sl-code"), SRC, [1 + k, 6, 8, 9]); flash($("#sl-code"), [8, 9]); play(STEPS[k].note, STEPS[k].duration) } else code($("#sl-code"), SRC, [6]);
+          k++; if (k > STEPS.length) this.disabled = true;
+        });
+        $("#sl-play").addEventListener("click", function () {
+          reset(); var rows = $("#sl-rows");
+          for (var j = 0; j <= STEPS.length; j++) rows.appendChild(row(j));
+          STEPS.forEach(function (s, j) {
+            playAt(s.note, s.duration, j * 0.4);
+            timers.push(setTimeout(function () { $$("#sl-rows tr").forEach(function (r, x) { r.classList.toggle("on", x === j) }); code($("#sl-code"), SRC, [1 + j, 8, 9]) }, j * 400));
+          });
+          timers.push(setTimeout(function () { $$("#sl-rows tr").forEach(function (r) { r.classList.remove("on") }); code($("#sl-code"), SRC) }, STEPS.length * 400 + 500));
+          $("#sl-next").disabled = true;
+        });
+        $("#sl-reset").addEventListener("click", reset);
+        reset();
+      })();
+
+      /* ---------- 23 steps editor ---------- */
+      playground("st", '// ---------- State ----------\n' + STEPS_SRC + '\n\n// ---------- Sound ----------\nconst synth = new Tone.Synth().toDestination();\n\n// ---------- Play every step ----------\nfunction playSteps() {\n  for (let i = 0; i < steps.length; i++) {\n    synth.triggerAttackRelease(\n      steps[i].note,\n      steps[i].duration,\n      Tone.now() + i * 0.4\n    );\n  }\n}\n\n// ---------- Controls ----------\nfunction keyDown(event) {\n  Tone.start();\n  if (event.repeat === false) {\n    playSteps();\n  }\n}\n\n// ---------- Setup ----------\nwindow.addEventListener("keydown", keyDown);\n');
+
+      /* ---------- 28 quiz: a song ---------- */
+      quiz($("#q2"), $("#q2-fb"), [
+        ["The song's title", 1, "One fact about the song, with a label: <code>title</code>."],
+        ["Its tempo", 1, "Another labelled fact: <code>tempo</code>. Is there a first one, among title and tempo? No."],
+        ["Its sections: intro, verse, chorus, verse, outro", 0, "Many sections, in order. Swap two and it's a different song."],
+        ["One section: its name and how many bars", 1, "One section, described by labelled parts: <code>name</code>, <code>bars</code>."],
+        ["The whole song", 2, "Labelled parts (title, tempo), and one of them, sections, is a list. Each section is labelled parts again. Real data nests."]
+      ], ["a list", "a label", "both"], "Ask: is there a first one? Does swapping two change it? Could it be both?");
+
+      /* ---------- 24 the event is an object ---------- */
+      (function () {
+        var SRC = 'function keyDown(event) {\n  if (event.repeat === false) {\n    if (event.key === "a") {\n      synth.triggerAttackRelease("C4", "8n");\n    }\n  }\n}\n\nwindow.addEventListener("keydown", keyDown);';
+        code($("#ev-code"), SRC);
+        var KEYS = ["type", "key", "code", "repeat", "shiftKey", "altKey", "ctrlKey", "metaKey", "location"], last = null;
+        var P = pad($("#ev-pad"), "<b>Click here</b>, then press keys. Try Shift too.", LIVE), el = $("#ev-pad");
+        objView($("#ev-obj"), "event", {});
+        el.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") { el.blur(); return }
+          if (e.key === "Tab" || e.ctrlKey || e.metaKey) return;
+          e.preventDefault(); e.stopPropagation();
+          P.show(e.key);
+          var o = {}, changed = [];
+          KEYS.forEach(function (k) { o[k] = e[k]; if (last && last[k] !== e[k]) changed.push(k) });
+          objView($("#ev-obj"), "event", o, { flash: changed });
+          code($("#ev-code"), SRC, [1, 2]);
+          last = o;
+          $("#ev-dir").innerHTML = "<code>event.key</code> is <code>" + esc(JSON.stringify(e.key)) + "</code>, <code>event.code</code> is <code>" + esc(JSON.stringify(e.code)) + "</code>. Nine labels shown here; the real object has more.";
+        });
+        el.addEventListener("keyup", function (e) { if (e.key !== "Escape" && !e.ctrlKey && !e.metaKey) { e.preventDefault(); e.stopPropagation() } });
+        el.addEventListener("mousedown", function () { setTimeout(function () { el.focus() }, 0) });
+      })();
+
+      /* ---------- 26 look it up: Tone.js ---------- */
+      (function () {
+        var ls = null, rel = 1, att = 0.005;
+        function lsyn() { if (!T) return null; if (!ls) { ls = new T.Synth().toDestination(); ls.volume.value = -10 } return ls }
+        function show(on) { code($("#lt-code"), 'const synth = new Tone.Synth().toDestination();\n\nsynth.envelope.attack = ' + att + ';\nsynth.envelope.release = ' + rel + ';\n\nsynth.triggerAttackRelease("C4", "8n");', on); if (on) flash($("#lt-code"), on) }
+        function seg(host, vals, get, set, line) {
+          vals.forEach(function (v) {
+            var b = document.createElement("button"); b.className = "btn ghost" + (v === get() ? " sel" : ""); b.textContent = String(v); b.style.textTransform = "none";
+            b.addEventListener("click", function () {
+              set(v); $$(".btn", host).forEach(function (x) { x.classList.toggle("sel", x === b); x.setAttribute("aria-pressed", x === b) });
+              show([line]); playIt();
+            });
+            host.appendChild(b);
+          });
+        }
+        function playIt() {
+          audioOn(); var s = lsyn(); if (!s) return;
+          try { s.envelope.attack = att; s.envelope.release = rel; s.triggerAttackRelease("C4", "8n") } catch (e) { }
+        }
+        seg($("#lt-rel"), [0.1, 1, 3], function () { return rel }, function (v) { rel = v }, 3);
+        seg($("#lt-att"), [0.005, 0.3], function () { return att }, function (v) { att = v }, 2);
+        $("#lt-play").addEventListener("click", function () { show([5]); playIt() });
+        show();
+      })();
+
+      /* ---------- 27 look it up: editor ---------- */
+      playground("lk", '// ---------- Sound ----------\nconst synth = new Tone.Synth().toDestination();\n\n// ---------- Controls ----------\nfunction keyDown(event) {\n  Tone.start();\n  console.log(event.key);\n  if (event.repeat === false) {\n    if (event.key === "a") {\n      synth.triggerAttackRelease("C4", "8n");\n    }\n  }\n}\n\n// ---------- Setup ----------\nwindow.addEventListener("keydown", keyDown);\n');
+    })();
+  </script>
+</body>
+
+</html>

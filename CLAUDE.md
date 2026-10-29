@@ -67,7 +67,9 @@ Use `/new-lecture <topic>` for a new deck. The workflow it follows:
 - Don't put the name of the design system ("Rehearsal") anywhere on the site.
 - No theatre vocabulary in anything you write (see above and `docs/design-system.md` → Voice). CSS names
   like `.stage` or `--curtain-600` are fine in code; their words never go on a slide.
-- Kicker lines (`.billing`) read `Section name · 10:35`, never `Scene 02 · …`.
+- Kicker lines (`.billing`) read `Section name` or `Section name · Detail`, never `Scene 02 · …`.
+- No clock times or durations on slides (kicker lines, running order, break slide). They make the session
+  feel rigid for students. Times belong in the outline and the speaker notes.
 - Slides are a fixed 1280×720 canvas, scaled to fit. Everything must fit at that size; never rely on scrolling a slide.
 - Interactive slides need both a presenter use (David drives it on the projector) and a student use
   (each student on their own laptop with the same link). Keep state per viewer; never require a server.

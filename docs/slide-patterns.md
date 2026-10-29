@@ -63,13 +63,14 @@ Every slide ends with `<aside class="nt">speaker notes</aside>`.
 
 ```html
 <section class="slide" id="roles" data-sec="What functions are for">
-  <div class="billing">What functions are for · 10:25</div><hr class="rule">
+  <div class="billing">What functions are for</div><hr class="rule">
   <h2 class="h1">Five jobs a function does</h2>
   … content …
 </section>
 ```
 
-Put the section name and start time in the kicker line (`.billing`) of the first slide of each section.
+Put the section name in the kicker line (`.billing`) of the first slide of each section. No clock times or
+durations on slides: they make the session feel rigid. Times go in the outline and the speaker notes.
 Don't number sections ("Scene 02"); write "Part 2" only where the Session Plan itself does.
 
 ## Layout helpers
@@ -188,7 +189,10 @@ name an input where that rule would have given a different answer.
 var r = D.run(src);               // {logs:[...], error?, blocked?}
 var r = D.run(src, "double");     // also returns the student's function as r.value
 var r = D.run(src, null, {Tone: Tone});  // extra globals for the code (a library, helpers)
+var r = D.run(src, null, {document: pad, console: myConsole}); // env.console replaces the captured console
 D.edKeys(textarea, runFn);        // Tab indents, Ctrl/⌘+Enter runs
+// Every textarea.code-ed is colour-coded automatically (workspace.js draws a highlighted copy under it).
+// Set code with ta.value = …: the colours follow. D.colourEditor(ta) exists for editors made some other way.
 ```
 
 Pass libraries through `env` rather than relying on `window`, so the fallback interpreter (which is
@@ -203,6 +207,14 @@ See the "Five small functions" slide: tabs (`.tabs`), an editor, `Run the tests`
 Each challenge is `{f: name, task: html, start: code, tests: [[args, expected], …], check?: fn(src)}`.
 Call `r.value` with each test's arguments, compare with `===`, list ✓ / ×, and if the function returned
 `undefined`, ask whether they returned or only logged. Save code per challenge with `D.store`.
+
+### Keyboard input (lecture-local, in `input/`)
+
+`playground(id, startCode)` wires `#id-ed`, `#id-run`, `#id-reset`, `#id-pad`, `#id-con` into an editor whose
+code gets a stand-in `document` (its listeners only hear the focused `.pad`), a `Tone` whose instruments are
+disposed on every run, and a live console. `capture(el, onDown, onUp)` catches keys only while `el` has focus,
+so the deck's own shortcuts keep working. `keyboard(host, {note, synth})` draws a playable QWERTY diagram.
+Tone.js is vendored at `shared/vendor/tone.min.js` (15.1.22, the version the exercises repo uses).
 
 ### The workspace
 
@@ -229,6 +241,14 @@ Strings only. Wrap `JSON.parse` in try/catch.
 has the sound editor (`soundEd`: editor, Play/Stop, a piano roll of what played, optional pads and tests),
 a recorder that sees every `triggerAttackRelease` (with a dry mode for testing a student's function silently),
 and `stopAll()`, bound to S. Copy them from there; promote to `shared/` if a third lecture needs them.
+
+`conditionals/` adds a song player (`songPlayer`: runs code on Tone's clock and fills an 8-bar beat grid as it plays).
+Two traps it works around:
+- `Tone.Transport` is fixed to the audio context that existed when Tone.js loaded. `stopAll()` swaps contexts, so after
+  the first stop, student code calling `Tone.Transport.start()` starts a dead clock. Pass student code a `Tone` whose
+  `Transport` is a getter for `Tone.getTransport()` (see `ToneEnv` in `conditionals/`).
+- JetBrains Mono draws `===`, `!==`, `<=`, `>=` as ligatures. Decks that teach these operators turn ligatures off
+  (`font-variant-ligatures:none`), so students see the characters they type.
 
 ## Lecture-local components in `functions/` worth reusing
 

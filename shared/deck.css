@@ -38,6 +38,8 @@ button{font:inherit;color:inherit}
 .dir{font-family:var(--font-display);font-style:italic;font-weight:500;color:var(--ink-500);font-size:22px;line-height:1.45;margin:0}
 .stage .dir{color:var(--paper-400)}
 code,.m{font-family:var(--font-mono);font-size:.88em}
+/* JetBrains Mono draws === and => as joined glyphs; beginners need to see every character */
+pre,code,kbd,textarea,.m,.console,.btn,.chip,.bar,.cb,.turn{font-variant-ligatures:none;font-feature-settings:"calt" 0,"liga" 0}
 p code,li code,.dir code,.lede code{background:var(--spot-200);color:var(--ink-900);padding:0 4px;border-radius:2px;font-style:normal}
 .stage p code{background:transparent;color:var(--spot-400);padding:0}
 .muted{color:var(--ink-500)}
@@ -110,6 +112,10 @@ input.t,textarea.t{font-family:var(--font-mono);font-size:19px;padding:9px 12px;
 input.t:focus,textarea.t:focus{outline:2px solid var(--curtain-600);outline-offset:2px}
 textarea.code-ed{font-family:var(--font-mono);font-size:17px;line-height:1.6;background:var(--ink-900);color:var(--syn-pl);border:0;padding:14px 18px;width:100%;resize:none;display:block;tab-size:2;caret-color:var(--spot-400)}
 textarea.code-ed:focus{outline:none;box-shadow:inset 0 0 0 2px var(--spot-400)}
+/* colour-coded editors (workspace.js): the highlighted copy sits under a transparent textarea */
+pre.ed-hl{position:absolute;margin:0;z-index:0;overflow:hidden;pointer-events:none;background:var(--ink-900);color:var(--syn-pl);border:0 solid transparent;box-sizing:border-box}
+textarea.code-ed.ed-on{position:relative;z-index:1;background:transparent;color:transparent;-webkit-text-fill-color:transparent}
+textarea.code-ed.ed-on::selection{background:rgba(255,222,60,.35)}
 
 /* rule-rows */
 .rows{border-top:1px solid var(--ink-900)}
